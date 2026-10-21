@@ -166,79 +166,76 @@ window.TL_DAY = {
       id: "shaping-basics",
       depth: "short",
       title: {
-        en: "Shaping data — Select, SelectMany, GroupBy and Join",
-        hi: "Data को shape देना — Select, SelectMany, GroupBy और Join",
-        hg: "Data ko shape dena — Select, SelectMany, GroupBy aur Join"
+        en: "Shaping data — Select vs SelectMany, GroupBy and Join",
+        hi: "Data को shape देना — Select बनाम SelectMany, GroupBy और Join",
+        hg: "Data ko shape dena — Select vs SelectMany, GroupBy aur Join"
       },
       body: {
-        en: `<p><b>Analogy — the Mumbai dabbawala:</b> every office worker gets one <b>dabba</b> (lunch box) with several dishes inside. Listing one thing per dabba ("whose dabba is this?") is <b>Select</b> — one output per input. Opening <b>all</b> the dabbas and putting every dish on one big plate is <b>SelectMany</b> — it flattens. Sorting the dabbas into crates by <b>station code</b> is <b>GroupBy</b>. Matching each dabba's code with the <b>office address list</b> is <b>Join</b>.</p>
+        en: `<p><b>Analogy — the Mumbai dabbawala:</b> every office worker gets one <b>dabba</b> with several dishes inside. "Whose dabba is this?" — one answer per dabba — is <b>Select</b>. Opening <b>all</b> the dabbas and putting every dish on one big plate is <b>SelectMany</b>. Sorting the dabbas into crates by <b>station code</b> is <b>GroupBy</b>. Matching each dabba's code with the <b>office address list</b> is <b>Join</b>.</p>
 <ul>
-<li><b>Select</b> = <b>one-to-one</b> projection. 10 orders in → 10 results out. If each result is itself a list, you get a <b>list of lists</b> (<code>IEnumerable&lt;List&lt;Item&gt;&gt;</code>).</li>
-<li><b>SelectMany</b> = <b>one-to-many, then flatten</b>. 10 orders with 3 items each → one flat sequence of 30 items. In query syntax it is two <code>from</code> clauses.</li>
-<li><b>GroupBy</b> = make buckets by a key. Result: a sequence of <code>IGrouping&lt;TKey, T&gt;</code> — each group has a <code>.Key</code> and is itself a sequence of its items. In LINQ to Objects, groups come in the order their key <b>first appears</b>.</li>
-<li><b>ToLookup</b> = like <code>GroupBy</code> but runs <b>immediately</b> and gives a dictionary-like lookup: <code>lookup["Pune"]</code>, and a missing key gives an <b>empty</b> sequence (no exception).</li>
-<li><b>Join</b> = <b>inner join</b> on equal keys: only pairs that match on both sides. Rows without a partner disappear.</li>
-<li><b>GroupJoin</b> = each outer item with the <b>group</b> (maybe empty) of matching inner items. With <code>SelectMany</code> + <code>DefaultIfEmpty()</code> it becomes the classic <b>left join</b>. .NET 10 adds a direct <code>LeftJoin</code> operator.</li>
+<li><b>Select</b> = <b>one output per input</b>. 10 orders in → 10 results out. If each result is a list, you get a <b>list of lists</b>.</li>
+<li><b>SelectMany</b> = <b>one-to-many, then flatten</b>. 10 orders with 3 items each → one flat sequence of 30 items.</li>
+<li><b>GroupBy</b> = buckets by a key. Each group has a <code>.Key</code> and is itself a sequence of its items, so you can <code>Count()</code> or <code>Sum()</code> per group.</li>
+<li><b>Join</b> = <b>inner join</b> on equal keys — rows without a partner disappear. A <b>left join</b> keeps them: <code>GroupJoin</code> + <code>DefaultIfEmpty()</code>, or <code>LeftJoin</code> in .NET 10.</li>
 </ul>
-<p><b>When to use:</b> <code>Select</code> to pick or reshape fields (DTOs), <code>SelectMany</code> for "all items of all orders", <code>GroupBy</code> for reports (totals per city), <code>Join</code> to combine two in-memory lists by key. <b>When not:</b> in EF Core, prefer <b>navigation properties</b> (<code>order.Customer.Name</code>) over manual <code>Join</code> when the relationship is mapped; and do not <code>GroupBy</code> a huge in-memory list just to count — a dictionary or <code>CountBy</code> (.NET 9) is lighter.</p>`,
-        hi: `<p><b>Analogy — Mumbai का dabbawala:</b> हर office वाले को एक <b>dabba</b> (lunch box) मिलता है जिसमें कई dishes हैं। हर dabba की एक चीज़ list करना ("यह dabba किसका है?") है <b>Select</b> — हर input का एक output। <b>सारे</b> dabbe खोलकर हर dish एक बड़ी थाली में रखना है <b>SelectMany</b> — यह flatten करता है। Dabbon को <b>station code</b> के हिसाब से crates में बाँटना है <b>GroupBy</b>। हर dabba के code को <b>office address list</b> से मिलाना है <b>Join</b>।</p>
+<p>Details — query syntax, <code>ToLookup</code>, composite keys, the left-join pattern in code — are in the detailed sections below.</p>
+<p><b>When to use:</b> <code>Select</code> for DTOs, <code>SelectMany</code> for "all items of all orders", <code>GroupBy</code> for per-key reports, <code>Join</code> to combine two in-memory lists by key. <b>When not:</b> in EF Core, prefer <b>navigation properties</b> (<code>order.Customer.Name</code>) over a manual <code>Join</code> when the relationship is mapped.</p>`,
+        hi: `<p><b>Analogy — Mumbai का dabbawala:</b> हर office वाले को एक <b>dabba</b> मिलता है जिसमें कई dishes हैं। "यह dabba किसका है?" — हर dabba का एक जवाब — यह है <b>Select</b>। <b>सारे</b> dabbe खोलकर हर dish एक बड़ी थाली में रखना है <b>SelectMany</b>। Dabbon को <b>station code</b> के हिसाब से crates में बाँटना है <b>GroupBy</b>। हर dabba के code को <b>office address list</b> से मिलाना है <b>Join</b>।</p>
 <ul>
-<li><b>Select</b> = <b>one-to-one</b> projection। 10 orders अंदर → 10 results बाहर। अगर हर result ख़ुद एक list है, तो आपको <b>lists की list</b> मिलती है (<code>IEnumerable&lt;List&lt;Item&gt;&gt;</code>)।</li>
-<li><b>SelectMany</b> = <b>one-to-many, फिर flatten</b>। 3-3 items वाले 10 orders → 30 items का एक flat sequence। Query syntax में यह दो <code>from</code> clauses हैं।</li>
-<li><b>GroupBy</b> = key के हिसाब से buckets बनाना। Result: <code>IGrouping&lt;TKey, T&gt;</code> का sequence — हर group के पास एक <code>.Key</code> है और वो ख़ुद अपने items का sequence है। LINQ to Objects में groups उसी order में आते हैं जिसमें उनकी key <b>पहली बार दिखी</b>।</li>
-<li><b>ToLookup</b> = <code>GroupBy</code> जैसा, पर <b>तुरंत</b> चलता है और dictionary जैसा lookup देता है: <code>lookup["Pune"]</code>, और missing key पर <b>खाली</b> sequence मिलता है (exception नहीं)।</li>
-<li><b>Join</b> = बराबर keys पर <b>inner join</b>: सिर्फ़ वो pairs जो दोनों तरफ़ match करें। जिनका partner नहीं, वो rows गायब।</li>
-<li><b>GroupJoin</b> = हर outer item के साथ matching inner items का <b>group</b> (खाली भी हो सकता है)। <code>SelectMany</code> + <code>DefaultIfEmpty()</code> के साथ यह classic <b>left join</b> बन जाता है। .NET 10 में सीधा <code>LeftJoin</code> operator आ गया है।</li>
+<li><b>Select</b> = <b>हर input का एक output</b>। 10 orders अंदर → 10 results बाहर। अगर हर result एक list है, तो <b>lists की list</b> मिलती है।</li>
+<li><b>SelectMany</b> = <b>one-to-many, फिर flatten</b>। 3-3 items वाले 10 orders → 30 items का एक flat sequence।</li>
+<li><b>GroupBy</b> = key के हिसाब से buckets। हर group के पास एक <code>.Key</code> है और वो ख़ुद अपने items का sequence है, इसलिए हर group पर <code>Count()</code> या <code>Sum()</code> कर सकते हो।</li>
+<li><b>Join</b> = बराबर keys पर <b>inner join</b> — जिन rows का partner नहीं, वो गायब। <b>Left join</b> उन्हें रखता है: <code>GroupJoin</code> + <code>DefaultIfEmpty()</code>, या .NET 10 में <code>LeftJoin</code>।</li>
 </ul>
-<p><b>कब use करें:</b> fields चुनने या reshape करने (DTOs) के लिए <code>Select</code>, "सारे orders के सारे items" के लिए <code>SelectMany</code>, reports के लिए <code>GroupBy</code> (हर city का total), दो in-memory lists को key से जोड़ने के लिए <code>Join</code>। <b>कब नहीं:</b> EF Core में relationship mapped हो तो manual <code>Join</code> की जगह <b>navigation properties</b> (<code>order.Customer.Name</code>) बेहतर हैं; और सिर्फ़ गिनने के लिए बहुत बड़ी in-memory list पर <code>GroupBy</code> मत करो — dictionary या <code>CountBy</code> (.NET 9) हल्का है।</p>`,
-        hg: `<p><b>Analogy — Mumbai ka dabbawala:</b> har office wale ko ek <b>dabba</b> (lunch box) milta hai jismein kai dishes hain. Har dabba ki ek cheez list karna ("yeh dabba kiska hai?") hai <b>Select</b> — har input ka ek output. <b>Saare</b> dabbe kholkar har dish ek badi thaali mein rakhna hai <b>SelectMany</b> — yeh flatten karta hai. Dabbon ko <b>station code</b> ke hisaab se crates mein baantna hai <b>GroupBy</b>. Har dabba ke code ko <b>office address list</b> se milaana hai <b>Join</b>.</p>
+<p>Details — query syntax, <code>ToLookup</code>, composite keys, code में left-join pattern — नीचे के detailed sections में हैं।</p>
+<p><b>कब use करें:</b> DTOs के लिए <code>Select</code>, "सारे orders के सारे items" के लिए <code>SelectMany</code>, per-key reports के लिए <code>GroupBy</code>, दो in-memory lists को key से जोड़ने के लिए <code>Join</code>। <b>कब नहीं:</b> EF Core में relationship mapped हो तो manual <code>Join</code> की जगह <b>navigation properties</b> (<code>order.Customer.Name</code>) बेहतर हैं।</p>`,
+        hg: `<p><b>Analogy — Mumbai ka dabbawala:</b> har office wale ko ek <b>dabba</b> milta hai jismein kai dishes hain. "Yeh dabba kiska hai?" — har dabba ka ek jawaab — yeh hai <b>Select</b>. <b>Saare</b> dabbe kholkar har dish ek badi thaali mein rakhna hai <b>SelectMany</b>. Dabbon ko <b>station code</b> ke hisaab se crates mein baantna hai <b>GroupBy</b>. Har dabba ke code ko <b>office address list</b> se milaana hai <b>Join</b>.</p>
 <ul>
-<li><b>Select</b> = <b>one-to-one</b> projection. 10 orders andar → 10 results bahar. Agar har result khud ek list hai, to aapko <b>lists ki list</b> milti hai (<code>IEnumerable&lt;List&lt;Item&gt;&gt;</code>).</li>
-<li><b>SelectMany</b> = <b>one-to-many, phir flatten</b>. 3-3 items wale 10 orders → 30 items ka ek flat sequence. Query syntax mein yeh do <code>from</code> clauses hain.</li>
-<li><b>GroupBy</b> = key ke hisaab se buckets banana. Result: <code>IGrouping&lt;TKey, T&gt;</code> ka sequence — har group ke paas ek <code>.Key</code> hai aur woh khud apne items ka sequence hai. LINQ to Objects mein groups usi order mein aate hain jismein unki key <b>pehli baar dikhi</b>.</li>
-<li><b>ToLookup</b> = <code>GroupBy</code> jaisa, par <b>turant</b> chalta hai aur dictionary jaisa lookup deta hai: <code>lookup["Pune"]</code>, aur missing key par <b>khaali</b> sequence milta hai (exception nahi).</li>
-<li><b>Join</b> = barabar keys par <b>inner join</b>: sirf woh pairs jo dono taraf match karein. Jinka partner nahi, woh rows gaayab.</li>
-<li><b>GroupJoin</b> = har outer item ke saath matching inner items ka <b>group</b> (khaali bhi ho sakta hai). <code>SelectMany</code> + <code>DefaultIfEmpty()</code> ke saath yeh classic <b>left join</b> ban jaata hai. .NET 10 mein seedha <code>LeftJoin</code> operator aa gaya hai.</li>
+<li><b>Select</b> = <b>har input ka ek output</b>. 10 orders andar → 10 results bahar. Agar har result ek list hai, to <b>lists ki list</b> milti hai.</li>
+<li><b>SelectMany</b> = <b>one-to-many, phir flatten</b>. 3-3 items wale 10 orders → 30 items ka ek flat sequence.</li>
+<li><b>GroupBy</b> = key ke hisaab se buckets. Har group ke paas ek <code>.Key</code> hai aur woh khud apne items ka sequence hai, isliye har group par <code>Count()</code> ya <code>Sum()</code> kar sakte ho.</li>
+<li><b>Join</b> = barabar keys par <b>inner join</b> — jin rows ka partner nahi, woh gaayab. <b>Left join</b> unhe rakhta hai: <code>GroupJoin</code> + <code>DefaultIfEmpty()</code>, ya .NET 10 mein <code>LeftJoin</code>.</li>
 </ul>
-<p><b>Kab use karein:</b> fields chunne ya reshape karne (DTOs) ke liye <code>Select</code>, "saare orders ke saare items" ke liye <code>SelectMany</code>, reports ke liye <code>GroupBy</code> (har city ka total), do in-memory lists ko key se jodne ke liye <code>Join</code>. <b>Kab nahi:</b> EF Core mein relationship mapped ho to manual <code>Join</code> ki jagah <b>navigation properties</b> (<code>order.Customer.Name</code>) behtar hain; aur sirf ginne ke liye bahut badi in-memory list par <code>GroupBy</code> mat karo — dictionary ya <code>CountBy</code> (.NET 9) halka hai.</p>`
+<p>Details — query syntax, <code>ToLookup</code>, composite keys, code mein left-join pattern — neeche ke detailed sections mein hain.</p>
+<p><b>Kab use karein:</b> DTOs ke liye <code>Select</code>, "saare orders ke saare items" ke liye <code>SelectMany</code>, per-key reports ke liye <code>GroupBy</code>, do in-memory lists ko key se jodne ke liye <code>Join</code>. <b>Kab nahi:</b> EF Core mein relationship mapped ho to manual <code>Join</code> ki jagah <b>navigation properties</b> (<code>order.Customer.Name</code>) behtar hain.</p>`
       }
     },
     {
       id: "picking-basics",
       depth: "short",
       title: {
-        en: "Picking and checking — First/Single, Any/Count, Distinct, Skip/Take",
-        hi: "चुनना और check करना — First/Single, Any/Count, Distinct, Skip/Take",
-        hg: "Chunna aur check karna — First/Single, Any/Count, Distinct, Skip/Take"
+        en: "Picking and checking — First vs Single, Any, and paging",
+        hi: "चुनना और check करना — First बनाम Single, Any, और paging",
+        hg: "Chunna aur check karna — First vs Single, Any, aur paging"
       },
       body: {
-        en: `<p><b>Analogy — the railway reservation chart:</b> "Who is the <b>first</b> passenger on the waiting list?" — <b>First</b>. "Find the passenger with this <b>PNR</b>" — there must be <b>exactly one</b>, two would be a serious bug — <b>Single</b>. "Is <b>any</b> berth free?" — you stop at the first free berth (<b>Any</b>); "<b>how many</b> berths are free?" — you must check every berth (<b>Count</b>). "List the <b>unique</b> stations on this route" — <b>Distinct</b>. And the chart is shown <b>page by page</b>, always in coach and berth order — <b>OrderBy + Skip/Take</b>.</p>
+        en: `<p><b>Analogy — the railway reservation chart:</b> "Who is the <b>first</b> passenger on the waiting list?" — <b>First</b>. "Find the passenger with this <b>PNR</b>" — there must be <b>exactly one</b>; two would be a serious bug — <b>Single</b>. "Is <b>any</b> berth free?" — stop at the first free berth — <b>Any</b>. And the chart is shown <b>page by page</b>, in coach and berth order — <b>OrderBy + Skip/Take</b>.</p>
 <ul>
-<li><b>First()</b> = the first item; <b>throws</b> if there is none. <b>FirstOrDefault()</b> = first item or <code>default</code> (<code>null</code> for classes, <code>0</code> for <code>int</code>). Since .NET 6 you can pass your own default: <code>FirstOrDefault(x =&gt; ..., -1)</code>.</li>
-<li><b>Single()</b> = the <b>only</b> item; throws if there are zero or more than one. <b>SingleOrDefault()</b> = default if zero, but <b>still throws if more than one</b>. Use <code>Single</code> to <b>assert</b> uniqueness (lookup by unique key).</li>
-<li><b>Any()</b> = "is there at least one?" — stops at the first match. <b>Count()</b> = walks <b>all</b> matching items. For "exists?" checks, <code>Any()</code> says what you mean and can stop early. For a <code>List</code> or array, use the <b><code>Count</code>/<code>Length</code> property</b> — it is already stored.</li>
-<li><b>Distinct()</b> removes duplicates using the type's equality (<code>Equals</code>/<code>GetHashCode</code>; value equality for records). <b>DistinctBy(x =&gt; x.Key)</b> (.NET 6) keeps the first item for each key.</li>
-<li><b>Skip(n).Take(size)</b> = paging. Page <code>p</code> (1-based) = <code>Skip((p - 1) * size).Take(size)</code>. <b>Sort first</b> — a database does not promise any row order without <code>ORDER BY</code>, so pages can repeat or miss rows.</li>
+<li><b>First()</b> = the first match; <b>throws</b> if there is none. <b>Single()</b> = the <b>only</b> match; throws on zero <b>or</b> many — use it to assert uniqueness (lookup by a unique key).</li>
+<li><b>...OrDefault()</b> returns <code>default</code> (<code>null</code>, or <code>0</code> for <code>int</code>) when nothing matches — but <code>SingleOrDefault()</code> <b>still throws on duplicates</b>.</li>
+<li><b>Any()</b> answers "is there at least one?" and stops at the first match — the right tool for existence checks (full comparison with <code>Count()</code> in the Q&amp;A).</li>
+<li><b>Paging</b>: <b>sort first</b>, then <code>Skip((page - 1) * size).Take(size)</code>. Without <code>ORDER BY</code>, a database promises no row order, so pages can repeat or miss rows.</li>
 </ul>
-<p><b>When to use:</b> <code>Single</code> when duplicates mean bad data; <code>FirstOrDefault</code> when "not found" is normal; <code>Any</code> for existence checks; <code>DistinctBy</code> for "one per customer"; <code>OrderBy</code> + <code>Skip</code>/<code>Take</code> for simple paging. <b>When not:</b> <code>First()</code> when "not found" is expected (you get an exception instead of a clean 404); <code>Count() &gt; 0</code> on a lazy query; and <code>Skip</code> with a very large offset on big tables — use <b>keyset paging</b> (<code>WHERE Id &gt; lastId</code>) there.</p>`,
-        hi: `<p><b>Analogy — railway reservation chart:</b> "Waiting list में <b>पहला</b> passenger कौन है?" — <b>First</b>। "इस <b>PNR</b> वाला passenger ढूँढो" — <b>ठीक एक</b> होना चाहिए, दो हों तो बड़ा bug है — <b>Single</b>। "क्या <b>कोई</b> berth खाली है?" — पहली खाली berth मिलते ही रुक जाओ (<b>Any</b>); "<b>कितनी</b> berths खाली हैं?" — हर berth check करनी पड़ेगी (<b>Count</b>)। "इस route के <b>unique</b> stations बताओ" — <b>Distinct</b>। और chart <b>page by page</b> दिखाया जाता है, हमेशा coach और berth के order में — <b>OrderBy + Skip/Take</b>।</p>
+<p>More operators — <code>Distinct</code>/<code>DistinctBy</code>, <code>MinBy</code>/<code>MaxBy</code>, <code>All</code>, keyset paging — are in the detailed sections below.</p>
+<p><b>When to use:</b> <code>Single</code> when duplicates mean bad data; <code>FirstOrDefault</code> when "not found" is normal; <code>Any</code> for "exists?". <b>When not:</b> <code>First()</code> when "not found" is expected — you get an exception instead of a clean 404.</p>`,
+        hi: `<p><b>Analogy — railway reservation chart:</b> "Waiting list में <b>पहला</b> passenger कौन है?" — <b>First</b>। "इस <b>PNR</b> वाला passenger ढूँढो" — <b>ठीक एक</b> होना चाहिए; दो हों तो बड़ा bug है — <b>Single</b>। "क्या <b>कोई</b> berth खाली है?" — पहली खाली berth पर रुक जाओ — <b>Any</b>। और chart <b>page by page</b> दिखाया जाता है, coach और berth के order में — <b>OrderBy + Skip/Take</b>।</p>
 <ul>
-<li><b>First()</b> = पहला item; कोई न हो तो <b>throw</b> करता है। <b>FirstOrDefault()</b> = पहला item या <code>default</code> (classes के लिए <code>null</code>, <code>int</code> के लिए <code>0</code>)। .NET 6 से अपना default दे सकते हो: <code>FirstOrDefault(x =&gt; ..., -1)</code>।</li>
-<li><b>Single()</b> = <b>इकलौता</b> item; zero या एक से ज़्यादा हों तो throw। <b>SingleOrDefault()</b> = zero हो तो default, पर <b>एक से ज़्यादा हों तो फिर भी throw</b>। Uniqueness <b>assert</b> करने के लिए <code>Single</code> use करो (unique key से lookup)।</li>
-<li><b>Any()</b> = "कम से कम एक है?" — पहला match मिलते ही रुक जाता है। <b>Count()</b> = <b>सारे</b> matching items से गुज़रता है। "Exists?" वाले checks के लिए <code>Any()</code> आपकी बात साफ़ कहता है और जल्दी रुक सकता है। <code>List</code> या array के लिए <b><code>Count</code>/<code>Length</code> property</b> use करो — वो पहले से stored है।</li>
-<li><b>Distinct()</b> type की equality (<code>Equals</code>/<code>GetHashCode</code>; records के लिए value equality) से duplicates हटाता है। <b>DistinctBy(x =&gt; x.Key)</b> (.NET 6) हर key का पहला item रखता है।</li>
-<li><b>Skip(n).Take(size)</b> = paging। Page <code>p</code> (1 से शुरू) = <code>Skip((p - 1) * size).Take(size)</code>। <b>पहले sort करो</b> — <code>ORDER BY</code> के बिना database rows के किसी order का वादा नहीं करता, इसलिए pages में rows दोहरा सकती हैं या छूट सकती हैं।</li>
+<li><b>First()</b> = पहला match; कोई न हो तो <b>throw</b>। <b>Single()</b> = <b>इकलौता</b> match; zero <b>या</b> कई हों तो throw — uniqueness assert करने के लिए (unique key से lookup)।</li>
+<li><b>...OrDefault()</b> कुछ match न हो तो <code>default</code> देता है (<code>null</code>, या <code>int</code> के लिए <code>0</code>) — पर <code>SingleOrDefault()</code> <b>duplicates पर फिर भी throw</b> करता है।</li>
+<li><b>Any()</b> पूछता है "कम से कम एक है?" और पहले match पर रुक जाता है — existence checks के लिए सही tool (<code>Count()</code> से पूरी तुलना Q&amp;A में)।</li>
+<li><b>Paging</b>: <b>पहले sort करो</b>, फिर <code>Skip((page - 1) * size).Take(size)</code>। <code>ORDER BY</code> के बिना database किसी row order का वादा नहीं करता, इसलिए pages में rows दोहरा सकती हैं या छूट सकती हैं।</li>
 </ul>
-<p><b>कब use करें:</b> <code>Single</code> जब duplicates का मतलब ख़राब data हो; <code>FirstOrDefault</code> जब "नहीं मिला" normal बात हो; existence checks के लिए <code>Any</code>; "हर customer का एक" के लिए <code>DistinctBy</code>; simple paging के लिए <code>OrderBy</code> + <code>Skip</code>/<code>Take</code>। <b>कब नहीं:</b> जब "नहीं मिला" expected हो तब <code>First()</code> (साफ़ 404 की जगह exception मिलेगा); lazy query पर <code>Count() &gt; 0</code>; और बड़ी tables पर बहुत बड़े offset वाला <code>Skip</code> — वहाँ <b>keyset paging</b> (<code>WHERE Id &gt; lastId</code>) use करो।</p>`,
-        hg: `<p><b>Analogy — railway reservation chart:</b> "Waiting list mein <b>pehla</b> passenger kaun hai?" — <b>First</b>. "Is <b>PNR</b> wala passenger dhoondho" — <b>theek ek</b> hona chahiye, do hon to bada bug hai — <b>Single</b>. "Kya <b>koi</b> berth khaali hai?" — pehli khaali berth milte hi ruk jao (<b>Any</b>); "<b>kitni</b> berths khaali hain?" — har berth check karni padegi (<b>Count</b>). "Is route ke <b>unique</b> stations batao" — <b>Distinct</b>. Aur chart <b>page by page</b> dikhaya jaata hai, hamesha coach aur berth ke order mein — <b>OrderBy + Skip/Take</b>.</p>
+<p>और operators — <code>Distinct</code>/<code>DistinctBy</code>, <code>MinBy</code>/<code>MaxBy</code>, <code>All</code>, keyset paging — नीचे के detailed sections में हैं।</p>
+<p><b>कब use करें:</b> <code>Single</code> जब duplicates का मतलब ख़राब data हो; <code>FirstOrDefault</code> जब "नहीं मिला" normal बात हो; "exists?" के लिए <code>Any</code>। <b>कब नहीं:</b> जब "नहीं मिला" expected हो तब <code>First()</code> — साफ़ 404 की जगह exception मिलेगा।</p>`,
+        hg: `<p><b>Analogy — railway reservation chart:</b> "Waiting list mein <b>pehla</b> passenger kaun hai?" — <b>First</b>. "Is <b>PNR</b> wala passenger dhoondho" — <b>theek ek</b> hona chahiye; do hon to bada bug hai — <b>Single</b>. "Kya <b>koi</b> berth khaali hai?" — pehli khaali berth par ruk jao — <b>Any</b>. Aur chart <b>page by page</b> dikhaya jaata hai, coach aur berth ke order mein — <b>OrderBy + Skip/Take</b>.</p>
 <ul>
-<li><b>First()</b> = pehla item; koi na ho to <b>throw</b> karta hai. <b>FirstOrDefault()</b> = pehla item ya <code>default</code> (classes ke liye <code>null</code>, <code>int</code> ke liye <code>0</code>). .NET 6 se apna default de sakte ho: <code>FirstOrDefault(x =&gt; ..., -1)</code>.</li>
-<li><b>Single()</b> = <b>iklauta</b> item; zero ya ek se zyada hon to throw. <b>SingleOrDefault()</b> = zero ho to default, par <b>ek se zyada hon to phir bhi throw</b>. Uniqueness <b>assert</b> karne ke liye <code>Single</code> use karo (unique key se lookup).</li>
-<li><b>Any()</b> = "kam se kam ek hai?" — pehla match milte hi ruk jaata hai. <b>Count()</b> = <b>saare</b> matching items se guzarta hai. "Exists?" wale checks ke liye <code>Any()</code> aapki baat saaf kehta hai aur jaldi ruk sakta hai. <code>List</code> ya array ke liye <b><code>Count</code>/<code>Length</code> property</b> use karo — woh pehle se stored hai.</li>
-<li><b>Distinct()</b> type ki equality (<code>Equals</code>/<code>GetHashCode</code>; records ke liye value equality) se duplicates hataata hai. <b>DistinctBy(x =&gt; x.Key)</b> (.NET 6) har key ka pehla item rakhta hai.</li>
-<li><b>Skip(n).Take(size)</b> = paging. Page <code>p</code> (1 se shuru) = <code>Skip((p - 1) * size).Take(size)</code>. <b>Pehle sort karo</b> — <code>ORDER BY</code> ke bina database rows ke kisi order ka waada nahi karta, isliye pages mein rows dohra sakti hain ya chhoot sakti hain.</li>
+<li><b>First()</b> = pehla match; koi na ho to <b>throw</b>. <b>Single()</b> = <b>iklauta</b> match; zero <b>ya</b> kai hon to throw — uniqueness assert karne ke liye (unique key se lookup).</li>
+<li><b>...OrDefault()</b> kuch match na ho to <code>default</code> deta hai (<code>null</code>, ya <code>int</code> ke liye <code>0</code>) — par <code>SingleOrDefault()</code> <b>duplicates par phir bhi throw</b> karta hai.</li>
+<li><b>Any()</b> poochhta hai "kam se kam ek hai?" aur pehle match par ruk jaata hai — existence checks ke liye sahi tool (<code>Count()</code> se poori tulna Q&amp;A mein).</li>
+<li><b>Paging</b>: <b>pehle sort karo</b>, phir <code>Skip((page - 1) * size).Take(size)</code>. <code>ORDER BY</code> ke bina database kisi row order ka waada nahi karta, isliye pages mein rows dohra sakti hain ya chhoot sakti hain.</li>
 </ul>
-<p><b>Kab use karein:</b> <code>Single</code> jab duplicates ka matlab kharaab data ho; <code>FirstOrDefault</code> jab "nahi mila" normal baat ho; existence checks ke liye <code>Any</code>; "har customer ka ek" ke liye <code>DistinctBy</code>; simple paging ke liye <code>OrderBy</code> + <code>Skip</code>/<code>Take</code>. <b>Kab nahi:</b> jab "nahi mila" expected ho tab <code>First()</code> (saaf 404 ki jagah exception milega); lazy query par <code>Count() &gt; 0</code>; aur badi tables par bahut bade offset wala <code>Skip</code> — wahan <b>keyset paging</b> (<code>WHERE Id &gt; lastId</code>) use karo.</p>`
+<p>Aur operators — <code>Distinct</code>/<code>DistinctBy</code>, <code>MinBy</code>/<code>MaxBy</code>, <code>All</code>, keyset paging — neeche ke detailed sections mein hain.</p>
+<p><b>Kab use karein:</b> <code>Single</code> jab duplicates ka matlab kharaab data ho; <code>FirstOrDefault</code> jab "nahi mila" normal baat ho; "exists?" ke liye <code>Any</code>. <b>Kab nahi:</b> jab "nahi mila" expected ho tab <code>First()</code> — saaf 404 ki jagah exception milega.</p>`
       }
     },
     {
@@ -437,7 +434,7 @@ class FakeDb
 <li><code>IQueryable&lt;T&gt;</code> has three parts: <code>Expression</code> (the tree so far), <code>ElementType</code>, and <code>Provider</code>. Each <code>Queryable</code> operator just <b>adds a node</b> to the tree. When you enumerate, the provider translates and executes it.</li>
 <li><b>The compile-time type picks the method</b>: on an <code>IQueryable&lt;T&gt;</code> variable, <code>Where(lambda)</code> binds to <code>Queryable.Where</code>. On an <code>IEnumerable&lt;T&gt;</code> variable — or when you pass a <b><code>Func</code> variable</b> — it binds to <code>Enumerable.Where</code>, and from there on everything runs in memory.</li>
 <li><b>Switching points</b>: <code>AsEnumerable()</code> = "from here on, LINQ to Objects" (still lazy, rows stream in); <code>ToList()</code> = run now and copy everything; <code>AsQueryable()</code> on a list = wraps it in an in-memory <code>IQueryable</code> (useful in tests and for dynamic queries, not for speed).</li>
-<li><b>Classic trap</b>: a repository method <code>Find(Func&lt;Order,bool&gt; filter)</code> that does <code>db.Orders.Where(filter)</code> compiles fine, but EF Core sends <code>SELECT * FROM Orders</code> and filters in memory. Use <code>Expression&lt;Func&lt;Order,bool&gt;&gt;</code>.</li>
+<li><b>Classic trap</b>: a repository method <code>Find(Func&lt;Order,bool&gt; filter)</code> that does <code>db.Orders.Where(filter)</code> compiles fine, but EF Core reads <b>all rows</b> of <code>Orders</code> (all columns, no <code>WHERE</code>) and filters in memory. Use <code>Expression&lt;Func&lt;Order,bool&gt;&gt;</code>.</li>
 <li>Day 5–6 show the SQL that EF Core generates (<code>ToQueryString()</code>, logging) and what it can and cannot translate.</li>
 </ul>
 <p><b>When to use:</b> <code>Expression&lt;Func&lt;...&gt;&gt;</code> parameters for filters that must run in the database (specifications, repository filters); <code>AsEnumerable()</code> when the last step needs a C# method SQL cannot run. <b>When not:</b> do not take <code>Expression</code> parameters for in-memory-only code (a plain <code>Func</code> is simpler and faster), and do not call <code>AsEnumerable()</code>/<code>ToList()</code> before the filters that the database could have done.</p>`,
@@ -449,7 +446,7 @@ class FakeDb
 <li><code>IQueryable&lt;T&gt;</code> के तीन हिस्से हैं: <code>Expression</code> (अब तक का tree), <code>ElementType</code>, और <code>Provider</code>। हर <code>Queryable</code> operator बस tree में एक <b>node जोड़ता है</b>। Enumerate करने पर provider उसे translate करके चलाता है।</li>
 <li><b>Compile-time type method चुनता है</b>: <code>IQueryable&lt;T&gt;</code> variable पर <code>Where(lambda)</code>, <code>Queryable.Where</code> से bind होता है। <code>IEnumerable&lt;T&gt;</code> variable पर — या जब आप <b><code>Func</code> variable</b> pass करते हो — यह <code>Enumerable.Where</code> से bind होता है, और वहाँ से सब कुछ memory में चलता है।</li>
 <li><b>Switching points</b>: <code>AsEnumerable()</code> = "यहाँ से आगे LINQ to Objects" (अब भी lazy, rows stream होकर आती हैं); <code>ToList()</code> = अभी चलाओ और सब copy करो; list पर <code>AsQueryable()</code> = उसे in-memory <code>IQueryable</code> में wrap करता है (tests और dynamic queries के लिए काम का, speed के लिए नहीं)।</li>
-<li><b>Classic trap</b>: repository method <code>Find(Func&lt;Order,bool&gt; filter)</code> जो <code>db.Orders.Where(filter)</code> करता है, compile तो हो जाता है, पर EF Core <code>SELECT * FROM Orders</code> भेजता है और filter memory में करता है। <code>Expression&lt;Func&lt;Order,bool&gt;&gt;</code> use करो।</li>
+<li><b>Classic trap</b>: repository method <code>Find(Func&lt;Order,bool&gt; filter)</code> जो <code>db.Orders.Where(filter)</code> करता है, compile तो हो जाता है, पर EF Core <code>Orders</code> की <b>सारी rows</b> पढ़ता है (सारे columns, कोई <code>WHERE</code> नहीं) और filter memory में करता है। <code>Expression&lt;Func&lt;Order,bool&gt;&gt;</code> use करो।</li>
 <li>Day 5–6 में दिखेगा कि EF Core कौन सा SQL बनाता है (<code>ToQueryString()</code>, logging) और क्या translate कर सकता है, क्या नहीं।</li>
 </ul>
 <p><b>कब use करें:</b> जो filters database में चलने चाहिए (specifications, repository filters), उनके लिए <code>Expression&lt;Func&lt;...&gt;&gt;</code> parameters; जब आख़िरी step में ऐसा C# method चाहिए जो SQL नहीं चला सकता, तब <code>AsEnumerable()</code>। <b>कब नहीं:</b> सिर्फ़ in-memory code के लिए <code>Expression</code> parameters मत लो (plain <code>Func</code> आसान और तेज़ है), और जो filters database कर सकता था, उनसे पहले <code>AsEnumerable()</code>/<code>ToList()</code> मत लगाओ।</p>`,
@@ -461,7 +458,7 @@ class FakeDb
 <li><code>IQueryable&lt;T&gt;</code> ke teen hisse hain: <code>Expression</code> (ab tak ka tree), <code>ElementType</code>, aur <code>Provider</code>. Har <code>Queryable</code> operator bas tree mein ek <b>node jodta hai</b>. Enumerate karne par provider use translate karke chalata hai.</li>
 <li><b>Compile-time type method chunta hai</b>: <code>IQueryable&lt;T&gt;</code> variable par <code>Where(lambda)</code>, <code>Queryable.Where</code> se bind hota hai. <code>IEnumerable&lt;T&gt;</code> variable par — ya jab aap <b><code>Func</code> variable</b> pass karte ho — yeh <code>Enumerable.Where</code> se bind hota hai, aur wahan se sab kuch memory mein chalta hai.</li>
 <li><b>Switching points</b>: <code>AsEnumerable()</code> = "yahan se aage LINQ to Objects" (ab bhi lazy, rows stream hokar aati hain); <code>ToList()</code> = abhi chalao aur sab copy karo; list par <code>AsQueryable()</code> = use in-memory <code>IQueryable</code> mein wrap karta hai (tests aur dynamic queries ke liye kaam ka, speed ke liye nahi).</li>
-<li><b>Classic trap</b>: repository method <code>Find(Func&lt;Order,bool&gt; filter)</code> jo <code>db.Orders.Where(filter)</code> karta hai, compile to ho jaata hai, par EF Core <code>SELECT * FROM Orders</code> bhejta hai aur filter memory mein karta hai. <code>Expression&lt;Func&lt;Order,bool&gt;&gt;</code> use karo.</li>
+<li><b>Classic trap</b>: repository method <code>Find(Func&lt;Order,bool&gt; filter)</code> jo <code>db.Orders.Where(filter)</code> karta hai, compile to ho jaata hai, par EF Core <code>Orders</code> ki <b>saari rows</b> padhta hai (saare columns, koi <code>WHERE</code> nahi) aur filter memory mein karta hai. <code>Expression&lt;Func&lt;Order,bool&gt;&gt;</code> use karo.</li>
 <li>Day 5–6 mein dikhega ki EF Core kaun sa SQL banata hai (<code>ToQueryString()</code>, logging) aur kya translate kar sakta hai, kya nahi.</li>
 </ul>
 <p><b>Kab use karein:</b> jo filters database mein chalne chahiye (specifications, repository filters), unke liye <code>Expression&lt;Func&lt;...&gt;&gt;</code> parameters; jab aakhri step mein aisa C# method chahiye jo SQL nahi chala sakta, tab <code>AsEnumerable()</code>. <b>Kab nahi:</b> sirf in-memory code ke liye <code>Expression</code> parameters mat lo (plain <code>Func</code> aasaan aur tez hai), aur jo filters database kar sakta tha, unse pehle <code>AsEnumerable()</code>/<code>ToList()</code> mat lagao.</p>`
@@ -613,7 +610,7 @@ record Order(int Id, string Customer, string[] Items);`
 <li><b>OrderBy / OrderByDescending</b> set the <b>primary</b> sort key. <b>ThenBy / ThenByDescending</b> add tie-breakers. <code>ThenBy</code> is available only after an <code>OrderBy</code> (it works on <code>IOrderedEnumerable&lt;T&gt;</code>).</li>
 <li><b>Calling OrderBy twice is a bug</b>: <code>OrderBy(p =&gt; p.Category).OrderBy(p =&gt; p.Price)</code> sorts by <b>Price</b>; the first sort only acts as a hidden tie-breaker (in memory) or may be ignored (in a database). Use <code>ThenBy</code>.</li>
 <li><b>Stable</b>: LINQ to Objects <code>OrderBy</code> is a stable sort — equal keys keep their original order. <code>List&lt;T&gt;.Sort()</code> and <code>Array.Sort()</code> are <b>not</b> stable.</li>
-<li>Sorting is <b>buffering</b>: it reads the whole source before giving the first item. For "the cheapest item" use <code>MinBy(p =&gt; p.Price)</code> (.NET 6) instead of <code>OrderBy(...).First()</code>. For plain values, <code>Order()</code> / <code>OrderDescending()</code> (.NET 7) sort by the value itself.</li>
+<li>Sorting is <b>buffering</b>: it reads the whole source before giving the first item. For "the cheapest item" in memory, <code>MinBy(p =&gt; p.Price)</code> (.NET 6) states the intent directly; modern .NET already runs <code>OrderBy(...).First()</code> as a single pass, so this is a readability choice. In an EF Core query, keep <code>OrderBy(...).First()</code>. For plain values, <code>Order()</code> / <code>OrderDescending()</code> (.NET 7) sort by the value itself.</li>
 <li><b>Paging</b>: <code>OrderBy(...).ThenBy(p =&gt; p.Id).Skip((page - 1) * size).Take(size)</code>. Sort by something <b>unique</b> (add the Id as the last tie-breaker) so every row has exactly one place. In EF Core on SQL Server this becomes <code>ORDER BY ... OFFSET ... ROWS FETCH NEXT ... ROWS ONLY</code>.</li>
 <li>Total pages = <code>(total + size - 1) / size</code>. The total needs its own <code>Count()</code> query.</li>
 <li><b>Deep pages are slow with OFFSET</b>: the database still reads and throws away all skipped rows. <b>Keyset (seek) paging</b> remembers the last key: <code>Where(p =&gt; p.Id &gt; lastId).OrderBy(p =&gt; p.Id).Take(size)</code> — fast at any depth, but no "jump to page 57".</li>
@@ -625,7 +622,7 @@ record Order(int Id, string Customer, string[] Items);`
 <li><b>OrderBy / OrderByDescending</b> <b>primary</b> sort key तय करते हैं। <b>ThenBy / ThenByDescending</b> tie-breakers जोड़ते हैं। <code>ThenBy</code> सिर्फ़ <code>OrderBy</code> के बाद मिलता है (यह <code>IOrderedEnumerable&lt;T&gt;</code> पर चलता है)।</li>
 <li><b>OrderBy दो बार लगाना bug है</b>: <code>OrderBy(p =&gt; p.Category).OrderBy(p =&gt; p.Price)</code> <b>Price</b> से sort करता है; पहला sort सिर्फ़ छुपे हुए tie-breaker की तरह काम करता है (memory में) या ignore हो सकता है (database में)। <code>ThenBy</code> use करो।</li>
 <li><b>Stable</b>: LINQ to Objects का <code>OrderBy</code> stable sort है — बराबर keys अपना original order रखती हैं। <code>List&lt;T&gt;.Sort()</code> और <code>Array.Sort()</code> stable <b>नहीं</b> हैं।</li>
-<li>Sorting <b>buffering</b> है: पहला item देने से पहले पूरा source पढ़ता है। "सबसे सस्ता item" के लिए <code>OrderBy(...).First()</code> की जगह <code>MinBy(p =&gt; p.Price)</code> (.NET 6) use करो। Plain values के लिए <code>Order()</code> / <code>OrderDescending()</code> (.NET 7) value से ही sort करते हैं।</li>
+<li>Sorting <b>buffering</b> है: पहला item देने से पहले पूरा source पढ़ता है। Memory में "सबसे सस्ता item" के लिए <code>MinBy(p =&gt; p.Price)</code> (.NET 6) इरादा सीधे बताता है; modern .NET <code>OrderBy(...).First()</code> को पहले से एक ही pass में चलाता है, इसलिए यह readability का फ़ैसला है। EF Core query में <code>OrderBy(...).First()</code> ही रखो। Plain values के लिए <code>Order()</code> / <code>OrderDescending()</code> (.NET 7) value से ही sort करते हैं।</li>
 <li><b>Paging</b>: <code>OrderBy(...).ThenBy(p =&gt; p.Id).Skip((page - 1) * size).Take(size)</code>। किसी <b>unique</b> चीज़ से sort करो (आख़िरी tie-breaker के रूप में Id जोड़ो) ताकि हर row की एक ही जगह हो। SQL Server पर EF Core में यह <code>ORDER BY ... OFFSET ... ROWS FETCH NEXT ... ROWS ONLY</code> बनता है।</li>
 <li>Total pages = <code>(total + size - 1) / size</code>। Total के लिए अलग <code>Count()</code> query चाहिए।</li>
 <li><b>OFFSET से गहरे pages धीमे होते हैं</b>: database skip होने वाली सारी rows पढ़कर फेंकता है। <b>Keyset (seek) paging</b> आख़िरी key याद रखता है: <code>Where(p =&gt; p.Id &gt; lastId).OrderBy(p =&gt; p.Id).Take(size)</code> — किसी भी depth पर तेज़, पर "page 57 पर jump" नहीं।</li>
@@ -637,7 +634,7 @@ record Order(int Id, string Customer, string[] Items);`
 <li><b>OrderBy / OrderByDescending</b> <b>primary</b> sort key tay karte hain. <b>ThenBy / ThenByDescending</b> tie-breakers jodte hain. <code>ThenBy</code> sirf <code>OrderBy</code> ke baad milta hai (yeh <code>IOrderedEnumerable&lt;T&gt;</code> par chalta hai).</li>
 <li><b>OrderBy do baar lagana bug hai</b>: <code>OrderBy(p =&gt; p.Category).OrderBy(p =&gt; p.Price)</code> <b>Price</b> se sort karta hai; pehla sort sirf chhupe hue tie-breaker ki tarah kaam karta hai (memory mein) ya ignore ho sakta hai (database mein). <code>ThenBy</code> use karo.</li>
 <li><b>Stable</b>: LINQ to Objects ka <code>OrderBy</code> stable sort hai — barabar keys apna original order rakhti hain. <code>List&lt;T&gt;.Sort()</code> aur <code>Array.Sort()</code> stable <b>nahi</b> hain.</li>
-<li>Sorting <b>buffering</b> hai: pehla item dene se pehle poora source padhta hai. "Sabse sasta item" ke liye <code>OrderBy(...).First()</code> ki jagah <code>MinBy(p =&gt; p.Price)</code> (.NET 6) use karo. Plain values ke liye <code>Order()</code> / <code>OrderDescending()</code> (.NET 7) value se hi sort karte hain.</li>
+<li>Sorting <b>buffering</b> hai: pehla item dene se pehle poora source padhta hai. Memory mein "sabse sasta item" ke liye <code>MinBy(p =&gt; p.Price)</code> (.NET 6) iraada seedhe batata hai; modern .NET <code>OrderBy(...).First()</code> ko pehle se ek hi pass mein chalata hai, isliye yeh readability ka faisla hai. EF Core query mein <code>OrderBy(...).First()</code> hi rakho. Plain values ke liye <code>Order()</code> / <code>OrderDescending()</code> (.NET 7) value se hi sort karte hain.</li>
 <li><b>Paging</b>: <code>OrderBy(...).ThenBy(p =&gt; p.Id).Skip((page - 1) * size).Take(size)</code>. Kisi <b>unique</b> cheez se sort karo (aakhri tie-breaker ke roop mein Id jodo) taaki har row ki ek hi jagah ho. SQL Server par EF Core mein yeh <code>ORDER BY ... OFFSET ... ROWS FETCH NEXT ... ROWS ONLY</code> banta hai.</li>
 <li>Total pages = <code>(total + size - 1) / size</code>. Total ke liye alag <code>Count()</code> query chahiye.</li>
 <li><b>OFFSET se gehre pages dheeme hote hain</b>: database skip hone wali saari rows padhkar phenkta hai. <b>Keyset (seek) paging</b> aakhri key yaad rakhta hai: <code>Where(p =&gt; p.Id &gt; lastId).OrderBy(p =&gt; p.Id).Take(size)</code> — kisi bhi depth par tez, par "page 57 par jump" nahi.</li>
@@ -909,9 +906,9 @@ var right = customers.RightJoin(orders,
 <ul>
 <li><b>First / Last</b>: throw <code>InvalidOperationException</code> if nothing matches ("Sequence contains no matching element"). <b>FirstOrDefault / LastOrDefault</b>: return <code>default</code> instead.</li>
 <li><b>Single</b>: throws if zero <b>or</b> more than one match. <b>SingleOrDefault</b>: default for zero, but still throws for two or more ("Sequence contains more than one matching element").</li>
-<li><b>Cost</b>: <code>First</code> stops at the first match. <code>Single</code> must keep looking for a <b>second</b> match, so it reads further (in EF Core, <code>First</code> becomes <code>TOP(1)</code> and <code>Single</code> becomes <code>TOP(2)</code>).</li>
+<li><b>Cost</b>: <code>First</code> stops at the first match. <code>Single</code> must keep looking for a <b>second</b> match, so it reads further (in EF Core on SQL Server, <code>First</code> becomes <code>TOP(1)</code> and <code>Single</code> becomes <code>TOP(2)</code>).</li>
 <li><b>The value-type trap</b>: <code>scores.FirstOrDefault(s =&gt; s &gt; 95)</code> returns <b>0</b> when nothing matches — but 0 could also be a real score. .NET 6 added overloads with your own default: <code>FirstOrDefault(s =&gt; s &gt; 95, -1)</code>. For classes, check for <code>null</code> before using the result.</li>
-<li><b>Any vs Count</b>: <code>Any()</code> stops at the first match; <code>Count()</code> visits every item. For collections, the <b><code>Count</code>/<code>Length</code> property</b> is free. Analyzers: <b>CA1827</b> (use <code>Any()</code> instead of <code>Count()</code> for existence), <b>CA1829</b> (use the <code>Count</code> property instead of <code>Count()</code>), <b>CA1860</b> (prefer <code>Count</code>/<code>Length</code> over <code>Any()</code> on collections).</li>
+<li><b>Any vs Count</b>: <code>Any()</code> stops at the first match; <code>Count()</code> on a lazy or filtered query walks every item. The full comparison (EF Core, collections, analyzers) is in the Q&amp;A "Any() or Count() &gt; 0".</li>
 <li><b>All</b> returns <code>true</code> for an <b>empty</b> sequence ("nobody failed" is true when there is nobody). A classic trick question.</li>
 <li><b>Empty sequences</b>: <code>Sum()</code> gives 0; <code>Min()</code>, <code>Max()</code>, <code>Average()</code> on non-nullable numbers <b>throw</b>; on nullable numbers (<code>int?</code>) they return <code>null</code>.</li>
 <li><b>MinBy / MaxBy</b> (.NET 6) return the <b>item</b> with the smallest/largest key. <code>Min</code>/<code>Max</code> return the <b>value</b>.</li>
@@ -921,9 +918,9 @@ var right = customers.RightJoin(orders,
 <ul>
 <li><b>First / Last</b>: कुछ match न हो तो <code>InvalidOperationException</code> throw करते हैं ("Sequence contains no matching element")। <b>FirstOrDefault / LastOrDefault</b>: उसकी जगह <code>default</code> return करते हैं।</li>
 <li><b>Single</b>: zero <b>या</b> एक से ज़्यादा match पर throw। <b>SingleOrDefault</b>: zero पर default, पर दो या ज़्यादा पर फिर भी throw ("Sequence contains more than one matching element")।</li>
-<li><b>Cost</b>: <code>First</code> पहले match पर रुक जाता है। <code>Single</code> को <b>दूसरा</b> match भी ढूँढना पड़ता है, इसलिए आगे तक पढ़ता है (EF Core में <code>First</code>, <code>TOP(1)</code> बनता है और <code>Single</code>, <code>TOP(2)</code>)।</li>
+<li><b>Cost</b>: <code>First</code> पहले match पर रुक जाता है। <code>Single</code> को <b>दूसरा</b> match भी ढूँढना पड़ता है, इसलिए आगे तक पढ़ता है (SQL Server पर EF Core में <code>First</code>, <code>TOP(1)</code> बनता है और <code>Single</code>, <code>TOP(2)</code>)।</li>
 <li><b>Value-type का जाल</b>: <code>scores.FirstOrDefault(s =&gt; s &gt; 95)</code> कुछ match न होने पर <b>0</b> देता है — पर 0 असली score भी हो सकता है। .NET 6 में अपने default वाले overloads आए: <code>FirstOrDefault(s =&gt; s &gt; 95, -1)</code>। Classes के लिए result use करने से पहले <code>null</code> check करो।</li>
-<li><b>Any बनाम Count</b>: <code>Any()</code> पहले match पर रुकता है; <code>Count()</code> हर item देखता है। Collections के लिए <b><code>Count</code>/<code>Length</code> property</b> मुफ़्त है। Analyzers: <b>CA1827</b> (existence के लिए <code>Count()</code> की जगह <code>Any()</code>), <b>CA1829</b> (<code>Count()</code> की जगह <code>Count</code> property), <b>CA1860</b> (collections पर <code>Any()</code> की जगह <code>Count</code>/<code>Length</code>)।</li>
+<li><b>Any बनाम Count</b>: <code>Any()</code> पहले match पर रुकता है; lazy या filtered query पर <code>Count()</code> हर item से गुज़रता है। पूरी तुलना (EF Core, collections, analyzers) Q&amp;A "Any() or Count() &gt; 0" में है।</li>
 <li><b>All</b> <b>खाली</b> sequence पर <code>true</code> देता है ("कोई fail नहीं हुआ" तब भी true है जब कोई है ही नहीं)। Classic trick question।</li>
 <li><b>खाली sequences</b>: <code>Sum()</code> 0 देता है; non-nullable numbers पर <code>Min()</code>, <code>Max()</code>, <code>Average()</code> <b>throw</b> करते हैं; nullable numbers (<code>int?</code>) पर <code>null</code> return करते हैं।</li>
 <li><b>MinBy / MaxBy</b> (.NET 6) सबसे छोटी/बड़ी key वाला <b>item</b> देते हैं। <code>Min</code>/<code>Max</code> <b>value</b> देते हैं।</li>
@@ -933,9 +930,9 @@ var right = customers.RightJoin(orders,
 <ul>
 <li><b>First / Last</b>: kuch match na ho to <code>InvalidOperationException</code> throw karte hain ("Sequence contains no matching element"). <b>FirstOrDefault / LastOrDefault</b>: uski jagah <code>default</code> return karte hain.</li>
 <li><b>Single</b>: zero <b>ya</b> ek se zyada match par throw. <b>SingleOrDefault</b>: zero par default, par do ya zyada par phir bhi throw ("Sequence contains more than one matching element").</li>
-<li><b>Cost</b>: <code>First</code> pehle match par ruk jaata hai. <code>Single</code> ko <b>doosra</b> match bhi dhoondhna padta hai, isliye aage tak padhta hai (EF Core mein <code>First</code>, <code>TOP(1)</code> banta hai aur <code>Single</code>, <code>TOP(2)</code>).</li>
+<li><b>Cost</b>: <code>First</code> pehle match par ruk jaata hai. <code>Single</code> ko <b>doosra</b> match bhi dhoondhna padta hai, isliye aage tak padhta hai (SQL Server par EF Core mein <code>First</code>, <code>TOP(1)</code> banta hai aur <code>Single</code>, <code>TOP(2)</code>).</li>
 <li><b>Value-type ka jaal</b>: <code>scores.FirstOrDefault(s =&gt; s &gt; 95)</code> kuch match na hone par <b>0</b> deta hai — par 0 asli score bhi ho sakta hai. .NET 6 mein apne default wale overloads aaye: <code>FirstOrDefault(s =&gt; s &gt; 95, -1)</code>. Classes ke liye result use karne se pehle <code>null</code> check karo.</li>
-<li><b>Any vs Count</b>: <code>Any()</code> pehle match par rukta hai; <code>Count()</code> har item dekhta hai. Collections ke liye <b><code>Count</code>/<code>Length</code> property</b> muft hai. Analyzers: <b>CA1827</b> (existence ke liye <code>Count()</code> ki jagah <code>Any()</code>), <b>CA1829</b> (<code>Count()</code> ki jagah <code>Count</code> property), <b>CA1860</b> (collections par <code>Any()</code> ki jagah <code>Count</code>/<code>Length</code>).</li>
+<li><b>Any vs Count</b>: <code>Any()</code> pehle match par rukta hai; lazy ya filtered query par <code>Count()</code> har item se guzarta hai. Poori tulna (EF Core, collections, analyzers) Q&amp;A "Any() or Count() &gt; 0" mein hai.</li>
 <li><b>All</b> <b>khaali</b> sequence par <code>true</code> deta hai ("koi fail nahi hua" tab bhi true hai jab koi hai hi nahi). Classic trick question.</li>
 <li><b>Khaali sequences</b>: <code>Sum()</code> 0 deta hai; non-nullable numbers par <code>Min()</code>, <code>Max()</code>, <code>Average()</code> <b>throw</b> karte hain; nullable numbers (<code>int?</code>) par <code>null</code> return karte hain.</li>
 <li><b>MinBy / MaxBy</b> (.NET 6) sabse chhoti/badi key wala <b>item</b> dete hain. <code>Min</code>/<code>Max</code> <b>value</b> dete hain.</li>
@@ -1010,7 +1007,7 @@ record User(int Id, string Email, bool Active);`
 <li><b>Aggregate</b> = a general "fold": <code>Aggregate(seed, (acc, x) =&gt; ...)</code>. Without a seed, the first item is the seed — and an <b>empty</b> sequence then throws. For sums, counts and joins of strings, the specialised methods (<code>Sum</code>, <code>Count</code>, <code>string.Join</code>) are clearer and usually faster.</li>
 <li><b>Index()</b> (.NET 9) returns <code>(Index, Item)</code> tuples — a cleaner way to get the position than <code>Select((x, i) =&gt; ...)</code>.</li>
 </ul>
-<p><b>When to use:</b> <code>Distinct</code> for unique simple values or records; <code>DistinctBy</code> for "one per key"; set operators to compare two lists (new vs old IDs); <code>Aggregate</code> for custom folds that have no built-in method. <b>When not:</b> <code>Distinct</code> on classes without equality (it silently removes nothing); <code>Aggregate</code> with string concatenation on big lists (O(n²) copying — use <code>string.Join</code> or <code>StringBuilder</code>); clever <code>Aggregate</code> one-liners that a plain loop would make readable.</p>`,
+<p><b>When to use:</b> <code>Distinct</code> for unique simple values or records; <code>DistinctBy</code> for "one per key"; set operators to compare two lists (new vs old IDs); <code>Aggregate</code> for custom folds that have no built-in method. <b>When not:</b> <code>Distinct</code> on classes without equality (it removes only same-instance duplicates); <code>Aggregate</code> with string concatenation on big lists (O(n²) copying — use <code>string.Join</code> or <code>StringBuilder</code>); clever <code>Aggregate</code> one-liners that a plain loop would make readable.</p>`,
         hi: `<p><b>Analogy — शादी की guest list और दुकान का गल्ला:</b> दुल्हन और दूल्हे, दोनों के परिवार guest lists भेजते हैं, और कुछ चाचा-मामा <b>दोनों</b> में हैं। दोहराव हटाना है <b>Distinct</b>। पर "वही इंसान" के लिए एक rule चाहिए: नाम एक जैसा? phone number एक जैसा? वो rule है <b>equality</b> — या वो key जो आप <b>DistinctBy</b> को देते हो। दिन के आख़िर में दुकानदार ख़ाली <b>गल्ले</b> से शुरू करता है और हर sale एक-एक करके जोड़कर दिन का total निकालता है — यही running fold है <b>Aggregate</b>।</p>
 <ul>
 <li><b>Distinct()</b> type का <code>Equals</code>/<code>GetHashCode</code> use करता है। <b>Records</b> (और anonymous types, tuples) <b>value</b> से compare होते हैं, इसलिए duplicates हट जाते हैं। Normal <b>class</b> <b>reference</b> से compare होती है, इसलिए एक जैसे data वाले दो objects दोनों रह जाते हैं — जब तक आप equality override न करो या <code>IEqualityComparer&lt;T&gt;</code> pass न करो।</li>
@@ -1021,7 +1018,7 @@ record User(int Id, string Email, bool Active);`
 <li><b>Aggregate</b> = एक general "fold": <code>Aggregate(seed, (acc, x) =&gt; ...)</code>। Seed न दो तो पहला item ही seed बनता है — और तब <b>खाली</b> sequence पर throw होता है। Sums, counts और strings जोड़ने के लिए specialised methods (<code>Sum</code>, <code>Count</code>, <code>string.Join</code>) ज़्यादा साफ़ और आमतौर पर तेज़ हैं।</li>
 <li><b>Index()</b> (.NET 9) <code>(Index, Item)</code> tuples देता है — position पाने का <code>Select((x, i) =&gt; ...)</code> से साफ़ तरीका।</li>
 </ul>
-<p><b>कब use करें:</b> unique simple values या records के लिए <code>Distinct</code>; "हर key का एक" के लिए <code>DistinctBy</code>; दो lists compare करने के लिए set operators (नए बनाम पुराने IDs); ऐसे custom folds के लिए <code>Aggregate</code> जिनका कोई built-in method नहीं। <b>कब नहीं:</b> बिना equality वाली classes पर <code>Distinct</code> (चुपचाप कुछ नहीं हटाता); बड़ी lists पर string जोड़ने वाला <code>Aggregate</code> (O(n²) copying — <code>string.Join</code> या <code>StringBuilder</code> use करो); ऐसे चालाक <code>Aggregate</code> one-liners जिन्हें plain loop पढ़ने लायक बना देता।</p>`,
+<p><b>कब use करें:</b> unique simple values या records के लिए <code>Distinct</code>; "हर key का एक" के लिए <code>DistinctBy</code>; दो lists compare करने के लिए set operators (नए बनाम पुराने IDs); ऐसे custom folds के लिए <code>Aggregate</code> जिनका कोई built-in method नहीं। <b>कब नहीं:</b> बिना equality वाली classes पर <code>Distinct</code> (यह सिर्फ़ same-instance duplicates हटाता है); बड़ी lists पर string जोड़ने वाला <code>Aggregate</code> (O(n²) copying — <code>string.Join</code> या <code>StringBuilder</code> use करो); ऐसे चालाक <code>Aggregate</code> one-liners जिन्हें plain loop पढ़ने लायक बना देता।</p>`,
         hg: `<p><b>Analogy — shaadi ki guest list aur dukaan ka galla:</b> dulhan aur dulhe, dono ke parivaar guest lists bhejte hain, aur kuch chacha-mama <b>dono</b> mein hain. Dohraav hataana hai <b>Distinct</b>. Par "wahi insaan" ke liye ek rule chahiye: naam ek jaisa? phone number ek jaisa? Woh rule hai <b>equality</b> — ya woh key jo aap <b>DistinctBy</b> ko dete ho. Din ke aakhir mein dukaandaar khaali <b>galle</b> se shuru karta hai aur har sale ek-ek karke jodkar din ka total nikaalta hai — yahi running fold hai <b>Aggregate</b>.</p>
 <ul>
 <li><b>Distinct()</b> type ka <code>Equals</code>/<code>GetHashCode</code> use karta hai. <b>Records</b> (aur anonymous types, tuples) <b>value</b> se compare hote hain, isliye duplicates hat jaate hain. Normal <b>class</b> <b>reference</b> se compare hoti hai, isliye ek jaise data wale do objects dono reh jaate hain — jab tak aap equality override na karo ya <code>IEqualityComparer&lt;T&gt;</code> pass na karo.</li>
@@ -1032,7 +1029,7 @@ record User(int Id, string Email, bool Active);`
 <li><b>Aggregate</b> = ek general "fold": <code>Aggregate(seed, (acc, x) =&gt; ...)</code>. Seed na do to pehla item hi seed banta hai — aur tab <b>khaali</b> sequence par throw hota hai. Sums, counts aur strings jodne ke liye specialised methods (<code>Sum</code>, <code>Count</code>, <code>string.Join</code>) zyada saaf aur aamtaur par tez hain.</li>
 <li><b>Index()</b> (.NET 9) <code>(Index, Item)</code> tuples deta hai — position paane ka <code>Select((x, i) =&gt; ...)</code> se saaf tareeka.</li>
 </ul>
-<p><b>Kab use karein:</b> unique simple values ya records ke liye <code>Distinct</code>; "har key ka ek" ke liye <code>DistinctBy</code>; do lists compare karne ke liye set operators (naye vs purane IDs); aise custom folds ke liye <code>Aggregate</code> jinka koi built-in method nahi. <b>Kab nahi:</b> bina equality wali classes par <code>Distinct</code> (chupchaap kuch nahi hataata); badi lists par string jodne wala <code>Aggregate</code> (O(n²) copying — <code>string.Join</code> ya <code>StringBuilder</code> use karo); aise chaalak <code>Aggregate</code> one-liners jinhe plain loop padhne laayak bana deta.</p>`
+<p><b>Kab use karein:</b> unique simple values ya records ke liye <code>Distinct</code>; "har key ka ek" ke liye <code>DistinctBy</code>; do lists compare karne ke liye set operators (naye vs purane IDs); aise custom folds ke liye <code>Aggregate</code> jinka koi built-in method nahi. <b>Kab nahi:</b> bina equality wali classes par <code>Distinct</code> (yeh sirf same-instance duplicates hataata hai); badi lists par string jodne wala <code>Aggregate</code> (O(n²) copying — <code>string.Join</code> ya <code>StringBuilder</code> use karo); aise chaalak <code>Aggregate</code> one-liners jinhe plain loop padhne laayak bana deta.</p>`
       },
       code: [{
         caption: {
@@ -1098,17 +1095,7 @@ class CityClass(string name)
 <li><b>When a plain loop is better</b>: hot paths that run millions of times (parsers, pricing engines, tight per-item loops); computing <b>several</b> aggregates in one pass (<code>Sum</code> + <code>Count</code> + <code>Max</code> in LINQ = three passes); complex early exits or state; and changing items in place.</li>
 <li><b>Readability matters too</b>: a 15-operator chain nobody can debug is worse than three named steps (<code>var paidOrders = ...; var byCity = ...;</code>).</li>
 </ul>
-<p><b>Code-review red flags</b> (what a Tech Lead looks for):</p>
-<ul>
-<li>A method with an <code>IEnumerable&lt;T&gt;</code> parameter that enumerates it <b>twice</b> (<code>Count()</code> then <code>foreach</code>) — CA1851.</li>
-<li><code>Count()</code> or <code>ElementAt(i)</code> inside a loop over a lazy query.</li>
-<li><code>Count() &gt; 0</code> instead of <code>Any()</code> (CA1827), or <code>Count()</code> on a <code>List</code>/array instead of the property (CA1829).</li>
-<li><b><code>ToList()</code> too early</b>: <code>db.Orders.ToList().Where(...)</code> loads the whole table, then filters in memory.</li>
-<li><b><code>ToList()</code> too late (or never)</b>: returning a deferred EF query from a method whose <code>DbContext</code> is disposed — it fails later with "Cannot access a disposed context instance"; or a deferred query enumerated in three places.</li>
-<li><code>First</code>/<code>Where</code>/<code>Single</code> on a list <b>inside a loop</b> (O(n × m)) — build a <code>Dictionary</code> or <code>ToLookup</code> once.</li>
-<li>Side effects inside <code>Select</code>/<code>Where</code> (logging, updating state, sending messages).</li>
-<li><code>OrderBy(...).OrderBy(...)</code> instead of <code>ThenBy</code>; <code>Single</code> on a non-unique column; <code>FirstOrDefault()</code> used without a null check.</li>
-</ul>
+<p><b>Code-review red flags</b>: the full checklist is in the Q&amp;A "As a Tech Lead, what LINQ problems do you look for in code review?". The demo below shows one of them — a <code>First()</code> lookup inside a loop — and its fix.</p>
 <p><b>When to use</b> LINQ: business logic, mapping, filtering, reports, EF Core queries — clarity wins. <b>When not:</b> measured hot paths, multi-aggregate single passes, and code with heavy side effects — use a loop and leave a short comment saying why.</p>`,
         hi: `<p><b>Analogy — auto-rickshaw बनाम पैदल:</b> 3 km के सफ़र के लिए auto आरामदायक और काफ़ी तेज़ है — कोई "petrol बचाने" के लिए पैदल नहीं जाता। पर भीड़ वाली गली के आख़िरी 50 meter में auto घुसाने से पैदल चलना जल्दी है। LINQ auto है: ज़्यादातर code के लिए सही default। Plain loop पैदल चलना है: गिनी-चुनी hot, tight जगहों के लिए बेहतर। और बहस से पहले <b>सफ़र नापो</b> (profiler या BenchmarkDotNet)।</p>
 <ul>
@@ -1117,17 +1104,7 @@ class CityClass(string name)
 <li><b>Plain loop कब बेहतर है</b>: लाखों बार चलने वाले hot paths (parsers, pricing engines, tight per-item loops); एक ही pass में <b>कई</b> aggregates निकालना (LINQ में <code>Sum</code> + <code>Count</code> + <code>Max</code> = तीन passes); complex early exits या state; और items को वहीं बदलना।</li>
 <li><b>Readability भी ज़रूरी है</b>: 15 operators की chain जिसे कोई debug न कर सके, तीन named steps से बदतर है (<code>var paidOrders = ...; var byCity = ...;</code>)।</li>
 </ul>
-<p><b>Code-review red flags</b> (Tech Lead क्या देखता है):</p>
-<ul>
-<li><code>IEnumerable&lt;T&gt;</code> parameter वाला method जो उसे <b>दो बार</b> enumerate करे (<code>Count()</code> फिर <code>foreach</code>) — CA1851।</li>
-<li>Lazy query पर loop के अंदर <code>Count()</code> या <code>ElementAt(i)</code>।</li>
-<li><code>Any()</code> की जगह <code>Count() &gt; 0</code> (CA1827), या <code>List</code>/array पर property की जगह <code>Count()</code> (CA1829)।</li>
-<li><b><code>ToList()</code> बहुत जल्दी</b>: <code>db.Orders.ToList().Where(...)</code> पूरी table load करता है, फिर memory में filter।</li>
-<li><b><code>ToList()</code> बहुत देर से (या कभी नहीं)</b>: ऐसे method से deferred EF query return करना जिसका <code>DbContext</code> dispose हो चुका है — बाद में "Cannot access a disposed context instance" से fail होता है; या एक deferred query जो तीन जगह enumerate होती है।</li>
-<li>List पर <b>loop के अंदर</b> <code>First</code>/<code>Where</code>/<code>Single</code> (O(n × m)) — एक बार <code>Dictionary</code> या <code>ToLookup</code> बनाओ।</li>
-<li><code>Select</code>/<code>Where</code> के अंदर side effects (logging, state update करना, messages भेजना)।</li>
-<li><code>ThenBy</code> की जगह <code>OrderBy(...).OrderBy(...)</code>; non-unique column पर <code>Single</code>; बिना null check के <code>FirstOrDefault()</code> का use।</li>
-</ul>
+<p><b>Code-review red flags</b>: पूरी checklist Q&amp;A "As a Tech Lead, what LINQ problems do you look for in code review?" में है। नीचे का demo उनमें से एक दिखाता है — loop के अंदर <code>First()</code> lookup — और उसका fix।</p>
 <p><b>कब use करें</b> LINQ: business logic, mapping, filtering, reports, EF Core queries — यहाँ clarity जीतती है। <b>कब नहीं:</b> measured hot paths, एक pass में कई aggregates, और भारी side effects वाला code — loop use करो और एक छोटा comment छोड़ो कि क्यों।</p>`,
         hg: `<p><b>Analogy — auto-rickshaw vs paidal:</b> 3 km ke safar ke liye auto aaraamdaayak aur kaafi tez hai — koi "petrol bachane" ke liye paidal nahi jaata. Par bheed wali gali ke aakhri 50 meter mein auto ghusaane se paidal chalna jaldi hai. LINQ auto hai: zyadatar code ke liye sahi default. Plain loop paidal chalna hai: gini-chuni hot, tight jagahon ke liye behtar. Aur behes se pehle <b>safar naapo</b> (profiler ya BenchmarkDotNet).</p>
 <ul>
@@ -1136,17 +1113,7 @@ class CityClass(string name)
 <li><b>Plain loop kab behtar hai</b>: laakhon baar chalne wale hot paths (parsers, pricing engines, tight per-item loops); ek hi pass mein <b>kai</b> aggregates nikaalna (LINQ mein <code>Sum</code> + <code>Count</code> + <code>Max</code> = teen passes); complex early exits ya state; aur items ko wahin badalna.</li>
 <li><b>Readability bhi zaroori hai</b>: 15 operators ki chain jise koi debug na kar sake, teen named steps se badtar hai (<code>var paidOrders = ...; var byCity = ...;</code>).</li>
 </ul>
-<p><b>Code-review red flags</b> (Tech Lead kya dekhta hai):</p>
-<ul>
-<li><code>IEnumerable&lt;T&gt;</code> parameter wala method jo use <b>do baar</b> enumerate kare (<code>Count()</code> phir <code>foreach</code>) — CA1851.</li>
-<li>Lazy query par loop ke andar <code>Count()</code> ya <code>ElementAt(i)</code>.</li>
-<li><code>Any()</code> ki jagah <code>Count() &gt; 0</code> (CA1827), ya <code>List</code>/array par property ki jagah <code>Count()</code> (CA1829).</li>
-<li><b><code>ToList()</code> bahut jaldi</b>: <code>db.Orders.ToList().Where(...)</code> poori table load karta hai, phir memory mein filter.</li>
-<li><b><code>ToList()</code> bahut der se (ya kabhi nahi)</b>: aise method se deferred EF query return karna jiska <code>DbContext</code> dispose ho chuka hai — baad mein "Cannot access a disposed context instance" se fail hota hai; ya ek deferred query jo teen jagah enumerate hoti hai.</li>
-<li>List par <b>loop ke andar</b> <code>First</code>/<code>Where</code>/<code>Single</code> (O(n × m)) — ek baar <code>Dictionary</code> ya <code>ToLookup</code> banao.</li>
-<li><code>Select</code>/<code>Where</code> ke andar side effects (logging, state update karna, messages bhejna).</li>
-<li><code>ThenBy</code> ki jagah <code>OrderBy(...).OrderBy(...)</code>; non-unique column par <code>Single</code>; bina null check ke <code>FirstOrDefault()</code> ka use.</li>
-</ul>
+<p><b>Code-review red flags</b>: poori checklist Q&amp;A "As a Tech Lead, what LINQ problems do you look for in code review?" mein hai. Neeche ka demo unmein se ek dikhata hai — loop ke andar <code>First()</code> lookup — aur uska fix.</p>
 <p><b>Kab use karein</b> LINQ: business logic, mapping, filtering, reports, EF Core queries — yahan clarity jeetti hai. <b>Kab nahi:</b> measured hot paths, ek pass mein kai aggregates, aur bhaari side effects wala code — loop use karo aur ek chhota comment chhodo ki kyon.</p>`
       },
       code: [{
@@ -1250,7 +1217,7 @@ record Customer(int Id, string Name);`
 <li><code>Enumerable.Where(Func&lt;T,bool&gt;)</code> vs <code>Queryable.Where(Expression&lt;Func&lt;T,bool&gt;&gt;)</code>. Same lambda text — different target types.</li>
 <li><code>IQueryable&lt;T&gt;</code> inherits <code>IEnumerable&lt;T&gt;</code>. The <b>compile-time type</b> of your variable decides which <code>Where</code> is called. Once the query is treated as <code>IEnumerable</code> (variable type, <code>AsEnumerable()</code>, <code>ToList()</code>), the rest runs in memory.</li>
 <li>Both are deferred. <code>IQueryable</code> is executed by its <b>provider</b> when enumerated (EF Core: translate → run SQL → materialize objects).</li>
-<li>Example: <code>db.Orders.Where(o =&gt; o.Total &gt; 500).ToList()</code> → SQL <code>WHERE</code>. But <code>db.Orders.AsEnumerable().Where(...)</code> → <code>SELECT *</code>, then filter in C#.</li>
+<li>Example: <code>db.Orders.Where(o =&gt; o.Total &gt; 500).ToList()</code> → SQL <code>WHERE</code>. But <code>db.Orders.AsEnumerable().Where(...)</code> → all rows and all columns, then filter in C#.</li>
 </ul>
 <p>Follow-up: "Then why not use IQueryable everywhere?" — Not every C# method can be translated, the query's shape becomes visible to all layers, and in-memory data does not need it. Keep it inside the data-access layer.</p>
 <p><b>TL angle:</b> in code review, look for <code>IEnumerable&lt;T&gt;</code> parameters or <code>Func</code> filters on repository methods that wrap EF Core — they silently move filtering to memory. Day 5–6 show the generated SQL.</p>`,
@@ -1258,7 +1225,7 @@ record Customer(int Id, string Name);`
 <li><code>Enumerable.Where(Func&lt;T,bool&gt;)</code> बनाम <code>Queryable.Where(Expression&lt;Func&lt;T,bool&gt;&gt;)</code>। Lambda का text वही — target types अलग।</li>
 <li><code>IQueryable&lt;T&gt;</code>, <code>IEnumerable&lt;T&gt;</code> को inherit करता है। आपके variable का <b>compile-time type</b> तय करता है कि कौन सा <code>Where</code> call होगा। जैसे ही query <code>IEnumerable</code> की तरह treat हुई (variable type, <code>AsEnumerable()</code>, <code>ToList()</code>), बाकी सब memory में चलता है।</li>
 <li>दोनों deferred हैं। <code>IQueryable</code> enumerate होने पर अपने <b>provider</b> से चलता है (EF Core: translate → SQL चलाओ → objects materialize करो)।</li>
-<li>Example: <code>db.Orders.Where(o =&gt; o.Total &gt; 500).ToList()</code> → SQL <code>WHERE</code>। पर <code>db.Orders.AsEnumerable().Where(...)</code> → <code>SELECT *</code>, फिर C# में filter।</li>
+<li>Example: <code>db.Orders.Where(o =&gt; o.Total &gt; 500).ToList()</code> → SQL <code>WHERE</code>। पर <code>db.Orders.AsEnumerable().Where(...)</code> → सारी rows और सारे columns, फिर C# में filter।</li>
 </ul>
 <p>Follow-up: "तो हर जगह IQueryable क्यों नहीं?" — हर C# method translate नहीं होता, query का shape सारी layers को दिखने लगता है, और in-memory data को इसकी ज़रूरत नहीं। इसे data-access layer के अंदर रखो।</p>
 <p><b>TL angle:</b> code review में EF Core को wrap करने वाले repository methods पर <code>IEnumerable&lt;T&gt;</code> parameters या <code>Func</code> filters ढूँढो — ये चुपचाप filtering को memory में ले जाते हैं। Generated SQL Day 5–6 में दिखेगा।</p>`,
@@ -1266,7 +1233,7 @@ record Customer(int Id, string Name);`
 <li><code>Enumerable.Where(Func&lt;T,bool&gt;)</code> vs <code>Queryable.Where(Expression&lt;Func&lt;T,bool&gt;&gt;)</code>. Lambda ka text wahi — target types alag.</li>
 <li><code>IQueryable&lt;T&gt;</code>, <code>IEnumerable&lt;T&gt;</code> ko inherit karta hai. Aapke variable ka <b>compile-time type</b> tay karta hai ki kaun sa <code>Where</code> call hoga. Jaise hi query <code>IEnumerable</code> ki tarah treat hui (variable type, <code>AsEnumerable()</code>, <code>ToList()</code>), baaki sab memory mein chalta hai.</li>
 <li>Dono deferred hain. <code>IQueryable</code> enumerate hone par apne <b>provider</b> se chalta hai (EF Core: translate → SQL chalao → objects materialize karo).</li>
-<li>Example: <code>db.Orders.Where(o =&gt; o.Total &gt; 500).ToList()</code> → SQL <code>WHERE</code>. Par <code>db.Orders.AsEnumerable().Where(...)</code> → <code>SELECT *</code>, phir C# mein filter.</li>
+<li>Example: <code>db.Orders.Where(o =&gt; o.Total &gt; 500).ToList()</code> → SQL <code>WHERE</code>. Par <code>db.Orders.AsEnumerable().Where(...)</code> → saari rows aur saare columns, phir C# mein filter.</li>
 </ul>
 <p>Follow-up: "To har jagah IQueryable kyon nahi?" — har C# method translate nahi hota, query ka shape saari layers ko dikhne lagta hai, aur in-memory data ko iski zaroorat nahi. Ise data-access layer ke andar rakho.</p>
 <p><b>TL angle:</b> code review mein EF Core ko wrap karne wale repository methods par <code>IEnumerable&lt;T&gt;</code> parameters ya <code>Func</code> filters dhoondho — yeh chupchaap filtering ko memory mein le jaate hain. Generated SQL Day 5–6 mein dikhega.</p>`
@@ -1325,7 +1292,7 @@ record Customer(int Id, string Name);`
 <li><b>Single / SingleOrDefault</b>: lookups by a <b>unique</b> key (Id, email, PNR). If two rows come back, that is a data bug — failing loudly is good.</li>
 <li><b>First / FirstOrDefault</b>: "any one" or "the top one" — with an <code>OrderBy</code> when you mean a specific one (latest order, cheapest product).</li>
 <li><b>...OrDefault</b> when "not found" is a normal case; then check for <code>null</code> (or use the .NET 6 overload with your own default: <code>FirstOrDefault(pred, -1)</code>, important for value types where default is <code>0</code>).</li>
-<li><b>Cost</b>: <code>First</code> stops at the first match; <code>Single</code> must check there is no second one. EF Core: <code>First</code> → <code>TOP(1)</code>, <code>Single</code> → <code>TOP(2)</code>.</li>
+<li><b>Cost</b>: <code>First</code> stops at the first match; <code>Single</code> must check there is no second one. EF Core on SQL Server: <code>First</code> → <code>TOP(1)</code>, <code>Single</code> → <code>TOP(2)</code>.</li>
 <li>Exception messages: "Sequence contains no elements" / "no matching element" / "more than one matching element" — all <code>InvalidOperationException</code>.</li>
 </ul>
 <p>Follow-up: "In an API, which do you use for GET /orders/{id}?" — <code>SingleOrDefault</code> (or <code>FirstOrDefault</code> on the primary key, or EF Core's <code>FindAsync</code>), then return 404 when it is <code>null</code>. Do not let <code>First()</code> throw and turn "not found" into a 500.</p>`,
@@ -1333,7 +1300,7 @@ record Customer(int Id, string Name);`
 <li><b>Single / SingleOrDefault</b>: <b>unique</b> key (Id, email, PNR) से lookup। अगर दो rows आ जाएँ तो वो data bug है — ज़ोर से fail होना अच्छा है।</li>
 <li><b>First / FirstOrDefault</b>: "कोई एक" या "सबसे ऊपर वाला" — जब कोई ख़ास item चाहिए (latest order, सबसे सस्ता product) तो <code>OrderBy</code> के साथ।</li>
 <li><b>...OrDefault</b> जब "नहीं मिला" normal case हो; फिर <code>null</code> check करो (या .NET 6 वाला अपने default वाला overload: <code>FirstOrDefault(pred, -1)</code>, value types के लिए ज़रूरी जहाँ default <code>0</code> होता है)।</li>
-<li><b>Cost</b>: <code>First</code> पहले match पर रुकता है; <code>Single</code> को check करना पड़ता है कि दूसरा तो नहीं है। EF Core: <code>First</code> → <code>TOP(1)</code>, <code>Single</code> → <code>TOP(2)</code>।</li>
+<li><b>Cost</b>: <code>First</code> पहले match पर रुकता है; <code>Single</code> को check करना पड़ता है कि दूसरा तो नहीं है। SQL Server पर EF Core: <code>First</code> → <code>TOP(1)</code>, <code>Single</code> → <code>TOP(2)</code>।</li>
 <li>Exception messages: "Sequence contains no elements" / "no matching element" / "more than one matching element" — सब <code>InvalidOperationException</code>।</li>
 </ul>
 <p>Follow-up: "API में GET /orders/{id} के लिए कौन सा use करोगे?" — <code>SingleOrDefault</code> (या primary key पर <code>FirstOrDefault</code>, या EF Core का <code>FindAsync</code>), फिर <code>null</code> हो तो 404 return करो। <code>First()</code> को throw करके "not found" को 500 में मत बदलने दो।</p>`,
@@ -1341,7 +1308,7 @@ record Customer(int Id, string Name);`
 <li><b>Single / SingleOrDefault</b>: <b>unique</b> key (Id, email, PNR) se lookup. Agar do rows aa jaayein to woh data bug hai — zor se fail hona achha hai.</li>
 <li><b>First / FirstOrDefault</b>: "koi ek" ya "sabse upar wala" — jab koi khaas item chahiye (latest order, sabse sasta product) to <code>OrderBy</code> ke saath.</li>
 <li><b>...OrDefault</b> jab "nahi mila" normal case ho; phir <code>null</code> check karo (ya .NET 6 wala apne default wala overload: <code>FirstOrDefault(pred, -1)</code>, value types ke liye zaroori jahan default <code>0</code> hota hai).</li>
-<li><b>Cost</b>: <code>First</code> pehle match par rukta hai; <code>Single</code> ko check karna padta hai ki doosra to nahi hai. EF Core: <code>First</code> → <code>TOP(1)</code>, <code>Single</code> → <code>TOP(2)</code>.</li>
+<li><b>Cost</b>: <code>First</code> pehle match par rukta hai; <code>Single</code> ko check karna padta hai ki doosra to nahi hai. SQL Server par EF Core: <code>First</code> → <code>TOP(1)</code>, <code>Single</code> → <code>TOP(2)</code>.</li>
 <li>Exception messages: "Sequence contains no elements" / "no matching element" / "more than one matching element" — sab <code>InvalidOperationException</code>.</li>
 </ul>
 <p>Follow-up: "API mein GET /orders/{id} ke liye kaun sa use karoge?" — <code>SingleOrDefault</code> (ya primary key par <code>FirstOrDefault</code>, ya EF Core ka <code>FindAsync</code>), phir <code>null</code> ho to 404 return karo. <code>First()</code> ko throw karke "not found" ko 500 mein mat badalne do.</p>`
@@ -1351,10 +1318,10 @@ record Customer(int Id, string Name);`
       id: "any-vs-count",
       depth: "short",
       q: "Any() or Count() > 0 — which one should you use, and why?",
-      answer: "Use Any(): it stops at the first match and shows intent. Count() visits every item — COUNT instead of EXISTS in EF Core. On a List or array, use the Count or Length property.",
+      answer: "Use Any(): it stops at the first match. Count() on a lazy or filtered query walks every item — COUNT instead of EXISTS in EF Core. On a List or array, use Count or Length.",
       meaning: {
-        hi: "Any() use करो: यह पहले match पर रुक जाता है और इरादा साफ़ बताता है। Count() हर item देखता है, और EF Core में यह EXISTS की जगह COUNT बनता है। List या array के लिए Count या Length property use करो।",
-        hg: "Any() use karo: yeh pehle match par ruk jaata hai aur iraada saaf batata hai. Count() har item dekhta hai, aur EF Core mein yeh EXISTS ki jagah COUNT banta hai. List ya array ke liye Count ya Length property use karo."
+        hi: "Any() use करो: यह पहले match पर रुक जाता है। Lazy या filtered query पर Count() हर item से गुज़रता है — EF Core में EXISTS की जगह COUNT। List या array पर Count या Length use करो।",
+        hg: "Any() use karo: yeh pehle match par ruk jaata hai. Lazy ya filtered query par Count() har item se guzarta hai — EF Core mein EXISTS ki jagah COUNT. List ya array par Count ya Length use karo."
       },
       explain: {
         en: `<ul>
@@ -1667,8 +1634,8 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
       q: "Why does IQueryable take Expression&lt;Func&lt;T,bool&gt;&gt; while IEnumerable takes Func&lt;T,bool&gt;?",
       answer: "A Func is compiled code that can only run. An Expression is the same lambda as data, which a provider can read and translate — for example into a SQL WHERE clause.",
       meaning: {
-        hi: "Func compiled code है जिसे सिर्फ़ चलाया जा सकता है। Expression वही lambda है data structure के रूप में, जिसे provider पढ़कर translate कर सकता है, जैसे SQL WHERE clause में। Translation के लिए पढ़ने लायक form चाहिए।",
-        hg: "Func compiled code hai jise sirf chalaya ja sakta hai. Expression wahi lambda hai data structure ke roop mein, jise provider padhkar translate kar sakta hai, jaise SQL WHERE clause mein. Translation ke liye padhne laayak form chahiye."
+        hi: "Func compiled code है जो सिर्फ़ चल सकता है। Expression वही lambda है data के रूप में, जिसे provider पढ़कर translate कर सकता है — जैसे SQL WHERE clause में।",
+        hg: "Func compiled code hai jo sirf chal sakta hai. Expression wahi lambda hai data ke roop mein, jise provider padhkar translate kar sakta hai — jaise SQL WHERE clause mein."
       },
       explain: {
         en: `<ul>
@@ -1700,8 +1667,8 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
       q: "Should a repository or service return IQueryable or IEnumerable?",
       answer: "It is a trade-off. IQueryable is flexible but leaks query building and EF Core rules to every caller. Most teams return lists or DTOs from purpose-built methods and keep IQueryable in the data layer.",
       meaning: {
-        hi: "यह एक trade-off है। IQueryable return करना flexible है, पर query बनाना और EF Core के rules हर caller तक पहुँच जाते हैं। ज़्यादातर teams ख़ास मकसद वाले methods से materialized lists या DTOs return करती हैं, और IQueryable को data layer के अंदर रखती हैं।",
-        hg: "Yeh ek trade-off hai. IQueryable return karna flexible hai, par query banana aur EF Core ke rules har caller tak pahunch jaate hain. Zyadatar teams khaas maqsad wale methods se materialized lists ya DTOs return karti hain, aur IQueryable ko data layer ke andar rakhti hain."
+        hi: "यह एक trade-off है। IQueryable flexible है, पर query बनाना और EF Core के rules हर caller तक पहुँच जाते हैं। ज़्यादातर teams ख़ास मकसद वाले methods से lists या DTOs return करती हैं और IQueryable को data layer में रखती हैं।",
+        hg: "Yeh ek trade-off hai. IQueryable flexible hai, par query banana aur EF Core ke rules har caller tak pahunch jaate hain. Zyadatar teams khaas maqsad wale methods se lists ya DTOs return karti hain aur IQueryable ko data layer mein rakhti hain."
       },
       explain: {
         en: `<ul>
@@ -1774,7 +1741,7 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
 <li><code>OrderBy(x =&gt; x.City).ThenBy(x =&gt; x.Name)</code> = SQL <code>ORDER BY City, Name</code>.</li>
 <li><code>OrderBy(x =&gt; x.City).OrderBy(x =&gt; x.Name)</code> = sorted by <b>Name</b>. In memory, the earlier City order survives only as a hidden tie-breaker (because the sort is stable); a database provider may ignore it. Either way it is not what the author meant.</li>
 <li><b>Stable</b>: documented for <code>Enumerable.OrderBy</code>. <code>List&lt;T&gt;.Sort</code>/<code>Array.Sort</code> are unstable (introsort) — equal items may swap.</li>
-<li>Sorting is O(n log n) and buffers all items. For a single min/max item, use <code>MinBy</code>/<code>MaxBy</code> (O(n)).</li>
+<li>Sorting is O(n log n) and buffers all items. For one min/max item in memory, <code>MinBy</code>/<code>MaxBy</code> say what you mean (modern .NET already runs <code>OrderBy(...).First()</code> as one pass, so this is about readability); in an EF Core query, use <code>OrderBy(...).First()</code>.</li>
 <li>Strings: pass a comparer when culture matters: <code>OrderBy(x =&gt; x.Name, StringComparer.OrdinalIgnoreCase)</code>.</li>
 </ul>
 <p>Follow-up: "Does a database promise any order without ORDER BY?" — No. Even if rows "usually" come back in Id order, it can change with plans, parallelism or indexes.</p>`,
@@ -1782,7 +1749,7 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
 <li><code>OrderBy(x =&gt; x.City).ThenBy(x =&gt; x.Name)</code> = SQL <code>ORDER BY City, Name</code>।</li>
 <li><code>OrderBy(x =&gt; x.City).OrderBy(x =&gt; x.Name)</code> = <b>Name</b> से sorted। Memory में पहले वाला City order सिर्फ़ छुपे tie-breaker की तरह बचता है (क्योंकि sort stable है); database provider उसे ignore कर सकता है। दोनों ही तरह लिखने वाले का इरादा यह नहीं था।</li>
 <li><b>Stable</b>: <code>Enumerable.OrderBy</code> के लिए documented है। <code>List&lt;T&gt;.Sort</code>/<code>Array.Sort</code> unstable हैं (introsort) — बराबर items जगह बदल सकते हैं।</li>
-<li>Sorting O(n log n) है और सारे items buffer करता है। एक min/max item के लिए <code>MinBy</code>/<code>MaxBy</code> use करो (O(n))।</li>
+<li>Sorting O(n log n) है और सारे items buffer करता है। Memory में एक min/max item के लिए <code>MinBy</code>/<code>MaxBy</code> इरादा साफ़ बताते हैं (modern .NET <code>OrderBy(...).First()</code> को पहले से एक pass में चलाता है, इसलिए बात readability की है); EF Core query में <code>OrderBy(...).First()</code> use करो।</li>
 <li>Strings: जब culture मायने रखे तो comparer दो: <code>OrderBy(x =&gt; x.Name, StringComparer.OrdinalIgnoreCase)</code>।</li>
 </ul>
 <p>Follow-up: "क्या ORDER BY के बिना database किसी order का वादा करता है?" — नहीं। Rows "आमतौर पर" Id order में आती दिखें, तब भी plans, parallelism या indexes से यह बदल सकता है।</p>`,
@@ -1790,7 +1757,7 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
 <li><code>OrderBy(x =&gt; x.City).ThenBy(x =&gt; x.Name)</code> = SQL <code>ORDER BY City, Name</code>.</li>
 <li><code>OrderBy(x =&gt; x.City).OrderBy(x =&gt; x.Name)</code> = <b>Name</b> se sorted. Memory mein pehle wala City order sirf chhupe tie-breaker ki tarah bachta hai (kyonki sort stable hai); database provider use ignore kar sakta hai. Dono hi tarah likhne wale ka iraada yeh nahi tha.</li>
 <li><b>Stable</b>: <code>Enumerable.OrderBy</code> ke liye documented hai. <code>List&lt;T&gt;.Sort</code>/<code>Array.Sort</code> unstable hain (introsort) — barabar items jagah badal sakte hain.</li>
-<li>Sorting O(n log n) hai aur saare items buffer karta hai. Ek min/max item ke liye <code>MinBy</code>/<code>MaxBy</code> use karo (O(n)).</li>
+<li>Sorting O(n log n) hai aur saare items buffer karta hai. Memory mein ek min/max item ke liye <code>MinBy</code>/<code>MaxBy</code> iraada saaf batate hain (modern .NET <code>OrderBy(...).First()</code> ko pehle se ek pass mein chalata hai, isliye baat readability ki hai); EF Core query mein <code>OrderBy(...).First()</code> use karo.</li>
 <li>Strings: jab culture maayne rakhe to comparer do: <code>OrderBy(x =&gt; x.Name, StringComparer.OrdinalIgnoreCase)</code>.</li>
 </ul>
 <p>Follow-up: "Kya ORDER BY ke bina database kisi order ka waada karta hai?" — Nahi. Rows "aamtaur par" Id order mein aati dikhein, tab bhi plans, parallelism ya indexes se yeh badal sakta hai.</p>`
@@ -1837,7 +1804,7 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
       },
       explain: {
         en: `<ul>
-<li>Classic bug: <code>customers.Distinct()</code> on a <code>class Customer</code> with no equality members removes <b>nothing</b>, because every object is a different reference.</li>
+<li>Classic bug: <code>customers.Distinct()</code> on a <code>class Customer</code> with no equality members removes only <b>same-instance</b> duplicates — two objects with the same data stay, because they are different references.</li>
 <li>Fixes: make it a <code>record</code> (value equality on all properties), override <code>Equals</code>/<code>GetHashCode</code>, pass an <code>IEqualityComparer&lt;T&gt;</code>, or use <b><code>DistinctBy(c =&gt; c.Email)</code></b>.</li>
 <li>Strings: <code>Distinct(StringComparer.OrdinalIgnoreCase)</code> for case-insensitive uniqueness.</li>
 <li>Same idea for <code>Union</code>/<code>Intersect</code>/<code>Except</code> and their <code>...By</code> versions (.NET 6), <code>GroupBy</code>, <code>ToHashSet</code>, <code>ToDictionary</code>.</li>
@@ -1845,7 +1812,7 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
 <li>EF Core: <code>Distinct()</code> becomes SQL <code>DISTINCT</code> over the selected columns — project to the columns you care about first.</li>
 </ul>`,
         hi: `<ul>
-<li>Classic bug: बिना equality members वाली <code>class Customer</code> पर <code>customers.Distinct()</code> <b>कुछ नहीं</b> हटाता, क्योंकि हर object अलग reference है।</li>
+<li>Classic bug: बिना equality members वाली <code>class Customer</code> पर <code>customers.Distinct()</code> सिर्फ़ <b>same-instance</b> duplicates हटाता है — एक जैसे data वाले दो objects रह जाते हैं, क्योंकि वो अलग references हैं।</li>
 <li>Fixes: उसे <code>record</code> बना दो (सारी properties पर value equality), <code>Equals</code>/<code>GetHashCode</code> override करो, <code>IEqualityComparer&lt;T&gt;</code> pass करो, या <b><code>DistinctBy(c =&gt; c.Email)</code></b> use करो।</li>
 <li>Strings: case-insensitive uniqueness के लिए <code>Distinct(StringComparer.OrdinalIgnoreCase)</code>।</li>
 <li>यही बात <code>Union</code>/<code>Intersect</code>/<code>Except</code> और उनके <code>...By</code> versions (.NET 6), <code>GroupBy</code>, <code>ToHashSet</code>, <code>ToDictionary</code> पर भी लागू है।</li>
@@ -1853,7 +1820,7 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
 <li>EF Core: <code>Distinct()</code> selected columns पर SQL <code>DISTINCT</code> बनता है — पहले उन columns में project करो जो आपको चाहिए।</li>
 </ul>`,
         hg: `<ul>
-<li>Classic bug: bina equality members wali <code>class Customer</code> par <code>customers.Distinct()</code> <b>kuch nahi</b> hataata, kyonki har object alag reference hai.</li>
+<li>Classic bug: bina equality members wali <code>class Customer</code> par <code>customers.Distinct()</code> sirf <b>same-instance</b> duplicates hataata hai — ek jaise data wale do objects reh jaate hain, kyonki woh alag references hain.</li>
 <li>Fixes: use <code>record</code> bana do (saari properties par value equality), <code>Equals</code>/<code>GetHashCode</code> override karo, <code>IEqualityComparer&lt;T&gt;</code> pass karo, ya <b><code>DistinctBy(c =&gt; c.Email)</code></b> use karo.</li>
 <li>Strings: case-insensitive uniqueness ke liye <code>Distinct(StringComparer.OrdinalIgnoreCase)</code>.</li>
 <li>Yahi baat <code>Union</code>/<code>Intersect</code>/<code>Except</code> aur unke <code>...By</code> versions (.NET 6), <code>GroupBy</code>, <code>ToHashSet</code>, <code>ToDictionary</code> par bhi laagu hai.</li>
@@ -1941,21 +1908,21 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
         en: `<ul>
 <li><b>Correctness</b>: <code>Single</code> on non-unique data; <code>FirstOrDefault()</code> result used without a null check; <code>First()</code> without <code>OrderBy</code> when a specific row is meant; <code>OrderBy</code>.<code>OrderBy</code> instead of <code>ThenBy</code>; paging without a deterministic order; <code>Distinct()</code> on classes without equality.</li>
 <li><b>Hidden cost</b>: multiple enumeration (CA1851); <code>Count()</code> in loop conditions; <code>ElementAt(i)</code> on lazy sequences; <code>Where</code>/<code>First</code> inside a loop (use <code>ToDictionary</code>/<code>ToLookup</code>); <code>Count() &gt; 0</code> (CA1827); <code>Count()</code> on lists (CA1829).</li>
-<li><b>EF Core boundary</b>: <code>ToList()</code>/<code>AsEnumerable()</code> too early; <code>Func</code> filters on repositories; deferred queries returned after the <code>DbContext</code> is gone; missing <code>Select</code> projection (loading whole entities for two fields).</li>
+<li><b>EF Core boundary</b>: <code>ToList()</code>/<code>AsEnumerable()</code> too early or too late (details in the <code>ToList()</code> Q&amp;A); <code>Func</code> filters on repositories; deferred queries returned after the <code>DbContext</code> is gone; missing <code>Select</code> projection (loading whole entities for two fields).</li>
 <li><b>Readability</b>: very long chains — split into named variables; side effects inside <code>Select</code>/<code>Where</code> — move to <code>foreach</code>.</li>
 <li>Automate what you can: enable analyzers (CA1827, CA1829, CA1851, CA1860) in <code>.editorconfig</code>, then review for design.</li>
 </ul>`,
         hi: `<ul>
 <li><b>Correctness</b>: non-unique data पर <code>Single</code>; बिना null check के <code>FirstOrDefault()</code> का result use करना; जब कोई ख़ास row चाहिए तब <code>OrderBy</code> के बिना <code>First()</code>; <code>ThenBy</code> की जगह <code>OrderBy</code>.<code>OrderBy</code>; deterministic order के बिना paging; बिना equality वाली classes पर <code>Distinct()</code>।</li>
 <li><b>छुपा हुआ ख़र्च</b>: multiple enumeration (CA1851); loop conditions में <code>Count()</code>; lazy sequences पर <code>ElementAt(i)</code>; loop के अंदर <code>Where</code>/<code>First</code> (<code>ToDictionary</code>/<code>ToLookup</code> use करो); <code>Count() &gt; 0</code> (CA1827); lists पर <code>Count()</code> (CA1829)।</li>
-<li><b>EF Core boundary</b>: बहुत जल्दी <code>ToList()</code>/<code>AsEnumerable()</code>; repositories पर <code>Func</code> filters; <code>DbContext</code> ख़त्म होने के बाद return हुई deferred queries; <code>Select</code> projection न होना (दो fields के लिए पूरी entities load करना)।</li>
+<li><b>EF Core boundary</b>: बहुत जल्दी या बहुत देर से <code>ToList()</code>/<code>AsEnumerable()</code> (details <code>ToList()</code> वाले Q&amp;A में); repositories पर <code>Func</code> filters; <code>DbContext</code> ख़त्म होने के बाद return हुई deferred queries; <code>Select</code> projection न होना (दो fields के लिए पूरी entities load करना)।</li>
 <li><b>Readability</b>: बहुत लंबी chains — named variables में तोड़ो; <code>Select</code>/<code>Where</code> के अंदर side effects — <code>foreach</code> में ले जाओ।</li>
 <li>जो automate हो सके करो: <code>.editorconfig</code> में analyzers (CA1827, CA1829, CA1851, CA1860) enable करो, फिर review design के लिए करो।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Correctness</b>: non-unique data par <code>Single</code>; bina null check ke <code>FirstOrDefault()</code> ka result use karna; jab koi khaas row chahiye tab <code>OrderBy</code> ke bina <code>First()</code>; <code>ThenBy</code> ki jagah <code>OrderBy</code>.<code>OrderBy</code>; deterministic order ke bina paging; bina equality wali classes par <code>Distinct()</code>.</li>
 <li><b>Chhupa hua kharcha</b>: multiple enumeration (CA1851); loop conditions mein <code>Count()</code>; lazy sequences par <code>ElementAt(i)</code>; loop ke andar <code>Where</code>/<code>First</code> (<code>ToDictionary</code>/<code>ToLookup</code> use karo); <code>Count() &gt; 0</code> (CA1827); lists par <code>Count()</code> (CA1829).</li>
-<li><b>EF Core boundary</b>: bahut jaldi <code>ToList()</code>/<code>AsEnumerable()</code>; repositories par <code>Func</code> filters; <code>DbContext</code> khatam hone ke baad return hui deferred queries; <code>Select</code> projection na hona (do fields ke liye poori entities load karna).</li>
+<li><b>EF Core boundary</b>: bahut jaldi ya bahut der se <code>ToList()</code>/<code>AsEnumerable()</code> (details <code>ToList()</code> wale Q&amp;A mein); repositories par <code>Func</code> filters; <code>DbContext</code> khatam hone ke baad return hui deferred queries; <code>Select</code> projection na hona (do fields ke liye poori entities load karna).</li>
 <li><b>Readability</b>: bahut lambi chains — named variables mein todo; <code>Select</code>/<code>Where</code> ke andar side effects — <code>foreach</code> mein le jao.</li>
 <li>Jo automate ho sake karo: <code>.editorconfig</code> mein analyzers (CA1827, CA1829, CA1851, CA1860) enable karo, phir review design ke liye karo.</li>
 </ul>`
@@ -1977,21 +1944,21 @@ static IEnumerable<T> MyWhere<T>(IEnumerable<T> source, Func<T, bool> predicate)
 <li><b>.NET 9</b>: <code>CountBy</code>, <code>AggregateBy</code> (per-key counts/totals without <code>GroupBy</code> objects), <code>Index()</code> (<code>(Index, Item)</code> tuples).</li>
 <li><b>.NET 10</b>: <code>LeftJoin</code>, <code>RightJoin</code> (EF Core 10 translates them); <code>System.Linq.AsyncEnumerable</code> brings LINQ for <code>IAsyncEnumerable&lt;T&gt;</code> into the base library (Day 3).</li>
 </ul>
-<p>Why mention them: they replace common hand-written helpers (<code>GroupBy(...).Select(g =&gt; g.First())</code> → <code>DistinctBy</code>, <code>OrderBy(...).First()</code> → <code>MinBy</code>), which reads better and avoids extra work.</p>`,
+<p>Why mention them: they replace common hand-written helpers (<code>GroupBy(...).Select(g =&gt; g.First())</code> → <code>DistinctBy</code>, in-memory <code>OrderBy(...).First()</code> → <code>MinBy</code>), which states the intent more clearly.</p>`,
         hi: `<ul>
 <li><b>.NET 6</b>: <code>DistinctBy</code>, <code>UnionBy</code>, <code>IntersectBy</code>, <code>ExceptBy</code>, <code>MinBy</code>, <code>MaxBy</code>; <code>Chunk(size)</code>; default value के साथ <code>FirstOrDefault</code>/<code>LastOrDefault</code>/<code>SingleOrDefault</code>; <code>Take(range)</code> जैसे <code>Take(2..5)</code>; <code>TryGetNonEnumeratedCount</code>; तीन sequences वाला <code>Zip</code>।</li>
 <li><b>.NET 7</b>: simple values sort करने के लिए <code>Order()</code> और <code>OrderDescending()</code>।</li>
 <li><b>.NET 9</b>: <code>CountBy</code>, <code>AggregateBy</code> (<code>GroupBy</code> objects के बिना per-key counts/totals), <code>Index()</code> (<code>(Index, Item)</code> tuples)।</li>
 <li><b>.NET 10</b>: <code>LeftJoin</code>, <code>RightJoin</code> (EF Core 10 इन्हें translate करता है); <code>System.Linq.AsyncEnumerable</code> से <code>IAsyncEnumerable&lt;T&gt;</code> के लिए LINQ base library में आ गया (Day 3)।</li>
 </ul>
-<p>इनका ज़िक्र क्यों: ये आम हाथ से लिखे helpers की जगह लेते हैं (<code>GroupBy(...).Select(g =&gt; g.First())</code> → <code>DistinctBy</code>, <code>OrderBy(...).First()</code> → <code>MinBy</code>), जो पढ़ने में बेहतर है और extra काम बचाता है।</p>`,
+<p>इनका ज़िक्र क्यों: ये आम हाथ से लिखे helpers की जगह लेते हैं (<code>GroupBy(...).Select(g =&gt; g.First())</code> → <code>DistinctBy</code>, in-memory <code>OrderBy(...).First()</code> → <code>MinBy</code>), जिससे इरादा ज़्यादा साफ़ दिखता है।</p>`,
         hg: `<ul>
 <li><b>.NET 6</b>: <code>DistinctBy</code>, <code>UnionBy</code>, <code>IntersectBy</code>, <code>ExceptBy</code>, <code>MinBy</code>, <code>MaxBy</code>; <code>Chunk(size)</code>; default value ke saath <code>FirstOrDefault</code>/<code>LastOrDefault</code>/<code>SingleOrDefault</code>; <code>Take(range)</code> jaise <code>Take(2..5)</code>; <code>TryGetNonEnumeratedCount</code>; teen sequences wala <code>Zip</code>.</li>
 <li><b>.NET 7</b>: simple values sort karne ke liye <code>Order()</code> aur <code>OrderDescending()</code>.</li>
 <li><b>.NET 9</b>: <code>CountBy</code>, <code>AggregateBy</code> (<code>GroupBy</code> objects ke bina per-key counts/totals), <code>Index()</code> (<code>(Index, Item)</code> tuples).</li>
 <li><b>.NET 10</b>: <code>LeftJoin</code>, <code>RightJoin</code> (EF Core 10 inhe translate karta hai); <code>System.Linq.AsyncEnumerable</code> se <code>IAsyncEnumerable&lt;T&gt;</code> ke liye LINQ base library mein aa gaya (Day 3).</li>
 </ul>
-<p>Inka zikr kyon: yeh aam haath se likhe helpers ki jagah lete hain (<code>GroupBy(...).Select(g =&gt; g.First())</code> → <code>DistinctBy</code>, <code>OrderBy(...).First()</code> → <code>MinBy</code>), jo padhne mein behtar hai aur extra kaam bachata hai.</p>`
+<p>Inka zikr kyon: yeh aam haath se likhe helpers ki jagah lete hain (<code>GroupBy(...).Select(g =&gt; g.First())</code> → <code>DistinctBy</code>, in-memory <code>OrderBy(...).First()</code> → <code>MinBy</code>), jisse iraada zyada saaf dikhta hai.</p>`
       }
     },
   ],
@@ -2011,52 +1978,22 @@ Console.WriteLine(expensive.Count());`,
       answer: "300\n4",
       explain: {
         en: `<ul>
-<li>Line 3 only <b>builds</b> the query. The lambda captures the <b>variable</b> <code>limit</code>, not the value 100.</li>
+<li>Line 4 only <b>builds</b> the query. The lambda captures the <b>variable</b> <code>limit</code>, not the value 100.</li>
 <li>When <code>string.Join</code> enumerates, <code>limit</code> is already <b>200</b> → only <b>300</b> passes.</li>
 <li><code>Count()</code> runs the query <b>again</b>, now with <code>limit = 0</code> → all <b>4</b> prices pass.</li>
 <li>Lesson: a deferred query reads captured variables <b>when it runs</b>, and it runs on every enumeration. To freeze the result, call <code>ToList()</code> right after building it.</li>
 </ul>`,
         hi: `<ul>
-<li>Line 3 सिर्फ़ query <b>बनाती</b> है। Lambda <code>limit</code> <b>variable</b> को capture करता है, value 100 को नहीं।</li>
+<li>Line 4 सिर्फ़ query <b>बनाती</b> है। Lambda <code>limit</code> <b>variable</b> को capture करता है, value 100 को नहीं।</li>
 <li>जब <code>string.Join</code> enumerate करता है, तब तक <code>limit</code> <b>200</b> हो चुका है → सिर्फ़ <b>300</b> pass होता है।</li>
 <li><code>Count()</code> query को <b>फिर से</b> चलाता है, अब <code>limit = 0</code> के साथ → चारों prices pass → <b>4</b>।</li>
 <li>सीख: deferred query captured variables को <b>चलते समय</b> पढ़ती है, और हर enumeration पर चलती है। Result fix करना है तो query बनाते ही <code>ToList()</code> call करो।</li>
 </ul>`,
         hg: `<ul>
-<li>Line 3 sirf query <b>banati</b> hai. Lambda <code>limit</code> <b>variable</b> ko capture karta hai, value 100 ko nahi.</li>
+<li>Line 4 sirf query <b>banati</b> hai. Lambda <code>limit</code> <b>variable</b> ko capture karta hai, value 100 ko nahi.</li>
 <li>Jab <code>string.Join</code> enumerate karta hai, tab tak <code>limit</code> <b>200</b> ho chuka hai → sirf <b>300</b> pass hota hai.</li>
 <li><code>Count()</code> query ko <b>phir se</b> chalata hai, ab <code>limit = 0</code> ke saath → chaaron prices pass → <b>4</b>.</li>
 <li>Seekh: deferred query captured variables ko <b>chalte samay</b> padhti hai, aur har enumeration par chalti hai. Result fix karna hai to query banate hi <code>ToList()</code> call karo.</li>
-</ul>`
-      }
-    },
-    {
-      id: "tolist-snapshot",
-      src: `var cart = new List<string> { "rice", "dal" };
-
-var lazy = cart.Select(item => item.ToUpper());
-var snapshot = cart.Select(item => item.ToUpper()).ToList();
-
-cart.Add("ghee");
-
-Console.WriteLine($"lazy: {string.Join(", ", lazy)}");
-Console.WriteLine($"snapshot: {string.Join(", ", snapshot)}");`,
-      answer: "lazy: RICE, DAL, GHEE\nsnapshot: RICE, DAL",
-      explain: {
-        en: `<ul>
-<li><code>lazy</code> is a deferred query over the list. It runs only inside <code>string.Join</code> — after <code>"ghee"</code> was added — so it sees <b>3</b> items.</li>
-<li><code>snapshot</code> ran immediately because of <code>ToList()</code>. It is a separate list with the 2 items that existed then.</li>
-<li>Lesson: <code>ToList()</code>/<code>ToArray()</code> = "run now and keep a copy". A query without them is a live view that follows the source.</li>
-</ul>`,
-        hi: `<ul>
-<li><code>lazy</code> list पर एक deferred query है। यह सिर्फ़ <code>string.Join</code> के अंदर चलती है — <code>"ghee"</code> जुड़ने के बाद — इसलिए <b>3</b> items देखती है।</li>
-<li><code>snapshot</code> <code>ToList()</code> की वजह से तुरंत चल गया। यह एक अलग list है जिसमें उस समय के 2 items हैं।</li>
-<li>सीख: <code>ToList()</code>/<code>ToArray()</code> = "अभी चलाओ और एक copy रखो"। इनके बिना query एक live view है जो source के साथ चलती है।</li>
-</ul>`,
-        hg: `<ul>
-<li><code>lazy</code> list par ek deferred query hai. Yeh sirf <code>string.Join</code> ke andar chalti hai — <code>"ghee"</code> judne ke baad — isliye <b>3</b> items dekhti hai.</li>
-<li><code>snapshot</code> <code>ToList()</code> ki wajah se turant chal gaya. Yeh ek alag list hai jismein us samay ke 2 items hain.</li>
-<li>Seekh: <code>ToList()</code>/<code>ToArray()</code> = "abhi chalao aur ek copy rakho". Inke bina query ek live view hai jo source ke saath chalti hai.</li>
 </ul>`
       }
     },
@@ -2147,19 +2084,19 @@ foreach (var s in sorted)
 <li>Nothing runs before the <code>foreach</code>, so <b>start</b> is first.</li>
 <li>We want only <b>one</b> item (<code>break</code>), but <code>OrderBy</code> cannot know the smallest value until it has seen <b>all</b> values. So it reads <b>30, 10, 20</b> first, sorts, and only then gives <b>10</b>.</li>
 <li>Compare with the previous puzzle: <code>Where</code>/<code>Select</code> stream; <code>OrderBy</code>, <code>GroupBy</code>, <code>Reverse</code> <b>buffer</b> the whole source.</li>
-<li>Lesson: on a huge or endless source, a buffering operator loads everything. For "the smallest item" use <code>MinBy</code>/<code>Min</code>, which also scan once but do not sort.</li>
+<li>Lesson: on a huge or endless source, a buffering operator loads everything. For "the smallest item", <code>MinBy</code>/<code>Min</code> say what you mean.</li>
 </ul>`,
         hi: `<ul>
 <li><code>foreach</code> से पहले कुछ नहीं चलता, इसलिए पहले <b>start</b>।</li>
 <li>हमें सिर्फ़ <b>एक</b> item चाहिए (<code>break</code>), पर <code>OrderBy</code> को सबसे छोटी value तब तक पता नहीं चल सकती जब तक वो <b>सारी</b> values न देख ले। इसलिए वो पहले <b>30, 10, 20</b> पढ़ता है, sort करता है, और फिर <b>10</b> देता है।</li>
 <li>पिछले puzzle से तुलना करो: <code>Where</code>/<code>Select</code> stream करते हैं; <code>OrderBy</code>, <code>GroupBy</code>, <code>Reverse</code> पूरे source को <b>buffer</b> करते हैं।</li>
-<li>सीख: बहुत बड़े या कभी न ख़त्म होने वाले source पर buffering operator सब कुछ load कर लेता है। "सबसे छोटा item" के लिए <code>MinBy</code>/<code>Min</code> use करो, जो भी एक बार scan करते हैं पर sort नहीं करते।</li>
+<li>सीख: बहुत बड़े या कभी न ख़त्म होने वाले source पर buffering operator सब कुछ load कर लेता है। "सबसे छोटा item" के लिए <code>MinBy</code>/<code>Min</code> इरादा सीधे बताते हैं।</li>
 </ul>`,
         hg: `<ul>
 <li><code>foreach</code> se pehle kuch nahi chalta, isliye pehle <b>start</b>.</li>
 <li>Hamein sirf <b>ek</b> item chahiye (<code>break</code>), par <code>OrderBy</code> ko sabse chhoti value tab tak pata nahi chal sakti jab tak woh <b>saari</b> values na dekh le. Isliye woh pehle <b>30, 10, 20</b> padhta hai, sort karta hai, aur phir <b>10</b> deta hai.</li>
 <li>Pichhle puzzle se tulna karo: <code>Where</code>/<code>Select</code> stream karte hain; <code>OrderBy</code>, <code>GroupBy</code>, <code>Reverse</code> poore source ko <b>buffer</b> karte hain.</li>
-<li>Seekh: bahut bade ya kabhi na khatam hone wale source par buffering operator sab kuch load kar leta hai. "Sabse chhota item" ke liye <code>MinBy</code>/<code>Min</code> use karo, jo bhi ek baar scan karte hain par sort nahi karte.</li>
+<li>Seekh: bahut bade ya kabhi na khatam hone wale source par buffering operator sab kuch load kar leta hai. "Sabse chhota item" ke liye <code>MinBy</code>/<code>Min</code> iraada seedhe batate hain.</li>
 </ul>`
       }
     },
@@ -2195,49 +2132,6 @@ catch (DivideByZeroException)
 <li><code>100 / 0</code> line 3 par likha hai, par <code>Select</code> deferred hai — division wahan nahi chalta, isliye <b>query built</b> print hota hai.</li>
 <li><code>foreach</code> lambda ko item by item chalata hai: <b>20</b>, <b>50</b>, phir <code>d = 0</code> par throw. Exception <b>loop ke andar</b> aata hai, kuch output ho jaane ke baad. Aakhri item (1) tak pahunchte hi nahi.</li>
 <li>Seekh: deferred queries mein query <b>banane</b> wali line ke aaspaas ka <code>try/catch</code> kuch nahi pakadta — error wahan aata hai jahan query <b>enumerate</b> hoti hai, shayad kisi doosre method ya layer mein.</li>
-</ul>`
-      }
-    },
-    {
-      id: "select-vs-selectmany",
-      src: `var orders = new[]
-{
-    new Order(1, ["pen", "book"]),
-    new Order(2, []),
-    new Order(3, ["bag", "pen", "ink"])
-};
-
-var nested = orders.Select(o => o.Items);
-var flat = orders.SelectMany(o => o.Items);
-
-Console.WriteLine(nested.Count());
-Console.WriteLine(flat.Count());
-Console.WriteLine(flat.Distinct().Count());
-Console.WriteLine(orders.SelectMany(o => o.Items, (o, item) => $"{o.Id}:{item}").Last());
-
-record Order(int Id, string[] Items);`,
-      answer: "3\n5\n4\n3:ink",
-      explain: {
-        en: `<ul>
-<li><code>Select</code> gives <b>one result per order</b> — here, one array per order, even the empty one → <b>3</b>.</li>
-<li><code>SelectMany</code> opens every array and flattens: 2 + 0 + 3 = <b>5</b> items. The empty order adds nothing.</li>
-<li><code>"pen"</code> appears twice, so <code>Distinct()</code> leaves <b>4</b>.</li>
-<li>The result-selector overload keeps the parent: the last pair is order 3 with <code>"ink"</code> → <b>3:ink</b>.</li>
-<li>Lesson: ask "one output per input?" → <code>Select</code>. "Many outputs per input, all in one list?" → <code>SelectMany</code>.</li>
-</ul>`,
-        hi: `<ul>
-<li><code>Select</code> <b>हर order का एक result</b> देता है — यहाँ हर order का एक array, खाली वाला भी → <b>3</b>।</li>
-<li><code>SelectMany</code> हर array खोलकर flatten करता है: 2 + 0 + 3 = <b>5</b> items। खाली order कुछ नहीं जोड़ता।</li>
-<li><code>"pen"</code> दो बार है, इसलिए <code>Distinct()</code> के बाद <b>4</b>।</li>
-<li>Result-selector वाला overload parent को साथ रखता है: आख़िरी pair order 3 और <code>"ink"</code> है → <b>3:ink</b>।</li>
-<li>सीख: पूछो "हर input का एक output?" → <code>Select</code>। "हर input के कई outputs, सब एक list में?" → <code>SelectMany</code>।</li>
-</ul>`,
-        hg: `<ul>
-<li><code>Select</code> <b>har order ka ek result</b> deta hai — yahan har order ka ek array, khaali wala bhi → <b>3</b>.</li>
-<li><code>SelectMany</code> har array kholkar flatten karta hai: 2 + 0 + 3 = <b>5</b> items. Khaali order kuch nahi jodta.</li>
-<li><code>"pen"</code> do baar hai, isliye <code>Distinct()</code> ke baad <b>4</b>.</li>
-<li>Result-selector wala overload parent ko saath rakhta hai: aakhri pair order 3 aur <code>"ink"</code> hai → <b>3:ink</b>.</li>
-<li>Seekh: poochho "har input ka ek output?" → <code>Select</code>. "Har input ke kai outputs, sab ek list mein?" → <code>SelectMany</code>.</li>
 </ul>`
       }
     },
@@ -2305,6 +2199,44 @@ Console.WriteLine($"Tatkal: {lookup["Tatkal"].Count()}");`,
 <li><code>ToLookup</code> original 3 tickets par <b>turant</b> chal gaya → 2 keys wala snapshot aur AC = <b>2</b>. List mein baad ke badlaav is par asar nahi karte.</li>
 <li>Lookup mein <b>missing key</b> (<code>"Tatkal"</code>) par <b>khaali</b> sequence milta hai → <b>0</b>. <code>Dictionary</code> hoti to <code>KeyNotFoundException</code> throw karti.</li>
 <li>Seekh: <code>GroupBy</code> = live, har baar phir se chalta hai; <code>ToLookup</code> = ek baar banta hai, key se tez access, missing keys par maaf kar deta hai.</li>
+</ul>`
+      }
+    },
+    {
+      id: "todictionary-duplicate-key",
+      src: `string[] cities = ["Pune", "Delhi", "Pune"];
+
+try
+{
+    var byName = cities.ToDictionary(c => c);
+    Console.WriteLine($"dictionary size: {byName.Count}");
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine(ex.Message);
+}
+
+var counts = cities.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
+Console.WriteLine($"Pune = {counts["Pune"]}, Delhi = {counts["Delhi"]}");`,
+      answer: "An item with the same key has already been added. Key: Pune\nPune = 2, Delhi = 1",
+      explain: {
+        en: `<ul>
+<li><code>ToDictionary</code> runs <b>immediately</b> and adds each item with its key. The second <code>"Pune"</code> is a duplicate key → <code>ArgumentException</code>, so <b>dictionary size</b> is never printed.</li>
+<li>Unlike <code>ToLookup</code> (one key → many items), a dictionary allows <b>one value per key</b>.</li>
+<li>Fix: decide what to do with duplicates first — group them (<code>GroupBy(...).ToDictionary(g =&gt; g.Key, g =&gt; g.Count())</code>), keep one (<code>DistinctBy</code>), or use <code>ToLookup</code>. Here Pune has <b>2</b>, Delhi <b>1</b>.</li>
+<li>Lesson: <code>ToDictionary</code> on real data is a common production crash — the key that was "always unique" in testing is not unique in production. Ask "can this key repeat?" in code review.</li>
+</ul>`,
+        hi: `<ul>
+<li><code>ToDictionary</code> <b>तुरंत</b> चलता है और हर item को उसकी key के साथ जोड़ता है। दूसरा <code>"Pune"</code> duplicate key है → <code>ArgumentException</code>, इसलिए <b>dictionary size</b> कभी print नहीं होता।</li>
+<li><code>ToLookup</code> (एक key → कई items) के उलट, dictionary में <b>हर key की एक ही value</b> हो सकती है।</li>
+<li>Fix: पहले तय करो कि duplicates का क्या करना है — उन्हें group करो (<code>GroupBy(...).ToDictionary(g =&gt; g.Key, g =&gt; g.Count())</code>), एक रखो (<code>DistinctBy</code>), या <code>ToLookup</code> use करो। यहाँ Pune के <b>2</b>, Delhi का <b>1</b>।</li>
+<li>सीख: असली data पर <code>ToDictionary</code> production crash की आम वजह है — testing में जो key "हमेशा unique" थी, production में unique नहीं निकलती। Code review में पूछो "क्या यह key दोहरा सकती है?"।</li>
+</ul>`,
+        hg: `<ul>
+<li><code>ToDictionary</code> <b>turant</b> chalta hai aur har item ko uski key ke saath jodta hai. Doosra <code>"Pune"</code> duplicate key hai → <code>ArgumentException</code>, isliye <b>dictionary size</b> kabhi print nahi hota.</li>
+<li><code>ToLookup</code> (ek key → kai items) ke ulat, dictionary mein <b>har key ki ek hi value</b> ho sakti hai.</li>
+<li>Fix: pehle tay karo ki duplicates ka kya karna hai — unhe group karo (<code>GroupBy(...).ToDictionary(g =&gt; g.Key, g =&gt; g.Count())</code>), ek rakho (<code>DistinctBy</code>), ya <code>ToLookup</code> use karo. Yahan Pune ke <b>2</b>, Delhi ka <b>1</b>.</li>
+<li>Seekh: asli data par <code>ToDictionary</code> production crash ki aam wajah hai — testing mein jo key "hamesha unique" thi, production mein unique nahi nikalti. Code review mein poochho "kya yeh key dohra sakti hai?".</li>
 </ul>`
       }
     },
@@ -2488,10 +2420,10 @@ Console.WriteLine(q1.Count() == q2.Count());`,
       "<b>GroupBy</b> = groups with a <code>Key</code>, in first-appearance order, deferred. <b>ToLookup</b> = immediate, indexable, missing key gives empty.",
       "<b>Join</b> = inner join; <b>GroupJoin</b> + <code>DefaultIfEmpty()</code> = left join; .NET 10 adds <code>LeftJoin</code>/<code>RightJoin</code>.",
       "<b>First</b> throws on none; <b>Single</b> throws on none or many; <b>...OrDefault</b> returns default on none — but <code>SingleOrDefault</code> still throws on duplicates.",
-      "<b>Any()</b> stops at the first match (EXISTS); <b>Count()</b> visits all (COUNT). On lists and arrays, use the <code>Count</code>/<code>Length</code> property.",
+      "<b>Any()</b> stops at the first match (EXISTS); <b>Count()</b> on a lazy or filtered query walks every item (COUNT). On lists and arrays, use the <code>Count</code>/<code>Length</code> property.",
       "<b>Distinct</b> uses Equals/GetHashCode (records by value, classes by reference); <b>DistinctBy</b> (.NET 6) keeps the first item per key.",
       "<b>Sorting and paging</b>: <code>OrderBy</code> + <code>ThenBy</code> (not <code>OrderBy</code> twice), a unique tie-breaker, then <code>Skip((page - 1) * size).Take(size)</code>; keyset paging for deep pages.",
-      "<b>TL view</b>: readable LINQ by default, a plain loop in measured hot paths; in review, catch <code>ToList()</code> too early or too late and lookups inside loops."
+      "<b>TL view</b>: readable LINQ by default; switch to a plain loop only in hot paths that a profiler or benchmark points to."
     ],
     meaning: {
       hi: [
@@ -2503,10 +2435,10 @@ Console.WriteLine(q1.Count() == q2.Count());`,
         "GroupBy = Key वाले groups, पहली बार दिखने के order में, deferred। ToLookup = तुरंत चलता है, index कर सकते हो, missing key पर खाली मिलता है।",
         "Join = inner join; GroupJoin + DefaultIfEmpty() = left join; .NET 10 में LeftJoin/RightJoin आए।",
         "First कुछ न मिले तो throw; Single कुछ न मिले या कई मिलें तो throw; ...OrDefault कुछ न मिले तो default — पर SingleOrDefault duplicates पर फिर भी throw करता है।",
-        "Any() पहले match पर रुकता है (EXISTS); Count() सब देखता है (COUNT)। Lists और arrays पर Count/Length property use करो।",
+        "Any() पहले match पर रुकता है (EXISTS); lazy या filtered query पर Count() हर item से गुज़रता है (COUNT)। Lists और arrays पर Count/Length property use करो।",
         "Distinct, Equals/GetHashCode use करता है (records value से, classes reference से); DistinctBy (.NET 6) हर key का पहला item रखता है।",
         "Sorting और paging: OrderBy + ThenBy (दो बार OrderBy नहीं), एक unique tie-breaker, फिर Skip((page - 1) * size).Take(size); गहरे pages के लिए keyset paging।",
-        "TL view: default में readable LINQ, measured hot paths में plain loop; review में बहुत जल्दी या बहुत देर से ToList() और loops के अंदर lookups पकड़ो।"
+        "TL view: default में readable LINQ; plain loop पर सिर्फ़ उन hot paths में जाओ जिन्हें profiler या benchmark दिखाए।"
       ],
       hg: [
         "Deferred execution: Where/Select/OrderBy sirf query banate hain; foreach, ToList, Count, First, Any use chalate hain — us pal ke data aur variable values ke saath.",
@@ -2517,10 +2449,10 @@ Console.WriteLine(q1.Count() == q2.Count());`,
         "GroupBy = Key wale groups, pehli baar dikhne ke order mein, deferred. ToLookup = turant chalta hai, index kar sakte ho, missing key par khaali milta hai.",
         "Join = inner join; GroupJoin + DefaultIfEmpty() = left join; .NET 10 mein LeftJoin/RightJoin aaye.",
         "First kuch na mile to throw; Single kuch na mile ya kai milein to throw; ...OrDefault kuch na mile to default — par SingleOrDefault duplicates par phir bhi throw karta hai.",
-        "Any() pehle match par rukta hai (EXISTS); Count() sab dekhta hai (COUNT). Lists aur arrays par Count/Length property use karo.",
+        "Any() pehle match par rukta hai (EXISTS); lazy ya filtered query par Count() har item se guzarta hai (COUNT). Lists aur arrays par Count/Length property use karo.",
         "Distinct, Equals/GetHashCode use karta hai (records value se, classes reference se); DistinctBy (.NET 6) har key ka pehla item rakhta hai.",
         "Sorting aur paging: OrderBy + ThenBy (do baar OrderBy nahi), ek unique tie-breaker, phir Skip((page - 1) * size).Take(size); gehre pages ke liye keyset paging.",
-        "TL view: default mein readable LINQ, measured hot paths mein plain loop; review mein bahut jaldi ya bahut der se ToList() aur loops ke andar lookups pakdo."
+        "TL view: default mein readable LINQ; plain loop par sirf un hot paths mein jao jinhe profiler ya benchmark dikhaaye."
       ]
     }
   },
