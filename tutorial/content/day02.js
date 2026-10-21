@@ -54,7 +54,7 @@ window.TL_DAY = {
 <li>a local variable in a method → usually on the <b>stack</b> (or just a CPU register);</li>
 <li>a field inside a class object → <b>inside that object, on the heap</b>;</li>
 <li>an element of an array → inside the array, on the heap;</li>
-<li><b>boxed</b>, or captured by a lambda / used across an <code>await</code> → copied to the heap.</li>
+<li><b>boxed</b> → its value is copied into a new object on the heap; <b>captured</b> by a lambda or used across an <code>await</code> → the variable itself is moved (hoisted) into a compiler-generated object on the heap.</li>
 </ul></li>
 <li>Objects of reference types are created on the <b>heap</b> and cleaned up by the <b>garbage collector (GC)</b>. The reference itself is stored like any value: on the stack if it is a local, inside an object if it is a field.</li>
 <li><b>Boxing</b> = wrapping a value type in an <code>object</code> on the heap (a copy). <b>Unboxing</b> = copying it back out with a cast.</li>
@@ -70,7 +70,7 @@ window.TL_DAY = {
 <li>method का local variable → अक्सर <b>stack</b> पर (या सिर्फ़ CPU register में);</li>
 <li>class object का field → <b>उसी object के अंदर, heap पर</b>;</li>
 <li>array का element → array के अंदर, heap पर;</li>
-<li><b>boxed</b> हो, या lambda ने capture किया हो / <code>await</code> के पार use हो → heap पर copy हो जाता है।</li>
+<li><b>boxed</b> हो → value heap पर एक नए object में copy होती है; lambda ने <b>capture</b> किया हो या <code>await</code> के पार use हो → variable ख़ुद compiler के बनाए object में heap पर चला जाता है (hoist होता है)।</li>
 </ul></li>
 <li>Reference types के objects <b>heap</b> पर बनते हैं और <b>garbage collector (GC)</b> उन्हें साफ़ करता है। Reference ख़ुद एक normal value की तरह store होता है: local है तो stack पर, field है तो object के अंदर।</li>
 <li><b>Boxing</b> = value type को heap पर एक <code>object</code> में लपेटना (एक copy)। <b>Unboxing</b> = cast करके उसे वापस बाहर copy करना।</li>
@@ -86,7 +86,7 @@ window.TL_DAY = {
 <li>method ka local variable → aksar <b>stack</b> par (ya sirf CPU register mein);</li>
 <li>class object ka field → <b>usi object ke andar, heap par</b>;</li>
 <li>array ka element → array ke andar, heap par;</li>
-<li><b>boxed</b> ho, ya lambda ne capture kiya ho / <code>await</code> ke paar use ho → heap par copy ho jaata hai.</li>
+<li><b>boxed</b> ho → value heap par ek naye object mein copy hoti hai; lambda ne <b>capture</b> kiya ho ya <code>await</code> ke paar use ho → variable khud compiler ke banaye object mein heap par chala jaata hai (hoist hota hai).</li>
 </ul></li>
 <li>Reference types ke objects <b>heap</b> par bante hain aur <b>garbage collector (GC)</b> unhe saaf karta hai. Reference khud ek normal value ki tarah store hota hai: local hai to stack par, field hai to object ke andar.</li>
 <li><b>Boxing</b> = value type ko heap par ek <code>object</code> mein lapetna (ek copy). <b>Unboxing</b> = cast karke use wapas bahar copy karna.</li>
@@ -483,7 +483,7 @@ Console.WriteLine($"Bill for {customer}: {items.Length} items");`
       body: {
         en: `<p><b>Analogy:</b> the <b>MRP printed on a packet</b> is fixed at the factory and copied onto every bill — that is a <code>const</code>. The <b>manufacturing date</b> is stamped once when each packet is made — that is a <code>readonly</code> field. Your <b>Aadhaar card</b> is never edited: an address change gives you a <b>new</b> card, and the old one still shows the old address — that is non-destructive mutation with <code>with</code>.</p>
 <ul>
-<li><code>const</code> — a compile-time constant; implicitly <code>static</code>; only numbers, <code>bool</code>, <code>char</code>, <code>string</code>, enums (or <code>null</code>). A non-constant value gives CS0133. The value is <b>copied into every assembly that uses it</b> — change a <code>public const</code> in a library and callers keep the old value until they recompile.</li>
+<li><code>const</code> — a compile-time constant; implicitly <code>static</code>; only numbers, <code>bool</code>, <code>char</code>, <code>string</code>, enums (or <code>null</code>). A non-constant value gives CS0133; a type such as <code>DateTime</code> or <code>TimeSpan</code> cannot be <code>const</code> at all (CS0283). The value is <b>copied into every assembly that uses it</b> — change a <code>public const</code> in a library and callers keep the old value until they recompile.</li>
 <li><code>readonly</code> field — set only in its declaration or a constructor (else CS0191). Each object can have its own value, decided at runtime.</li>
 <li><code>static readonly</code> — one value per type, set at runtime (e.g. <code>TimeSpan</code>, objects) — CS0198 if assigned elsewhere. Use it when <code>const</code> is not allowed.</li>
 <li><code>init</code> accessor (C# 9) — set in an object initializer or constructor, then frozen (CS8852 later).</li>
@@ -494,7 +494,7 @@ Console.WriteLine($"Bill for {customer}: {items.Length} items");`
 <p><b>When to use:</b> immutable types for values and messages (money, addresses, DTOs, events, configuration snapshots) and anything shared between threads; <code>const</code> for true universal constants (<code>MaxRetries</code> inside one assembly), <code>static readonly</code> for public "constants" in libraries. <b>When not:</b> entities with a real lifecycle (an <code>Order</code> moving through states) are naturally mutable — protect them with encapsulation (Day 1) rather than forcing every change to create a new object.</p>`,
         hi: `<p><b>Analogy:</b> packet पर छपा <b>MRP</b> factory में fix होता है और हर bill पर copy होता है — यह <code>const</code> है। <b>Manufacturing date</b> हर packet बनते समय एक बार stamp होती है — यह <code>readonly</code> field है। आपका <b>Aadhaar card</b> कभी edit नहीं होता: address बदलने पर <b>नया</b> card मिलता है, और पुराने पर अब भी पुराना address है — यह <code>with</code> वाला non-destructive mutation है।</p>
 <ul>
-<li><code>const</code> — compile-time constant; अपने-आप <code>static</code>; सिर्फ़ numbers, <code>bool</code>, <code>char</code>, <code>string</code>, enums (या <code>null</code>)। Non-constant value देने पर CS0133। Value <b>use करने वाली हर assembly में copy हो जाती है</b> — library में <code>public const</code> बदलो तो callers के पास पुरानी value ही रहती है जब तक वो recompile न हों।</li>
+<li><code>const</code> — compile-time constant; अपने-आप <code>static</code>; सिर्फ़ numbers, <code>bool</code>, <code>char</code>, <code>string</code>, enums (या <code>null</code>)। Non-constant value देने पर CS0133; <code>DateTime</code> या <code>TimeSpan</code> जैसा type <code>const</code> हो ही नहीं सकता (CS0283)। Value <b>use करने वाली हर assembly में copy हो जाती है</b> — library में <code>public const</code> बदलो तो callers के पास पुरानी value ही रहती है जब तक वो recompile न हों।</li>
 <li><code>readonly</code> field — सिर्फ़ declaration या constructor में set होता है (वरना CS0191)। हर object की अपनी value हो सकती है, जो runtime पर तय होती है।</li>
 <li><code>static readonly</code> — पूरे type के लिए एक value, runtime पर set (जैसे <code>TimeSpan</code>, objects) — कहीं और assign करो तो CS0198। जहाँ <code>const</code> allowed नहीं, वहाँ यह use करो।</li>
 <li><code>init</code> accessor (C# 9) — object initializer या constructor में set करो, फिर freeze (बाद में CS8852)।</li>
@@ -505,7 +505,7 @@ Console.WriteLine($"Bill for {customer}: {items.Length} items");`
 <p><b>कब use करें:</b> values और messages (money, addresses, DTOs, events, configuration snapshots) और threads के बीच share होने वाली हर चीज़ के लिए immutable types; सच्चे universal constants के लिए <code>const</code> (एक assembly के अंदर <code>MaxRetries</code>), libraries के public "constants" के लिए <code>static readonly</code>। <b>कब नहीं:</b> जिन entities की असली lifecycle है (states से गुज़रता <code>Order</code>) वो स्वाभाविक रूप से mutable हैं — हर बदलाव पर नया object बनाने के बजाय उन्हें encapsulation (Day 1) से बचाओ।</p>`,
         hg: `<p><b>Analogy:</b> packet par chhapa <b>MRP</b> factory mein fix hota hai aur har bill par copy hota hai — yeh <code>const</code> hai. <b>Manufacturing date</b> har packet bante samay ek baar stamp hoti hai — yeh <code>readonly</code> field hai. Aapka <b>Aadhaar card</b> kabhi edit nahi hota: address badalne par <b>naya</b> card milta hai, aur purane par ab bhi purana address hai — yeh <code>with</code> wala non-destructive mutation hai.</p>
 <ul>
-<li><code>const</code> — compile-time constant; apne-aap <code>static</code>; sirf numbers, <code>bool</code>, <code>char</code>, <code>string</code>, enums (ya <code>null</code>). Non-constant value dene par CS0133. Value <b>use karne wali har assembly mein copy ho jaati hai</b> — library mein <code>public const</code> badlo to callers ke paas purani value hi rehti hai jab tak woh recompile na hon.</li>
+<li><code>const</code> — compile-time constant; apne-aap <code>static</code>; sirf numbers, <code>bool</code>, <code>char</code>, <code>string</code>, enums (ya <code>null</code>). Non-constant value dene par CS0133; <code>DateTime</code> ya <code>TimeSpan</code> jaisa type <code>const</code> ho hi nahi sakta (CS0283). Value <b>use karne wali har assembly mein copy ho jaati hai</b> — library mein <code>public const</code> badlo to callers ke paas purani value hi rehti hai jab tak woh recompile na hon.</li>
 <li><code>readonly</code> field — sirf declaration ya constructor mein set hota hai (warna CS0191). Har object ki apni value ho sakti hai, jo runtime par tay hoti hai.</li>
 <li><code>static readonly</code> — poore type ke liye ek value, runtime par set (jaise <code>TimeSpan</code>, objects) — kahin aur assign karo to CS0198. Jahan <code>const</code> allowed nahi, wahan yeh use karo.</li>
 <li><code>init</code> accessor (C# 9) — object initializer ya constructor mein set karo, phir freeze (baad mein CS8852).</li>
@@ -577,7 +577,7 @@ public class LegacyRules
         en: `<p><b>Analogy — USB-C cable:</b> one cable design charges many phones — that is a generic type. But it works only with phones that <b>have a USB-C port</b> — that rule is a <b>constraint</b>. The cable checks the port when you plug it in (compile time), not after it starts charging.</p>
 <ul>
 <li><b>Generic class</b>: <code>InMemoryRepository&lt;T&gt;</code> below is written once and works for <code>Customer</code>, <code>Product</code>, ... <b>Generic method</b>: <code>Max&lt;T&gt;(T a, T b)</code> — the compiler usually infers <code>T</code> from the arguments.</li>
-<li><b>Constraints</b>: <code>where T : class</code> (reference type, else CS0452), <code>struct</code> (non-nullable value type, else CS0453), <code>new()</code> (public parameterless constructor, else CS0310), a base class, an interface (<code>IComparable&lt;T&gt;</code> — else CS0311), <code>notnull</code>, <code>unmanaged</code>, another type parameter (<code>where T : U</code>). C# 13 added <code>allows ref struct</code>.</li>
+<li><b>Constraints</b>: <code>where T : class</code> (reference type, else CS0452), <code>struct</code> (non-nullable value type, else CS0453), <code>new()</code> (public parameterless constructor, else CS0310), a base class, an interface (<code>IComparable&lt;T&gt;</code> — else CS0311 for a class, CS0315 for a struct), <code>notnull</code>, <code>unmanaged</code>, another type parameter (<code>where T : U</code>). C# 13 added <code>allows ref struct</code>.</li>
 <li><b>Generics are real at runtime</b> (unlike Java's type erasure): <code>List&lt;int&gt;</code> and <code>List&lt;string&gt;</code> are different types. The JIT creates specialised code for each value-type argument (so <code>List&lt;int&gt;</code> stores real ints, no boxing) and shares one copy of code for reference types. Static fields are <b>per closed type</b> — <code>Cache&lt;int&gt;.Count</code> and <code>Cache&lt;string&gt;.Count</code> are separate.</li>
 <li><b>Variance</b> (interfaces and delegates only, reference types only): <b>covariance</b> <code>out T</code> — <code>IEnumerable&lt;string&gt;</code> can be used as <code>IEnumerable&lt;object&gt;</code>; <b>contravariance</b> <code>in T</code> — an <code>Action&lt;object&gt;</code> can be used as <code>Action&lt;string&gt;</code>. But <code>List&lt;string&gt;</code> → <code>List&lt;object&gt;</code> is CS0029, because a list also accepts writes.</li>
 <li><code>default(T)</code> / <code>default</code> gives <code>null</code> for reference types and zero for value types.</li>
@@ -586,7 +586,7 @@ public class LegacyRules
         hi: `<p><b>Analogy — USB-C cable:</b> एक ही cable design कई phones charge करता है — यह generic type है। पर यह सिर्फ़ उन्हीं phones में चलेगा जिनमें <b>USB-C port हो</b> — यह rule एक <b>constraint</b> है। Plug लगाते ही cable port check कर लेती है (compile time), charging शुरू होने के बाद नहीं।</p>
 <ul>
 <li><b>Generic class</b>: नीचे वाला <code>InMemoryRepository&lt;T&gt;</code> एक बार लिखा है और <code>Customer</code>, <code>Product</code>, ... सबके लिए चलता है। <b>Generic method</b>: <code>Max&lt;T&gt;(T a, T b)</code> — compiler अक्सर arguments से <code>T</code> ख़ुद समझ लेता है।</li>
-<li><b>Constraints</b>: <code>where T : class</code> (reference type, वरना CS0452), <code>struct</code> (non-nullable value type, वरना CS0453), <code>new()</code> (public parameterless constructor, वरना CS0310), कोई base class, कोई interface (<code>IComparable&lt;T&gt;</code> — वरना CS0311), <code>notnull</code>, <code>unmanaged</code>, दूसरा type parameter (<code>where T : U</code>)। C# 13 में <code>allows ref struct</code> आया।</li>
+<li><b>Constraints</b>: <code>where T : class</code> (reference type, वरना CS0452), <code>struct</code> (non-nullable value type, वरना CS0453), <code>new()</code> (public parameterless constructor, वरना CS0310), कोई base class, कोई interface (<code>IComparable&lt;T&gt;</code> — वरना class के लिए CS0311, struct के लिए CS0315), <code>notnull</code>, <code>unmanaged</code>, दूसरा type parameter (<code>where T : U</code>)। C# 13 में <code>allows ref struct</code> आया।</li>
 <li><b>Generics runtime पर असली हैं</b> (Java के type erasure जैसे नहीं): <code>List&lt;int&gt;</code> और <code>List&lt;string&gt;</code> अलग types हैं। JIT हर value-type argument के लिए अलग specialised code बनाता है (इसलिए <code>List&lt;int&gt;</code> असली ints रखती है, boxing नहीं) और reference types के लिए एक ही code share करता है। Static fields <b>हर closed type के अलग</b> होते हैं — <code>Cache&lt;int&gt;.Count</code> और <code>Cache&lt;string&gt;.Count</code> अलग हैं।</li>
 <li><b>Variance</b> (सिर्फ़ interfaces और delegates, सिर्फ़ reference types): <b>covariance</b> <code>out T</code> — <code>IEnumerable&lt;string&gt;</code> को <code>IEnumerable&lt;object&gt;</code> की तरह use कर सकते हो; <b>contravariance</b> <code>in T</code> — <code>Action&lt;object&gt;</code> को <code>Action&lt;string&gt;</code> की तरह use कर सकते हो। पर <code>List&lt;string&gt;</code> → <code>List&lt;object&gt;</code> CS0029 है, क्योंकि list में लिख भी सकते हैं।</li>
 <li><code>default(T)</code> / <code>default</code> reference types के लिए <code>null</code> और value types के लिए zero देता है।</li>
@@ -595,7 +595,7 @@ public class LegacyRules
         hg: `<p><b>Analogy — USB-C cable:</b> ek hi cable design kai phones charge karta hai — yeh generic type hai. Par yeh sirf unhi phones mein chalega jinmein <b>USB-C port ho</b> — yeh rule ek <b>constraint</b> hai. Plug lagate hi cable port check kar leti hai (compile time), charging shuru hone ke baad nahi.</p>
 <ul>
 <li><b>Generic class</b>: neeche wala <code>InMemoryRepository&lt;T&gt;</code> ek baar likha hai aur <code>Customer</code>, <code>Product</code>, ... sabke liye chalta hai. <b>Generic method</b>: <code>Max&lt;T&gt;(T a, T b)</code> — compiler aksar arguments se <code>T</code> khud samajh leta hai.</li>
-<li><b>Constraints</b>: <code>where T : class</code> (reference type, warna CS0452), <code>struct</code> (non-nullable value type, warna CS0453), <code>new()</code> (public parameterless constructor, warna CS0310), koi base class, koi interface (<code>IComparable&lt;T&gt;</code> — warna CS0311), <code>notnull</code>, <code>unmanaged</code>, doosra type parameter (<code>where T : U</code>). C# 13 mein <code>allows ref struct</code> aaya.</li>
+<li><b>Constraints</b>: <code>where T : class</code> (reference type, warna CS0452), <code>struct</code> (non-nullable value type, warna CS0453), <code>new()</code> (public parameterless constructor, warna CS0310), koi base class, koi interface (<code>IComparable&lt;T&gt;</code> — warna class ke liye CS0311, struct ke liye CS0315), <code>notnull</code>, <code>unmanaged</code>, doosra type parameter (<code>where T : U</code>). C# 13 mein <code>allows ref struct</code> aaya.</li>
 <li><b>Generics runtime par asli hain</b> (Java ke type erasure jaise nahi): <code>List&lt;int&gt;</code> aur <code>List&lt;string&gt;</code> alag types hain. JIT har value-type argument ke liye alag specialised code banata hai (isliye <code>List&lt;int&gt;</code> asli ints rakhti hai, boxing nahi) aur reference types ke liye ek hi code share karta hai. Static fields <b>har closed type ke alag</b> hote hain — <code>Cache&lt;int&gt;.Count</code> aur <code>Cache&lt;string&gt;.Count</code> alag hain.</li>
 <li><b>Variance</b> (sirf interfaces aur delegates, sirf reference types): <b>covariance</b> <code>out T</code> — <code>IEnumerable&lt;string&gt;</code> ko <code>IEnumerable&lt;object&gt;</code> ki tarah use kar sakte ho; <b>contravariance</b> <code>in T</code> — <code>Action&lt;object&gt;</code> ko <code>Action&lt;string&gt;</code> ki tarah use kar sakte ho. Par <code>List&lt;string&gt;</code> → <code>List&lt;object&gt;</code> CS0029 hai, kyunki list mein likh bhi sakte hain.</li>
 <li><code>default(T)</code> / <code>default</code> reference types ke liye <code>null</code> aur value types ke liye zero deta hai.</li>
@@ -654,7 +654,7 @@ public class InMemoryRepository<T> where T : class, IEntity
 <ul>
 <li><b>Big-O cheat sheet</b>: <code>List&lt;T&gt;</code> index O(1), <code>Add</code> O(1) amortised, <code>Contains</code>/<code>Insert</code>/<code>Remove</code> O(n). <code>Dictionary</code>/<code>HashSet</code> lookup O(1) on average. <code>SortedDictionary</code> O(log n), always sorted by key.</li>
 <li><b>Dictionary tips</b>: use <code>TryGetValue</code> (one lookup instead of <code>ContainsKey</code> + indexer); pass a comparer (<code>StringComparer.OrdinalIgnoreCase</code>) for case-insensitive keys; the indexer setter adds or overwrites, <code>Add</code> throws on a duplicate key. Do not rely on its enumeration order.</li>
-<li><b>Modifying while iterating</b>: <code>Remove</code> inside <code>foreach</code> throws <code>InvalidOperationException</code> ("Collection was modified"). Use <code>RemoveAll</code>, or loop over a copy.</li>
+<li><b>Modifying while iterating</b>: removing from a <code>List&lt;T&gt;</code>, or <b>adding</b> to a <code>List</code>/<code>Dictionary</code>/<code>HashSet</code>, inside <code>foreach</code> throws <code>InvalidOperationException</code> ("Collection was modified"). For a list use <code>RemoveAll</code>, or loop over a copy. In modern .NET, <code>Dictionary</code> (since .NET Core 3.0) and <code>HashSet</code> do allow <code>Remove</code> during enumeration.</li>
 <li><b>Read-only view</b> (<code>AsReadOnly()</code>, <code>IReadOnlyList&lt;T&gt;</code>): callers cannot change it, but they <b>do see</b> changes made to the inner list. <b>Immutable</b> (<code>ImmutableList&lt;T&gt;</code>, <code>ImmutableArray&lt;T&gt;</code>): never changes; "Add" returns a new collection. <b>Frozen</b> (<code>FrozenDictionary</code>/<code>FrozenSet</code>, .NET 8+): slower to build, very fast to read — ideal for lookup tables built at startup.</li>
 <li><b>Threads</b>: <code>List</code> and <code>Dictionary</code> are not safe for concurrent writes. Use <code>ConcurrentDictionary</code>, <code>ConcurrentQueue</code>, <code>Channel&lt;T&gt;</code> (producer/consumer), or a <code>lock</code>.</li>
 </ul>
@@ -663,7 +663,7 @@ public class InMemoryRepository<T> where T : class, IEntity
 <ul>
 <li><b>Big-O cheat sheet</b>: <code>List&lt;T&gt;</code> index O(1), <code>Add</code> amortised O(1), <code>Contains</code>/<code>Insert</code>/<code>Remove</code> O(n)। <code>Dictionary</code>/<code>HashSet</code> lookup average O(1)। <code>SortedDictionary</code> O(log n), हमेशा key से sorted।</li>
 <li><b>Dictionary tips</b>: <code>TryGetValue</code> use करो (<code>ContainsKey</code> + indexer की जगह एक ही lookup); case-insensitive keys के लिए comparer दो (<code>StringComparer.OrdinalIgnoreCase</code>); indexer setter add या overwrite करता है, <code>Add</code> duplicate key पर exception देता है। इसके enumeration order पर भरोसा मत करो।</li>
-<li><b>Iterate करते समय बदलना</b>: <code>foreach</code> के अंदर <code>Remove</code> करने पर <code>InvalidOperationException</code> ("Collection was modified") आता है। <code>RemoveAll</code> use करो, या copy पर loop चलाओ।</li>
+<li><b>Iterate करते समय बदलना</b>: <code>foreach</code> के अंदर <code>List&lt;T&gt;</code> से remove करने पर, या <code>List</code>/<code>Dictionary</code>/<code>HashSet</code> में <b>add</b> करने पर <code>InvalidOperationException</code> ("Collection was modified") आता है। List के लिए <code>RemoveAll</code> use करो, या copy पर loop चलाओ। Modern .NET में <code>Dictionary</code> (.NET Core 3.0 से) और <code>HashSet</code> enumeration के दौरान <code>Remove</code> allow करते हैं।</li>
 <li><b>Read-only view</b> (<code>AsReadOnly()</code>, <code>IReadOnlyList&lt;T&gt;</code>): callers इसे बदल नहीं सकते, पर अंदर की list में हुए बदलाव उन्हें <b>दिखते हैं</b>। <b>Immutable</b> (<code>ImmutableList&lt;T&gt;</code>, <code>ImmutableArray&lt;T&gt;</code>): कभी नहीं बदलता; "Add" नया collection return करता है। <b>Frozen</b> (<code>FrozenDictionary</code>/<code>FrozenSet</code>, .NET 8+): बनाने में धीमा, पढ़ने में बहुत तेज़ — startup पर बनने वाली lookup tables के लिए बढ़िया।</li>
 <li><b>Threads</b>: <code>List</code> और <code>Dictionary</code> concurrent writes के लिए safe नहीं हैं। <code>ConcurrentDictionary</code>, <code>ConcurrentQueue</code>, <code>Channel&lt;T&gt;</code> (producer/consumer), या <code>lock</code> use करो।</li>
 </ul>
@@ -672,7 +672,7 @@ public class InMemoryRepository<T> where T : class, IEntity
 <ul>
 <li><b>Big-O cheat sheet</b>: <code>List&lt;T&gt;</code> index O(1), <code>Add</code> amortised O(1), <code>Contains</code>/<code>Insert</code>/<code>Remove</code> O(n). <code>Dictionary</code>/<code>HashSet</code> lookup average O(1). <code>SortedDictionary</code> O(log n), hamesha key se sorted.</li>
 <li><b>Dictionary tips</b>: <code>TryGetValue</code> use karo (<code>ContainsKey</code> + indexer ki jagah ek hi lookup); case-insensitive keys ke liye comparer do (<code>StringComparer.OrdinalIgnoreCase</code>); indexer setter add ya overwrite karta hai, <code>Add</code> duplicate key par exception deta hai. Iske enumeration order par bharosa mat karo.</li>
-<li><b>Iterate karte samay badalna</b>: <code>foreach</code> ke andar <code>Remove</code> karne par <code>InvalidOperationException</code> ("Collection was modified") aata hai. <code>RemoveAll</code> use karo, ya copy par loop chalao.</li>
+<li><b>Iterate karte samay badalna</b>: <code>foreach</code> ke andar <code>List&lt;T&gt;</code> se remove karne par, ya <code>List</code>/<code>Dictionary</code>/<code>HashSet</code> mein <b>add</b> karne par <code>InvalidOperationException</code> ("Collection was modified") aata hai. List ke liye <code>RemoveAll</code> use karo, ya copy par loop chalao. Modern .NET mein <code>Dictionary</code> (.NET Core 3.0 se) aur <code>HashSet</code> enumeration ke dauraan <code>Remove</code> allow karte hain.</li>
 <li><b>Read-only view</b> (<code>AsReadOnly()</code>, <code>IReadOnlyList&lt;T&gt;</code>): callers ise badal nahi sakte, par andar ki list mein hue badlaav unhe <b>dikhte hain</b>. <b>Immutable</b> (<code>ImmutableList&lt;T&gt;</code>, <code>ImmutableArray&lt;T&gt;</code>): kabhi nahi badalta; "Add" naya collection return karta hai. <b>Frozen</b> (<code>FrozenDictionary</code>/<code>FrozenSet</code>, .NET 8+): banane mein dheema, padhne mein bahut tez — startup par banne wali lookup tables ke liye badhiya.</li>
 <li><b>Threads</b>: <code>List</code> aur <code>Dictionary</code> concurrent writes ke liye safe nahi hain. <code>ConcurrentDictionary</code>, <code>ConcurrentQueue</code>, <code>Channel&lt;T&gt;</code> (producer/consumer), ya <code>lock</code> use karo.</li>
 </ul>
@@ -856,7 +856,7 @@ public class OrderTracker(string orderId)
       body: {
         en: `<p><b>Analogy — mobile cover with a stand:</b> you cannot open your phone and add a stand inside it, but a cover adds that feature from outside. The phone does not change; the cover only uses what the phone already exposes. An extension method adds a method to a type <b>from outside</b>, using only its public members.</p>
 <ul>
-<li><b>Rules</b>: a <code>static</code> method in a non-generic, non-nested <code>static</code> class (else CS1106); the first parameter has <code>this</code>. Callers need the class's namespace in a <code>using</code>.</li>
+<li><b>Rules</b>: a <code>static</code> method in a non-generic, non-nested <code>static</code> class (CS1106; CS1109 if nested); the first parameter has <code>this</code>. Callers need the class's namespace in a <code>using</code>.</li>
 <li>It is <b>pure syntax</b>: <code>name.IsBlank()</code> compiles to <code>StringExtensions.IsBlank(name)</code>. So it can be called on <code>null</code> without a <code>NullReferenceException</code> — decide whether that makes sense, or throw <code>ArgumentNullException</code> yourself.</li>
 <li>It is chosen at <b>compile time</b> from the declared type — no <code>virtual</code> dispatch. An applicable <b>instance method always wins</b> over an extension with the same signature.</li>
 <li>It cannot see <code>private</code> or <code>protected</code> members.</li>
@@ -866,7 +866,7 @@ public class OrderTracker(string orderId)
 <p><b>When to use:</b> helpers for types you do not own (<code>string</code>, <code>IEnumerable&lt;T&gt;</code>, <code>IServiceCollection</code>), fluent setup APIs, small reusable conversions. <b>When not:</b> logic that needs private state or is core domain behaviour — put it in the class itself; and avoid piling extensions on <code>object</code> or <code>string</code> in shared libraries — they show up in everyone's IntelliSense.</p>`,
         hi: `<p><b>Analogy — stand वाला mobile cover:</b> आप phone खोलकर अंदर stand नहीं जोड़ सकते, पर cover बाहर से वो feature जोड़ देता है। Phone नहीं बदलता; cover बस वही use करता है जो phone पहले से बाहर दिखाता है। Extension method किसी type में <b>बाहर से</b> method जोड़ता है, सिर्फ़ उसके public members use करके।</p>
 <ul>
-<li><b>Rules</b>: non-generic, non-nested <code>static</code> class के अंदर <code>static</code> method (वरना CS1106); पहले parameter पर <code>this</code>। Callers को उस class का namespace <code>using</code> में चाहिए।</li>
+<li><b>Rules</b>: non-generic, non-nested <code>static</code> class के अंदर <code>static</code> method (वरना CS1106; nested हो तो CS1109); पहले parameter पर <code>this</code>। Callers को उस class का namespace <code>using</code> में चाहिए।</li>
 <li>यह <b>सिर्फ़ syntax</b> है: <code>name.IsBlank()</code> compile होकर <code>StringExtensions.IsBlank(name)</code> बनता है। इसलिए इसे <code>null</code> पर भी बिना <code>NullReferenceException</code> के call कर सकते हो — तय करो कि यह सही है या नहीं, वरना ख़ुद <code>ArgumentNullException</code> फेंको।</li>
 <li>यह <b>compile time</b> पर declared type से चुना जाता है — कोई <code>virtual</code> dispatch नहीं। Same signature वाला लागू होने लायक <b>instance method हमेशा जीतता है</b>।</li>
 <li>यह <code>private</code> या <code>protected</code> members नहीं देख सकता।</li>
@@ -876,7 +876,7 @@ public class OrderTracker(string orderId)
 <p><b>कब use करें:</b> जो types आपके नहीं हैं (<code>string</code>, <code>IEnumerable&lt;T&gt;</code>, <code>IServiceCollection</code>) उनके helpers, fluent setup APIs, छोटे reusable conversions। <b>कब नहीं:</b> जिस logic को private state चाहिए या जो core domain behaviour है — उसे class में ही रखो; और shared libraries में <code>object</code> या <code>string</code> पर ढेर सारे extensions मत डालो — वो सबकी IntelliSense में दिखते हैं।</p>`,
         hg: `<p><b>Analogy — stand wala mobile cover:</b> aap phone kholkar andar stand nahi jod sakte, par cover bahar se woh feature jod deta hai. Phone nahi badalta; cover bas wahi use karta hai jo phone pehle se bahar dikhata hai. Extension method kisi type mein <b>bahar se</b> method jodta hai, sirf uske public members use karke.</p>
 <ul>
-<li><b>Rules</b>: non-generic, non-nested <code>static</code> class ke andar <code>static</code> method (warna CS1106); pehle parameter par <code>this</code>. Callers ko us class ka namespace <code>using</code> mein chahiye.</li>
+<li><b>Rules</b>: non-generic, non-nested <code>static</code> class ke andar <code>static</code> method (warna CS1106; nested ho to CS1109); pehle parameter par <code>this</code>. Callers ko us class ka namespace <code>using</code> mein chahiye.</li>
 <li>Yeh <b>sirf syntax</b> hai: <code>name.IsBlank()</code> compile hokar <code>StringExtensions.IsBlank(name)</code> banta hai. Isliye ise <code>null</code> par bhi bina <code>NullReferenceException</code> ke call kar sakte ho — tay karo ki yeh sahi hai ya nahi, warna khud <code>ArgumentNullException</code> phenko.</li>
 <li>Yeh <b>compile time</b> par declared type se chuna jaata hai — koi <code>virtual</code> dispatch nahi. Same signature wala laagu hone laayak <b>instance method hamesha jeetta hai</b>.</li>
 <li>Yeh <code>private</code> ya <code>protected</code> members nahi dekh sakta.</li>
@@ -996,7 +996,7 @@ public static class StringExtensions
       id: "stack-vs-heap",
       depth: "short",
       q: "Where are value types and reference types stored — on the stack or the heap?",
-      answer: "Reference-type objects live on the managed heap. A value type lives where its container lives: on the stack as a local variable, inside the object on the heap as a field, and on the heap when boxed or captured by a lambda.",
+      answer: "Reference-type objects live on the managed heap. A value type lives where its container lives: a local on the stack, a field inside its heap object, and boxed or captured values on the heap.",
       meaning: {
         hi: "Reference-type objects managed heap पर रहते हैं। Value type वहीं रहता है जहाँ उसका container है: local variable हो तो stack पर, field हो तो heap पर object के अंदर, और boxed हो या lambda ने capture किया हो तो heap पर।",
         hg: "Reference-type objects managed heap par rehte hain. Value type wahin rehta hai jahan uska container hai: local variable ho to stack par, field ho to heap par object ke andar, aur boxed ho ya lambda ne capture kiya ho to heap par."
@@ -1227,7 +1227,7 @@ public static class StringExtensions
       id: "extension-methods",
       depth: "short",
       q: "What are extension methods and how do they work internally?",
-      answer: "They are static methods in a static class whose first parameter is marked with this, so you can call them like instance methods. The compiler simply rewrites the call into a normal static method call — LINQ is built this way.",
+      answer: "Static methods in a static class whose first parameter has this, so they read like instance methods. The compiler rewrites each call into an ordinary static call — that is how LINQ works.",
       meaning: {
         hi: "ये static class के अंदर static methods हैं जिनके पहले parameter पर this लगा होता है, इसलिए इन्हें instance methods की तरह call कर सकते हो। Compiler बस call को normal static method call में बदल देता है — LINQ ऐसे ही बना है।",
         hg: "Yeh static class ke andar static methods hain jinke pehle parameter par this laga hota hai, isliye inhe instance methods ki tarah call kar sakte ho. Compiler bas call ko normal static method call mein badal deta hai — LINQ aise hi bana hai."
@@ -1348,21 +1348,21 @@ public static class StringExtensions
       },
       explain: {
         en: `<ul>
-<li><code>const</code>: value known at compile time; only primitive types, <code>string</code>, enums (else CS0133). Implicitly static. Can be used in <code>switch</code> cases and attribute arguments.</li>
+<li><code>const</code>: value known at compile time; only primitive types, <code>string</code>, enums (another type such as <code>DateTime</code> gives CS0283; a non-constant value gives CS0133). Implicitly static. Can be used in <code>switch</code> cases and attribute arguments.</li>
 <li><code>readonly</code>: any type; assigned in the declaration or a constructor (CS0191 elsewhere); different objects can hold different values.</li>
 <li><code>static readonly</code>: any type, one value per type, computed at runtime — e.g. <code>static readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);</code> (CS0198 if assigned outside the static constructor/initializer).</li>
 </ul>
 <p><b>The versioning trap</b> (TL-level): library A has <code>public const int MaxItems = 50;</code>. App B compiles against it — the number 50 is <b>copied into B's IL</b>. A ships 100, but B still uses 50 until B is recompiled. With <code>static readonly</code>, B reads the value from A at runtime.</p>
 <p>Follow-up: "Does readonly make an object immutable?" — No, it is shallow: a <code>readonly List&lt;T&gt;</code> can still be modified; only the reference is fixed.</p>`,
         hi: `<ul>
-<li><code>const</code>: value compile time पर पता होनी चाहिए; सिर्फ़ primitive types, <code>string</code>, enums (वरना CS0133)। अपने-आप static। <code>switch</code> cases और attribute arguments में use हो सकता है।</li>
+<li><code>const</code>: value compile time पर पता होनी चाहिए; सिर्फ़ primitive types, <code>string</code>, enums (<code>DateTime</code> जैसा दूसरा type दो तो CS0283; non-constant value दो तो CS0133)। अपने-आप static। <code>switch</code> cases और attribute arguments में use हो सकता है।</li>
 <li><code>readonly</code>: कोई भी type; declaration या constructor में assign होता है (कहीं और CS0191); अलग objects की अलग values हो सकती हैं।</li>
 <li><code>static readonly</code>: कोई भी type, पूरे type के लिए एक value, runtime पर calculate — जैसे <code>static readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);</code> (static constructor/initializer के बाहर assign करो तो CS0198)।</li>
 </ul>
 <p><b>Versioning trap</b> (TL-level): library A में <code>public const int MaxItems = 50;</code> है। App B उसके against compile होता है — number 50 <b>B के IL में copy हो जाता है</b>। A ने 100 ship किया, पर B तब तक 50 ही use करेगा जब तक B recompile न हो। <code>static readonly</code> में B runtime पर A से value पढ़ता है।</p>
 <p>Follow-up: "क्या readonly object को immutable बना देता है?" — नहीं, यह shallow है: <code>readonly List&lt;T&gt;</code> अब भी बदल सकती है; सिर्फ़ reference fix है।</p>`,
         hg: `<ul>
-<li><code>const</code>: value compile time par pata honi chahiye; sirf primitive types, <code>string</code>, enums (warna CS0133). Apne-aap static. <code>switch</code> cases aur attribute arguments mein use ho sakta hai.</li>
+<li><code>const</code>: value compile time par pata honi chahiye; sirf primitive types, <code>string</code>, enums (<code>DateTime</code> jaisa doosra type do to CS0283; non-constant value do to CS0133). Apne-aap static. <code>switch</code> cases aur attribute arguments mein use ho sakta hai.</li>
 <li><code>readonly</code>: koi bhi type; declaration ya constructor mein assign hota hai (kahin aur CS0191); alag objects ki alag values ho sakti hain.</li>
 <li><code>static readonly</code>: koi bhi type, poore type ke liye ek value, runtime par calculate — jaise <code>static readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);</code> (static constructor/initializer ke bahar assign karo to CS0198).</li>
 </ul>
@@ -1407,6 +1407,75 @@ public static class StringExtensions
       }
     },
     {
+      id: "var-dynamic-object",
+      depth: "detailed",
+      q: "What is the difference between var, dynamic and object?",
+      answer: "var is compile-time type inference — the variable is still strongly typed. object is the base type: value types get boxed and you must cast. dynamic skips compile-time checks and binds members at runtime.",
+      meaning: {
+        hi: "var compile-time type inference है — variable फिर भी strongly typed रहता है। object base type है: value types box होते हैं और cast करना पड़ता है। dynamic compile-time checks छोड़ देता है और members runtime पर bind करता है।",
+        hg: "var compile-time type inference hai — variable phir bhi strongly typed rehta hai. object base type hai: value types box hote hain aur cast karna padta hai. dynamic compile-time checks chhod deta hai aur members runtime par bind karta hai."
+      },
+      explain: {
+        en: `<p><b>Analogy:</b> <code>var</code> is a parcel whose label the post office fills in for you — the label is still there and checked. <code>object</code> is a plain brown box — anything fits, but you must open it and check what is inside before using it (cast). <code>dynamic</code> is accepting the parcel <b>without any check</b> — you find out only when you open it at home (runtime).</p>
+<ul>
+<li><code>var count = 5;</code> — the compiler infers <code>int</code>. Later <code>count = "x";</code> is a compile error (CS0029). Same performance and safety as writing <code>int</code>.</li>
+<li><code>object o = 5;</code> — boxing; <code>o + 1</code> does not compile (CS0019) until you cast: <code>(int)o + 1</code>.</li>
+<li><code>dynamic d = 5;</code> — <code>d + 1</code>, <code>d.Length</code>, <code>d.Foo()</code> all compile. The runtime binder (Microsoft.CSharp) decides at runtime; a missing member throws <code>RuntimeBinderException</code>.</li>
+<li><b>Cost of dynamic</b>: runtime binding work (cached after the first call, but still slower than a normal call), no IntelliSense, no compile-time safety, and errors move from your build to production.</li>
+</ul>
+<p><b>When dynamic is justified:</b> COM interop (Office automation), talking to dynamic languages or scripting hosts, or quick handling of loosely-shaped data where you have no type. For JSON in normal app code, prefer typed DTOs with <code>System.Text.Json</code>, or <code>JsonNode</code>/<code>JsonElement</code> for truly unknown shapes.</p>
+<p>Follow-up: "Is <code>var</code> bad for readability?" — a team style choice: common convention is <code>var</code> when the type is obvious from the right side (<code>var orders = new List&lt;Order&gt;();</code>), explicit type when it is not.</p>`,
+        hi: `<p><b>Analogy:</b> <code>var</code> ऐसा parcel है जिस पर label post office ख़ुद भर देता है — label फिर भी है और check होता है। <code>object</code> एक सादा भूरा box है — कुछ भी आ जाता है, पर use करने से पहले खोलकर check करना पड़ता है कि अंदर क्या है (cast)। <code>dynamic</code> मतलब parcel <b>बिना किसी check के</b> ले लेना — घर पर खोलकर ही पता चलता है (runtime)।</p>
+<ul>
+<li><code>var count = 5;</code> — compiler <code>int</code> समझ लेता है। बाद में <code>count = "x";</code> compile error है (CS0029)। <code>int</code> लिखने जितनी ही performance और safety।</li>
+<li><code>object o = 5;</code> — boxing; <code>o + 1</code> तब तक compile नहीं होता (CS0019) जब तक cast न करो: <code>(int)o + 1</code>।</li>
+<li><code>dynamic d = 5;</code> — <code>d + 1</code>, <code>d.Length</code>, <code>d.Foo()</code> सब compile हो जाते हैं। Runtime binder (Microsoft.CSharp) runtime पर तय करता है; member न मिले तो <code>RuntimeBinderException</code> आता है।</li>
+<li><b>dynamic की कीमत</b>: runtime binding का काम (पहली call के बाद cache होता है, फिर भी normal call से धीमा), IntelliSense नहीं, compile-time safety नहीं, और errors build से हटकर production में पहुँच जाते हैं।</li>
+</ul>
+<p><b>dynamic कब ठीक है:</b> COM interop (Office automation), dynamic languages या scripting hosts से बात करना, या ढीले-ढाले shape वाला data जिसका कोई type नहीं है। Normal app code में JSON के लिए <code>System.Text.Json</code> के साथ typed DTOs लो, या सच में अनजान shape हो तो <code>JsonNode</code>/<code>JsonElement</code>।</p>
+<p>Follow-up: "क्या <code>var</code> readability के लिए बुरा है?" — यह team की style choice है: आम convention है कि type right side से साफ़ दिखे तो <code>var</code> (<code>var orders = new List&lt;Order&gt;();</code>), न दिखे तो explicit type।</p>`,
+        hg: `<p><b>Analogy:</b> <code>var</code> aisa parcel hai jis par label post office khud bhar deta hai — label phir bhi hai aur check hota hai. <code>object</code> ek saada bhoora box hai — kuch bhi aa jaata hai, par use karne se pehle kholkar check karna padta hai ki andar kya hai (cast). <code>dynamic</code> matlab parcel <b>bina kisi check ke</b> le lena — ghar par kholkar hi pata chalta hai (runtime).</p>
+<ul>
+<li><code>var count = 5;</code> — compiler <code>int</code> samajh leta hai. Baad mein <code>count = "x";</code> compile error hai (CS0029). <code>int</code> likhne jitni hi performance aur safety.</li>
+<li><code>object o = 5;</code> — boxing; <code>o + 1</code> tab tak compile nahi hota (CS0019) jab tak cast na karo: <code>(int)o + 1</code>.</li>
+<li><code>dynamic d = 5;</code> — <code>d + 1</code>, <code>d.Length</code>, <code>d.Foo()</code> sab compile ho jaate hain. Runtime binder (Microsoft.CSharp) runtime par tay karta hai; member na mile to <code>RuntimeBinderException</code> aata hai.</li>
+<li><b>dynamic ki keemat</b>: runtime binding ka kaam (pehli call ke baad cache hota hai, phir bhi normal call se dheema), IntelliSense nahi, compile-time safety nahi, aur errors build se hatkar production mein pahunch jaate hain.</li>
+</ul>
+<p><b>dynamic kab theek hai:</b> COM interop (Office automation), dynamic languages ya scripting hosts se baat karna, ya dheele-dhaale shape wala data jiska koi type nahi hai. Normal app code mein JSON ke liye <code>System.Text.Json</code> ke saath typed DTOs lo, ya sach mein anjaan shape ho to <code>JsonNode</code>/<code>JsonElement</code>.</p>
+<p>Follow-up: "Kya <code>var</code> readability ke liye bura hai?" — yeh team ki style choice hai: aam convention hai ki type right side se saaf dikhe to <code>var</code> (<code>var orders = new List&lt;Order&gt;();</code>), na dikhe to explicit type.</p>`
+      },
+      code: [{
+        caption: {
+          en: "var is still typed, object needs a cast, dynamic binds at runtime (and can fail at runtime)",
+          hi: "var फिर भी typed है, object को cast चाहिए, dynamic runtime पर bind होता है (और runtime पर fail हो सकता है)",
+          hg: "var phir bhi typed hai, object ko cast chahiye, dynamic runtime par bind hota hai (aur runtime par fail ho sakta hai)"
+        },
+        check: "run",
+        expected: "Int32\n6\n6\n12\nRuntimeBinderException",
+        src: `var count = 5;                 // var: inferred as int at compile time
+// count = "x";                // CS0029: count is an int
+object boxed = count;          // object: boxing
+// var bad = boxed + 1;        // CS0019: cast first
+dynamic late = count;          // dynamic: members are bound at runtime
+
+Console.WriteLine(count.GetType().Name);
+Console.WriteLine((int)boxed + 1);
+Console.WriteLine(late + 1);
+
+late = "now a string";         // allowed: the type can change
+Console.WriteLine(late.Length);
+
+try
+{
+    late.Foo();                // compiles, fails only at runtime
+}
+catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+{
+    Console.WriteLine("RuntimeBinderException");
+}`
+      }]
+    },
+    {
       id: "generic-constraints",
       depth: "detailed",
       q: "What generic constraints are available in C#, and why would you use them?",
@@ -1420,7 +1489,7 @@ public static class StringExtensions
 <li><code>where T : class</code> — reference type (CS0452 for <code>int</code>); <code>class?</code> allows nullable reference types.</li>
 <li><code>where T : struct</code> — non-nullable value type (CS0453 for <code>string</code>).</li>
 <li><code>where T : new()</code> — public parameterless constructor, so you can write <code>new T()</code> (CS0310 otherwise).</li>
-<li><code>where T : BaseClass</code> / <code>where T : IInterface</code> — call their members on <code>T</code> (CS0311 when the type does not match).</li>
+<li><code>where T : BaseClass</code> / <code>where T : IInterface</code> — call their members on <code>T</code> (a non-matching reference type gives CS0311, a non-matching struct gives CS0315).</li>
 <li><code>notnull</code>, <code>unmanaged</code> (no references inside — for low-level/binary code), <code>where T : U</code>, <code>Enum</code>/<code>Delegate</code> base constraints (C# 7.3), and <code>allows ref struct</code> (C# 13).</li>
 <li>Combine them: <code>where T : class, IEntity, new()</code>.</li>
 </ul>
@@ -1429,7 +1498,7 @@ public static class StringExtensions
 <li><code>where T : class</code> — reference type (<code>int</code> दो तो CS0452); <code>class?</code> nullable reference types भी allow करता है।</li>
 <li><code>where T : struct</code> — non-nullable value type (<code>string</code> दो तो CS0453)।</li>
 <li><code>where T : new()</code> — public parameterless constructor, ताकि <code>new T()</code> लिख सको (वरना CS0310)।</li>
-<li><code>where T : BaseClass</code> / <code>where T : IInterface</code> — <code>T</code> पर उनके members call करो (type match न हो तो CS0311)।</li>
+<li><code>where T : BaseClass</code> / <code>where T : IInterface</code> — <code>T</code> पर उनके members call करो (match न करने वाला reference type दो तो CS0311, struct दो तो CS0315)।</li>
 <li><code>notnull</code>, <code>unmanaged</code> (अंदर कोई reference नहीं — low-level/binary code के लिए), <code>where T : U</code>, <code>Enum</code>/<code>Delegate</code> base constraints (C# 7.3), और <code>allows ref struct</code> (C# 13)।</li>
 <li>इन्हें जोड़ भी सकते हो: <code>where T : class, IEntity, new()</code>।</li>
 </ul>
@@ -1438,7 +1507,7 @@ public static class StringExtensions
 <li><code>where T : class</code> — reference type (<code>int</code> do to CS0452); <code>class?</code> nullable reference types bhi allow karta hai.</li>
 <li><code>where T : struct</code> — non-nullable value type (<code>string</code> do to CS0453).</li>
 <li><code>where T : new()</code> — public parameterless constructor, taaki <code>new T()</code> likh sako (warna CS0310).</li>
-<li><code>where T : BaseClass</code> / <code>where T : IInterface</code> — <code>T</code> par unke members call karo (type match na ho to CS0311).</li>
+<li><code>where T : BaseClass</code> / <code>where T : IInterface</code> — <code>T</code> par unke members call karo (match na karne wala reference type do to CS0311, struct do to CS0315).</li>
 <li><code>notnull</code>, <code>unmanaged</code> (andar koi reference nahi — low-level/binary code ke liye), <code>where T : U</code>, <code>Enum</code>/<code>Delegate</code> base constraints (C# 7.3), aur <code>allows ref struct</code> (C# 13).</li>
 <li>Inhe jod bhi sakte ho: <code>where T : class, IEntity, new()</code>.</li>
 </ul>
@@ -1497,21 +1566,21 @@ public static class StringExtensions
 <li><code>ImmutableList&lt;T&gt;</code>, <code>ImmutableDictionary</code> (System.Collections.Immutable) — truly never change; <code>Add</code> returns a new instance that shares most structure with the old one. Great for snapshots shared between threads. <code>ImmutableArray&lt;T&gt;</code> is faster to read but copies on every change.</li>
 <li><code>FrozenDictionary</code>/<code>FrozenSet</code> (.NET 8+) — immutable and optimised for lookups; creating them costs more. Ideal for config/lookup tables built once at startup and read on every request.</li>
 </ul>
-<p><b>TL angle:</b> from a domain class, expose <code>IReadOnlyList&lt;T&gt;</code> (backed by <code>AsReadOnly()</code> if the risk matters). For data shared across threads, prefer immutable or frozen collections over locks.</p>`,
+<p><b>TL angle:</b> from a domain class, expose <code>IReadOnlyList&lt;T&gt;</code> (backed by <code>AsReadOnly()</code> if the risk matters). For <b>read-mostly</b> data shared across threads, immutable or frozen collections let readers skip locks — but writers still need coordination: build a new collection and swap the reference with <code>ImmutableInterlocked</code> or under a <code>lock</code>. For write-heavy data, concurrent collections usually fit better. It is a trade-off, not a rule.</p>`,
         hi: `<ul>
 <li><code>IReadOnlyList&lt;T&gt;</code> — सिर्फ़ एक interface। अगर आप अपनी अंदर की <code>List&lt;T&gt;</code> इसी type में return करते हो, तो caller उसे वापस <code>List&lt;T&gt;</code> में cast करके बदल सकता है।</li>
 <li><code>ReadOnlyCollection&lt;T&gt;</code> (<code>list.AsReadOnly()</code>) — एक wrapper/<b>view</b>: caller इसे cast करके नहीं बदल सकता, पर अंदर की list में हुए बदलाव इसमें दिखते हैं।</li>
 <li><code>ImmutableList&lt;T&gt;</code>, <code>ImmutableDictionary</code> (System.Collections.Immutable) — सच में कभी नहीं बदलते; <code>Add</code> नया instance return करता है जो पुराने के साथ ज़्यादातर structure share करता है। Threads के बीच share होने वाले snapshots के लिए बढ़िया। <code>ImmutableArray&lt;T&gt;</code> पढ़ने में तेज़ है पर हर बदलाव पर copy करता है।</li>
 <li><code>FrozenDictionary</code>/<code>FrozenSet</code> (.NET 8+) — immutable और lookups के लिए optimised; बनाने में ज़्यादा खर्च। Startup पर एक बार बनने वाली और हर request में पढ़ी जाने वाली config/lookup tables के लिए बढ़िया।</li>
 </ul>
-<p><b>TL angle:</b> domain class से <code>IReadOnlyList&lt;T&gt;</code> expose करो (risk ज़रूरी हो तो <code>AsReadOnly()</code> के साथ)। Threads के बीच share होने वाले data के लिए locks की जगह immutable या frozen collections बेहतर हैं।</p>`,
+<p><b>TL angle:</b> domain class से <code>IReadOnlyList&lt;T&gt;</code> expose करो (risk ज़रूरी हो तो <code>AsReadOnly()</code> के साथ)। Threads के बीच share होने वाला data अगर <b>ज़्यादातर पढ़ा</b> जाता है, तो immutable या frozen collections से readers को lock नहीं चाहिए — पर writers को फिर भी coordination चाहिए: नया collection बनाओ और reference को <code>ImmutableInterlocked</code> से या <code>lock</code> के अंदर swap करो। जहाँ writes ज़्यादा हों, वहाँ concurrent collections अक्सर बेहतर हैं। यह trade-off है, fixed rule नहीं।</p>`,
         hg: `<ul>
 <li><code>IReadOnlyList&lt;T&gt;</code> — sirf ek interface. Agar aap apni andar ki <code>List&lt;T&gt;</code> isi type mein return karte ho, to caller use wapas <code>List&lt;T&gt;</code> mein cast karke badal sakta hai.</li>
 <li><code>ReadOnlyCollection&lt;T&gt;</code> (<code>list.AsReadOnly()</code>) — ek wrapper/<b>view</b>: caller ise cast karke nahi badal sakta, par andar ki list mein hue badlaav ismein dikhte hain.</li>
 <li><code>ImmutableList&lt;T&gt;</code>, <code>ImmutableDictionary</code> (System.Collections.Immutable) — sach mein kabhi nahi badalte; <code>Add</code> naya instance return karta hai jo purane ke saath zyaadatar structure share karta hai. Threads ke beech share hone wale snapshots ke liye badhiya. <code>ImmutableArray&lt;T&gt;</code> padhne mein tez hai par har badlaav par copy karta hai.</li>
 <li><code>FrozenDictionary</code>/<code>FrozenSet</code> (.NET 8+) — immutable aur lookups ke liye optimised; banane mein zyada kharch. Startup par ek baar banne wali aur har request mein padhi jaane wali config/lookup tables ke liye badhiya.</li>
 </ul>
-<p><b>TL angle:</b> domain class se <code>IReadOnlyList&lt;T&gt;</code> expose karo (risk zaroori ho to <code>AsReadOnly()</code> ke saath). Threads ke beech share hone wale data ke liye locks ki jagah immutable ya frozen collections behtar hain.</p>`
+<p><b>TL angle:</b> domain class se <code>IReadOnlyList&lt;T&gt;</code> expose karo (risk zaroori ho to <code>AsReadOnly()</code> ke saath). Threads ke beech share hone wala data agar <b>zyaadatar padha</b> jaata hai, to immutable ya frozen collections se readers ko lock nahi chahiye — par writers ko phir bhi coordination chahiye: naya collection banao aur reference ko <code>ImmutableInterlocked</code> se ya <code>lock</code> ke andar swap karo. Jahan writes zyada hon, wahan concurrent collections aksar behtar hain. Yeh trade-off hai, fixed rule nahi.</p>`
       }
     },
     {
@@ -1674,7 +1743,7 @@ public class OrderStats
       id: "closure-loop-capture",
       depth: "detailed",
       q: "What is a closure? Explain the classic loop-variable capture problem.",
-      answer: "A closure is a lambda that captures outer variables — the variables themselves, not their values. In a for loop all lambdas share one loop variable, so they all see its final value; foreach gets a fresh variable per iteration since C# 5.",
+      answer: "A closure is a lambda that captures variables themselves, not their values. A for loop has one shared variable, so all lambdas see the final value; foreach creates a fresh one per iteration (C# 5+).",
       meaning: {
         hi: "Closure वो lambda है जो बाहर के variables capture करता है — variables ख़ुद, उनकी values नहीं। for loop में सारे lambdas एक ही loop variable share करते हैं, इसलिए सबको आख़िरी value दिखती है; C# 5 से foreach में हर iteration का नया variable होता है।",
         hg: "Closure woh lambda hai jo bahar ke variables capture karta hai — variables khud, unki values nahi. for loop mein saare lambdas ek hi loop variable share karte hain, isliye sabko aakhri value dikhti hai; C# 5 se foreach mein har iteration ka naya variable hota hai."
@@ -2187,12 +2256,12 @@ static class Extensions
   revision: {
     en: [
       "<b>Value type</b> copies the data; <b>reference type</b> copies the reference — two variables, one object.",
-      "A value type lives <b>where its container lives</b>: local → stack, field → inside the heap object, boxed or captured → heap. Class objects → heap, cleaned by the GC.",
+      "A value type lives <b>where its container lives</b>: local → stack, field → inside the heap object, boxed → copied to the heap, captured → hoisted into a heap closure object. Class objects → heap, cleaned by the GC.",
       "<b>Boxing</b> = value type → <code>object</code>/interface (a heap copy); <b>unboxing</b> = cast back to the <b>exact</b> type. Avoid it in hot paths with generics.",
       "<b>string</b> is an immutable reference type; <code>==</code> compares text. Every \"change\" returns a new string.",
       "<b>StringBuilder</b> for loops and unknown counts; <code>+</code> or <code>$\"...\"</code> for a few pieces; <code>string.Join</code> for a collection.",
       "String <b>literals are interned</b>, runtime strings are not. Compare with <code>==</code> or <code>StringComparison.Ordinal(IgnoreCase)</code>, never by reference.",
-      "<b>const</b> = compile-time, copied into callers; <b>readonly</b> = set in the constructor; <b>static readonly</b> = runtime, one per type. <code>readonly</code> is shallow.",
+      "<b>const</b> = compile-time, copied into callers; <b>readonly</b> = set at declaration or in the constructor; <b>static readonly</b> = runtime, one per type. <code>readonly</code> is shallow.",
       "<b>Generics</b> = type safety + no boxing + reuse. Constraints (<code>class</code>, <code>struct</code>, <code>new()</code>, interface) unlock members on <code>T</code>. Static fields are per closed type.",
       "<b>Covariance</b> <code>out T</code> (<code>IEnumerable&lt;string&gt;</code> as <code>IEnumerable&lt;object&gt;</code>), <b>contravariance</b> <code>in T</code> (<code>Action&lt;object&gt;</code> as <code>Action&lt;string&gt;</code>) — interfaces/delegates, reference types only.",
       "Pick collections by operation: <b>List</b> (by index), <b>Dictionary</b> (by key, O(1) average), <b>HashSet</b> (unique), <b>Queue/Stack</b> (order). Read-only view ≠ immutable; <b>Frozen</b> for read-heavy lookups; <b>Concurrent</b> for multi-thread writes.",
@@ -2202,12 +2271,12 @@ static class Extensions
     meaning: {
       hi: [
         "Value type data copy करता है; reference type reference copy करता है — दो variables, एक object।",
-        "Value type वहीं रहता है जहाँ उसका container है: local → stack, field → heap object के अंदर, boxed या captured → heap। Class objects → heap, जिन्हें GC साफ़ करता है।",
+        "Value type वहीं रहता है जहाँ उसका container है: local → stack, field → heap object के अंदर, boxed → heap पर copy, captured → heap के closure object में hoist। Class objects → heap, जिन्हें GC साफ़ करता है।",
         "Boxing = value type → object/interface (heap पर copy); unboxing = वापस exact type में cast। Hot paths में generics से इससे बचो।",
         "string एक immutable reference type है; == text compare करता है। हर \"बदलाव\" नई string return करता है।",
         "Loops और अनजान count के लिए StringBuilder; कुछ हिस्सों के लिए + या $\"...\"; collection के लिए string.Join।",
         "String literals intern होते हैं, runtime strings नहीं। == या StringComparison.Ordinal(IgnoreCase) से compare करो, reference से कभी नहीं।",
-        "const = compile-time, callers में copy होता है; readonly = constructor में set; static readonly = runtime, हर type का एक। readonly shallow है।",
+        "const = compile-time, callers में copy होता है; readonly = declaration पर या constructor में set; static readonly = runtime, हर type का एक। readonly shallow है।",
         "Generics = type safety + boxing नहीं + reuse। Constraints (class, struct, new(), interface) से T पर members use कर सकते हो। Static fields हर closed type के अलग हैं।",
         "Covariance out T (IEnumerable&lt;string&gt; को IEnumerable&lt;object&gt; की तरह), contravariance in T (Action&lt;object&gt; को Action&lt;string&gt; की तरह) — सिर्फ़ interfaces/delegates और reference types।",
         "Operation देखकर collection चुनो: List (index से), Dictionary (key से, average O(1)), HashSet (unique), Queue/Stack (order)। Read-only view ≠ immutable; ज़्यादा पढ़े जाने वाले lookups के लिए Frozen; कई threads के writes के लिए Concurrent।",
@@ -2216,12 +2285,12 @@ static class Extensions
       ],
       hg: [
         "Value type data copy karta hai; reference type reference copy karta hai — do variables, ek object.",
-        "Value type wahin rehta hai jahan uska container hai: local → stack, field → heap object ke andar, boxed ya captured → heap. Class objects → heap, jinhe GC saaf karta hai.",
+        "Value type wahin rehta hai jahan uska container hai: local → stack, field → heap object ke andar, boxed → heap par copy, captured → heap ke closure object mein hoist. Class objects → heap, jinhe GC saaf karta hai.",
         "Boxing = value type → object/interface (heap par copy); unboxing = wapas exact type mein cast. Hot paths mein generics se isse bacho.",
         "string ek immutable reference type hai; == text compare karta hai. Har \"badlaav\" nayi string return karta hai.",
         "Loops aur anjaan count ke liye StringBuilder; kuch hisson ke liye + ya $\"...\"; collection ke liye string.Join.",
         "String literals intern hote hain, runtime strings nahi. == ya StringComparison.Ordinal(IgnoreCase) se compare karo, reference se kabhi nahi.",
-        "const = compile-time, callers mein copy hota hai; readonly = constructor mein set; static readonly = runtime, har type ka ek. readonly shallow hai.",
+        "const = compile-time, callers mein copy hota hai; readonly = declaration par ya constructor mein set; static readonly = runtime, har type ka ek. readonly shallow hai.",
         "Generics = type safety + boxing nahi + reuse. Constraints (class, struct, new(), interface) se T par members use kar sakte ho. Static fields har closed type ke alag hain.",
         "Covariance out T (IEnumerable&lt;string&gt; ko IEnumerable&lt;object&gt; ki tarah), contravariance in T (Action&lt;object&gt; ko Action&lt;string&gt; ki tarah) — sirf interfaces/delegates aur reference types.",
         "Operation dekhkar collection chuno: List (index se), Dictionary (key se, average O(1)), HashSet (unique), Queue/Stack (order). Read-only view ≠ immutable; zyada padhe jaane wale lookups ke liye Frozen; kai threads ke writes ke liye Concurrent.",
@@ -2234,7 +2303,7 @@ static class Extensions
     en: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025). Recent features related to today's topics — each tagged with its version:</p>
 <ul>
 <li><b>C# 13</b> (.NET 9) — <b>params collections</b>: <code>params</code> now works with <code>Span&lt;T&gt;</code>, <code>ReadOnlySpan&lt;T&gt;</code>, <code>List&lt;T&gt;</code>, <code>IEnumerable&lt;T&gt;</code> and more, not only arrays (see the collections section).</li>
-<li><b>C# 13</b> — the new <code>System.Threading.Lock</code> type: <code>lock (gate)</code> on a <code>Lock</code> object uses its dedicated, more efficient API instead of <code>Monitor</code>.</li>
+<li><b>C# 13</b> — the <code>lock</code> statement recognises the new .NET 9 type <code>System.Threading.Lock</code>: <code>lock (gate)</code> on a <code>Lock</code> object uses its dedicated, more efficient API instead of <code>Monitor</code>.</li>
 <li><b>C# 13</b> — <code>\\e</code> escape sequence for the ESC character (terminal colours), instead of <code>\\u001b</code>.</li>
 <li><b>C# 13</b> — <code>allows ref struct</code> in generic constraints, and <code>ref struct</code> types can implement interfaces.</li>
 <li><b>C# 14</b> (.NET 10) — <b>extension members</b>: <code>extension(...)</code> blocks add extension <b>properties</b> and <b>static</b> extension members (see the extension methods section).</li>
@@ -2242,13 +2311,13 @@ static class Extensions
 <li><b>C# 14</b> — null-conditional assignment: <code>customer?.Address = newAddress;</code> assigns only when <code>customer</code> is not null.</li>
 <li><b>C# 14</b> — <code>nameof</code> with unbound generic types: <code>nameof(List&lt;&gt;)</code> gives <code>"List"</code>.</li>
 <li><b>C# 14</b> — lambda parameters with modifiers but no types: <code>(text, out result) =&gt; ...</code>.</li>
-<li><b>C# 14</b> — implicit conversions from arrays to <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> ("first-class spans").</li>
+<li><b>C# 14</b> — "first-class spans": array → <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> conversions existed since C# 7.2 as user-defined operators; now the language itself understands them, so they also work for extension-method receivers and generic type inference.</li>
 </ul>
 <p>The code checker for this tutorial uses the .NET 9 SDK (C# 13), so C# 14 snippets are marked as not compiled.</p>`,
     hi: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025)। आज के topics से जुड़े नए features — हर एक पर उसका version लिखा है:</p>
 <ul>
 <li><b>C# 13</b> (.NET 9) — <b>params collections</b>: <code>params</code> अब सिर्फ़ arrays नहीं, <code>Span&lt;T&gt;</code>, <code>ReadOnlySpan&lt;T&gt;</code>, <code>List&lt;T&gt;</code>, <code>IEnumerable&lt;T&gt;</code> वगैरह के साथ भी चलता है (collections section देखो)।</li>
-<li><b>C# 13</b> — नया <code>System.Threading.Lock</code> type: <code>Lock</code> object पर <code>lock (gate)</code> <code>Monitor</code> की जगह उसका अपना, ज़्यादा efficient API use करता है।</li>
+<li><b>C# 13</b> — <code>lock</code> statement .NET 9 के नए type <code>System.Threading.Lock</code> को पहचानता है: <code>Lock</code> object पर <code>lock (gate)</code> <code>Monitor</code> की जगह उसका अपना, ज़्यादा efficient API use करता है।</li>
 <li><b>C# 13</b> — ESC character (terminal colours) के लिए <code>\\u001b</code> की जगह <code>\\e</code> escape sequence।</li>
 <li><b>C# 13</b> — generic constraints में <code>allows ref struct</code>, और <code>ref struct</code> types अब interfaces implement कर सकते हैं।</li>
 <li><b>C# 14</b> (.NET 10) — <b>extension members</b>: <code>extension(...)</code> blocks से extension <b>properties</b> और <b>static</b> extension members (extension methods section देखो)।</li>
@@ -2256,13 +2325,13 @@ static class Extensions
 <li><b>C# 14</b> — null-conditional assignment: <code>customer?.Address = newAddress;</code> तभी assign करता है जब <code>customer</code> null न हो।</li>
 <li><b>C# 14</b> — unbound generic types के साथ <code>nameof</code>: <code>nameof(List&lt;&gt;)</code> से <code>"List"</code> मिलता है।</li>
 <li><b>C# 14</b> — lambda parameters पर modifiers, बिना types लिखे: <code>(text, out result) =&gt; ...</code>।</li>
-<li><b>C# 14</b> — arrays से <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> में implicit conversions ("first-class spans")।</li>
+<li><b>C# 14</b> — "first-class spans": array → <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> conversions C# 7.2 से user-defined operators के रूप में थे; अब language ख़ुद इन्हें समझती है, इसलिए ये extension-method receivers और generic type inference में भी चलते हैं।</li>
 </ul>
 <p>इस tutorial का code checker .NET 9 SDK (C# 13) use करता है, इसलिए C# 14 snippets "compile नहीं हुए" mark किए गए हैं।</p>`,
     hg: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025). Aaj ke topics se jude naye features — har ek par uska version likha hai:</p>
 <ul>
 <li><b>C# 13</b> (.NET 9) — <b>params collections</b>: <code>params</code> ab sirf arrays nahi, <code>Span&lt;T&gt;</code>, <code>ReadOnlySpan&lt;T&gt;</code>, <code>List&lt;T&gt;</code>, <code>IEnumerable&lt;T&gt;</code> waghera ke saath bhi chalta hai (collections section dekho).</li>
-<li><b>C# 13</b> — naya <code>System.Threading.Lock</code> type: <code>Lock</code> object par <code>lock (gate)</code> <code>Monitor</code> ki jagah uska apna, zyada efficient API use karta hai.</li>
+<li><b>C# 13</b> — <code>lock</code> statement .NET 9 ke naye type <code>System.Threading.Lock</code> ko pehchanta hai: <code>Lock</code> object par <code>lock (gate)</code> <code>Monitor</code> ki jagah uska apna, zyada efficient API use karta hai.</li>
 <li><b>C# 13</b> — ESC character (terminal colours) ke liye <code>\\u001b</code> ki jagah <code>\\e</code> escape sequence.</li>
 <li><b>C# 13</b> — generic constraints mein <code>allows ref struct</code>, aur <code>ref struct</code> types ab interfaces implement kar sakte hain.</li>
 <li><b>C# 14</b> (.NET 10) — <b>extension members</b>: <code>extension(...)</code> blocks se extension <b>properties</b> aur <b>static</b> extension members (extension methods section dekho).</li>
@@ -2270,7 +2339,7 @@ static class Extensions
 <li><b>C# 14</b> — null-conditional assignment: <code>customer?.Address = newAddress;</code> tabhi assign karta hai jab <code>customer</code> null na ho.</li>
 <li><b>C# 14</b> — unbound generic types ke saath <code>nameof</code>: <code>nameof(List&lt;&gt;)</code> se <code>"List"</code> milta hai.</li>
 <li><b>C# 14</b> — lambda parameters par modifiers, bina types likhe: <code>(text, out result) =&gt; ...</code>.</li>
-<li><b>C# 14</b> — arrays se <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> mein implicit conversions ("first-class spans").</li>
+<li><b>C# 14</b> — "first-class spans": array → <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> conversions C# 7.2 se user-defined operators ke roop mein the; ab language khud inhe samajhti hai, isliye yeh extension-method receivers aur generic type inference mein bhi chalte hain.</li>
 </ul>
 <p>Is tutorial ka code checker .NET 9 SDK (C# 13) use karta hai, isliye C# 14 snippets "compile nahi hue" mark kiye gaye hain.</p>`
   }
