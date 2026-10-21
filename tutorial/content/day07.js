@@ -16,7 +16,7 @@ window.TL_DAY = {
 <li><b>Top 10 lines (10 min)</b> — read them once more on interview morning.</li>
 </ul>
 <p>Tip: keep a small <b>"weak list"</b> — the 3 to 5 topics where you stumbled — and re-read only those days' revision bullets. Revision is about <b>confidence</b>, not about covering everything again.</p>`,
-    hi: `<p>आपने <b>छह भारी दिन</b> पूरे कर लिए — OOP, C# Core, C# Advanced, LINQ और EF Core के दो दिन। बहुत बढ़िया! आज <b>कुछ नया नहीं सीखना</b> है। आज जो पढ़ा है, उसे वो बनाना है जो आप interview में <b>बोल</b> सको।</p>
+    hi: `<p>आपने <b>छह भारी दिन</b> पूरे कर लिए — OOP, C# Core, C# Advanced, LINQ और EF Core के दो दिन। बहुत बढ़िया! आज <b>कुछ नया नहीं सीखना</b> है। आज पढ़ी हुई चीज़ों को interview में <b>बोलने लायक</b> बनाना है।</p>
 <p><b>आज revision कैसे करें (लगभग 1 घंटा 15 मिनट):</b></p>
 <ul>
 <li><b>Cheat sheets (20 min, Short mode)</b> — हर दिन की एक। एक line पढ़ो, उसे ढको, और English में ज़ोर से बोलो। कोई line कच्ची लगे, तो उस दिन का section फिर से खोलो।</li>
@@ -25,7 +25,7 @@ window.TL_DAY = {
 <li><b>Top 10 lines (10 min)</b> — interview वाली सुबह इन्हें एक बार फिर पढ़ो।</li>
 </ul>
 <p>Tip: एक छोटी <b>"weak list"</b> रखो — वो 3 से 5 topics जहाँ आप अटके — और सिर्फ़ उन दिनों के revision bullets दोबारा पढ़ो। Revision का मक़सद <b>confidence</b> है, सब कुछ फिर से पढ़ना नहीं।</p>`,
-    hg: `<p>Aapne <b>chhah bhaari din</b> poore kar liye — OOP, C# Core, C# Advanced, LINQ aur EF Core ke do din. Bahut badhiya! Aaj <b>kuch naya nahi seekhna</b> hai. Aaj jo padha hai, use woh banana hai jo aap interview mein <b>bol</b> sako.</p>
+    hg: `<p>Aapne <b>chhah bhaari din</b> poore kar liye — OOP, C# Core, C# Advanced, LINQ aur EF Core ke do din. Bahut badhiya! Aaj <b>kuch naya nahi seekhna</b> hai. Aaj padhi hui cheezon ko interview mein <b>bolne laayak</b> banana hai.</p>
 <p><b>Aaj revision kaise karein (lagbhag 1 ghanta 15 minute):</b></p>
 <ul>
 <li><b>Cheat sheets (20 min, Short mode)</b> — har din ki ek. Ek line padho, use dhako, aur English mein zor se bolo. Koi line kachchi lage, to us din ka section phir se kholo.</li>
@@ -178,7 +178,8 @@ window.TL_DAY = {
 <li><code>ConfigureAwait(false)</code> matters in library and UI code; <b>ASP.NET Core has no SynchronizationContext</b>.</li>
 <li><code>throw;</code> keeps the stack trace, <code>throw ex;</code> resets it (CA2200). One global handler logs once and returns ProblemDetails.</li>
 <li><code>using</code> = deterministic <code>Dispose</code> for resources; the <b>GC</b> cleans memory (Gen 0 → 1 → 2; objects of 85,000 bytes or more go to the LOH).</li>
-<li><b>record</b> = value equality + <code>with</code> (shallow). <b>NRT</b> = compile-time warnings only. <b>Span&lt;T&gt;</b> = a stack-only view, no copies.</li>
+<li><b>record</b> = value equality + <code>with</code> copies (shallow); a good fit for DTOs.</li>
+<li><b>NRT</b> (<code>string?</code>) = compile-time warnings only — nothing changes at runtime.</li>
 </ul>
 <p><b>Classic traps:</b></p>
 <ul>
@@ -195,7 +196,8 @@ window.TL_DAY = {
 <li><code>ConfigureAwait(false)</code> library और UI code में मायने रखता है; <b>ASP.NET Core में SynchronizationContext नहीं है</b>।</li>
 <li><code>throw;</code> stack trace बचाता है, <code>throw ex;</code> उसे reset कर देता है (CA2200)। एक global handler एक बार log करता है और ProblemDetails लौटाता है।</li>
 <li><code>using</code> = resources के लिए तय समय पर <code>Dispose</code>; <b>GC</b> memory साफ़ करता है (Gen 0 → 1 → 2; 85,000 bytes या उससे बड़े objects LOH में जाते हैं)।</li>
-<li><b>record</b> = value equality + <code>with</code> (shallow)। <b>NRT</b> = सिर्फ़ compile-time warnings। <b>Span&lt;T&gt;</b> = stack-only view, कोई copy नहीं।</li>
+<li><b>record</b> = value equality + <code>with</code> copies (shallow); DTOs के लिए बढ़िया।</li>
+<li><b>NRT</b> (<code>string?</code>) = सिर्फ़ compile-time warnings — runtime पर कुछ नहीं बदलता।</li>
 </ul>
 <p><b>Classic traps:</b></p>
 <ul>
@@ -212,7 +214,8 @@ window.TL_DAY = {
 <li><code>ConfigureAwait(false)</code> library aur UI code mein maayne rakhta hai; <b>ASP.NET Core mein SynchronizationContext nahi hai</b>.</li>
 <li><code>throw;</code> stack trace bachaata hai, <code>throw ex;</code> use reset kar deta hai (CA2200). Ek global handler ek baar log karta hai aur ProblemDetails lautaata hai.</li>
 <li><code>using</code> = resources ke liye tay samay par <code>Dispose</code>; <b>GC</b> memory saaf karta hai (Gen 0 → 1 → 2; 85,000 bytes ya usse bade objects LOH mein jaate hain).</li>
-<li><b>record</b> = value equality + <code>with</code> (shallow). <b>NRT</b> = sirf compile-time warnings. <b>Span&lt;T&gt;</b> = stack-only view, koi copy nahi.</li>
+<li><b>record</b> = value equality + <code>with</code> copies (shallow); DTOs ke liye badhiya.</li>
+<li><b>NRT</b> (<code>string?</code>) = sirf compile-time warnings — runtime par kuch nahi badalta.</li>
 </ul>
 <p><b>Classic traps:</b></p>
 <ul>
@@ -245,7 +248,7 @@ window.TL_DAY = {
 <p><b>Classic traps:</b></p>
 <ul>
 <li><code>ToList()</code> or <code>AsEnumerable()</code> <b>before</b> <code>Where</code> on a big table loads the whole table into memory.</li>
-<li><code>OrderBy</code> twice — the second sort replaces the first. Use <code>ThenBy</code>.</li>
+<li><code>OrderBy</code> twice — the second becomes the primary sort; the first is at most a hidden tie-breaker (in memory) or dropped (in SQL). Use <code>ThenBy</code>.</li>
 <li>Paging without a stable, unique order — pages can repeat or miss rows.</li>
 </ul>`,
         hi: `<p><b>तस्वीर — recipe card बनाम पका हुआ खाना:</b> query लिखने से कुछ नहीं पकता; enumerate करने पर पकता है — और हर बार फिर से; <code>ToList()</code> खाने को tiffin box में pack कर देता है।</p>
@@ -262,7 +265,7 @@ window.TL_DAY = {
 <p><b>Classic traps:</b></p>
 <ul>
 <li>बड़ी table पर <code>Where</code> से <b>पहले</b> <code>ToList()</code> या <code>AsEnumerable()</code> पूरी table memory में ले आता है।</li>
-<li>दो बार <code>OrderBy</code> — दूसरा sort पहले को replace कर देता है। <code>ThenBy</code> use करो।</li>
+<li>दो बार <code>OrderBy</code> — दूसरा sort primary बन जाता है; पहला ज़्यादा से ज़्यादा एक छुपा tie-breaker रहता है (memory में) या हट जाता है (SQL में)। <code>ThenBy</code> use करो।</li>
 <li>Stable, unique order के बिना paging — pages में rows दोहरा सकती हैं या छूट सकती हैं।</li>
 </ul>`,
         hg: `<p><b>Tasveer — recipe card banaam paka hua khaana:</b> query likhne se kuch nahi pakta; enumerate karne par pakta hai — aur har baar phir se; <code>ToList()</code> khaane ko tiffin box mein pack kar deta hai.</p>
@@ -279,7 +282,7 @@ window.TL_DAY = {
 <p><b>Classic traps:</b></p>
 <ul>
 <li>Badi table par <code>Where</code> se <b>pehle</b> <code>ToList()</code> ya <code>AsEnumerable()</code> poori table memory mein le aata hai.</li>
-<li>Do baar <code>OrderBy</code> — doosra sort pehle ko replace kar deta hai. <code>ThenBy</code> use karo.</li>
+<li>Do baar <code>OrderBy</code> — doosra sort primary ban jaata hai; pehla zyada se zyada ek chhupa tie-breaker rehta hai (memory mein) ya hat jaata hai (SQL mein). <code>ThenBy</code> use karo.</li>
 <li>Stable, unique order ke bina paging — pages mein rows dohra sakti hain ya chhoot sakti hain.</li>
 </ul>`
       }
@@ -300,7 +303,8 @@ window.TL_DAY = {
 <li><code>AddDbContext</code> = <b>Scoped</b> (one per request). Not thread-safe — never a singleton. <code>AddDbContextFactory</code> for background and parallel work.</li>
 <li><b>Code-First</b> = the C# model is the truth and migrations build the schema. <b>DB-First</b> = scaffold classes from an existing database.</li>
 <li><b>Migrations</b> diff against the model snapshot; applied ones are recorded in <code>__EFMigrationsHistory</code>. In production: a reviewed idempotent script or bundle, run by the pipeline.</li>
-<li><b>Relationships</b>: FK on the "many" side; 1:1 = FK + unique index; N:N = join table (skip navigations, EF Core 5+). Required FK → Cascade by default; optional FK → ClientSetNull.</li>
+<li><b>Relationships</b>: FK on the "many" side; 1:1 = FK + unique index; N:N = a join table that EF Core 5+ creates for you.</li>
+<li><b>Delete rules</b>: required FK → Cascade by default; optional FK → ClientSetNull.</li>
 <li><b>Loading</b>: related data is not loaded unless you ask. <code>Include</code> = a JOIN in the same query; explicit <code>Load()</code> = one more query when you choose; lazy proxies = hidden queries (N+1 risk).</li>
 <li><b>Tracking</b>: Added / Unchanged / Modified / Deleted / Detached; the UPDATE has only the changed columns. <code>AsNoTracking()</code> for read-only queries.</li>
 </ul>
@@ -315,9 +319,10 @@ window.TL_DAY = {
 <ul>
 <li><b>DbContext</b> = कम समय चलने वाला unit of work; <code>SaveChanges()</code> सारे बदलाव <b>एक transaction</b> में लिखता है।</li>
 <li><code>AddDbContext</code> = <b>Scoped</b> (हर request का एक)। Thread-safe नहीं — कभी singleton नहीं। Background और parallel काम के लिए <code>AddDbContextFactory</code>।</li>
-<li><b>Code-First</b> = C# model सच है और migrations schema बनाते हैं। <b>DB-First</b> = मौजूदा database से classes scaffold करो।</li>
+<li><b>Code-First</b> = C# model ही source of truth है और migrations schema बनाते हैं। <b>DB-First</b> = मौजूदा database से classes scaffold करो।</li>
 <li><b>Migrations</b> model snapshot से diff करते हैं; applied migrations <code>__EFMigrationsHistory</code> में दर्ज होते हैं। Production में: review की हुई idempotent script या bundle, जिसे pipeline चलाए।</li>
-<li><b>Relationships</b>: FK "many" side पर; 1:1 = FK + unique index; N:N = join table (skip navigations, EF Core 5+)। Required FK → default Cascade; optional FK → ClientSetNull।</li>
+<li><b>Relationships</b>: FK "many" side पर; 1:1 = FK + unique index; N:N = join table, जिसे EF Core 5+ आपके लिए बनाता है।</li>
+<li><b>Delete rules</b>: required FK → default Cascade; optional FK → ClientSetNull।</li>
 <li><b>Loading</b>: आप माँगो नहीं तो related data load नहीं होता। <code>Include</code> = उसी query में JOIN; explicit <code>Load()</code> = आपकी मर्ज़ी के समय एक और query; lazy proxies = छुपी queries (N+1 का ख़तरा)।</li>
 <li><b>Tracking</b>: Added / Unchanged / Modified / Deleted / Detached; UPDATE में सिर्फ़ बदले हुए columns। Read-only queries के लिए <code>AsNoTracking()</code>।</li>
 </ul>
@@ -332,9 +337,10 @@ window.TL_DAY = {
 <ul>
 <li><b>DbContext</b> = kam samay chalne wala unit of work; <code>SaveChanges()</code> saare badlaav <b>ek transaction</b> mein likhta hai.</li>
 <li><code>AddDbContext</code> = <b>Scoped</b> (har request ka ek). Thread-safe nahi — kabhi singleton nahi. Background aur parallel kaam ke liye <code>AddDbContextFactory</code>.</li>
-<li><b>Code-First</b> = C# model sach hai aur migrations schema banaate hain. <b>DB-First</b> = maujooda database se classes scaffold karo.</li>
+<li><b>Code-First</b> = C# model hi source of truth hai aur migrations schema banaate hain. <b>DB-First</b> = maujooda database se classes scaffold karo.</li>
 <li><b>Migrations</b> model snapshot se diff karte hain; applied migrations <code>__EFMigrationsHistory</code> mein darj hote hain. Production mein: review ki hui idempotent script ya bundle, jise pipeline chalaaye.</li>
-<li><b>Relationships</b>: FK "many" side par; 1:1 = FK + unique index; N:N = join table (skip navigations, EF Core 5+). Required FK → default Cascade; optional FK → ClientSetNull.</li>
+<li><b>Relationships</b>: FK "many" side par; 1:1 = FK + unique index; N:N = join table, jise EF Core 5+ aapke liye banata hai.</li>
+<li><b>Delete rules</b>: required FK → default Cascade; optional FK → ClientSetNull.</li>
 <li><b>Loading</b>: aap maango nahi to related data load nahi hota. <code>Include</code> = usi query mein JOIN; explicit <code>Load()</code> = aapki marzi ke samay ek aur query; lazy proxies = chhupi queries (N+1 ka khatra).</li>
 <li><b>Tracking</b>: Added / Unchanged / Modified / Deleted / Detached; UPDATE mein sirf badle hue columns. Read-only queries ke liye <code>AsNoTracking()</code>.</li>
 </ul>
@@ -411,39 +417,39 @@ window.TL_DAY = {
   ],
   qa: [
     {
-      id: "slow-endpoint-ef-linq",
+      id: "fast-sql-slow-request",
       depth: "short",
-      q: "Your API endpoint is slow. It uses EF Core and LINQ. How do you investigate?",
-      answer: "Measure first: request time and query count. Then read the SQL and its plan: look for N+1, early ToList, over-fetching, missing indexes or blocking .Result calls. Fix one cause and re-measure.",
+      q: "SQL Server shows every query of an endpoint finishing in a few milliseconds, but the request still takes seconds. Where do you look?",
+      answer: "Look at the C# around the queries: N+1 inside a LINQ loop, an IEnumerable pulling a whole table, blocking .Result calls, or serializing big entity graphs. Then fix one cause and re-measure.",
       meaning: {
-        hi: "पहले नापो: request का time और queries की गिनती। फिर SQL और उसका plan पढ़ो: N+1, जल्दी लगा ToList, ज़रूरत से ज़्यादा data, missing indexes या blocking .Result calls ढूँढो। एक वजह ठीक करो और फिर से नापो।",
-        hg: "Pehle naapo: request ka time aur queries ki ginti. Phir SQL aur uska plan padho: N+1, jaldi laga ToList, zaroorat se zyada data, missing indexes ya blocking .Result calls dhoondho. Ek wajah theek karo aur phir se naapo."
+        hi: "Queries के आसपास के C# को देखो: LINQ loop के अंदर N+1, पूरी table खींचता IEnumerable, block करने वाली .Result calls, या बड़े entity graphs का serialization। फिर एक वजह ठीक करो और फिर से नापो।",
+        hg: "Queries ke aaspaas ke C# ko dekho: LINQ loop ke andar N+1, poori table kheenchta IEnumerable, block karne wali .Result calls, ya bade entity graphs ka serialization. Phir ek wajah theek karo aur phir se naapo."
       },
       explain: {
         en: `<ul>
-<li><b>Measure</b>: Application Insights (or any APM tool) shows the request duration and every SQL dependency call. In development, <code>LogTo</code> prints every command — count them.</li>
-<li><b>Many similar queries</b> → N+1 (Day 6): fix with <code>Include</code>, a projection or one batch query.</li>
-<li><b>Too many rows or columns</b> → over-fetching: a <code>ToList()</code>/<code>AsEnumerable()</code> before <code>Where</code>, an <code>IEnumerable</code> variable over a DbSet (Day 4), or full entities where a DTO projection would do.</li>
-<li><b>One slow query</b> → copy it into SSMS and read the actual execution plan: scans vs seeks, a missing index, an implicit conversion.</li>
-<li><b>Fast SQL but a slow request</b> → look at the C# side: <code>.Result</code>/<code>.Wait()</code> blocking threads (Day 3), large tracked result sets (Day 5), LINQ lookups inside loops.</li>
+<li><b>Many fast queries add up</b> → N+1 hidden in a LINQ loop or a <code>Select</code> that calls a service per item (Day 4 + Day 6): 200 queries × 5 ms = 1 second, although each query looks fine. Count the commands per request — <code>LogTo</code> in development, dependency calls in Application Insights.</li>
+<li><b>One fast query, a huge result</b> → an <code>IEnumerable</code> variable over a DbSet, or <code>ToList()</code>/<code>AsEnumerable()</code> before <code>Where</code> (Day 4). The SQL is simple, but every row travels, is materialized and tracked (Day 5).</li>
+<li><b>Blocked threads</b> → <code>.Result</code>/<code>.Wait()</code> on async calls (Day 3). Under load, requests wait for a free thread, not for SQL.</li>
+<li><b>Serialization</b> → returning entities with navigations: big object graphs, cycles, or lazy loading firing during JSON serialization (Day 5). Return DTO projections instead (Day 6).</li>
+<li>If one query <b>is</b> slow inside SQL Server, that is Day 6's question "slow-query-investigation": execution plan, indexes, implicit conversions.</li>
 </ul>
-<p>Follow-up: "How do you prove the fix?" — The same measurement before and after (duration, query count), ideally with a query-count check in an integration test so the problem cannot come back silently.</p>`,
+<p>Follow-up: "How do you prove the fix?" — The same measurement before and after (request duration, query count), ideally with a query-count check in an integration test so the problem cannot come back silently.</p>`,
         hi: `<ul>
-<li><b>नापो</b>: Application Insights (या कोई भी APM tool) request की duration और हर SQL dependency call दिखाता है। Development में <code>LogTo</code> हर command print करता है — उन्हें गिनो।</li>
-<li><b>एक जैसी बहुत सी queries</b> → N+1 (Day 6): <code>Include</code>, projection या एक batch query से ठीक करो।</li>
-<li><b>बहुत ज़्यादा rows या columns</b> → over-fetching: <code>Where</code> से पहले <code>ToList()</code>/<code>AsEnumerable()</code>, DbSet पर <code>IEnumerable</code> variable (Day 4), या जहाँ DTO projection काफ़ी था वहाँ पूरी entities।</li>
-<li><b>एक धीमी query</b> → उसे SSMS में copy करो और actual execution plan पढ़ो: scans बनाम seeks, missing index, implicit conversion।</li>
-<li><b>SQL तेज़ पर request धीमी</b> → C# side देखो: threads को block करते <code>.Result</code>/<code>.Wait()</code> (Day 3), बड़े tracked result sets (Day 5), loops के अंदर LINQ lookups।</li>
+<li><b>बहुत सी तेज़ queries जुड़ जाती हैं</b> → LINQ loop में छुपा N+1, या ऐसा <code>Select</code> जो हर item के लिए service call करे (Day 4 + Day 6): 200 queries × 5 ms = 1 second, भले ही हर query ठीक दिखे। हर request के commands गिनो — development में <code>LogTo</code>, Application Insights में dependency calls।</li>
+<li><b>एक तेज़ query, विशाल result</b> → DbSet पर <code>IEnumerable</code> variable, या <code>Where</code> से पहले <code>ToList()</code>/<code>AsEnumerable()</code> (Day 4)। SQL आसान है, पर हर row आती है, materialize होती है और track होती है (Day 5)।</li>
+<li><b>Blocked threads</b> → async calls पर <code>.Result</code>/<code>.Wait()</code> (Day 3)। Load में requests SQL का नहीं, free thread का इंतज़ार करती हैं।</li>
+<li><b>Serialization</b> → navigations वाली entities लौटाना: बड़े object graphs, cycles, या JSON serialization के दौरान चलता lazy loading (Day 5)। इसकी जगह DTO projections लौटाओ (Day 6)।</li>
+<li>अगर कोई query SQL Server के अंदर सच में धीमी <b>है</b>, तो वो Day 6 का सवाल "slow-query-investigation" है: execution plan, indexes, implicit conversions।</li>
 </ul>
-<p>Follow-up: "Fix साबित कैसे करोगे?" — पहले और बाद में वही measurement (duration, query count), और बेहतर हो तो integration test में query-count check, ताकि problem चुपचाप वापस न आ सके।</p>`,
+<p>Follow-up: "Fix साबित कैसे करोगे?" — पहले और बाद में वही measurement (request duration, query count), और बेहतर हो तो integration test में query-count check, ताकि problem चुपचाप वापस न आ सके।</p>`,
         hg: `<ul>
-<li><b>Naapo</b>: Application Insights (ya koi bhi APM tool) request ki duration aur har SQL dependency call dikhata hai. Development mein <code>LogTo</code> har command print karta hai — unhe gino.</li>
-<li><b>Ek jaisi bahut si queries</b> → N+1 (Day 6): <code>Include</code>, projection ya ek batch query se theek karo.</li>
-<li><b>Bahut zyada rows ya columns</b> → over-fetching: <code>Where</code> se pehle <code>ToList()</code>/<code>AsEnumerable()</code>, DbSet par <code>IEnumerable</code> variable (Day 4), ya jahan DTO projection kaafi tha wahan poori entities.</li>
-<li><b>Ek dheemi query</b> → use SSMS mein copy karo aur actual execution plan padho: scans banaam seeks, missing index, implicit conversion.</li>
-<li><b>SQL tez par request dheemi</b> → C# side dekho: threads ko block karte <code>.Result</code>/<code>.Wait()</code> (Day 3), bade tracked result sets (Day 5), loops ke andar LINQ lookups.</li>
+<li><b>Bahut si tez queries jud jaati hain</b> → LINQ loop mein chhupa N+1, ya aisa <code>Select</code> jo har item ke liye service call kare (Day 4 + Day 6): 200 queries × 5 ms = 1 second, bhale hi har query theek dikhe. Har request ke commands gino — development mein <code>LogTo</code>, Application Insights mein dependency calls.</li>
+<li><b>Ek tez query, vishaal result</b> → DbSet par <code>IEnumerable</code> variable, ya <code>Where</code> se pehle <code>ToList()</code>/<code>AsEnumerable()</code> (Day 4). SQL aasaan hai, par har row aati hai, materialize hoti hai aur track hoti hai (Day 5).</li>
+<li><b>Blocked threads</b> → async calls par <code>.Result</code>/<code>.Wait()</code> (Day 3). Load mein requests SQL ka nahi, free thread ka intezaar karti hain.</li>
+<li><b>Serialization</b> → navigations wali entities lautaana: bade object graphs, cycles, ya JSON serialization ke dauraan chalta lazy loading (Day 5). Iski jagah DTO projections lautaao (Day 6).</li>
+<li>Agar koi query SQL Server ke andar sach mein dheemi <b>hai</b>, to woh Day 6 ka sawaal "slow-query-investigation" hai: execution plan, indexes, implicit conversions.</li>
 </ul>
-<p>Follow-up: "Fix saabit kaise karoge?" — Pehle aur baad mein wahi measurement (duration, query count), aur behtar ho to integration test mein query-count check, taaki problem chupchaap wapas na aa sake.</p>`
+<p>Follow-up: "Fix saabit kaise karoge?" — Pehle aur baad mein wahi measurement (request duration, query count), aur behtar ho to integration test mein query-count check, taaki problem chupchaap wapas na aa sake.</p>`
       }
     },
     {
@@ -576,10 +582,10 @@ window.TL_DAY = {
       id: "lock-vs-concurrency-token",
       depth: "short",
       q: "To stop two requests from selling the same last item, a developer wraps the stock update in a C# <code>lock</code>. Is that enough?",
-      answer: "No. A lock protects only one process — with two app instances it does nothing — and you cannot await inside it. Use the database: a concurrency token, or one atomic UPDATE with WHERE Stock > 0.",
+      answer: "No. A lock protects one process only, so two app instances bypass it, and you cannot await inside it. Use the database: a concurrency token, or an atomic UPDATE with WHERE Stock > 0.",
       meaning: {
-        hi: "नहीं। lock सिर्फ़ एक process को बचाता है — app के दो instances हों तो कुछ नहीं करता — और उसके अंदर await नहीं कर सकते। Database से काम लो: concurrency token, या WHERE Stock > 0 वाला एक atomic UPDATE।",
-        hg: "Nahi. lock sirf ek process ko bachaata hai — app ke do instances hon to kuch nahi karta — aur uske andar await nahi kar sakte. Database se kaam lo: concurrency token, ya WHERE Stock > 0 wala ek atomic UPDATE."
+        hi: "नहीं। lock सिर्फ़ एक process को बचाता है, इसलिए app के दो instances उसे bypass कर देते हैं, और उसके अंदर await नहीं कर सकते। Database से काम लो: concurrency token, या WHERE Stock > 0 वाला atomic UPDATE।",
+        hg: "Nahi. lock sirf ek process ko bachaata hai, isliye app ke do instances use bypass kar dete hain, aur uske andar await nahi kar sakte. Database se kaam lo: concurrency token, ya WHERE Stock > 0 wala atomic UPDATE."
       },
       explain: {
         en: `<ul>
@@ -1347,7 +1353,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       "<b>override follows the object, new follows the reference.</b>",
       "<b>Favor composition (has-a) over inheritance (is-a)</b> — dependency injection is composition.",
       "A <b>value type</b> copies the data; a <b>reference type</b> copies the reference — two variables, one object.",
-      "<code>await</code> <b>frees the thread while you wait — it does not create a new one.</b> Go async all the way.",
+      "<code>await</code> <b>frees the thread while you wait — it does not create a new one.</b>",
       "<code>throw;</code> keeps the stack trace; <code>throw ex;</code> resets it.",
       "A LINQ query runs <b>only when enumerated</b> — and runs <b>again</b> every time you enumerate it.",
       "<b>IQueryable</b> becomes SQL; after <code>AsEnumerable()</code> or <code>ToList()</code>, everything runs <b>in memory</b>.",
@@ -1360,7 +1366,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         "override object के पीछे चलता है, new reference के पीछे।",
         "Inheritance (is-a) से ज़्यादा composition (has-a) को चुनो — dependency injection भी composition ही है।",
         "Value type data copy करता है; reference type reference copy करता है — दो variables, एक object।",
-        "await इंतज़ार के दौरान thread को free करता है — नया thread नहीं बनाता। पूरी तरह async रहो।",
+        "await इंतज़ार के दौरान thread को free करता है — नया thread नहीं बनाता।",
         "throw; stack trace बचाता है; throw ex; उसे reset कर देता है।",
         "LINQ query सिर्फ़ enumerate करने पर चलती है — और हर बार enumerate करने पर फिर से चलती है।",
         "IQueryable SQL बनता है; AsEnumerable() या ToList() के बाद सब कुछ memory में चलता है।",
@@ -1372,7 +1378,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         "override object ke peeche chalta hai, new reference ke peeche.",
         "Inheritance (is-a) se zyada composition (has-a) ko chuno — dependency injection bhi composition hi hai.",
         "Value type data copy karta hai; reference type reference copy karta hai — do variables, ek object.",
-        "await intezaar ke dauraan thread ko free karta hai — naya thread nahi banata. Poori tarah async raho.",
+        "await intezaar ke dauraan thread ko free karta hai — naya thread nahi banata.",
         "throw; stack trace bachaata hai; throw ex; use reset kar deta hai.",
         "LINQ query sirf enumerate karne par chalti hai — aur har baar enumerate karne par phir se chalti hai.",
         "IQueryable SQL banta hai; AsEnumerable() ya ToList() ke baad sab kuch memory mein chalta hai.",
