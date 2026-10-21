@@ -55,18 +55,20 @@ function writeIfChanged(file, content) {
 
 function dotnet(args, cwd, timeout = 180000) {
   const r = spawnSync('dotnet', args, { cwd, env: ENV, encoding: 'utf8', timeout });
-  return { status: r.status, out: (r.stdout || '') + (r.stderr || ''), timedOut: r.error?.code === 'ETIMEDOUT' };
+  const stdout = r.stdout || '', stderr = r.stderr || '';
+  return { status: r.status, stdout, stderr, out: stdout + stderr, timedOut: r.error?.code === 'ETIMEDOUT' };
 }
 
 const BUILD_ARGS = ['build', '-nologo', '-v', 'q', '--tl:off', '-clp:NoSummary', '-p:UseSharedCompilation=true'];
 
 function firstError(out) {
   const lines = out.split(/\r?\n/);
-  const hit = lines.find(l => /\berror\b/i.test(l)) || lines.find(l => l.trim()) || 'unknown error';
+  const hit = lines.find(l => /error (CS|NU)\d+/.test(l)) || lines.find(l => /\berror\b/i.test(l)) || lines.find(l => l.trim()) || 'unknown error';
   return hit.replace(/\s*\[[^\]]*\.csproj\]\s*$/, '').trim();
 }
 
-const isRestoreFailure = (out) => /\bNU1\d{3}\b/.test(out);
+// Restore failure = an `error NU1xxx` line and no compiler error; NU warnings alone never mean SKIP.
+export const isRestoreFailure = (out) => /error NU1\d{3}/.test(out) && !/error CS\d+/.test(out);
 
 export function checkSnippet(snip) {
   const dir = path.join(SNIPPETS_DIR, snip.key);
@@ -90,12 +92,12 @@ export function checkSnippet(snip) {
 
   const r = dotnet([path.join(dir, 'out', 'snippet.dll')], dir, 60000);
   if (r.timedOut) return { status: 'FAIL', detail: 'run timed out' };
-  if (r.status !== 0) return { status: 'FAIL', detail: `exit code ${r.status}: ${firstError(r.out)}` };
+  if (r.status !== 0) return { status: 'FAIL', detail: `exit code ${r.status}: ${firstError(r.stderr || r.stdout)}` };
   if (snip.expected === undefined) return { status: 'PASS' };
-  const actual = normalize(r.out);
+  const actual = normalize(r.stdout);
   const expected = normalize(snip.expected);
   if (actual !== expected) {
-    return { status: 'FAIL', detail: `output mismatch\n    expected: ${JSON.stringify(expected)}\n    actual:   ${JSON.stringify(actual)}` };
+    return { status: 'FAIL', detail: `output mismatch\n    expected: ${JSON.stringify(expected)}\n    actual:   ${JSON.stringify(actual)}${r.stderr.trim() ? `\n    stderr:   ${JSON.stringify(r.stderr.trim())}` : ''}` };
   }
   return { status: 'PASS' };
 }
