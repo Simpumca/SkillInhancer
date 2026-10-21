@@ -1914,7 +1914,8 @@ class SalesReport : Report
 <li><b>C# 11</b> — <code>required</code> members, <code>static abstract</code> members in interfaces, <code>file</code>-scoped types.</li>
 <li><b>C# 12</b> — primary constructors for classes and structs: <code>class OrderService(IOrderRepository repo)</code>.</li>
 <li><b>C# 14</b> — the <code>field</code> keyword inside property accessors (validate a value without declaring a backing field) and extension members (extension properties, not only extension methods).</li>
-</ul>`,
+</ul>
+<p><b>Next (as of Oct 2026):</b> .NET 11 (STS) is due in November 2026; .NET 10 stays the LTS.</p>`,
     hi: `<p>OOP code में आपको ये modern C# features दिखेंगे (current: <b>C# 14 / .NET 10 LTS</b>):</p>
 <ul>
 <li><b>C# 8</b> — default interface methods (.NET Core 3.0+ चाहिए, .NET Framework में नहीं चलते)।</li>
@@ -1922,7 +1923,8 @@ class SalesReport : Report
 <li><b>C# 11</b> — <code>required</code> members, interfaces में <code>static abstract</code> members, <code>file</code>-scoped types।</li>
 <li><b>C# 12</b> — classes और structs के लिए primary constructors: <code>class OrderService(IOrderRepository repo)</code>।</li>
 <li><b>C# 14</b> — property accessor के अंदर <code>field</code> keyword (बिना backing field लिखे value validate करो) और extension members (सिर्फ़ extension methods नहीं, extension properties भी)।</li>
-</ul>`,
+</ul>
+<p><b>आगे (Oct 2026 तक की जानकारी):</b> .NET 11 (STS) November 2026 में आने वाला है; .NET 10 ही LTS रहेगा।</p>`,
     hg: `<p>OOP code mein aapko yeh modern C# features dikhenge (current: <b>C# 14 / .NET 10 LTS</b>):</p>
 <ul>
 <li><b>C# 8</b> — default interface methods (.NET Core 3.0+ chahiye, .NET Framework mein nahi chalte).</li>
@@ -1930,6 +1932,7 @@ class SalesReport : Report
 <li><b>C# 11</b> — <code>required</code> members, interfaces mein <code>static abstract</code> members, <code>file</code>-scoped types.</li>
 <li><b>C# 12</b> — classes aur structs ke liye primary constructors: <code>class OrderService(IOrderRepository repo)</code>.</li>
 <li><b>C# 14</b> — property accessor ke andar <code>field</code> keyword (bina backing field likhe value validate karo) aur extension members (sirf extension methods nahi, extension properties bhi).</li>
-</ul>`
+</ul>
+<p><b>Aage (Oct 2026 tak ki jaankari):</b> .NET 11 (STS) November 2026 mein aane wala hai; .NET 10 hi LTS rahega.</p>`
   }
 };

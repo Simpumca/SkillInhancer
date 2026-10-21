@@ -3023,7 +3023,8 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 10</b> — <code>ExecuteUpdateAsync</code> accepts a regular lambda for the setters, so you can add <code>SetProperty</code> calls conditionally (before, it had to be an expression tree); <b>named query filters</b> — several global filters per entity (for example soft delete + tenant) that you can switch off one at a time with <code>IgnoreQueryFilters(["SoftDelete"])</code>.</li>
 <li><b>EF Core 10, also</b> — split queries keep the same ordering (including the key) in every query, fixing a paging consistency bug; an analyzer warning for string concatenation inside raw SQL methods; simpler SQL parameter names (<code>@city</code> instead of <code>@__city_0</code>); and <code>ids.Contains(...)</code> now becomes <code>IN (@ids1, @ids2, ...)</code> with one parameter per value by default.</li>
 </ul>
-<p>This tutorial's checker runs every EF snippet on EF Core 9 (.NET 9 SDK). The printed SQL is real SQL Server SQL from EF Core 9; on EF Core 10 the parameter names are simpler and aliases can differ slightly.</p>`,
+<p>This tutorial's checker runs every EF snippet on EF Core 9 (.NET 9 SDK). The printed SQL is real SQL Server SQL from EF Core 9; on EF Core 10 the parameter names are simpler and aliases can differ slightly.</p>
+<p><b>Next (as of Oct 2026):</b> .NET 11 (STS) is due in November 2026; .NET 10 stays the LTS.</p>`,
     hi: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 चाहिए)। आज के lesson की हर बात EF Core 10 में भी लागू है। कई blog answers नीचे के features से पहले के हैं — हर version ने यह <b>जोड़ा</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — split queries (<code>AsSplitQuery</code>); आपके अपने transaction के अंदर <code>SaveChanges()</code> चलने पर अपने-आप savepoints।</li>
@@ -3034,7 +3035,8 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 10</b> — <code>ExecuteUpdateAsync</code> setters के लिए एक normal lambda लेता है, इसलिए <code>SetProperty</code> calls शर्त के साथ जोड़ सकते हो (पहले expression tree ज़रूरी था); <b>named query filters</b> — हर entity पर कई global filters (जैसे soft delete + tenant) जिन्हें <code>IgnoreQueryFilters(["SoftDelete"])</code> से एक-एक करके बंद कर सकते हो।</li>
 <li><b>EF Core 10, और भी</b> — split queries हर query में एक जैसी ordering (key समेत) रखती हैं, जिससे paging का एक consistency bug ठीक हुआ; raw SQL methods के अंदर string जोड़ने पर analyzer warning; आसान SQL parameter names (<code>@__city_0</code> की जगह <code>@city</code>); और <code>ids.Contains(...)</code> अब by default <code>IN (@ids1, @ids2, ...)</code> बनता है, हर value का एक parameter।</li>
 </ul>
-<p>इस tutorial का checker हर EF snippet EF Core 9 (.NET 9 SDK) पर चलाता है। Print हुआ SQL EF Core 9 का असली SQL Server SQL है; EF Core 10 पर parameter names आसान होते हैं और aliases थोड़े अलग हो सकते हैं।</p>`,
+<p>इस tutorial का checker हर EF snippet EF Core 9 (.NET 9 SDK) पर चलाता है। Print हुआ SQL EF Core 9 का असली SQL Server SQL है; EF Core 10 पर parameter names आसान होते हैं और aliases थोड़े अलग हो सकते हैं।</p>
+<p><b>आगे (Oct 2026 तक की जानकारी):</b> .NET 11 (STS) November 2026 में आने वाला है; .NET 10 ही LTS रहेगा।</p>`,
     hg: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 chahiye). Aaj ke lesson ki har baat EF Core 10 mein bhi laagu hai. Kai blog answers neeche ke features se pehle ke hain — har version ne yeh <b>joda</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — split queries (<code>AsSplitQuery</code>); aapke apne transaction ke andar <code>SaveChanges()</code> chalne par apne-aap savepoints.</li>
@@ -3045,6 +3047,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 10</b> — <code>ExecuteUpdateAsync</code> setters ke liye ek normal lambda leta hai, isliye <code>SetProperty</code> calls shart ke saath jod sakte ho (pehle expression tree zaroori tha); <b>named query filters</b> — har entity par kai global filters (jaise soft delete + tenant) jinhe <code>IgnoreQueryFilters(["SoftDelete"])</code> se ek-ek karke band kar sakte ho.</li>
 <li><b>EF Core 10, aur bhi</b> — split queries har query mein ek jaisi ordering (key samet) rakhti hain, jisse paging ka ek consistency bug theek hua; raw SQL methods ke andar string jodne par analyzer warning; aasaan SQL parameter names (<code>@__city_0</code> ki jagah <code>@city</code>); aur <code>ids.Contains(...)</code> ab by default <code>IN (@ids1, @ids2, ...)</code> banta hai, har value ka ek parameter.</li>
 </ul>
-<p>Is tutorial ka checker har EF snippet EF Core 9 (.NET 9 SDK) par chalata hai. Print hua SQL EF Core 9 ka asli SQL Server SQL hai; EF Core 10 par parameter names aasaan hote hain aur aliases thode alag ho sakte hain.</p>`
+<p>Is tutorial ka checker har EF snippet EF Core 9 (.NET 9 SDK) par chalata hai. Print hua SQL EF Core 9 ka asli SQL Server SQL hai; EF Core 10 par parameter names aasaan hote hain aur aliases thode alag ho sakte hain.</p>
+<p><b>Aage (Oct 2026 tak ki jaankari):</b> .NET 11 (STS) November 2026 mein aane wala hai; .NET 10 hi LTS rahega.</p>`
   }
 };

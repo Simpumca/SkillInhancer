@@ -2604,7 +2604,8 @@ public class SchoolContext(DbContextOptions<SchoolContext> options) : DbContext(
 <li><b>EF Core 9</b> — <code>Migrate()</code> takes a lock so concurrent instances do not apply the same migration twice; applying migrations now throws if the model has changes with no migration; new <code>UseSeeding</code>/<code>UseAsyncSeeding</code> for seed data.</li>
 <li><b>EF Core 10</b> — the headline changes are on the query side (for example <code>LeftJoin</code>/<code>RightJoin</code>, Day 4); more EF Core 9/10 changes on Day 6.</li>
 </ul>
-<p>This tutorial's checker runs every EF snippet on EF Core 9 (.NET 9 SDK). The printed SQL is real SQL Server SQL from <code>ToQueryString()</code>/<code>GenerateCreateScript()</code>; alias and parameter names can differ slightly between EF Core versions.</p>`,
+<p>This tutorial's checker runs every EF snippet on EF Core 9 (.NET 9 SDK). The printed SQL is real SQL Server SQL from <code>ToQueryString()</code>/<code>GenerateCreateScript()</code>; alias and parameter names can differ slightly between EF Core versions.</p>
+<p><b>Next (as of Oct 2026):</b> .NET 11 (STS) is due in November 2026; .NET 10 stays the LTS.</p>`,
     hi: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 चाहिए)। आज के lesson के concepts EF Core 10 में नहीं बदले। Online कई "पुराने" answers नीचे के features से पहले के हैं — हर version ने यह <b>जोड़ा</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — skip navigations वाला many-to-many (join entity की ज़रूरत नहीं), filtered <code>Include</code>, split queries (<code>AsSplitQuery</code>), <code>AsNoTrackingWithIdentityResolution</code>।</li>
@@ -2614,7 +2615,8 @@ public class SchoolContext(DbContextOptions<SchoolContext> options) : DbContext(
 <li><b>EF Core 9</b> — <code>Migrate()</code> एक lock लेता है ताकि एक साथ चल रहे instances एक ही migration दो बार apply न करें; model में बिना migration वाले बदलाव हों तो migrations apply करते समय अब exception आता है; seed data के लिए नए <code>UseSeeding</code>/<code>UseAsyncSeeding</code>।</li>
 <li><b>EF Core 10</b> — मुख्य बदलाव query वाली side पर हैं (जैसे <code>LeftJoin</code>/<code>RightJoin</code>, Day 4); EF Core 9/10 के और बदलाव Day 6 में।</li>
 </ul>
-<p>इस tutorial का checker हर EF snippet EF Core 9 (.NET 9 SDK) पर चलाता है। Print हुआ SQL <code>ToQueryString()</code>/<code>GenerateCreateScript()</code> से आया असली SQL Server SQL है; alias और parameter names EF Core versions के बीच थोड़े अलग हो सकते हैं।</p>`,
+<p>इस tutorial का checker हर EF snippet EF Core 9 (.NET 9 SDK) पर चलाता है। Print हुआ SQL <code>ToQueryString()</code>/<code>GenerateCreateScript()</code> से आया असली SQL Server SQL है; alias और parameter names EF Core versions के बीच थोड़े अलग हो सकते हैं।</p>
+<p><b>आगे (Oct 2026 तक की जानकारी):</b> .NET 11 (STS) November 2026 में आने वाला है; .NET 10 ही LTS रहेगा।</p>`,
     hg: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 chahiye). Aaj ke lesson ke concepts EF Core 10 mein nahi badle. Online kai "purane" answers neeche ke features se pehle ke hain — har version ne yeh <b>joda</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — skip navigations wala many-to-many (join entity ki zaroorat nahi), filtered <code>Include</code>, split queries (<code>AsSplitQuery</code>), <code>AsNoTrackingWithIdentityResolution</code>.</li>
@@ -2624,6 +2626,7 @@ public class SchoolContext(DbContextOptions<SchoolContext> options) : DbContext(
 <li><b>EF Core 9</b> — <code>Migrate()</code> ek lock leta hai taaki ek saath chal rahe instances ek hi migration do baar apply na karein; model mein bina migration wale badlaav hon to migrations apply karte samay ab exception aata hai; seed data ke liye naye <code>UseSeeding</code>/<code>UseAsyncSeeding</code>.</li>
 <li><b>EF Core 10</b> — mukhya badlaav query wali side par hain (jaise <code>LeftJoin</code>/<code>RightJoin</code>, Day 4); EF Core 9/10 ke aur badlaav Day 6 mein.</li>
 </ul>
-<p>Is tutorial ka checker har EF snippet EF Core 9 (.NET 9 SDK) par chalata hai. Print hua SQL <code>ToQueryString()</code>/<code>GenerateCreateScript()</code> se aaya asli SQL Server SQL hai; alias aur parameter names EF Core versions ke beech thode alag ho sakte hain.</p>`
+<p>Is tutorial ka checker har EF snippet EF Core 9 (.NET 9 SDK) par chalata hai. Print hua SQL <code>ToQueryString()</code>/<code>GenerateCreateScript()</code> se aaya asli SQL Server SQL hai; alias aur parameter names EF Core versions ke beech thode alag ho sakte hain.</p>
+<p><b>Aage (Oct 2026 tak ki jaankari):</b> .NET 11 (STS) November 2026 mein aane wala hai; .NET 10 hi LTS rahega.</p>`
   }
 };

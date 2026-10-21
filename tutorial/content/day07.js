@@ -175,7 +175,7 @@ window.TL_DAY = {
 <li><b><code>await</code> frees the thread while you wait — it does not create a new one.</b> A method runs synchronously until it awaits an <b>unfinished</b> task.</li>
 <li><b>Task</b> = a promise of work or a result (thread pool, exceptions, cancellation, <code>WhenAll</code>). <b>Thread</b> = an OS thread you manage yourself.</li>
 <li>Three rules: <b>async all the way</b>, <code>async void</code> only for event handlers, pass a <code>CancellationToken</code>.</li>
-<li><code>ConfigureAwait(false)</code> matters in library and UI code; <b>ASP.NET Core has no SynchronizationContext</b>.</li>
+<li>Use <code>ConfigureAwait(false)</code> in libraries; avoid it in UI code that touches controls. <b>ASP.NET Core has no SynchronizationContext</b>.</li>
 <li><code>throw;</code> keeps the stack trace, <code>throw ex;</code> resets it (CA2200). One global handler logs once and returns ProblemDetails.</li>
 <li><code>using</code> = deterministic <code>Dispose</code> for resources; the <b>GC</b> cleans memory (Gen 0 → 1 → 2; objects of 85,000 bytes or more go to the LOH).</li>
 <li><b>record</b> = value equality + <code>with</code> copies (shallow); a good fit for DTOs.</li>
@@ -193,7 +193,7 @@ window.TL_DAY = {
 <li><b><code>await</code> इंतज़ार के दौरान thread को free करता है — नया thread नहीं बनाता।</b> Method तब तक synchronously चलता है जब तक वो किसी <b>अधूरे</b> task को await न करे।</li>
 <li><b>Task</b> = काम या result का वादा (thread pool, exceptions, cancellation, <code>WhenAll</code>)। <b>Thread</b> = OS thread जिसे आप खुद manage करते हो।</li>
 <li>तीन नियम: <b>async all the way</b>, <code>async void</code> सिर्फ़ event handlers के लिए, <code>CancellationToken</code> आगे पास करो।</li>
-<li><code>ConfigureAwait(false)</code> library और UI code में मायने रखता है; <b>ASP.NET Core में SynchronizationContext नहीं है</b>।</li>
+<li>Libraries में <code>ConfigureAwait(false)</code> use करो; जो UI code controls छूता है उसमें इससे बचो। <b>ASP.NET Core में SynchronizationContext नहीं है</b>।</li>
 <li><code>throw;</code> stack trace बचाता है, <code>throw ex;</code> उसे reset कर देता है (CA2200)। एक global handler एक बार log करता है और ProblemDetails लौटाता है।</li>
 <li><code>using</code> = resources के लिए तय समय पर <code>Dispose</code>; <b>GC</b> memory साफ़ करता है (Gen 0 → 1 → 2; 85,000 bytes या उससे बड़े objects LOH में जाते हैं)।</li>
 <li><b>record</b> = value equality + <code>with</code> copies (shallow); DTOs के लिए बढ़िया।</li>
@@ -211,7 +211,7 @@ window.TL_DAY = {
 <li><b><code>await</code> intezaar ke dauraan thread ko free karta hai — naya thread nahi banata.</b> Method tab tak synchronously chalta hai jab tak woh kisi <b>adhoore</b> task ko await na kare.</li>
 <li><b>Task</b> = kaam ya result ka vaada (thread pool, exceptions, cancellation, <code>WhenAll</code>). <b>Thread</b> = OS thread jise aap khud manage karte ho.</li>
 <li>Teen niyam: <b>async all the way</b>, <code>async void</code> sirf event handlers ke liye, <code>CancellationToken</code> aage pass karo.</li>
-<li><code>ConfigureAwait(false)</code> library aur UI code mein maayne rakhta hai; <b>ASP.NET Core mein SynchronizationContext nahi hai</b>.</li>
+<li>Libraries mein <code>ConfigureAwait(false)</code> use karo; jo UI code controls chhoota hai usmein isse bacho. <b>ASP.NET Core mein SynchronizationContext nahi hai</b>.</li>
 <li><code>throw;</code> stack trace bachaata hai, <code>throw ex;</code> use reset kar deta hai (CA2200). Ek global handler ek baar log karta hai aur ProblemDetails lautaata hai.</li>
 <li><code>using</code> = resources ke liye tay samay par <code>Dispose</code>; <b>GC</b> memory saaf karta hai (Gen 0 → 1 → 2; 85,000 bytes ya usse bade objects LOH mein jaate hain).</li>
 <li><b>record</b> = value equality + <code>with</code> copies (shallow); DTOs ke liye badhiya.</li>

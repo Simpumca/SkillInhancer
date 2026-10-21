@@ -409,12 +409,12 @@ public sealed class TokenCache
     private readonly SemaphoreSlim _gate = new(1, 1);
     private string? _token;
 
-    public async Task<string> GetTokenAsync(Func<Task<string>> fetchToken)
+    public async Task<string> GetTokenAsync(Func<CancellationToken, Task<string>> fetchToken, CancellationToken ct = default)
     {
-        await _gate.WaitAsync();
+        await _gate.WaitAsync(ct);
         try
         {
-            return _token ??= await fetchToken();   // only one caller fetches
+            return _token ??= await fetchToken(ct);   // only one caller fetches
         }
         finally
         {
@@ -1289,7 +1289,7 @@ static int Sum(ReadOnlySpan<int> values)
 <li>With <code>ConfigureAwait(false)</code> the continuation runs on a thread-pool thread instead. Benefits in <b>libraries</b>: no deadlock if a UI caller blocks with <code>.Result</code>, and no extra jump back to the UI thread.</li>
 <li>It affects <b>only that one await</b>. If the task was already complete, execution simply continues on the same thread — so a library should use it on <b>every</b> await, not just the first.</li>
 <li>After <code>ConfigureAwait(false)</code> in UI code, you cannot touch UI controls — so do not use it in UI event handlers or view models that update the screen.</li>
-<li>.NET 8 added <code>ConfigureAwait(ConfigureAwaitOptions...)</code>, e.g. <code>SuppressThrowing</code> to await completion without throwing.</li>
+<li>.NET 8 added <code>ConfigureAwait(ConfigureAwaitOptions...)</code>, e.g. <code>SuppressThrowing</code> (non-generic <code>Task</code> only) to await completion without throwing.</li>
 </ul>
 <p>Follow-up: "Is <code>ConfigureAwait(false)</code> the fix for a deadlock?" — Only a partial defence: it works only if <b>every</b> await down the chain uses it. The real fix is to stop blocking — async all the way.</p>
 <p><b>TL angle:</b> agree on a team rule — e.g. "required in shared libraries (enforce with analyzer CA2007), optional in ASP.NET Core app code" — so reviews do not argue about it every time.</p>`,
@@ -1298,7 +1298,7 @@ static int Sum(ReadOnlySpan<int> values)
 <li><code>ConfigureAwait(false)</code> के साथ continuation उसकी जगह thread-pool thread पर चलता है। <b>Libraries</b> में फ़ायदे: अगर UI caller <code>.Result</code> से block करे तो deadlock नहीं, और UI thread पर वापस जाने का extra चक्कर नहीं।</li>
 <li>यह <b>सिर्फ़ उसी एक await</b> पर असर करता है। अगर task पहले से complete था, तो code उसी thread पर आगे चलता रहता है — इसलिए library में इसे सिर्फ़ पहले नहीं, <b>हर</b> await पर लगाना चाहिए।</li>
 <li>UI code में <code>ConfigureAwait(false)</code> के बाद आप UI controls नहीं छू सकते — इसलिए screen update करने वाले UI event handlers या view models में इसे use मत करो।</li>
-<li>.NET 8 में <code>ConfigureAwait(ConfigureAwaitOptions...)</code> आया, जैसे <code>SuppressThrowing</code> — बिना throw किए completion का इंतज़ार करने के लिए।</li>
+<li>.NET 8 में <code>ConfigureAwait(ConfigureAwaitOptions...)</code> आया, जैसे <code>SuppressThrowing</code> (सिर्फ़ non-generic <code>Task</code> पर) — बिना throw किए completion का इंतज़ार करने के लिए।</li>
 </ul>
 <p>Follow-up: "क्या <code>ConfigureAwait(false)</code> deadlock का इलाज है?" — सिर्फ़ आधा बचाव: यह तभी काम करता है जब chain में नीचे तक <b>हर</b> await इसे use करे। असली इलाज है block करना बंद करो — async all the way।</p>
 <p><b>TL angle:</b> team का एक rule तय करो — जैसे "shared libraries में ज़रूरी (analyzer CA2007 से enforce), ASP.NET Core app code में optional" — ताकि हर review में इस पर बहस न हो।</p>`,
@@ -1307,7 +1307,7 @@ static int Sum(ReadOnlySpan<int> values)
 <li><code>ConfigureAwait(false)</code> ke saath continuation uski jagah thread-pool thread par chalta hai. <b>Libraries</b> mein fayde: agar UI caller <code>.Result</code> se block kare to deadlock nahi, aur UI thread par wapas jaane ka extra chakkar nahi.</li>
 <li>Yeh <b>sirf usi ek await</b> par asar karta hai. Agar task pehle se complete tha, to code usi thread par aage chalta rehta hai — isliye library mein ise sirf pehle nahi, <b>har</b> await par lagana chahiye.</li>
 <li>UI code mein <code>ConfigureAwait(false)</code> ke baad aap UI controls nahi chhoo sakte — isliye screen update karne wale UI event handlers ya view models mein ise use mat karo.</li>
-<li>.NET 8 mein <code>ConfigureAwait(ConfigureAwaitOptions...)</code> aaya, jaise <code>SuppressThrowing</code> — bina throw kiye completion ka intezaar karne ke liye.</li>
+<li>.NET 8 mein <code>ConfigureAwait(ConfigureAwaitOptions...)</code> aaya, jaise <code>SuppressThrowing</code> (sirf non-generic <code>Task</code> par) — bina throw kiye completion ka intezaar karne ke liye.</li>
 </ul>
 <p>Follow-up: "Kya <code>ConfigureAwait(false)</code> deadlock ka ilaaj hai?" — Sirf aadha bachaav: yeh tabhi kaam karta hai jab chain mein neeche tak <b>har</b> await ise use kare. Asli ilaaj hai block karna band karo — async all the way.</p>
 <p><b>TL angle:</b> team ka ek rule tay karo — jaise "shared libraries mein zaroori (analyzer CA2007 se enforce), ASP.NET Core app code mein optional" — taaki har review mein is par bahas na ho.</p>`
@@ -1491,10 +1491,10 @@ static int Sum(ReadOnlySpan<int> values)
       id: "sync-over-async-deadlock",
       depth: "detailed",
       q: "Why can calling .Result or .Wait() on a Task cause a deadlock?",
-      answer: "In apps with a single-threaded SynchronizationContext, like WPF or classic ASP.NET, .Result blocks that thread while the awaited code needs the same thread to resume, so each waits for the other.",
+      answer: "If the SynchronizationContext lets only one thread run at a time (WPF's UI thread, classic ASP.NET's per-request context), .Result blocks that context while the awaited code needs it to resume, so both wait forever.",
       meaning: {
-        hi: "जिन apps में single-threaded SynchronizationContext होता है, जैसे WPF या पुराना ASP.NET, वहाँ .Result उस thread को block कर देता है, जबकि await किए गए code को वापस चलने के लिए वही thread चाहिए — दोनों एक-दूसरे का इंतज़ार करते रहते हैं।",
-        hg: "Jin apps mein single-threaded SynchronizationContext hota hai, jaise WPF ya purana ASP.NET, wahan .Result us thread ko block kar deta hai, jabki await kiye gaye code ko wapas chalne ke liye wahi thread chahiye — dono ek-doosre ka intezaar karte rehte hain."
+        hi: "अगर SynchronizationContext एक समय पर एक ही thread चलने देता है (WPF का UI thread, पुराने ASP.NET का per-request context), तो .Result उस context को block कर देता है, जबकि await किए गए code को resume होने के लिए वही context चाहिए — दोनों हमेशा इंतज़ार करते रहते हैं।",
+        hg: "Agar SynchronizationContext ek samay par ek hi thread chalne deta hai (WPF ka UI thread, purane ASP.NET ka per-request context), to .Result us context ko block kar deta hai, jabki await kiye gaye code ko resume hone ke liye wahi context chahiye — dono hamesha intezaar karte rehte hain."
       },
       explain: {
         en: `<p>Step by step, in a WPF button click:</p>
@@ -1951,7 +1951,7 @@ public sealed class CartTotals(PriceCache prices)
       explain: {
         en: `<ul>
 <li><b>Why a separate heap</b>: copying huge objects during compaction is expensive, so the LOH is swept but not compacted by default. Many short-lived large buffers → fragmentation, more memory, more full GCs. One-time compaction can be requested with <code>GCSettings.LargeObjectHeapCompactionMode</code>.</li>
-<li><b>Avoid LOH churn</b>: <code>ArrayPool&lt;T&gt;.Shared.Rent/Return</code> for big buffers; stream data instead of loading whole files into a <code>byte[]</code> or <code>string</code>; <code>RecyclableMemoryStream</code> (Microsoft.IO package) instead of many big <code>MemoryStream</code>s.</li>
+<li><b>Avoid LOH churn</b>: <code>ArrayPool&lt;T&gt;.Shared.Rent/Return</code> for big buffers; stream data instead of loading whole files into a <code>byte[]</code> or <code>string</code>; <code>RecyclableMemoryStream</code> (NuGet package <code>Microsoft.IO.RecyclableMemoryStream</code>) instead of many big <code>MemoryStream</code>s.</li>
 <li><b>Managed "leaks"</b> = still-reachable objects: static <code>Dictionary</code> caches with no eviction (use <code>IMemoryCache</code> with expiration/size limits), events from a long-lived publisher to short-lived subscribers, timers never disposed, a singleton capturing a scoped service.</li>
 <li><b>Unmanaged leaks</b>: undisposed handles, connections, native memory.</li>
 <li><b>How to investigate</b>: <code>dotnet-counters</code> to confirm growth (GC heap size, Gen 2 size); take two <code>dotnet-gcdump</code> snapshots some minutes apart and compare which types grow; follow the "paths to root" in Visual Studio or PerfView.</li>
@@ -1959,7 +1959,7 @@ public sealed class CartTotals(PriceCache prices)
 <p>Follow-up: "Memory grows in production but drops after a GC — is that a leak?" — Not necessarily. Server GC can let the heap grow while memory is available. A leak is memory that keeps growing <b>after full GCs</b> under steady load.</p>`,
         hi: `<ul>
 <li><b>अलग heap क्यों</b>: compaction के दौरान बहुत बड़े objects copy करना महँगा है, इसलिए LOH by default sweep होता है पर compact नहीं। बहुत सारे थोड़ी देर वाले बड़े buffers → fragmentation, ज़्यादा memory, ज़्यादा full GCs। एक बार का compaction <code>GCSettings.LargeObjectHeapCompactionMode</code> से माँगा जा सकता है।</li>
-<li><b>LOH की उथल-पुथल से बचो</b>: बड़े buffers के लिए <code>ArrayPool&lt;T&gt;.Shared.Rent/Return</code>; पूरी file को <code>byte[]</code> या <code>string</code> में load करने की जगह data stream करो; बहुत सारे बड़े <code>MemoryStream</code> की जगह <code>RecyclableMemoryStream</code> (Microsoft.IO package)।</li>
+<li><b>LOH की उथल-पुथल से बचो</b>: बड़े buffers के लिए <code>ArrayPool&lt;T&gt;.Shared.Rent/Return</code>; पूरी file को <code>byte[]</code> या <code>string</code> में load करने की जगह data stream करो; बहुत सारे बड़े <code>MemoryStream</code> की जगह <code>RecyclableMemoryStream</code> (NuGet package <code>Microsoft.IO.RecyclableMemoryStream</code>)।</li>
 <li><b>Managed "leaks"</b> = अब भी reachable objects: बिना eviction वाली static <code>Dictionary</code> caches (expiration/size limits के साथ <code>IMemoryCache</code> use करो), लंबे समय वाले publisher से थोड़ी देर वाले subscribers के events, कभी dispose न हुए timers, scoped service को पकड़े हुए singleton।</li>
 <li><b>Unmanaged leaks</b>: dispose न हुए handles, connections, native memory।</li>
 <li><b>जाँच कैसे करें</b>: growth confirm करने के लिए <code>dotnet-counters</code> (GC heap size, Gen 2 size); कुछ मिनट के अंतर पर दो <code>dotnet-gcdump</code> snapshots लो और compare करो कि कौन से types बढ़ रहे हैं; Visual Studio या PerfView में "paths to root" follow करो।</li>
@@ -1967,7 +1967,7 @@ public sealed class CartTotals(PriceCache prices)
 <p>Follow-up: "Production में memory बढ़ती है पर GC के बाद गिर जाती है — क्या यह leak है?" — ज़रूरी नहीं। Memory available हो तो Server GC heap को बढ़ने देता है। Leak वो memory है जो steady load पर <b>full GCs के बाद भी</b> बढ़ती रहे।</p>`,
         hg: `<ul>
 <li><b>Alag heap kyun</b>: compaction ke dauraan bahut bade objects copy karna mehenga hai, isliye LOH by default sweep hota hai par compact nahi. Bahut saare thodi der wale bade buffers → fragmentation, zyada memory, zyada full GCs. Ek baar ka compaction <code>GCSettings.LargeObjectHeapCompactionMode</code> se maanga ja sakta hai.</li>
-<li><b>LOH ki uthal-puthal se bacho</b>: bade buffers ke liye <code>ArrayPool&lt;T&gt;.Shared.Rent/Return</code>; poori file ko <code>byte[]</code> ya <code>string</code> mein load karne ki jagah data stream karo; bahut saare bade <code>MemoryStream</code> ki jagah <code>RecyclableMemoryStream</code> (Microsoft.IO package).</li>
+<li><b>LOH ki uthal-puthal se bacho</b>: bade buffers ke liye <code>ArrayPool&lt;T&gt;.Shared.Rent/Return</code>; poori file ko <code>byte[]</code> ya <code>string</code> mein load karne ki jagah data stream karo; bahut saare bade <code>MemoryStream</code> ki jagah <code>RecyclableMemoryStream</code> (NuGet package <code>Microsoft.IO.RecyclableMemoryStream</code>).</li>
 <li><b>Managed "leaks"</b> = ab bhi reachable objects: bina eviction wali static <code>Dictionary</code> caches (expiration/size limits ke saath <code>IMemoryCache</code> use karo), lambe samay wale publisher se thodi der wale subscribers ke events, kabhi dispose na hue timers, scoped service ko pakde hue singleton.</li>
 <li><b>Unmanaged leaks</b>: dispose na hue handles, connections, native memory.</li>
 <li><b>Jaanch kaise karein</b>: growth confirm karne ke liye <code>dotnet-counters</code> (GC heap size, Gen 2 size); kuch minute ke antar par do <code>dotnet-gcdump</code> snapshots lo aur compare karo ki kaun se types badh rahe hain; Visual Studio ya PerfView mein "paths to root" follow karo.</li>
@@ -2480,22 +2480,22 @@ Console.WriteLine(name.ToUpper());`,
       answer: "False\nFalse\nTrue\n-1\n0\n[]\nGUEST",
       explain: {
         en: `<ul>
-<li>Comparisons with a null <code>int?</code> (<code>&gt;</code>, <code>&lt;=</code>, ...) are <b>always false</b> — so <code>stock &gt; 0</code> and <code>stock &lt;= 0</code> are <b>both</b> false. Easy to miss in a <code>if (stock &lt;= 0) Reorder();</code> check.</li>
-<li><code>==</code> with null works as expected → <b>True</b>.</li>
+<li>The comparisons <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code> with a null <code>int?</code> operand are <b>always false</b> — so <code>stock &gt; 0</code> and <code>stock &lt;= 0</code> are <b>both</b> false. Easy to miss in a <code>if (stock &lt;= 0) Reorder();</code> check.</li>
+<li><code>==</code> and <code>!=</code> with null work as expected (<code>null != 5</code> is true) → <b>True</b>.</li>
 <li>Arithmetic with null gives null (<code>null + 5</code> is null), so <code>??</code> picks <b>-1</b>.</li>
 <li><code>name?.Length</code> is null → <code>?? 0</code> → <b>0</b>. Interpolating null prints an empty string → <b>[]</b>.</li>
 <li><code>??=</code> assigns only because <code>name</code> is null → <b>GUEST</b>. After it, the compiler knows <code>name</code> is not null, so <code>name.ToUpper()</code> gives no warning.</li>
 </ul>`,
         hi: `<ul>
-<li>Null <code>int?</code> के साथ comparisons (<code>&gt;</code>, <code>&lt;=</code>, ...) <b>हमेशा false</b> होते हैं — इसलिए <code>stock &gt; 0</code> और <code>stock &lt;= 0</code> <b>दोनों</b> false हैं। <code>if (stock &lt;= 0) Reorder();</code> जैसे check में यह आसानी से छूट जाता है।</li>
-<li>Null के साथ <code>==</code> उम्मीद के मुताबिक़ चलता है → <b>True</b>।</li>
+<li>Null <code>int?</code> operand के साथ comparisons <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code> <b>हमेशा false</b> होते हैं — इसलिए <code>stock &gt; 0</code> और <code>stock &lt;= 0</code> <b>दोनों</b> false हैं। <code>if (stock &lt;= 0) Reorder();</code> जैसे check में यह आसानी से छूट जाता है।</li>
+<li>Null के साथ <code>==</code> और <code>!=</code> उम्मीद के मुताबिक़ चलते हैं (<code>null != 5</code> true है) → <b>True</b>।</li>
 <li>Null के साथ arithmetic null देता है (<code>null + 5</code> null है), इसलिए <code>??</code> <b>-1</b> चुनता है।</li>
 <li><code>name?.Length</code> null है → <code>?? 0</code> → <b>0</b>। Null को interpolate करने पर empty string print होती है → <b>[]</b>।</li>
 <li><code>??=</code> सिर्फ़ इसलिए assign करता है क्योंकि <code>name</code> null है → <b>GUEST</b>। उसके बाद compiler जानता है कि <code>name</code> null नहीं है, इसलिए <code>name.ToUpper()</code> पर warning नहीं आती।</li>
 </ul>`,
         hg: `<ul>
-<li>Null <code>int?</code> ke saath comparisons (<code>&gt;</code>, <code>&lt;=</code>, ...) <b>hamesha false</b> hote hain — isliye <code>stock &gt; 0</code> aur <code>stock &lt;= 0</code> <b>dono</b> false hain. <code>if (stock &lt;= 0) Reorder();</code> jaise check mein yeh aasaani se chhoot jaata hai.</li>
-<li>Null ke saath <code>==</code> ummeed ke mutaabik chalta hai → <b>True</b>.</li>
+<li>Null <code>int?</code> operand ke saath comparisons <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code> <b>hamesha false</b> hote hain — isliye <code>stock &gt; 0</code> aur <code>stock &lt;= 0</code> <b>dono</b> false hain. <code>if (stock &lt;= 0) Reorder();</code> jaise check mein yeh aasaani se chhoot jaata hai.</li>
+<li>Null ke saath <code>==</code> aur <code>!=</code> ummeed ke mutaabik chalte hain (<code>null != 5</code> true hai) → <b>True</b>.</li>
 <li>Null ke saath arithmetic null deta hai (<code>null + 5</code> null hai), isliye <code>??</code> <b>-1</b> chunta hai.</li>
 <li><code>name?.Length</code> null hai → <code>?? 0</code> → <b>0</b>. Null ko interpolate karne par empty string print hoti hai → <b>[]</b>.</li>
 <li><code>??=</code> sirf isliye assign karta hai kyunki <code>name</code> null hai → <b>GUEST</b>. Uske baad compiler jaanta hai ki <code>name</code> null nahi hai, isliye <code>name.ToUpper()</code> par warning nahi aati.</li>
@@ -2582,7 +2582,7 @@ Console.WriteLine($"{marks[1]} {copy[0]} {middle.Length}");`,
   whatsNew: {
     en: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025). Recent changes related to today's topics — each tagged with its version, and whether it is a <b>library/runtime</b> change (.NET) or a <b>language</b> feature (C#):</p>
 <ul>
-<li><b>.NET 8 (library)</b> — <code>ConfigureAwaitOptions</code>: <code>await task.ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing)</code> waits for completion without throwing; <code>ForceYielding</code> always yields. Before, <code>ConfigureAwait</code> took only a <code>bool</code>.</li>
+<li><b>.NET 8 (library)</b> — <code>ConfigureAwaitOptions</code>: <code>await task.ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing)</code> waits for completion without throwing (non-generic <code>Task</code> only); <code>ForceYielding</code> always yields. Before, <code>ConfigureAwait</code> took only a <code>bool</code>.</li>
 <li><b>.NET 8 (ASP.NET Core)</b> — <code>IExceptionHandler</code> for clean global exception handling with ProblemDetails.</li>
 <li><b>.NET 9 (library)</b> — <code>Task.WhenEach</code>: <code>await foreach (var t in Task.WhenEach(tasks))</code> gives tasks in the order they <b>complete</b>, replacing the old <code>WhenAny</code> loop.</li>
 <li><b>.NET 9 (runtime)</b> — exception handling in CoreCLR was reimplemented (based on the NativeAOT model), making throw/catch noticeably faster. Exceptions are still for exceptional cases.</li>
@@ -2592,10 +2592,11 @@ Console.WriteLine($"{marks[1]} {copy[0]} {middle.Length}");`,
 <li><b>.NET 10 (library)</b> — <code>System.Linq.AsyncEnumerable</code>: LINQ operators for <code>IAsyncEnumerable&lt;T&gt;</code> are now built in; before, you added the <code>System.Linq.Async</code> NuGet package.</li>
 <li><b>C# 14</b> (.NET 10) — first-class span conversions: arrays convert to <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> in more places (extension-method receivers, generic inference); and null-conditional assignment <code>customer?.Email = value;</code> (Day 2 whatsNew).</li>
 </ul>
-<p>The code checker for this tutorial uses the .NET 9 SDK (C# 13); nothing in today's runnable code needs C# 14.</p>`,
+<p>The code checker for this tutorial uses the .NET 9 SDK (C# 13); nothing in today's runnable code needs C# 14.</p>
+<p><b>Next (as of Oct 2026):</b> .NET 11 (STS) is due in November 2026; .NET 10 stays the LTS.</p>`,
     hi: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025)। आज के topics से जुड़े हाल के बदलाव — हर एक पर उसका version लिखा है, और यह भी कि वो <b>library/runtime</b> बदलाव (.NET) है या <b>language</b> feature (C#):</p>
 <ul>
-<li><b>.NET 8 (library)</b> — <code>ConfigureAwaitOptions</code>: <code>await task.ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing)</code> बिना throw किए completion का इंतज़ार करता है; <code>ForceYielding</code> हमेशा yield करता है। पहले <code>ConfigureAwait</code> सिर्फ़ <code>bool</code> लेता था।</li>
+<li><b>.NET 8 (library)</b> — <code>ConfigureAwaitOptions</code>: <code>await task.ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing)</code> बिना throw किए completion का इंतज़ार करता है (सिर्फ़ non-generic <code>Task</code> पर); <code>ForceYielding</code> हमेशा yield करता है। पहले <code>ConfigureAwait</code> सिर्फ़ <code>bool</code> लेता था।</li>
 <li><b>.NET 8 (ASP.NET Core)</b> — ProblemDetails के साथ साफ़ global exception handling के लिए <code>IExceptionHandler</code>।</li>
 <li><b>.NET 9 (library)</b> — <code>Task.WhenEach</code>: <code>await foreach (var t in Task.WhenEach(tasks))</code> tasks को उसी order में देता है जिसमें वो <b>complete</b> होते हैं, पुराने <code>WhenAny</code> loop की जगह।</li>
 <li><b>.NET 9 (runtime)</b> — CoreCLR में exception handling दोबारा implement हुआ (NativeAOT model पर), जिससे throw/catch काफ़ी तेज़ हुए। Exceptions फिर भी असाधारण हालात के लिए ही हैं।</li>
@@ -2605,10 +2606,11 @@ Console.WriteLine($"{marks[1]} {copy[0]} {middle.Length}");`,
 <li><b>.NET 10 (library)</b> — <code>System.Linq.AsyncEnumerable</code>: <code>IAsyncEnumerable&lt;T&gt;</code> के लिए LINQ operators अब built-in हैं; पहले <code>System.Linq.Async</code> NuGet package जोड़ना पड़ता था।</li>
 <li><b>C# 14</b> (.NET 10) — first-class span conversions: arrays अब ज़्यादा जगहों पर <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> में convert होते हैं (extension-method receivers, generic inference); और null-conditional assignment <code>customer?.Email = value;</code> (Day 2 whatsNew)।</li>
 </ul>
-<p>इस tutorial का code checker .NET 9 SDK (C# 13) use करता है; आज के runnable code में कुछ भी C# 14 पर depend नहीं करता।</p>`,
+<p>इस tutorial का code checker .NET 9 SDK (C# 13) use करता है; आज के runnable code में कुछ भी C# 14 पर depend नहीं करता।</p>
+<p><b>आगे (Oct 2026 तक की जानकारी):</b> .NET 11 (STS) November 2026 में आने वाला है; .NET 10 ही LTS रहेगा।</p>`,
     hg: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025). Aaj ke topics se jude haal ke badlaav — har ek par uska version likha hai, aur yeh bhi ki woh <b>library/runtime</b> badlaav (.NET) hai ya <b>language</b> feature (C#):</p>
 <ul>
-<li><b>.NET 8 (library)</b> — <code>ConfigureAwaitOptions</code>: <code>await task.ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing)</code> bina throw kiye completion ka intezaar karta hai; <code>ForceYielding</code> hamesha yield karta hai. Pehle <code>ConfigureAwait</code> sirf <code>bool</code> leta tha.</li>
+<li><b>.NET 8 (library)</b> — <code>ConfigureAwaitOptions</code>: <code>await task.ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing)</code> bina throw kiye completion ka intezaar karta hai (sirf non-generic <code>Task</code> par); <code>ForceYielding</code> hamesha yield karta hai. Pehle <code>ConfigureAwait</code> sirf <code>bool</code> leta tha.</li>
 <li><b>.NET 8 (ASP.NET Core)</b> — ProblemDetails ke saath saaf global exception handling ke liye <code>IExceptionHandler</code>.</li>
 <li><b>.NET 9 (library)</b> — <code>Task.WhenEach</code>: <code>await foreach (var t in Task.WhenEach(tasks))</code> tasks ko usi order mein deta hai jismein woh <b>complete</b> hote hain, purane <code>WhenAny</code> loop ki jagah.</li>
 <li><b>.NET 9 (runtime)</b> — CoreCLR mein exception handling dobara implement hua (NativeAOT model par), jisse throw/catch kaafi tez hue. Exceptions phir bhi asaadhaaran haalaat ke liye hi hain.</li>
@@ -2618,6 +2620,7 @@ Console.WriteLine($"{marks[1]} {copy[0]} {middle.Length}");`,
 <li><b>.NET 10 (library)</b> — <code>System.Linq.AsyncEnumerable</code>: <code>IAsyncEnumerable&lt;T&gt;</code> ke liye LINQ operators ab built-in hain; pehle <code>System.Linq.Async</code> NuGet package jodna padta tha.</li>
 <li><b>C# 14</b> (.NET 10) — first-class span conversions: arrays ab zyada jagahon par <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> mein convert hote hain (extension-method receivers, generic inference); aur null-conditional assignment <code>customer?.Email = value;</code> (Day 2 whatsNew).</li>
 </ul>
-<p>Is tutorial ka code checker .NET 9 SDK (C# 13) use karta hai; aaj ke runnable code mein kuch bhi C# 14 par depend nahi karta.</p>`
+<p>Is tutorial ka code checker .NET 9 SDK (C# 13) use karta hai; aaj ke runnable code mein kuch bhi C# 14 par depend nahi karta.</p>
+<p><b>Aage (Oct 2026 tak ki jaankari):</b> .NET 11 (STS) November 2026 mein aane wala hai; .NET 10 hi LTS rahega.</p>`
   }
 };

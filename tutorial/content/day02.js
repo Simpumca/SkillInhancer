@@ -2313,7 +2313,8 @@ static class Extensions
 <li><b>C# 14</b> — lambda parameters with modifiers but no types: <code>(text, out result) =&gt; ...</code>.</li>
 <li><b>C# 14</b> — "first-class spans": array → <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> conversions existed since C# 7.2 as user-defined operators; now the language itself understands them, so they also work for extension-method receivers and generic type inference.</li>
 </ul>
-<p>The code checker for this tutorial uses the .NET 9 SDK (C# 13), so C# 14 snippets are marked as not compiled.</p>`,
+<p>The code checker for this tutorial uses the .NET 9 SDK (C# 13), so C# 14 snippets are marked as not compiled.</p>
+<p><b>Next (as of Oct 2026):</b> .NET 11 (STS) is due in November 2026; .NET 10 stays the LTS.</p>`,
     hi: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025)। आज के topics से जुड़े नए features — हर एक पर उसका version लिखा है:</p>
 <ul>
 <li><b>C# 13</b> (.NET 9) — <b>params collections</b>: <code>params</code> अब सिर्फ़ arrays नहीं, <code>Span&lt;T&gt;</code>, <code>ReadOnlySpan&lt;T&gt;</code>, <code>List&lt;T&gt;</code>, <code>IEnumerable&lt;T&gt;</code> वगैरह के साथ भी चलता है (collections section देखो)।</li>
@@ -2327,7 +2328,8 @@ static class Extensions
 <li><b>C# 14</b> — lambda parameters पर modifiers, बिना types लिखे: <code>(text, out result) =&gt; ...</code>।</li>
 <li><b>C# 14</b> — "first-class spans": array → <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> conversions C# 7.2 से user-defined operators के रूप में थे; अब language ख़ुद इन्हें समझती है, इसलिए ये extension-method receivers और generic type inference में भी चलते हैं।</li>
 </ul>
-<p>इस tutorial का code checker .NET 9 SDK (C# 13) use करता है, इसलिए C# 14 snippets "compile नहीं हुए" mark किए गए हैं।</p>`,
+<p>इस tutorial का code checker .NET 9 SDK (C# 13) use करता है, इसलिए C# 14 snippets "compile नहीं हुए" mark किए गए हैं।</p>
+<p><b>आगे (Oct 2026 तक की जानकारी):</b> .NET 11 (STS) November 2026 में आने वाला है; .NET 10 ही LTS रहेगा।</p>`,
     hg: `<p>Current: <b>C# 14 / .NET 10 LTS</b> (Nov 2025). Aaj ke topics se jude naye features — har ek par uska version likha hai:</p>
 <ul>
 <li><b>C# 13</b> (.NET 9) — <b>params collections</b>: <code>params</code> ab sirf arrays nahi, <code>Span&lt;T&gt;</code>, <code>ReadOnlySpan&lt;T&gt;</code>, <code>List&lt;T&gt;</code>, <code>IEnumerable&lt;T&gt;</code> waghera ke saath bhi chalta hai (collections section dekho).</li>
@@ -2341,6 +2343,7 @@ static class Extensions
 <li><b>C# 14</b> — lambda parameters par modifiers, bina types likhe: <code>(text, out result) =&gt; ...</code>.</li>
 <li><b>C# 14</b> — "first-class spans": array → <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> conversions C# 7.2 se user-defined operators ke roop mein the; ab language khud inhe samajhti hai, isliye yeh extension-method receivers aur generic type inference mein bhi chalte hain.</li>
 </ul>
-<p>Is tutorial ka code checker .NET 9 SDK (C# 13) use karta hai, isliye C# 14 snippets "compile nahi hue" mark kiye gaye hain.</p>`
+<p>Is tutorial ka code checker .NET 9 SDK (C# 13) use karta hai, isliye C# 14 snippets "compile nahi hue" mark kiye gaye hain.</p>
+<p><b>Aage (Oct 2026 tak ki jaankari):</b> .NET 11 (STS) November 2026 mein aane wala hai; .NET 10 hi LTS rahega.</p>`
   }
 };

@@ -2466,7 +2466,8 @@ Console.WriteLine(q1.Count() == q2.Count());`,
 <li><b>EF Core 10</b> — translates <code>LeftJoin</code>/<code>RightJoin</code> to SQL <code>LEFT JOIN</code>/<code>RIGHT JOIN</code> (more EF Core 9/10 changes on Day 6).</li>
 <li><b>.NET 10</b> — <code>System.Linq.AsyncEnumerable</code>: LINQ for <code>IAsyncEnumerable&lt;T&gt;</code> is now built in (Day 3 whatsNew).</li>
 </ul>
-<p>The code checker for this tutorial uses the .NET 9 SDK, so the .NET 9 operators above are compiled and run; the .NET 10 <code>LeftJoin</code>/<code>RightJoin</code> snippet is shown but not compiled. Today's code uses C# 12 collection expressions (<code>int[] marks = [72, 35, 90];</code>).</p>`,
+<p>The code checker for this tutorial uses the .NET 9 SDK, so the .NET 9 operators above are compiled and run; the .NET 10 <code>LeftJoin</code>/<code>RightJoin</code> snippet is shown but not compiled. Today's code uses C# 12 collection expressions (<code>int[] marks = [72, 35, 90];</code>).</p>
+<p><b>Next (as of Oct 2026):</b> .NET 11 (STS) is due in November 2026; .NET 10 stays the LTS.</p>`,
     hi: `<p>Current: <b>.NET 10 LTS / C# 14 / EF Core 10</b> (Nov 2025)। LINQ के बदलाव <b>library</b> बदलाव हैं (<code>System.Linq</code> में नए methods, जो किसी .NET version के साथ आते हैं), C# language features नहीं। हर version में क्या नया है — उससे पहले की हर चीज़ पहले से चलती थी:</p>
 <ul>
 <li><b>.NET 6</b> — <code>DistinctBy</code>, <code>UnionBy</code>, <code>IntersectBy</code>, <code>ExceptBy</code>, <code>MinBy</code>, <code>MaxBy</code>; <code>Chunk(size)</code>; default-value overloads <code>FirstOrDefault(pred, value)</code> / <code>LastOrDefault</code> / <code>SingleOrDefault</code>; <code>Take(range)</code>; <code>TryGetNonEnumeratedCount</code>; तीन sequences वाला <code>Zip</code>।</li>
@@ -2476,7 +2477,8 @@ Console.WriteLine(q1.Count() == q2.Count());`,
 <li><b>EF Core 10</b> — <code>LeftJoin</code>/<code>RightJoin</code> को SQL <code>LEFT JOIN</code>/<code>RIGHT JOIN</code> में translate करता है (EF Core 9/10 के और बदलाव Day 6 में)।</li>
 <li><b>.NET 10</b> — <code>System.Linq.AsyncEnumerable</code>: <code>IAsyncEnumerable&lt;T&gt;</code> के लिए LINQ अब built-in है (Day 3 whatsNew)।</li>
 </ul>
-<p>इस tutorial का code checker .NET 9 SDK use करता है, इसलिए ऊपर के .NET 9 operators compile होकर चलते हैं; .NET 10 वाला <code>LeftJoin</code>/<code>RightJoin</code> snippet दिखाया गया है पर compile नहीं होता। आज का code C# 12 collection expressions use करता है (<code>int[] marks = [72, 35, 90];</code>)।</p>`,
+<p>इस tutorial का code checker .NET 9 SDK use करता है, इसलिए ऊपर के .NET 9 operators compile होकर चलते हैं; .NET 10 वाला <code>LeftJoin</code>/<code>RightJoin</code> snippet दिखाया गया है पर compile नहीं होता। आज का code C# 12 collection expressions use करता है (<code>int[] marks = [72, 35, 90];</code>)।</p>
+<p><b>आगे (Oct 2026 तक की जानकारी):</b> .NET 11 (STS) November 2026 में आने वाला है; .NET 10 ही LTS रहेगा।</p>`,
     hg: `<p>Current: <b>.NET 10 LTS / C# 14 / EF Core 10</b> (Nov 2025). LINQ ke badlaav <b>library</b> badlaav hain (<code>System.Linq</code> mein naye methods, jo kisi .NET version ke saath aate hain), C# language features nahi. Har version mein kya naya hai — usse pehle ki har cheez pehle se chalti thi:</p>
 <ul>
 <li><b>.NET 6</b> — <code>DistinctBy</code>, <code>UnionBy</code>, <code>IntersectBy</code>, <code>ExceptBy</code>, <code>MinBy</code>, <code>MaxBy</code>; <code>Chunk(size)</code>; default-value overloads <code>FirstOrDefault(pred, value)</code> / <code>LastOrDefault</code> / <code>SingleOrDefault</code>; <code>Take(range)</code>; <code>TryGetNonEnumeratedCount</code>; teen sequences wala <code>Zip</code>.</li>
@@ -2486,6 +2488,7 @@ Console.WriteLine(q1.Count() == q2.Count());`,
 <li><b>EF Core 10</b> — <code>LeftJoin</code>/<code>RightJoin</code> ko SQL <code>LEFT JOIN</code>/<code>RIGHT JOIN</code> mein translate karta hai (EF Core 9/10 ke aur badlaav Day 6 mein).</li>
 <li><b>.NET 10</b> — <code>System.Linq.AsyncEnumerable</code>: <code>IAsyncEnumerable&lt;T&gt;</code> ke liye LINQ ab built-in hai (Day 3 whatsNew).</li>
 </ul>
-<p>Is tutorial ka code checker .NET 9 SDK use karta hai, isliye upar ke .NET 9 operators compile hokar chalte hain; .NET 10 wala <code>LeftJoin</code>/<code>RightJoin</code> snippet dikhaya gaya hai par compile nahi hota. Aaj ka code C# 12 collection expressions use karta hai (<code>int[] marks = [72, 35, 90];</code>).</p>`
+<p>Is tutorial ka code checker .NET 9 SDK use karta hai, isliye upar ke .NET 9 operators compile hokar chalte hain; .NET 10 wala <code>LeftJoin</code>/<code>RightJoin</code> snippet dikhaya gaya hai par compile nahi hota. Aaj ka code C# 12 collection expressions use karta hai (<code>int[] marks = [72, 35, 90];</code>).</p>
+<p><b>Aage (Oct 2026 tak ki jaankari):</b> .NET 11 (STS) November 2026 mein aane wala hai; .NET 10 hi LTS rahega.</p>`
   }
 };
