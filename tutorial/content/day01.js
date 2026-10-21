@@ -3,7 +3,7 @@ window.TL_DAY = {
   day: 1,
   title: {
     en: "OOP — Object-Oriented Programming",
-    hi: "OOP — ऑब्जेक्ट ओरिएंटेड प्रोग्रामिंग",
+    hi: "OOP — Object-Oriented Programming (objects पर आधारित programming)",
     hg: "OOP — Object-Oriented Programming"
   },
   summary: {
@@ -116,7 +116,7 @@ window.TL_DAY = {
 <li><b>Overriding</b>: a derived class gives a new body to a base <code>virtual</code>/<code>abstract</code> method with the same signature. Chosen at run time from the <b>actual object</b>.</li>
 <li><code>virtual</code> — "you <i>may</i> override me". <code>abstract</code> — "you <i>must</i> override me" (no body; class must be abstract).</li>
 <li><code>override</code> — replaces the behaviour; even a base-class reference calls the new version.</li>
-<li><code>new</code> — <b>hides</b> the base member. Not polymorphic: a base reference still calls the base version. Hiding without writing <code>new</code> gives warning CS0108.</li>
+<li><code>new</code> — <b>hides</b> the base member. Not polymorphic: a base reference still calls the base version. If the base member is non-virtual, hiding it without <code>new</code> gives warning CS0108. If it is <code>virtual</code> and you forget <code>override</code>, you get warning CS0114 and the method silently <b>hides</b> instead of overriding — base references keep calling the base version.</li>
 <li><code>sealed</code> — on a class: no one can inherit it. On an override (<code>sealed override</code>): no further overriding down the chain.</li>
 </ul>
 <p><b>Remember:</b> <b>override follows the object, new follows the reference.</b></p>
@@ -127,7 +127,7 @@ window.TL_DAY = {
 <li><b>Overriding</b>: derived class, base के <code>virtual</code>/<code>abstract</code> method को same signature के साथ नई body देती है। Run time पर <b>असली object</b> देखकर चुना जाता है।</li>
 <li><code>virtual</code> — "आप मुझे override <i>कर सकते</i> हो"। <code>abstract</code> — "आपको मुझे override <i>करना ही</i> होगा" (body नहीं; class भी abstract होनी चाहिए)।</li>
 <li><code>override</code> — behaviour बदल देता है; base-class reference से भी नया version ही call होता है।</li>
-<li><code>new</code> — base member को <b>छुपाता (hide)</b> है। यह polymorphic नहीं है: base reference से अब भी base version ही call होगा। <code>new</code> लिखे बिना hide करोगे तो warning CS0108 आएगी।</li>
+<li><code>new</code> — base member को <b>छुपाता (hide)</b> है। यह polymorphic नहीं है: base reference से अब भी base version ही call होगा। Base member non-virtual हो और <code>new</code> न लिखो, तो warning CS0108 आती है। Base member <code>virtual</code> हो और आप <code>override</code> लिखना भूल जाओ, तो warning CS0114 आती है और method override की जगह चुपचाप <b>hide</b> कर देता है — base references base version ही call करते रहते हैं।</li>
 <li><code>sealed</code> — class पर: कोई उसे inherit नहीं कर सकता। Override पर (<code>sealed override</code>): आगे chain में कोई override नहीं कर सकता।</li>
 </ul>
 <p><b>याद रखो:</b> <b>override object को follow करता है, new reference को।</b></p>
@@ -138,7 +138,7 @@ window.TL_DAY = {
 <li><b>Overriding</b>: derived class, base ke <code>virtual</code>/<code>abstract</code> method ko same signature ke saath nayi body deti hai. Run time par <b>asli object</b> dekhkar chuna jaata hai.</li>
 <li><code>virtual</code> — "aap mujhe override <i>kar sakte</i> ho". <code>abstract</code> — "aapko mujhe override <i>karna hi</i> hoga" (body nahi; class bhi abstract honi chahiye).</li>
 <li><code>override</code> — behaviour badal deta hai; base-class reference se bhi naya version hi call hota hai.</li>
-<li><code>new</code> — base member ko <b>chhupata (hide)</b> hai. Yeh polymorphic nahi hai: base reference se ab bhi base version hi call hoga. <code>new</code> likhe bina hide karoge to warning CS0108 aayegi.</li>
+<li><code>new</code> — base member ko <b>chhupata (hide)</b> hai. Yeh polymorphic nahi hai: base reference se ab bhi base version hi call hoga. Base member non-virtual ho aur <code>new</code> na likho, to warning CS0108 aati hai. Base member <code>virtual</code> ho aur aap <code>override</code> likhna bhool jao, to warning CS0114 aati hai aur method override ki jagah chupchaap <b>hide</b> kar deta hai — base references base version hi call karte rehte hain.</li>
 <li><code>sealed</code> — class par: koi use inherit nahi kar sakta. Override par (<code>sealed override</code>): aage chain mein koi override nahi kar sakta.</li>
 </ul>
 <p><b>Yaad rakho:</b> <b>override object ko follow karta hai, new reference ko.</b></p>
@@ -242,7 +242,8 @@ public class BankAccount
 
     public bool Withdraw(decimal amount)
     {
-        if (amount <= 0 || amount > Balance) return false;   // rule protected here
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
+        if (amount > Balance) return false;   // business rule: no overdraft
         Balance -= amount;
         return true;
     }
@@ -264,21 +265,24 @@ public class BankAccount
 <li><code>EmailNotification</code> uses <code>sealed override</code> — nobody below it may override <code>Send</code> again.</li>
 <li><code>UrgentSms</code> is a <code>sealed</code> class and calls <code>base.Send(...)</code> to reuse the parent's behaviour.</li>
 </ul>
-<p><b>Compile-time polymorphism (overloading):</b> <code>Calculator.Add</code> has three versions; the compiler picks one from the argument types. A method that differs only in return type is <b>not</b> an overload (error CS0111).</p>`,
+<p><b>Compile-time polymorphism (overloading):</b> <code>Calculator.Add</code> has three versions; the compiler picks one from the argument types. A method that differs only in return type is <b>not</b> an overload (error CS0111).</p>
+<p><b>When to use:</b> prefer virtual/interface dispatch over a long <code>switch</code> or <code>if</code> chain on the object's type — a new type then means a new class, not edits to every switch. <b>When not:</b> do not make members <code>virtual</code> "just in case" — every virtual member is an extension point you must support. Keep methods non-virtual (and classes sealed) until there is a real need.</p>`,
         hi: `<p><b>Analogy — TV remote:</b> Same "Power" button Sony TV पर भी चलता है और LG TV पर भी; हर TV अपने तरीके से on होता है। आपका code बस button दबाता है।</p>
 <p><b>Run-time polymorphism:</b> नीचे का loop सिर्फ़ type <code>Notification</code> जानता है, पर हर object अपना <code>Send</code> चलाता है। ध्यान दो:</p>
 <ul>
 <li><code>EmailNotification</code> में <code>sealed override</code> है — इसके नीचे कोई <code>Send</code> को फिर से override नहीं कर सकता।</li>
 <li><code>UrgentSms</code> एक <code>sealed</code> class है और parent का behaviour reuse करने के लिए <code>base.Send(...)</code> call करती है।</li>
 </ul>
-<p><b>Compile-time polymorphism (overloading):</b> <code>Calculator.Add</code> के तीन versions हैं; compiler argument types देखकर एक चुनता है। जो method सिर्फ़ return type में अलग है, वो overload <b>नहीं</b> है (error CS0111)।</p>`,
+<p><b>Compile-time polymorphism (overloading):</b> <code>Calculator.Add</code> के तीन versions हैं; compiler argument types देखकर एक चुनता है। जो method सिर्फ़ return type में अलग है, वो overload <b>नहीं</b> है (error CS0111)।</p>
+<p><b>कब use करें:</b> object के type पर लंबे <code>switch</code> या <code>if</code> chain की जगह virtual/interface dispatch use करो — नया type आए तो बस नई class जोड़ो, हर switch को edit मत करो। <b>कब नहीं:</b> members को "शायद काम आए" सोचकर <code>virtual</code> मत बनाओ — हर virtual member एक extension point है जिसे आगे support करना पड़ता है। असली ज़रूरत आने तक methods non-virtual (और classes sealed) रखो।</p>`,
         hg: `<p><b>Analogy — TV remote:</b> Same "Power" button Sony TV par bhi chalta hai aur LG TV par bhi; har TV apne tareeke se on hota hai. Aapka code bas button dabata hai.</p>
 <p><b>Run-time polymorphism:</b> neeche ka loop sirf type <code>Notification</code> jaanta hai, par har object apna <code>Send</code> chalata hai. Dhyaan do:</p>
 <ul>
 <li><code>EmailNotification</code> mein <code>sealed override</code> hai — iske neeche koi <code>Send</code> ko phir se override nahi kar sakta.</li>
 <li><code>UrgentSms</code> ek <code>sealed</code> class hai aur parent ka behaviour reuse karne ke liye <code>base.Send(...)</code> call karti hai.</li>
 </ul>
-<p><b>Compile-time polymorphism (overloading):</b> <code>Calculator.Add</code> ke teen versions hain; compiler argument types dekhkar ek chunta hai. Jo method sirf return type mein alag hai, woh overload <b>nahi</b> hai (error CS0111).</p>`
+<p><b>Compile-time polymorphism (overloading):</b> <code>Calculator.Add</code> ke teen versions hain; compiler argument types dekhkar ek chunta hai. Jo method sirf return type mein alag hai, woh overload <b>nahi</b> hai (error CS0111).</p>
+<p><b>Kab use karein:</b> object ke type par lambe <code>switch</code> ya <code>if</code> chain ki jagah virtual/interface dispatch use karo — naya type aaye to bas nayi class jodo, har switch ko edit mat karo. <b>Kab nahi:</b> members ko "shayad kaam aaye" sochkar <code>virtual</code> mat banao — har virtual member ek extension point hai jise aage support karna padta hai. Asli zaroorat aane tak methods non-virtual (aur classes sealed) rakho.</p>`
       },
       code: [{
         caption: {
@@ -349,21 +353,24 @@ public class Calculator
 <li>The default body is visible only through the interface: <code>new SmsNotifier().SendBulk(...)</code> does <b>not</b> compile; <code>((INotifier)sms).SendBulk(...)</code> does.</li>
 <li>Default methods need a runtime that supports them (.NET Core 3.0+ / .NET 5+); they do not work on .NET Framework.</li>
 </ul>
-<p><b>Example 2 — abstract class:</b> <code>ReportBase</code> has a field, a constructor and a fixed algorithm (<code>Generate</code>) with one abstract step. This is the <b>Template Method</b> pattern. <code>SalesReport</code> inherits <b>one</b> base class and also implements an interface — that is how C# replaces multiple inheritance.</p>`,
+<p><b>Example 2 — abstract class:</b> <code>ReportBase</code> has a field, a constructor and a fixed algorithm (<code>Generate</code>) with one abstract step. This is the <b>Template Method</b> pattern. <code>SalesReport</code> inherits <b>one</b> base class and also implements an interface — that is how C# replaces multiple inheritance.</p>
+<p><b>When to use:</b> default interface methods only to evolve an interface that other code already implements (a shared library or public contract); an abstract base class when closely related types share real code or state. <b>When not:</b> do not use default methods to move business logic into interfaces, and do not create an abstract base just to share a helper or two — compose a small service instead.</p>`,
         hi: `<p><b>Analogy — tiffin service:</b> Housing society कहती है "हर tiffin वाला 1 बजे तक deliver करे" (interface — ऐसा rule जो कोई भी follow कर सकता है)। एक brand कई kitchens चलाता है, सबका cooking process same है, बस हर kitchen का menu अलग है (abstract class — shared process और state)।</p>
 <p><b>Example 1 — default interface method:</b> <code>INotifier</code> के version 1 में सिर्फ़ <code>Send</code> था। Version 2 में <code>SendBulk</code> <b>body के साथ</b> जोड़ा गया, इसलिए पुराना <code>SmsNotifier</code> अब भी compile होता है और उसे default मिल जाता है। <code>EmailNotifier</code> अपना बेहतर implementation देता है।</p>
 <ul>
 <li>Default body सिर्फ़ interface से दिखती है: <code>new SmsNotifier().SendBulk(...)</code> compile <b>नहीं</b> होगा; <code>((INotifier)sms).SendBulk(...)</code> होगा।</li>
 <li>Default methods के लिए ऐसा runtime चाहिए जो इन्हें support करे (.NET Core 3.0+ / .NET 5+); .NET Framework पर ये नहीं चलते।</li>
 </ul>
-<p><b>Example 2 — abstract class:</b> <code>ReportBase</code> में एक field, एक constructor और एक fixed algorithm (<code>Generate</code>) है जिसमें एक step abstract है। यह <b>Template Method</b> pattern है। <code>SalesReport</code> <b>एक</b> base class inherit करती है और साथ में एक interface भी implement करती है — C# में multiple inheritance की जगह यही तरीका है।</p>`,
+<p><b>Example 2 — abstract class:</b> <code>ReportBase</code> में एक field, एक constructor और एक fixed algorithm (<code>Generate</code>) है जिसमें एक step abstract है। यह <b>Template Method</b> pattern है। <code>SalesReport</code> <b>एक</b> base class inherit करती है और साथ में एक interface भी implement करती है — C# में multiple inheritance की जगह यही तरीका है।</p>
+<p><b>कब use करें:</b> default interface methods सिर्फ़ तब, जब ऐसे interface को आगे बढ़ाना हो जिसे दूसरा code पहले से implement करता है (shared library या public contract); abstract base class तब, जब करीबी types असली code या state share करें। <b>कब नहीं:</b> default methods से business logic interfaces में मत डालो, और सिर्फ़ एक-दो helpers share करने के लिए abstract base मत बनाओ — एक छोटी service compose करो।</p>`,
         hg: `<p><b>Analogy — tiffin service:</b> Housing society kehti hai "har tiffin wala 1 baje tak deliver kare" (interface — aisa rule jo koi bhi follow kar sakta hai). Ek brand kai kitchens chalata hai, sabka cooking process same hai, bas har kitchen ka menu alag hai (abstract class — shared process aur state).</p>
 <p><b>Example 1 — default interface method:</b> <code>INotifier</code> ke version 1 mein sirf <code>Send</code> tha. Version 2 mein <code>SendBulk</code> <b>body ke saath</b> joda gaya, isliye purana <code>SmsNotifier</code> ab bhi compile hota hai aur use default mil jaata hai. <code>EmailNotifier</code> apna behtar implementation deta hai.</p>
 <ul>
 <li>Default body sirf interface se dikhti hai: <code>new SmsNotifier().SendBulk(...)</code> compile <b>nahi</b> hoga; <code>((INotifier)sms).SendBulk(...)</code> hoga.</li>
 <li>Default methods ke liye aisa runtime chahiye jo inhe support kare (.NET Core 3.0+ / .NET 5+); .NET Framework par yeh nahi chalte.</li>
 </ul>
-<p><b>Example 2 — abstract class:</b> <code>ReportBase</code> mein ek field, ek constructor aur ek fixed algorithm (<code>Generate</code>) hai jismein ek step abstract hai. Yeh <b>Template Method</b> pattern hai. <code>SalesReport</code> <b>ek</b> base class inherit karti hai aur saath mein ek interface bhi implement karti hai — C# mein multiple inheritance ki jagah yahi tareeka hai.</p>`
+<p><b>Example 2 — abstract class:</b> <code>ReportBase</code> mein ek field, ek constructor aur ek fixed algorithm (<code>Generate</code>) hai jismein ek step abstract hai. Yeh <b>Template Method</b> pattern hai. <code>SalesReport</code> <b>ek</b> base class inherit karti hai aur saath mein ek interface bhi implement karti hai — C# mein multiple inheritance ki jagah yahi tareeka hai.</p>
+<p><b>Kab use karein:</b> default interface methods sirf tab, jab aise interface ko aage badhana ho jise doosra code pehle se implement karta hai (shared library ya public contract); abstract base class tab, jab kareebi types asli code ya state share karein. <b>Kab nahi:</b> default methods se business logic interfaces mein mat daalo, aur sirf ek-do helpers share karne ke liye abstract base mat banao — ek chhoti service compose karo.</p>`
       },
       code: [{
         caption: {
@@ -462,30 +469,33 @@ public class SalesReport : ReportBase, IExportable
 <li><b>Static constructor</b> — <code>static Order() { }</code>: no parameters, no access modifier, cannot be called by you. The runtime runs it <b>once per type</b>, before the first instance is created or any static member is used. If it throws, you get <code>TypeInitializationException</code> and the type stays unusable.</li>
 <li><b>Private constructor</b> — outside code cannot call <code>new</code>. Used for Singleton, static factory methods (<code>Order.Create(...)</code>) that validate or cache, and classes that should not be instantiated.</li>
 <li><b>Chaining</b> — <code>: this(...)</code> calls another constructor of the same class; <code>: base(...)</code> calls the parent's constructor. Write setup logic once.</li>
-<li>If you write no <code>base(...)</code>, the compiler inserts <code>base()</code>. If the parent has no accessible parameterless constructor, you get error CS7036 — you must call <code>base(...)</code> with arguments.</li>
+<li>If you write no <code>base(...)</code>, the compiler inserts <code>base()</code>. If the parent has no parameterless constructor you get error CS7036; if it has one but it is <code>private</code>, you get CS0122 (inaccessible). Either way, call <code>base(...)</code> with arguments.</li>
 <li><b>Order with inheritance:</b> derived field initializers → base field initializers → base constructor body → derived constructor body.</li>
 <li><b>Primary constructors</b> (C# 12): <code>class OrderService(IOrderRepository repo)</code>. The parameters are in scope in the whole class body — very handy for DI. They are parameters, not properties: if you need a public property, declare it and assign it from the parameter.</li>
-</ul>`,
+</ul>
+<p><b>When to use / when not:</b> keep constructors cheap and validating — assign fields, check arguments, nothing more. No I/O, database or HTTP calls inside a constructor: it cannot be <code>async</code>, and a half-built object is hard to handle. If creation can fail in an expected way or needs async work, use a static factory method such as <code>static async Task&lt;Report&gt; CreateAsync(...)</code>.</p>`,
         hi: `<p><b>Analogy — mobile connection:</b> Telecom company अपना network <b>एक बार</b> setup करती है (static constructor)। हर नया SIM अलग से activate होता है (instance constructor)। "Prepaid plan" activation पहले basic activation steps चलाता है, फिर अपने steps जोड़ता है (constructor chaining)। और आप अपना Aadhaar card ख़ुद print नहीं कर सकते — सिर्फ़ authority issue करती है (private constructor + factory method)।</p>
 <ul>
 <li><b>Instance constructor</b> — हर <code>new</code> पर चलता है; object को valid state में रखता है।</li>
 <li><b>Static constructor</b> — <code>static Order() { }</code>: कोई parameter नहीं, कोई access modifier नहीं, आप इसे call नहीं कर सकते। Runtime इसे <b>हर type के लिए एक बार</b> चलाता है — पहला object बनने या कोई static member use होने से पहले। अगर यह exception फेंके, तो <code>TypeInitializationException</code> आता है और वो type आगे use नहीं हो पाता।</li>
 <li><b>Private constructor</b> — बाहर का code <code>new</code> नहीं कर सकता। Singleton, static factory methods (<code>Order.Create(...)</code>) जो validate या cache करें, और ऐसी classes जिनका object नहीं बनना चाहिए — इनमें use होता है।</li>
 <li><b>Chaining</b> — <code>: this(...)</code> उसी class का दूसरा constructor call करता है; <code>: base(...)</code> parent का constructor call करता है। Setup logic एक ही बार लिखो।</li>
-<li>अगर आप <code>base(...)</code> नहीं लिखते, तो compiler ख़ुद <code>base()</code> डाल देता है। अगर parent में accessible parameterless constructor नहीं है, तो error CS7036 आता है — तब आपको arguments के साथ <code>base(...)</code> call करना पड़ेगा।</li>
+<li>अगर आप <code>base(...)</code> नहीं लिखते, तो compiler ख़ुद <code>base()</code> डाल देता है। अगर parent में parameterless constructor है ही नहीं, तो error CS7036 आता है; अगर है पर <code>private</code> है, तो CS0122 (inaccessible)। दोनों cases में arguments के साथ <code>base(...)</code> call करो।</li>
 <li><b>Inheritance में order:</b> derived field initializers → base field initializers → base constructor body → derived constructor body।</li>
 <li><b>Primary constructors</b> (C# 12): <code>class OrderService(IOrderRepository repo)</code>। Parameters पूरी class body में available रहते हैं — DI के लिए बहुत काम का। ये parameters हैं, properties नहीं: अगर public property चाहिए तो उसे declare करो और parameter से assign करो।</li>
-</ul>`,
+</ul>
+<p><b>कब use करें / कब नहीं:</b> constructors हल्के और validate करने वाले रखो — fields assign करो, arguments check करो, बस। Constructor के अंदर I/O, database या HTTP calls नहीं: constructor <code>async</code> नहीं हो सकता, और आधा बना object संभालना मुश्किल है। अगर object बनाना expected तरीके से fail हो सकता है या async काम चाहिए, तो static factory method use करो, जैसे <code>static async Task&lt;Report&gt; CreateAsync(...)</code>।</p>`,
         hg: `<p><b>Analogy — mobile connection:</b> Telecom company apna network <b>ek baar</b> setup karti hai (static constructor). Har naya SIM alag se activate hota hai (instance constructor). "Prepaid plan" activation pehle basic activation steps chalata hai, phir apne steps jodta hai (constructor chaining). Aur aap apna Aadhaar card khud print nahi kar sakte — sirf authority issue karti hai (private constructor + factory method).</p>
 <ul>
 <li><b>Instance constructor</b> — har <code>new</code> par chalta hai; object ko valid state mein rakhta hai.</li>
 <li><b>Static constructor</b> — <code>static Order() { }</code>: koi parameter nahi, koi access modifier nahi, aap ise call nahi kar sakte. Runtime ise <b>har type ke liye ek baar</b> chalata hai — pehla object banne ya koi static member use hone se pehle. Agar yeh exception phenke, to <code>TypeInitializationException</code> aata hai aur woh type aage use nahi ho paata.</li>
 <li><b>Private constructor</b> — bahar ka code <code>new</code> nahi kar sakta. Singleton, static factory methods (<code>Order.Create(...)</code>) jo validate ya cache karein, aur aisi classes jinka object nahi banna chahiye — inmein use hota hai.</li>
 <li><b>Chaining</b> — <code>: this(...)</code> usi class ka doosra constructor call karta hai; <code>: base(...)</code> parent ka constructor call karta hai. Setup logic ek hi baar likho.</li>
-<li>Agar aap <code>base(...)</code> nahi likhte, to compiler khud <code>base()</code> daal deta hai. Agar parent mein accessible parameterless constructor nahi hai, to error CS7036 aata hai — tab aapko arguments ke saath <code>base(...)</code> call karna padega.</li>
+<li>Agar aap <code>base(...)</code> nahi likhte, to compiler khud <code>base()</code> daal deta hai. Agar parent mein parameterless constructor hai hi nahi, to error CS7036 aata hai; agar hai par <code>private</code> hai, to CS0122 (inaccessible). Dono cases mein arguments ke saath <code>base(...)</code> call karo.</li>
 <li><b>Inheritance mein order:</b> derived field initializers → base field initializers → base constructor body → derived constructor body.</li>
 <li><b>Primary constructors</b> (C# 12): <code>class OrderService(IOrderRepository repo)</code>. Parameters poori class body mein available rehte hain — DI ke liye bahut kaam ka. Yeh parameters hain, properties nahi: agar public property chahiye to use declare karo aur parameter se assign karo.</li>
-</ul>`
+</ul>
+<p><b>Kab use karein / kab nahi:</b> constructors halke aur validate karne wale rakho — fields assign karo, arguments check karo, bas. Constructor ke andar I/O, database ya HTTP calls nahi: constructor <code>async</code> nahi ho sakta, aur aadha bana object sambhaalna mushkil hai. Agar object banana expected tareeke se fail ho sakta hai ya async kaam chahiye, to static factory method use karo, jaise <code>static async Task&lt;Report&gt; CreateAsync(...)</code>.</p>`
       },
       code: [{
         caption: {
@@ -643,7 +653,8 @@ public class Student(string name, int rollNo) : Person(name)
           hg: "Saare access modifiers ek jagah (maan lo yeh file Billing.dll mein hai)"
         },
         check: "compile",
-        src: `public class Invoice
+        src: `// Fields are used here only to show the modifiers; real code would expose properties.
+public class Invoice
 {
     private decimal _amount;                  // only inside Invoice
     protected string Number = "";             // Invoice + derived classes (any assembly)
@@ -751,7 +762,7 @@ public class CheckoutService(IPaymentGateway gateway, IMessageSender sender)
       id: "four-pillars",
       depth: "short",
       q: "What are the four pillars of OOP? Explain each with a real example.",
-      answer: "Encapsulation, Abstraction, Inheritance and Polymorphism. Encapsulation hides data behind methods that enforce rules, abstraction exposes only what the caller needs, inheritance reuses a base class in an is-a relationship, and polymorphism lets one call behave differently depending on the actual object.",
+      answer: "Encapsulation, Abstraction, Inheritance and Polymorphism: hide data behind rule-checking methods, expose only what callers need, reuse a base class for a true is-a, and let one call behave differently per actual object.",
       meaning: {
         hi: "चार pillars: Encapsulation (data छुपाकर methods से rules लागू करो), Abstraction (caller को सिर्फ़ ज़रूरी चीज़ दिखाओ), Inheritance (is-a relation में base class reuse), Polymorphism (एक call, असली object के हिसाब से अलग behaviour)।",
         hg: "Chaar pillars: Encapsulation (data chhupakar methods se rules laagu karo), Abstraction (caller ko sirf zaroori cheez dikhao), Inheritance (is-a relation mein base class reuse), Polymorphism (ek call, asli object ke hisaab se alag behaviour)."
@@ -787,7 +798,7 @@ public class CheckoutService(IPaymentGateway gateway, IMessageSender sender)
       id: "abstract-vs-interface",
       depth: "short",
       q: "Abstract class vs interface — what is the difference, and when would you use which?",
-      answer: "An abstract class is a partial base class: it can hold state, constructors and shared code, but a class can inherit only one. An interface is a contract with no instance state, and a class can implement many — I use interfaces for contracts, DI and mocking, and an abstract class when closely related types share real code.",
+      answer: "An abstract class is a partial base class with state, constructors and shared code, but you can inherit only one; an interface is a contract with no instance state, and a class can implement many. I use interfaces for contracts, DI and mocking, and an abstract class when closely related types share real code.",
       meaning: {
         hi: "Abstract class एक अधूरी base class है: इसमें state, constructors और shared code हो सकता है, पर inherit सिर्फ़ एक कर सकते हो। Interface एक contract है, instance state नहीं, और कई implement कर सकते हो — contracts, DI और mocking के लिए interface, और करीबी types में असली shared code के लिए abstract class।",
         hg: "Abstract class ek adhoori base class hai: ismein state, constructors aur shared code ho sakta hai, par inherit sirf ek kar sakte ho. Interface ek contract hai, instance state nahi, aur kai implement kar sakte ho — contracts, DI aur mocking ke liye interface, aur kareebi types mein asli shared code ke liye abstract class."
@@ -798,31 +809,34 @@ public class CheckoutService(IPaymentGateway gateway, IMessageSender sender)
 <li><b>Constructors</b>: abstract class yes (usually <code>protected</code>); interface no.</li>
 <li><b>Count</b>: one base class, but any number of interfaces.</li>
 <li><b>Access</b>: abstract class members can be anything; interface members are public by default.</li>
-<li><b>Bodies</b>: since C# 8 interfaces can have default method bodies, but only for versioning; they still cannot hold instance state.</li>
+<li><b>Bodies</b>: since C# 8 interfaces can have default method bodies, mainly for versioning; they still cannot hold instance state.</li>
 <li><b>Value types</b>: a <code>struct</code> can implement interfaces but cannot inherit a class.</li>
 </ul>
 <p><b>TL angle:</b> services expose interfaces so they can be registered in DI and mocked in tests. Abstract bases are for frameworks and families: <code>BackgroundService</code>, <code>DbContext</code>, <code>ControllerBase</code>. Often you combine them: <code>IRepository&lt;T&gt;</code> + <code>RepositoryBase&lt;T&gt;</code>.</p>
-<p>Follow-up: "Interfaces have method bodies now — so what is the difference?" — still no instance fields or constructors, still multiple implementation, and the default body is only reachable through the interface type.</p>`,
+<p>Follow-up: "Interfaces have method bodies now — so what is the difference?" — still no instance fields or constructors, still multiple implementation, and the default body is only reachable through the interface type.</p>
+<p>Follow-up: "Can an abstract class implement an interface without implementing all members?" — Yes: it maps them to <code>abstract</code> members (<code>public abstract void Send(string msg);</code>) and the concrete children implement them.</p>`,
         hi: `<ul>
 <li><b>State</b>: abstract class में instance fields हो सकते हैं; interface में नहीं।</li>
 <li><b>Constructors</b>: abstract class में हाँ (अक्सर <code>protected</code>); interface में नहीं।</li>
 <li><b>गिनती</b>: base class एक, पर interfaces कितने भी।</li>
 <li><b>Access</b>: abstract class के members कुछ भी हो सकते हैं; interface members by default public।</li>
-<li><b>Bodies</b>: C# 8 से interfaces में default method bodies हो सकती हैं, पर सिर्फ़ versioning के लिए; instance state अब भी नहीं रख सकते।</li>
+<li><b>Bodies</b>: C# 8 से interfaces में default method bodies हो सकती हैं, मुख्य रूप से versioning के लिए; instance state अब भी नहीं रख सकते।</li>
 <li><b>Value types</b>: <code>struct</code> interfaces implement कर सकता है पर class inherit नहीं कर सकता।</li>
 </ul>
 <p><b>TL angle:</b> services interfaces expose करती हैं ताकि DI में register हो सकें और tests में mock हो सकें। Abstract bases frameworks और families के लिए हैं: <code>BackgroundService</code>, <code>DbContext</code>, <code>ControllerBase</code>। अक्सर दोनों साथ: <code>IRepository&lt;T&gt;</code> + <code>RepositoryBase&lt;T&gt;</code>।</p>
-<p>Follow-up: "अब interfaces में भी method bodies हैं — तो फ़र्क क्या है?" — अब भी instance fields या constructors नहीं, अब भी multiple implementation, और default body सिर्फ़ interface type से मिलती है।</p>`,
+<p>Follow-up: "अब interfaces में भी method bodies हैं — तो फ़र्क क्या है?" — अब भी instance fields या constructors नहीं, अब भी multiple implementation, और default body सिर्फ़ interface type से मिलती है।</p>
+<p>Follow-up: "क्या abstract class interface implement कर सकती है बिना सारे members implement किए?" — हाँ: वो उन्हें <code>abstract</code> members पर map कर देती है (<code>public abstract void Send(string msg);</code>) और concrete children उन्हें implement करते हैं।</p>`,
         hg: `<ul>
 <li><b>State</b>: abstract class mein instance fields ho sakte hain; interface mein nahi.</li>
 <li><b>Constructors</b>: abstract class mein haan (aksar <code>protected</code>); interface mein nahi.</li>
 <li><b>Ginti</b>: base class ek, par interfaces kitne bhi.</li>
 <li><b>Access</b>: abstract class ke members kuch bhi ho sakte hain; interface members by default public.</li>
-<li><b>Bodies</b>: C# 8 se interfaces mein default method bodies ho sakti hain, par sirf versioning ke liye; instance state ab bhi nahi rakh sakte.</li>
+<li><b>Bodies</b>: C# 8 se interfaces mein default method bodies ho sakti hain, mukhya roop se versioning ke liye; instance state ab bhi nahi rakh sakte.</li>
 <li><b>Value types</b>: <code>struct</code> interfaces implement kar sakta hai par class inherit nahi kar sakta.</li>
 </ul>
 <p><b>TL angle:</b> services interfaces expose karti hain taaki DI mein register ho sakein aur tests mein mock ho sakein. Abstract bases frameworks aur families ke liye hain: <code>BackgroundService</code>, <code>DbContext</code>, <code>ControllerBase</code>. Aksar dono saath: <code>IRepository&lt;T&gt;</code> + <code>RepositoryBase&lt;T&gt;</code>.</p>
-<p>Follow-up: "Ab interfaces mein bhi method bodies hain — to farak kya hai?" — ab bhi instance fields ya constructors nahi, ab bhi multiple implementation, aur default body sirf interface type se milti hai.</p>`
+<p>Follow-up: "Ab interfaces mein bhi method bodies hain — to farak kya hai?" — ab bhi instance fields ya constructors nahi, ab bhi multiple implementation, aur default body sirf interface type se milti hai.</p>
+<p>Follow-up: "Kya abstract class interface implement kar sakti hai bina saare members implement kiye?" — Haan: woh unhe <code>abstract</code> members par map kar deti hai (<code>public abstract void Send(string msg);</code>) aur concrete children unhe implement karte hain.</p>`
       }
     },
     {
@@ -927,21 +941,21 @@ public class CheckoutService(IPaymentGateway gateway, IMessageSender sender)
 <li>If <code>Dog</code> <b>overrides</b> <code>Speak()</code>: <code>a.Speak()</code> → Dog's version (the object is a Dog).</li>
 <li>If <code>Dog</code> declares <code>new void Move()</code>: <code>a.Move()</code> → Animal's version (the reference is <code>Animal</code>); <code>((Dog)a).Move()</code> → Dog's version.</li>
 </ul>
-<p>If you hide a member without writing <code>new</code>, the code still compiles with warning CS0108 — <code>new</code> just says "I did this on purpose".</p>
+<p>Hiding without writing <code>new</code> still compiles, with a warning: CS0108 if the base member is non-virtual, CS0114 if it is <code>virtual</code>. <code>new</code> just says "I did this on purpose". Watch CS0114 closely: if you forget <code>override</code>, the method silently hides, so base references still call the base version.</p>
 <p><b>TL angle:</b> in code review, <code>new</code> on a method is a red flag — callers using the base type get different behaviour from callers using the derived type. Accept it only when you cannot change a third-party base class.</p>`,
         hi: `<p><code>Animal a = new Dog();</code></p>
 <ul>
 <li>अगर <code>Dog</code> ने <code>Speak()</code> को <b>override</b> किया: <code>a.Speak()</code> → Dog का version (object Dog है)।</li>
 <li>अगर <code>Dog</code> ने <code>new void Move()</code> लिखा: <code>a.Move()</code> → Animal का version (reference <code>Animal</code> है); <code>((Dog)a).Move()</code> → Dog का version।</li>
 </ul>
-<p>अगर <code>new</code> लिखे बिना member hide करो, तो code compile होता है पर warning CS0108 आती है — <code>new</code> बस बताता है कि "मैंने यह जानबूझकर किया"।</p>
+<p><code>new</code> लिखे बिना hide करो तो भी code compile होता है, पर warning आती है: base member non-virtual हो तो CS0108, <code>virtual</code> हो तो CS0114। <code>new</code> बस बताता है कि "मैंने यह जानबूझकर किया"। CS0114 पर ख़ास ध्यान दो: <code>override</code> लिखना भूल गए तो method चुपचाप hide कर देता है, और base references से base version ही चलता है।</p>
 <p><b>TL angle:</b> code review में method पर <code>new</code> एक red flag है — base type से call करने वालों को अलग behaviour मिलता है और derived type से call करने वालों को अलग। इसे तभी accept करो जब third-party base class बदल नहीं सकते।</p>`,
         hg: `<p><code>Animal a = new Dog();</code></p>
 <ul>
 <li>Agar <code>Dog</code> ne <code>Speak()</code> ko <b>override</b> kiya: <code>a.Speak()</code> → Dog ka version (object Dog hai).</li>
 <li>Agar <code>Dog</code> ne <code>new void Move()</code> likha: <code>a.Move()</code> → Animal ka version (reference <code>Animal</code> hai); <code>((Dog)a).Move()</code> → Dog ka version.</li>
 </ul>
-<p>Agar <code>new</code> likhe bina member hide karo, to code compile hota hai par warning CS0108 aati hai — <code>new</code> bas batata hai ki "maine yeh jaanboojhkar kiya".</p>
+<p><code>new</code> likhe bina hide karo to bhi code compile hota hai, par warning aati hai: base member non-virtual ho to CS0108, <code>virtual</code> ho to CS0114. <code>new</code> bas batata hai ki "maine yeh jaanboojhkar kiya". CS0114 par khaas dhyaan do: <code>override</code> likhna bhool gaye to method chupchaap hide kar deta hai, aur base references se base version hi chalta hai.</p>
 <p><b>TL angle:</b> code review mein method par <code>new</code> ek red flag hai — base type se call karne walon ko alag behaviour milta hai aur derived type se call karne walon ko alag. Ise tabhi accept karo jab third-party base class badal nahi sakte.</p>`
       }
     },
@@ -1090,28 +1104,28 @@ public class CheckoutService(IPaymentGateway gateway, IMessageSender sender)
 <li><b>Performance</b>: when the JIT knows the exact type, it can devirtualize and inline calls; type checks (<code>is</code>/casts) against sealed types are cheaper too.</li>
 <li>The .NET analyzer <b>CA1852</b> suggests sealing internal types that have no subtypes.</li>
 </ul>
-<p><b>TL angle:</b> "Design for inheritance or prohibit it." Unsealing later is a non-breaking change; sealing a public class later is breaking. So for new public classes, sealed is a safe default unless you plan extension.</p>`,
+<p><b>TL angle:</b> unsealing later is a non-breaking change; sealing a public class later is breaking. Many teams seal application classes by default, and CA1852 flags internal types that could be sealed. For public library types it is a deliberate trade-off: the .NET Framework Design Guidelines advise against sealing without a good reason, while Joshua Bloch (<i>Effective Java</i>) says "design and document for inheritance or else prohibit it". Either way, decide on purpose.</p>`,
         hi: `<ul>
 <li>.NET में examples: <code>string</code> sealed है; हर <code>struct</code> implicitly sealed होता है।</li>
 <li>Sealed class <b>नए</b> virtual members declare नहीं कर सकती (CS0549), और class एक साथ <code>abstract</code> और <code>sealed</code> नहीं हो सकती (CS0418)। <code>static</code> class IL में abstract + sealed बनकर compile होती है।</li>
 <li><b>Performance</b>: जब JIT को exact type पता होता है, तो वो calls को devirtualize और inline कर सकता है; sealed types पर type checks (<code>is</code>/casts) भी सस्ते होते हैं।</li>
 <li>.NET analyzer <b>CA1852</b> सुझाव देता है कि जिन internal types के subtypes नहीं हैं, उन्हें seal करो।</li>
 </ul>
-<p><b>TL angle:</b> "Inheritance के लिए design करो, या उसे रोक दो।" बाद में unseal करना non-breaking change है; public class को बाद में seal करना breaking है। इसलिए नई public classes के लिए sealed एक safe default है, जब तक extension का plan न हो।</p>`,
+<p><b>TL angle:</b> बाद में unseal करना non-breaking change है; public class को बाद में seal करना breaking है। कई teams application classes को default में seal करती हैं, और CA1852 उन internal types को flag करता है जिन्हें seal किया जा सकता है। Public library types के लिए यह सोच-समझकर लिया गया trade-off है: .NET Framework Design Guidelines बिना ठोस वजह seal न करने की सलाह देती हैं, जबकि Joshua Bloch (<i>Effective Java</i>) कहते हैं "inheritance के लिए design और document करो, वरना उसे रोक दो"। जो भी चुनो, जानबूझकर चुनो।</p>`,
         hg: `<ul>
 <li>.NET mein examples: <code>string</code> sealed hai; har <code>struct</code> implicitly sealed hota hai.</li>
 <li>Sealed class <b>naye</b> virtual members declare nahi kar sakti (CS0549), aur class ek saath <code>abstract</code> aur <code>sealed</code> nahi ho sakti (CS0418). <code>static</code> class IL mein abstract + sealed bankar compile hoti hai.</li>
 <li><b>Performance</b>: jab JIT ko exact type pata hota hai, to woh calls ko devirtualize aur inline kar sakta hai; sealed types par type checks (<code>is</code>/casts) bhi saste hote hain.</li>
 <li>.NET analyzer <b>CA1852</b> sujhaav deta hai ki jin internal types ke subtypes nahi hain, unhe seal karo.</li>
 </ul>
-<p><b>TL angle:</b> "Inheritance ke liye design karo, ya use rok do." Baad mein unseal karna non-breaking change hai; public class ko baad mein seal karna breaking hai. Isliye nayi public classes ke liye sealed ek safe default hai, jab tak extension ka plan na ho.</p>`
+<p><b>TL angle:</b> baad mein unseal karna non-breaking change hai; public class ko baad mein seal karna breaking hai. Kai teams application classes ko default mein seal karti hain, aur CA1852 un internal types ko flag karta hai jinhe seal kiya ja sakta hai. Public library types ke liye yeh soch-samajhkar liya gaya trade-off hai: .NET Framework Design Guidelines bina thos wajah seal na karne ki salaah deti hain, jabki Joshua Bloch (<i>Effective Java</i>) kehte hain "inheritance ke liye design aur document karo, warna use rok do". Jo bhi chuno, jaanboojhkar chuno.</p>`
       }
     },
     {
       id: "static-constructor",
       depth: "detailed",
       q: "What is a static constructor? When does it run, and what happens if it throws?",
-      answer: "A static constructor initializes the static data of a type. It has no parameters and no access modifier, you cannot call it, and the runtime runs it exactly once — before the first instance is created or any static member is used. If it throws, the type fails with TypeInitializationException and stays unusable.",
+      answer: "It initializes a type's static data; it has no parameters or modifiers, and the runtime runs it once, before the first instance or static member access. If it throws, you get TypeInitializationException and the type stays unusable.",
       meaning: {
         hi: "Static constructor type का static data initialize करता है। इसमें कोई parameter या access modifier नहीं होता, आप इसे call नहीं कर सकते, और runtime इसे सिर्फ़ एक बार चलाता है — पहला object बनने या कोई static member use होने से पहले। अगर यह exception फेंके, तो TypeInitializationException आता है और type आगे use नहीं हो पाता।",
         hg: "Static constructor type ka static data initialize karta hai. Ismein koi parameter ya access modifier nahi hota, aap ise call nahi kar sakte, aur runtime ise sirf ek baar chalata hai — pehla object banne ya koi static member use hone se pehle. Agar yeh exception phenke, to TypeInitializationException aata hai aur type aage use nahi ho paata."
@@ -1155,19 +1169,19 @@ public class CheckoutService(IPaymentGateway gateway, IMessageSender sender)
 <li><b>Factory method</b>: <code>Money.FromRupees(250)</code> reads better than <code>new Money(250)</code> and can validate, cache or return a subtype.</li>
 <li>For a helper with only static members, prefer a <code>static class</code> — the compiler then blocks instances for you.</li>
 </ul>
-<p><b>TL angle:</b> in ASP.NET Core, prefer <code>services.AddSingleton&lt;IClock, SystemClock&gt;()</code> over a hand-written Singleton — same "one instance", but it can be replaced in tests.</p>`,
+<p><b>TL angle:</b> in ASP.NET Core, prefer <code>builder.Services.AddSingleton(TimeProvider.System)</code> over a hand-written Singleton — same "one instance", but tests can swap in a fake (e.g. <code>FakeTimeProvider</code>).</p>`,
         hi: `<ul>
 <li><b>Singleton</b>: private constructor + एक static instance। <code>Lazy&lt;T&gt;</code> इसे lazy और thread-safe बनाता है।</li>
 <li><b>Factory method</b>: <code>Money.FromRupees(250)</code> पढ़ने में <code>new Money(250)</code> से बेहतर है और validate, cache या subtype return कर सकता है।</li>
 <li>सिर्फ़ static members वाले helper के लिए <code>static class</code> बेहतर है — तब compiler ख़ुद instances रोक देता है।</li>
 </ul>
-<p><b>TL angle:</b> ASP.NET Core में hand-written Singleton की जगह <code>services.AddSingleton&lt;IClock, SystemClock&gt;()</code> use करो — "एक ही instance" वही है, पर tests में बदला जा सकता है।</p>`,
+<p><b>TL angle:</b> ASP.NET Core में hand-written Singleton की जगह <code>builder.Services.AddSingleton(TimeProvider.System)</code> use करो — "एक ही instance" वही है, पर tests में fake (जैसे <code>FakeTimeProvider</code>) से बदला जा सकता है।</p>`,
         hg: `<ul>
 <li><b>Singleton</b>: private constructor + ek static instance. <code>Lazy&lt;T&gt;</code> ise lazy aur thread-safe banata hai.</li>
 <li><b>Factory method</b>: <code>Money.FromRupees(250)</code> padhne mein <code>new Money(250)</code> se behtar hai aur validate, cache ya subtype return kar sakta hai.</li>
 <li>Sirf static members wale helper ke liye <code>static class</code> behtar hai — tab compiler khud instances rok deta hai.</li>
 </ul>
-<p><b>TL angle:</b> ASP.NET Core mein hand-written Singleton ki jagah <code>services.AddSingleton&lt;IClock, SystemClock&gt;()</code> use karo — "ek hi instance" wahi hai, par tests mein badla ja sakta hai.</p>`
+<p><b>TL angle:</b> ASP.NET Core mein hand-written Singleton ki jagah <code>builder.Services.AddSingleton(TimeProvider.System)</code> use karo — "ek hi instance" wahi hai, par tests mein fake (jaise <code>FakeTimeProvider</code>) se badla ja sakta hai.</p>`
       },
       code: [{
         caption: {
@@ -1222,9 +1236,9 @@ public sealed class Money
 <li>Parent constructor body</li>
 <li>Child constructor body</li>
 </ol>
-<p>(Static constructors, if any, run once before all this, the first time each type is used.)</p>
+<p><b>With static constructors</b> (first creation only): the Child static constructor runs first, before step 1. The Parent static constructor runs when the Parent constructor is first invoked — that is, <i>after</i> the Child field initializers. Full order: Child static → Child field → Parent static → Parent field → Parent ctor → Child ctor. The Base/Derived static-constructor puzzle shows this.</p>
 <ul>
-<li>No <code>base(...)</code> written → the compiler adds <code>base()</code>. If the parent has only constructors with parameters → CS7036.</li>
+<li>No <code>base(...)</code> written → the compiler adds <code>base()</code>. If the parent has only constructors with parameters → CS7036; if its parameterless constructor is <code>private</code> → CS0122.</li>
 <li>A constructor can call <code>this(...)</code> <b>or</b> <code>base(...)</code>, not both; the chain ends at a constructor that calls <code>base</code>.</li>
 </ul>
 <p>Follow-up: this order is exactly what the "constructor order" puzzle tests.</p>`,
@@ -1235,9 +1249,9 @@ public sealed class Money
 <li>Parent constructor body</li>
 <li>Child constructor body</li>
 </ol>
-<p>(Static constructors, अगर हों, तो इन सबसे पहले एक बार चलते हैं — हर type के पहले use पर।)</p>
+<p><b>Static constructors के साथ</b> (सिर्फ़ पहली बार object बनने पर): Child का static constructor सबसे पहले चलता है, step 1 से भी पहले। Parent का static constructor तब चलता है जब Parent constructor पहली बार invoke होता है — यानी Child field initializers के <i>बाद</i>। पूरा order: Child static → Child field → Parent static → Parent field → Parent ctor → Child ctor। Base/Derived static-constructor वाला puzzle यही दिखाता है।</p>
 <ul>
-<li><code>base(...)</code> नहीं लिखा → compiler <code>base()</code> जोड़ देता है। अगर parent में सिर्फ़ parameters वाले constructors हैं → CS7036।</li>
+<li><code>base(...)</code> नहीं लिखा → compiler <code>base()</code> जोड़ देता है। अगर parent में सिर्फ़ parameters वाले constructors हैं → CS7036; अगर उसका parameterless constructor <code>private</code> है → CS0122।</li>
 <li>Constructor <code>this(...)</code> <b>या</b> <code>base(...)</code> call कर सकता है, दोनों नहीं; chain उस constructor पर ख़त्म होती है जो <code>base</code> call करता है।</li>
 </ul>
 <p>Follow-up: "constructor order" puzzle बिल्कुल यही order test करता है।</p>`,
@@ -1248,9 +1262,9 @@ public sealed class Money
 <li>Parent constructor body</li>
 <li>Child constructor body</li>
 </ol>
-<p>(Static constructors, agar hon, to in sabse pehle ek baar chalte hain — har type ke pehle use par.)</p>
+<p><b>Static constructors ke saath</b> (sirf pehli baar object banne par): Child ka static constructor sabse pehle chalta hai, step 1 se bhi pehle. Parent ka static constructor tab chalta hai jab Parent constructor pehli baar invoke hota hai — yaani Child field initializers ke <i>baad</i>. Poora order: Child static → Child field → Parent static → Parent field → Parent ctor → Child ctor. Base/Derived static-constructor wala puzzle yahi dikhata hai.</p>
 <ul>
-<li><code>base(...)</code> nahi likha → compiler <code>base()</code> jod deta hai. Agar parent mein sirf parameters wale constructors hain → CS7036.</li>
+<li><code>base(...)</code> nahi likha → compiler <code>base()</code> jod deta hai. Agar parent mein sirf parameters wale constructors hain → CS7036; agar uska parameterless constructor <code>private</code> hai → CS0122.</li>
 <li>Constructor <code>this(...)</code> <b>ya</b> <code>base(...)</code> call kar sakta hai, dono nahi; chain us constructor par khatam hoti hai jo <code>base</code> call karta hai.</li>
 </ul>
 <p>Follow-up: "constructor order" puzzle bilkul yahi order test karta hai.</p>`
@@ -1260,10 +1274,10 @@ public sealed class Money
       id: "abstract-vs-virtual",
       depth: "detailed",
       q: "What is the difference between an abstract method and a virtual method?",
-      answer: "A virtual method has a default body that a derived class may override. An abstract method has no body, can exist only in an abstract class, and every non-abstract derived class must override it.",
+      answer: "A virtual method has a default body that a derived class may override. An abstract method has no body, lives only in an abstract class (or as a body-less interface member), and every non-abstract derived class must override it.",
       meaning: {
-        hi: "Virtual method की default body होती है जिसे derived class चाहे तो override करे। Abstract method की body नहीं होती, वो सिर्फ़ abstract class में हो सकता है, और हर non-abstract derived class को उसे override करना ही पड़ता है।",
-        hg: "Virtual method ki default body hoti hai jise derived class chahe to override kare. Abstract method ki body nahi hoti, woh sirf abstract class mein ho sakta hai, aur har non-abstract derived class ko use override karna hi padta hai."
+        hi: "Virtual method की default body होती है जिसे derived class चाहे तो override करे। Abstract method की body नहीं होती, वो सिर्फ़ abstract class में (या interface के बिना body वाले member के रूप में) हो सकता है, और हर non-abstract derived class को उसे override करना ही पड़ता है।",
+        hg: "Virtual method ki default body hoti hai jise derived class chahe to override kare. Abstract method ki body nahi hoti, woh sirf abstract class mein (ya interface ke bina body wale member ke roop mein) ho sakta hai, aur har non-abstract derived class ko use override karna hi padta hai."
       },
       explain: {
         en: `<ul>
@@ -1460,7 +1474,7 @@ class SmartDevice : IPrinter, IScanner
       id: "inheritance-code-review",
       depth: "detailed",
       q: "As a tech lead, what inheritance problems do you look for in a code review?",
-      answer: "Deep hierarchies, base classes used only to share helper code, overrides that break the parent's contract (Liskov violations), method hiding with new, and protected fields that leak internals. My usual fix is a shallow hierarchy, interfaces plus composition, and sealing classes that are not designed for extension.",
+      answer: "Deep hierarchies, base classes used only for helper reuse, overrides that break the parent's contract (Liskov), method hiding with new, and protected fields. I push for shallow hierarchies, interfaces plus composition, and sealing what is not designed for extension.",
       meaning: {
         hi: "गहरी hierarchies, सिर्फ़ helper code share करने के लिए बनी base classes, ऐसे overrides जो parent का contract तोड़ें (Liskov violation), new से method hiding, और protected fields जो अंदर की चीज़ें बाहर दिखाएँ। मेरा आम fix: छोटी hierarchy, interfaces + composition, और जो classes extension के लिए नहीं बनीं उन्हें seal करना।",
         hg: "Gehri hierarchies, sirf helper code share karne ke liye bani base classes, aise overrides jo parent ka contract todein (Liskov violation), new se method hiding, aur protected fields jo andar ki cheezein bahar dikhayein. Mera aam fix: chhoti hierarchy, interfaces + composition, aur jo classes extension ke liye nahi banin unhe seal karna."
