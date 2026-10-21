@@ -2001,12 +2001,12 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       q: "How do you call a stored procedure from EF Core?",
       answer: "For entity rows, FromSql($\"EXEC dbo.Proc {param}\"); add AsEnumerable before any further LINQ, since SQL Server cannot compose over EXEC. Other shapes: SqlQuery&lt;T&gt;; commands: ExecuteSql. OUTPUT parameters need a SqlParameter.",
       meaning: {
-        hi: "Entity से map होने वाली rows के लिए FromSql($\"EXEC dbo.Proc {param}\") और फिर AsEnumerable, क्योंकि SQL Server EXEC के ऊपर compose नहीं कर सकता। दूसरे shapes के लिए SqlQuery&lt;T&gt;; commands के लिए ExecuteSql। Output parameters के लिए SqlParameter चाहिए।",
-        hg: "Entity se map hone wali rows ke liye FromSql($\"EXEC dbo.Proc {param}\") aur phir AsEnumerable, kyunki SQL Server EXEC ke upar compose nahi kar sakta. Doosre shapes ke liye SqlQuery&lt;T&gt;; commands ke liye ExecuteSql. Output parameters ke liye SqlParameter chahiye."
+        hi: "Entity से map होने वाली rows के लिए FromSql($\"EXEC dbo.Proc {param}\"); आगे कोई LINQ लगाना हो तो उससे पहले AsEnumerable जोड़ो, क्योंकि SQL Server EXEC के ऊपर compose नहीं कर सकता। दूसरे shapes के लिए SqlQuery&lt;T&gt;; commands के लिए ExecuteSql। Output parameters के लिए SqlParameter चाहिए।",
+        hg: "Entity se map hone wali rows ke liye FromSql($\"EXEC dbo.Proc {param}\"); aage koi LINQ lagaana ho to usse pehle AsEnumerable jodo, kyunki SQL Server EXEC ke upar compose nahi kar sakta. Doosre shapes ke liye SqlQuery&lt;T&gt;; commands ke liye ExecuteSql. Output parameters ke liye SqlParameter chahiye."
       },
       explain: {
         en: `<ul>
-<li>Entity results: <code>db.Customers.FromSql($"EXEC dbo.GetCustomersByCity {city}").AsEnumerable()</code>. The procedure must return all the entity's columns.</li>
+<li>Entity results: <code>db.Customers.FromSql($"EXEC dbo.GetCustomersByCity {city}").ToList()</code>. The procedure must return all the entity's columns. Only if more LINQ follows (for example <code>OrderBy</code>), put <code>AsEnumerable()</code> before it so it runs in memory.</li>
 <li>Custom shape (report): <code>db.Database.SqlQuery&lt;SalesRow&gt;($"EXEC dbo.SalesReport {year}")</code> — EF Core 8+ maps columns to properties by name.</li>
 <li>No result set: <code>db.Database.ExecuteSql($"EXEC dbo.ArchiveOrders {cutoff}")</code> returns rows affected.</li>
 <li>Output parameter: create <code>new SqlParameter("@total", SqlDbType.Int) { Direction = ParameterDirection.Output }</code>, run <code>ExecuteSqlRaw("EXEC dbo.CountOrders @total OUTPUT", total)</code>, then read <code>total.Value</code>.</li>
@@ -2014,7 +2014,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 </ul>
 <p>TL angle: procedures are fine for heavy reports or when a DBA team owns the logic; keep business rules in one place, not half in C# and half in procedures.</p>`,
         hi: `<ul>
-<li>Entity results: <code>db.Customers.FromSql($"EXEC dbo.GetCustomersByCity {city}").AsEnumerable()</code>। Procedure को entity के सारे columns लौटाने चाहिए।</li>
+<li>Entity results: <code>db.Customers.FromSql($"EXEC dbo.GetCustomersByCity {city}").ToList()</code>। Procedure को entity के सारे columns लौटाने चाहिए। सिर्फ़ तब, जब आगे और LINQ हो (जैसे <code>OrderBy</code>), उससे पहले <code>AsEnumerable()</code> लगाओ ताकि वो memory में चले।</li>
 <li>Custom shape (report): <code>db.Database.SqlQuery&lt;SalesRow&gt;($"EXEC dbo.SalesReport {year}")</code> — EF Core 8+ columns को नाम से properties पर map करता है।</li>
 <li>कोई result set नहीं: <code>db.Database.ExecuteSql($"EXEC dbo.ArchiveOrders {cutoff}")</code> affected rows लौटाता है।</li>
 <li>Output parameter: <code>new SqlParameter("@total", SqlDbType.Int) { Direction = ParameterDirection.Output }</code> बनाओ, <code>ExecuteSqlRaw("EXEC dbo.CountOrders @total OUTPUT", total)</code> चलाओ, फिर <code>total.Value</code> पढ़ो।</li>
@@ -2022,7 +2022,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 </ul>
 <p>TL angle: heavy reports के लिए या जब logic DBA team का हो तब procedures ठीक हैं; business rules एक ही जगह रखो, आधे C# में और आधे procedures में नहीं।</p>`,
         hg: `<ul>
-<li>Entity results: <code>db.Customers.FromSql($"EXEC dbo.GetCustomersByCity {city}").AsEnumerable()</code>. Procedure ko entity ke saare columns lautaane chahiye.</li>
+<li>Entity results: <code>db.Customers.FromSql($"EXEC dbo.GetCustomersByCity {city}").ToList()</code>. Procedure ko entity ke saare columns lautaane chahiye. Sirf tab, jab aage aur LINQ ho (jaise <code>OrderBy</code>), usse pehle <code>AsEnumerable()</code> lagao taaki woh memory mein chale.</li>
 <li>Custom shape (report): <code>db.Database.SqlQuery&lt;SalesRow&gt;($"EXEC dbo.SalesReport {year}")</code> — EF Core 8+ columns ko naam se properties par map karta hai.</li>
 <li>Koi result set nahi: <code>db.Database.ExecuteSql($"EXEC dbo.ArchiveOrders {cutoff}")</code> affected rows lautaata hai.</li>
 <li>Output parameter: <code>new SqlParameter("@total", SqlDbType.Int) { Direction = ParameterDirection.Output }</code> banao, <code>ExecuteSqlRaw("EXEC dbo.CountOrders @total OUTPUT", total)</code> chalao, phir <code>total.Value</code> padho.</li>
@@ -2044,7 +2044,11 @@ using Microsoft.EntityFrameworkCore;
 
 public class ReportService(ShopContext db)
 {
-    // 1. Rows that map to an entity. AsEnumerable(): SQL Server cannot compose over EXEC
+    // 1a. Rows that map to an entity: no further LINQ, so just ToList()
+    public List<Customer> AllCustomersIn(string city) =>
+        db.Customers.FromSql($"EXEC dbo.GetCustomersByCity {city}").ToList();
+
+    // 1b. More LINQ follows: AsEnumerable() first, because SQL Server cannot compose over EXEC
     public List<Customer> CustomersIn(string city) =>
         db.Customers
           .FromSql($"EXEC dbo.GetCustomersByCity {city}")
