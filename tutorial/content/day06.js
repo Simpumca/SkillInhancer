@@ -2,9 +2,9 @@
 window.TL_DAY = {
   day: 6,
   title: {
-    en: "EF Core Part 2 — N+1, generated SQL, projections, compiled queries, raw SQL, transactions, concurrency, ExecuteUpdate/ExecuteDelete, performance",
-    hi: "EF Core Part 2 — N+1, generated SQL, projections, compiled queries, raw SQL, transactions, concurrency, ExecuteUpdate/ExecuteDelete और performance",
-    hg: "EF Core Part 2 — N+1, generated SQL, projections, compiled queries, raw SQL, transactions, concurrency, ExecuteUpdate/ExecuteDelete aur performance"
+    en: "EF Core Part 2 — Queries, Raw SQL, Transactions, Concurrency",
+    hi: "EF Core Part 2 — Queries, SQL, Transactions और Concurrency",
+    hg: "EF Core Part 2 — Queries, SQL, Transactions aur Concurrency"
   },
   summary: {
     en: `<p>Today is <b>EF Core, Part 2</b> — the part interviewers use to separate "I have used EF" from "I can run EF in production". Your SQL Server strength is the secret weapon today: every topic below is about <b>which SQL EF sends, and how many times</b>.</p>
@@ -128,7 +128,7 @@ window.TL_DAY = {
 <ul>
 <li><code>db.Customers.FromSql($"SELECT * FROM Customers WHERE City = {city}")</code> (EF Core 7+; same as the older <code>FromSqlInterpolated</code>) looks like string interpolation, but EF turns each <code>{value}</code> into a <b>DbParameter</b> (<code>@p0</code>). Safe.</li>
 <li><code>FromSqlRaw(sql, args)</code> takes a plain string. It is safe only when values go through <code>{0}</code> placeholders or <code>SqlParameter</code> objects — <b>never</b> concatenate user input into it. EF's analyzer warns (<b>EF1002</b>) when you pass an interpolated string to it.</li>
-<li>You can add LINQ on top: <code>FromSql(...).Where(...).OrderBy(...)</code> — EF wraps your SQL as a subquery. Stored procedures cannot be wrapped, so call <code>AsEnumerable()</code> right after them.</li>
+<li>You can add LINQ on top: <code>FromSql(...).Where(...).OrderBy(...)</code> — EF wraps your SQL as a subquery. Stored procedures cannot be wrapped: if you want more LINQ after one, put <code>AsEnumerable()</code> first so that LINQ runs in memory.</li>
 <li>For non-entity results: <code>db.Database.SqlQuery&lt;T&gt;($"...")</code> (scalars since EF Core 7, unmapped DTO types since EF Core 8). For commands: <code>db.Database.ExecuteSql($"UPDATE ...")</code> returns rows affected.</li>
 </ul>
 <p><b>When to use:</b> SQL that LINQ cannot express well (window functions, query hints, tuned reports), existing stored procedures, and hot queries you have hand-tuned. <b>When not:</b> plain CRUD that LINQ handles — raw SQL loses compile-time checking and rename safety, and ties the code to one database engine.</p>`,
@@ -136,7 +136,7 @@ window.TL_DAY = {
 <ul>
 <li><code>db.Customers.FromSql($"SELECT * FROM Customers WHERE City = {city}")</code> (EF Core 7+; पुराने <code>FromSqlInterpolated</code> जैसा ही) string interpolation जैसा दिखता है, पर EF हर <code>{value}</code> को एक <b>DbParameter</b> (<code>@p0</code>) बना देता है। Safe।</li>
 <li><code>FromSqlRaw(sql, args)</code> एक plain string लेता है। यह तभी safe है जब values <code>{0}</code> placeholders या <code>SqlParameter</code> objects से जाएँ — user input को इसमें <b>कभी</b> मत जोड़ो। इसमें interpolated string दो तो EF का analyzer warning (<b>EF1002</b>) देता है।</li>
-<li>ऊपर LINQ जोड़ सकते हो: <code>FromSql(...).Where(...).OrderBy(...)</code> — EF आपके SQL को subquery बनाकर लपेट देता है। Stored procedures को लपेटा नहीं जा सकता, इसलिए उनके तुरंत बाद <code>AsEnumerable()</code> call करो।</li>
+<li>ऊपर LINQ जोड़ सकते हो: <code>FromSql(...).Where(...).OrderBy(...)</code> — EF आपके SQL को subquery बनाकर लपेट देता है। Stored procedures को लपेटा नहीं जा सकता: उसके बाद और LINQ चाहिए तो पहले <code>AsEnumerable()</code> लगाओ, ताकि वो LINQ memory में चले।</li>
 <li>Non-entity results के लिए: <code>db.Database.SqlQuery&lt;T&gt;($"...")</code> (scalars EF Core 7 से, unmapped DTO types EF Core 8 से)। Commands के लिए: <code>db.Database.ExecuteSql($"UPDATE ...")</code> affected rows की गिनती लौटाता है।</li>
 </ul>
 <p><b>कब use करें:</b> ऐसा SQL जो LINQ से ठीक से नहीं बनता (window functions, query hints, tuned reports), पहले से बने stored procedures, और hot queries जिन्हें आपने हाथ से tune किया है। <b>कब नहीं:</b> सीधा CRUD जो LINQ संभाल लेता है — raw SQL में compile-time checking और rename safety खो जाती है, और code एक database engine से बँध जाता है।</p>`,
@@ -144,7 +144,7 @@ window.TL_DAY = {
 <ul>
 <li><code>db.Customers.FromSql($"SELECT * FROM Customers WHERE City = {city}")</code> (EF Core 7+; purane <code>FromSqlInterpolated</code> jaisa hi) string interpolation jaisa dikhta hai, par EF har <code>{value}</code> ko ek <b>DbParameter</b> (<code>@p0</code>) bana deta hai. Safe.</li>
 <li><code>FromSqlRaw(sql, args)</code> ek plain string leta hai. Yeh tabhi safe hai jab values <code>{0}</code> placeholders ya <code>SqlParameter</code> objects se jaayein — user input ko ismein <b>kabhi</b> mat jodo. Ismein interpolated string do to EF ka analyzer warning (<b>EF1002</b>) deta hai.</li>
-<li>Upar LINQ jod sakte ho: <code>FromSql(...).Where(...).OrderBy(...)</code> — EF aapke SQL ko subquery banakar lapet deta hai. Stored procedures ko lapeta nahi ja sakta, isliye unke turant baad <code>AsEnumerable()</code> call karo.</li>
+<li>Upar LINQ jod sakte ho: <code>FromSql(...).Where(...).OrderBy(...)</code> — EF aapke SQL ko subquery banakar lapet deta hai. Stored procedures ko lapeta nahi ja sakta: uske baad aur LINQ chahiye to pehle <code>AsEnumerable()</code> lagao, taaki woh LINQ memory mein chale.</li>
 <li>Non-entity results ke liye: <code>db.Database.SqlQuery&lt;T&gt;($"...")</code> (scalars EF Core 7 se, unmapped DTO types EF Core 8 se). Commands ke liye: <code>db.Database.ExecuteSql($"UPDATE ...")</code> affected rows ki ginti lautaata hai.</li>
 </ul>
 <p><b>Kab use karein:</b> aisa SQL jo LINQ se theek se nahi banta (window functions, query hints, tuned reports), pehle se bane stored procedures, aur hot queries jinhe aapne haath se tune kiya hai. <b>Kab nahi:</b> seedha CRUD jo LINQ sambhaal leta hai — raw SQL mein compile-time checking aur rename safety kho jaati hai, aur code ek database engine se bandh jaata hai.</p>`
@@ -163,28 +163,25 @@ window.TL_DAY = {
 <ul>
 <li>One <code>SaveChanges()</code> already runs all its INSERT/UPDATE/DELETE statements in <b>one transaction</b> (Day 5). For most requests, that is all you need.</li>
 <li>When <b>several</b> steps must succeed or fail together — two <code>SaveChanges()</code> calls, or <code>SaveChanges()</code> plus <code>ExecuteUpdate</code>/raw SQL — use <code>using var tx = db.Database.BeginTransaction();</code> … <code>tx.Commit();</code>. If you dispose it without <code>Commit()</code>, everything rolls back.</li>
-<li>Inside your transaction, each <code>SaveChanges()</code> also sets a <b>savepoint</b> (EF Core 5+), so one failed <code>SaveChanges()</code> rolls back only its own part and you decide what happens next.</li>
 <li>Cloud databases drop connections for a moment. A <b>retrying execution strategy</b> (<code>EnableRetryOnFailure()</code> on SQL Server) retries such failures. With it on, wrap your whole transaction in <code>strategy.Execute(...)</code> so it is retried as <b>one unit</b>.</li>
-<li><code>TransactionScope</code> also works with EF Core, but watch out: its default isolation level is <b>Serializable</b>, and with <code>async</code> you must pass <code>TransactionScopeAsyncFlowOption.Enabled</code>.</li>
 </ul>
+<p>Savepoints and <code>TransactionScope</code> cautions are in the detailed section "Transactions in code".</p>
 <p><b>When to use:</b> money movement, "order + stock + payment record" together, multi-step imports. <b>When not:</b> do not wrap a single <code>SaveChanges()</code> in an extra transaction "for safety", and do not keep a transaction open while calling an external API or waiting for a user — the locks stay held and other requests queue behind you.</p>`,
         hi: `<p><b>Analogy — UPI transfer:</b> ₹500 आपके खाते से निकलकर दोस्त के खाते में पहुँचते हैं। या तो <b>दोनों</b> होते हैं या <b>कुछ नहीं</b> — "पैसे कट गए पर पहुँचे नहीं" कभी नहीं। Transaction आपके database steps के लिए यही वादा है।</p>
 <ul>
 <li>एक <code>SaveChanges()</code> अपने सारे INSERT/UPDATE/DELETE statements पहले से ही <b>एक transaction</b> में चलाता है (Day 5)। ज़्यादातर requests के लिए इतना ही काफ़ी है।</li>
 <li>जब <b>कई</b> steps को साथ में succeed या fail होना हो — दो <code>SaveChanges()</code> calls, या <code>SaveChanges()</code> के साथ <code>ExecuteUpdate</code>/raw SQL — तो <code>using var tx = db.Database.BeginTransaction();</code> … <code>tx.Commit();</code> use करो। <code>Commit()</code> के बिना dispose हुआ तो सब rollback हो जाता है।</li>
-<li>आपके transaction के अंदर हर <code>SaveChanges()</code> एक <b>savepoint</b> भी बनाता है (EF Core 5+), इसलिए एक <code>SaveChanges()</code> fail हो तो सिर्फ़ उसका हिस्सा rollback होता है और आगे क्या करना है, आप तय करते हो।</li>
 <li>Cloud databases का connection पल भर के लिए टूट जाता है। <b>Retrying execution strategy</b> (SQL Server पर <code>EnableRetryOnFailure()</code>) ऐसी failures को retry करती है। इसके चालू होने पर पूरे transaction को <code>strategy.Execute(...)</code> में लपेटो, ताकि वो <b>एक unit</b> की तरह retry हो।</li>
-<li><code>TransactionScope</code> भी EF Core के साथ चलता है, पर ध्यान रखो: इसका default isolation level <b>Serializable</b> है, और <code>async</code> के साथ <code>TransactionScopeAsyncFlowOption.Enabled</code> देना ज़रूरी है।</li>
 </ul>
+<p>Savepoints और <code>TransactionScope</code> की सावधानियाँ detailed section "Code में transactions" में हैं।</p>
 <p><b>कब use करें:</b> पैसों का लेन-देन, "order + stock + payment record" एक साथ, multi-step imports। <b>कब नहीं:</b> एक अकेले <code>SaveChanges()</code> को "safety के लिए" extra transaction में मत लपेटो, और external API call करते समय या user का इंतज़ार करते समय transaction खुला मत रखो — locks पकड़े रहते हैं और बाकी requests आपके पीछे लाइन में लगती हैं।</p>`,
         hg: `<p><b>Analogy — UPI transfer:</b> ₹500 aapke khaate se nikalkar dost ke khaate mein pahunchte hain. Ya to <b>dono</b> hote hain ya <b>kuch nahi</b> — "paise kat gaye par pahunche nahi" kabhi nahi. Transaction aapke database steps ke liye yahi waada hai.</p>
 <ul>
 <li>Ek <code>SaveChanges()</code> apne saare INSERT/UPDATE/DELETE statements pehle se hi <b>ek transaction</b> mein chalata hai (Day 5). Zyaadatar requests ke liye itna hi kaafi hai.</li>
 <li>Jab <b>kai</b> steps ko saath mein succeed ya fail hona ho — do <code>SaveChanges()</code> calls, ya <code>SaveChanges()</code> ke saath <code>ExecuteUpdate</code>/raw SQL — to <code>using var tx = db.Database.BeginTransaction();</code> … <code>tx.Commit();</code> use karo. <code>Commit()</code> ke bina dispose hua to sab rollback ho jaata hai.</li>
-<li>Aapke transaction ke andar har <code>SaveChanges()</code> ek <b>savepoint</b> bhi banata hai (EF Core 5+), isliye ek <code>SaveChanges()</code> fail ho to sirf uska hissa rollback hota hai aur aage kya karna hai, aap tay karte ho.</li>
 <li>Cloud databases ka connection pal bhar ke liye toot jaata hai. <b>Retrying execution strategy</b> (SQL Server par <code>EnableRetryOnFailure()</code>) aisi failures ko retry karti hai. Iske chaalu hone par poore transaction ko <code>strategy.Execute(...)</code> mein lapeto, taaki woh <b>ek unit</b> ki tarah retry ho.</li>
-<li><code>TransactionScope</code> bhi EF Core ke saath chalta hai, par dhyaan rakho: iska default isolation level <b>Serializable</b> hai, aur <code>async</code> ke saath <code>TransactionScopeAsyncFlowOption.Enabled</code> dena zaroori hai.</li>
 </ul>
+<p>Savepoints aur <code>TransactionScope</code> ki saavdhaaniyaan detailed section "Code mein transactions" mein hain.</p>
 <p><b>Kab use karein:</b> paison ka len-den, "order + stock + payment record" ek saath, multi-step imports. <b>Kab nahi:</b> ek akele <code>SaveChanges()</code> ko "safety ke liye" extra transaction mein mat lapeto, aur external API call karte samay ya user ka intezaar karte samay transaction khula mat rakho — locks pakde rehte hain aur baaki requests aapke peeche line mein lagti hain.</p>`
       }
     },
@@ -202,7 +199,7 @@ window.TL_DAY = {
 <li><b>Lost update</b>: users A and B load the same row. A saves. B saves a moment later with old data — A's change disappears <b>with no error</b>. EF's default is "last write wins".</li>
 <li><b>Optimistic concurrency</b>: mark a <b>concurrency token</b>. EF adds its original value to the UPDATE/DELETE: <code>WHERE [Id] = @p1 AND [Version] = @p2</code>. If 0 rows change, EF throws <code>DbUpdateConcurrencyException</code>.</li>
 <li>On SQL Server, use <code>[Timestamp] public byte[] Version { get; set; }</code> → a <code>rowversion</code> column that the database changes on <b>every</b> update. Elsewhere, mark a column with <code>[ConcurrencyCheck]</code> or <code>.IsConcurrencyToken()</code>.</li>
-<li>Handling the exception = a business decision: reload and show the user (<b>store wins</b>), overwrite (<b>client wins</b>), or merge field by field — then save again.</li>
+<li>Handling the exception = a business decision: reload and show the user (<b>store wins</b>, also called "database wins"), overwrite (<b>client wins</b>), or merge field by field — then save again.</li>
 <li><b>Pessimistic locking</b> (for example <code>UPDLOCK</code> via raw SQL inside a transaction) blocks other users while you work. Web apps usually prefer optimistic.</li>
 </ul>
 <p><b>When to use:</b> rows several people or processes edit — stock, bookings, account settings, admin forms. <b>When not:</b> insert-only data (logs, audit rows), or simple counters, where one atomic SQL statement is better: <code>ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Stock, p =&gt; p.Stock - 1))</code> with <code>WHERE Stock &gt; 0</code>.</p>`,
@@ -211,7 +208,7 @@ window.TL_DAY = {
 <li><b>Lost update</b>: users A और B एक ही row load करते हैं। A save करता है। B पल भर बाद पुराने data के साथ save करता है — A का बदलाव <b>बिना किसी error के</b> गायब। EF का default है "last write wins"।</li>
 <li><b>Optimistic concurrency</b>: एक <b>concurrency token</b> mark करो। EF उसकी original value UPDATE/DELETE में जोड़ता है: <code>WHERE [Id] = @p1 AND [Version] = @p2</code>। अगर 0 rows बदलीं, तो EF <code>DbUpdateConcurrencyException</code> throw करता है।</li>
 <li>SQL Server पर <code>[Timestamp] public byte[] Version { get; set; }</code> use करो → एक <code>rowversion</code> column जिसे database <b>हर</b> update पर बदलता है। दूसरी जगह किसी column को <code>[ConcurrencyCheck]</code> या <code>.IsConcurrencyToken()</code> से mark करो।</li>
-<li>Exception संभालना = business का फ़ैसला: reload करके user को दिखाओ (<b>store wins</b>), overwrite करो (<b>client wins</b>), या field-by-field merge करो — फिर दोबारा save।</li>
+<li>Exception संभालना = business का फ़ैसला: reload करके user को दिखाओ (<b>store wins</b>, जिसे "database wins" भी कहते हैं), overwrite करो (<b>client wins</b>), या field-by-field merge करो — फिर दोबारा save।</li>
 <li><b>Pessimistic locking</b> (जैसे transaction के अंदर raw SQL से <code>UPDLOCK</code>) आपके काम करते समय दूसरे users को रोक देता है। Web apps आमतौर पर optimistic पसंद करते हैं।</li>
 </ul>
 <p><b>कब use करें:</b> ऐसी rows जिन्हें कई लोग या processes edit करते हैं — stock, bookings, account settings, admin forms। <b>कब नहीं:</b> सिर्फ़ insert होने वाला data (logs, audit rows), या simple counters, जहाँ एक atomic SQL statement बेहतर है: <code>ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Stock, p =&gt; p.Stock - 1))</code> के साथ <code>WHERE Stock &gt; 0</code>।</p>`,
@@ -220,7 +217,7 @@ window.TL_DAY = {
 <li><b>Lost update</b>: users A aur B ek hi row load karte hain. A save karta hai. B pal bhar baad purane data ke saath save karta hai — A ka badlaav <b>bina kisi error ke</b> gaayab. EF ka default hai "last write wins".</li>
 <li><b>Optimistic concurrency</b>: ek <b>concurrency token</b> mark karo. EF uski original value UPDATE/DELETE mein jodta hai: <code>WHERE [Id] = @p1 AND [Version] = @p2</code>. Agar 0 rows badlin, to EF <code>DbUpdateConcurrencyException</code> throw karta hai.</li>
 <li>SQL Server par <code>[Timestamp] public byte[] Version { get; set; }</code> use karo → ek <code>rowversion</code> column jise database <b>har</b> update par badalta hai. Doosri jagah kisi column ko <code>[ConcurrencyCheck]</code> ya <code>.IsConcurrencyToken()</code> se mark karo.</li>
-<li>Exception sambhaalna = business ka faisla: reload karke user ko dikhao (<b>store wins</b>), overwrite karo (<b>client wins</b>), ya field-by-field merge karo — phir dobara save.</li>
+<li>Exception sambhaalna = business ka faisla: reload karke user ko dikhao (<b>store wins</b>, jise "database wins" bhi kehte hain), overwrite karo (<b>client wins</b>), ya field-by-field merge karo — phir dobara save.</li>
 <li><b>Pessimistic locking</b> (jaise transaction ke andar raw SQL se <code>UPDLOCK</code>) aapke kaam karte samay doosre users ko rok deta hai. Web apps aamtaur par optimistic pasand karte hain.</li>
 </ul>
 <p><b>Kab use karein:</b> aisi rows jinhe kai log ya processes edit karte hain — stock, bookings, account settings, admin forms. <b>Kab nahi:</b> sirf insert hone wala data (logs, audit rows), ya simple counters, jahan ek atomic SQL statement behtar hai: <code>ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Stock, p =&gt; p.Stock - 1))</code> ke saath <code>WHERE Stock &gt; 0</code>.</p>`
@@ -239,7 +236,7 @@ window.TL_DAY = {
 <ul>
 <li><code>db.Products.Where(p =&gt; p.Stock == 0).ExecuteDelete()</code> → one <code>DELETE ... WHERE</code>. <code>ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Price, p =&gt; p.Price * 1.1m))</code> → one <code>UPDATE ... SET ... WHERE</code>. Both arrived in <b>EF Core 7</b>.</li>
 <li>They run <b>immediately</b> — no <code>SaveChanges()</code> — and return the number of rows affected. No entities are loaded into memory.</li>
-<li>They <b>bypass the change tracker</b>: entities already tracked in memory are <b>not</b> updated (they go stale), and SaveChanges-based logic (events, interceptors, audit columns set in <code>SaveChanges</code>) does not run.</li>
+<li>They <b>bypass the change tracker</b>: entities already tracked in memory are <b>not</b> updated (they go stale), and SaveChanges-based logic (<code>SavingChanges</code> events, SaveChanges interceptors, audit columns set in <code>SaveChanges</code>) does not run. Command interceptors still see the SQL.</li>
 <li>Global query filters still apply. There is no automatic concurrency check, and cascades happen only through the database's own FK rules.</li>
 </ul>
 <p><b>When to use:</b> bulk price changes, archive/cleanup jobs, soft-deleting many rows, counters. <b>When not:</b> when every row needs C# business rules or domain events, or when you need the changed entities in memory right after — then load, change and call <code>SaveChanges()</code>.</p>`,
@@ -247,7 +244,7 @@ window.TL_DAY = {
 <ul>
 <li><code>db.Products.Where(p =&gt; p.Stock == 0).ExecuteDelete()</code> → एक <code>DELETE ... WHERE</code>। <code>ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Price, p =&gt; p.Price * 1.1m))</code> → एक <code>UPDATE ... SET ... WHERE</code>। दोनों <b>EF Core 7</b> में आए।</li>
 <li>ये <b>तुरंत</b> चलते हैं — <code>SaveChanges()</code> की ज़रूरत नहीं — और affected rows की गिनती लौटाते हैं। कोई entity memory में load नहीं होती।</li>
-<li>ये <b>change tracker को bypass</b> करते हैं: memory में पहले से tracked entities update <b>नहीं</b> होतीं (पुरानी पड़ जाती हैं), और SaveChanges पर टिका logic (events, interceptors, <code>SaveChanges</code> में set होने वाले audit columns) नहीं चलता।</li>
+<li>ये <b>change tracker को bypass</b> करते हैं: memory में पहले से tracked entities update <b>नहीं</b> होतीं (पुरानी पड़ जाती हैं), और SaveChanges पर टिका logic (<code>SavingChanges</code> events, SaveChanges interceptors, <code>SaveChanges</code> में set होने वाले audit columns) नहीं चलता। Command interceptors को SQL फिर भी दिखता है।</li>
 <li>Global query filters फिर भी लागू होते हैं। कोई automatic concurrency check नहीं होता, और cascades सिर्फ़ database के अपने FK rules से होते हैं।</li>
 </ul>
 <p><b>कब use करें:</b> bulk price changes, archive/cleanup jobs, कई rows को soft-delete करना, counters। <b>कब नहीं:</b> जब हर row पर C# business rules या domain events चलने हों, या बदली हुई entities तुरंत memory में चाहिए हों — तब load करो, बदलो और <code>SaveChanges()</code> call करो।</p>`,
@@ -255,7 +252,7 @@ window.TL_DAY = {
 <ul>
 <li><code>db.Products.Where(p =&gt; p.Stock == 0).ExecuteDelete()</code> → ek <code>DELETE ... WHERE</code>. <code>ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Price, p =&gt; p.Price * 1.1m))</code> → ek <code>UPDATE ... SET ... WHERE</code>. Dono <b>EF Core 7</b> mein aaye.</li>
 <li>Yeh <b>turant</b> chalte hain — <code>SaveChanges()</code> ki zaroorat nahi — aur affected rows ki ginti lautaate hain. Koi entity memory mein load nahi hoti.</li>
-<li>Yeh <b>change tracker ko bypass</b> karte hain: memory mein pehle se tracked entities update <b>nahi</b> hotin (purani pad jaati hain), aur SaveChanges par tika logic (events, interceptors, <code>SaveChanges</code> mein set hone wale audit columns) nahi chalta.</li>
+<li>Yeh <b>change tracker ko bypass</b> karte hain: memory mein pehle se tracked entities update <b>nahi</b> hotin (purani pad jaati hain), aur SaveChanges par tika logic (<code>SavingChanges</code> events, SaveChanges interceptors, <code>SaveChanges</code> mein set hone wale audit columns) nahi chalta. Command interceptors ko SQL phir bhi dikhta hai.</li>
 <li>Global query filters phir bhi laagu hote hain. Koi automatic concurrency check nahi hota, aur cascades sirf database ke apne FK rules se hote hain.</li>
 </ul>
 <p><b>Kab use karein:</b> bulk price changes, archive/cleanup jobs, kai rows ko soft-delete karna, counters. <b>Kab nahi:</b> jab har row par C# business rules ya domain events chalne hon, ya badli hui entities turant memory mein chahiye hon — tab load karo, badlo aur <code>SaveChanges()</code> call karo.</p>`
@@ -277,7 +274,7 @@ window.TL_DAY = {
 <li><b>Fix 2 — projection</b>: <code>Select(c =&gt; new { c.Name, Total = c.Orders.Sum(o =&gt; o.Total) })</code> — the sum is done <b>by SQL Server</b> in a subquery; only the totals come back.</li>
 <li><b>Fix 3 — one batch query</b>: collect the parent ids, run <b>one</b> <code>Where(o =&gt; ids.Contains(o.CustomerId))</code>, then group in memory. Two queries in total, whatever N is. Useful when the children come from another service or repository.</li>
 <li><b>Cartesian explosion</b>: two collection Includes in one query multiply the rows (a customer with 10 orders and 10 addresses = 100 joined rows). <code>AsSplitQuery()</code> sends one SQL per collection instead. EF logs a warning when you load several collections without choosing a mode. You can set the default with <code>UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)</code> and opt back in per query with <code>AsSingleQuery()</code>.</li>
-<li><b>Split-query trade-off</b>: fewer duplicated rows, but more round trips. Without a transaction (Serializable or snapshot), the split queries can also see data that changed in between. Paging with <code>Skip</code>/<code>Take</code> needs a unique sort order so each split query sees the same rows.</li>
+<li><b>Split-query trade-off</b>: fewer duplicated rows, but more round trips. Without a transaction (Serializable or snapshot), the split queries can also see data that changed in between. Paging with <code>Skip</code>/<code>Take</code> needs a unique sort order so each split query sees the same rows — before EF Core 10, EF could even drop the key from the ordering inside the child query; EF Core 10 fixes that, but a unique order is still your job.</li>
 <li><code>TagWith("Orders page")</code> adds a SQL comment to the query, so you can find it quickly in Query Store, Profiler or the logs.</li>
 </ul>
 <p><b>When to use:</b> projection for read screens, <code>Include</code> when you need whole entities, a batch query across service boundaries, <code>AsSplitQuery()</code> when two or more collections are large. <b>When not:</b> do not switch every query to split mode by habit — for small one-to-many results a single JOIN is usually faster; and do not "fix" N+1 by caching blindly — first remove the extra round trips.</p>`,
@@ -288,7 +285,7 @@ window.TL_DAY = {
 <li><b>Fix 2 — projection</b>: <code>Select(c =&gt; new { c.Name, Total = c.Orders.Sum(o =&gt; o.Total) })</code> — sum <b>SQL Server</b> एक subquery में करता है; वापस सिर्फ़ totals आते हैं।</li>
 <li><b>Fix 3 — एक batch query</b>: parent ids इकट्ठा करो, <b>एक</b> <code>Where(o =&gt; ids.Contains(o.CustomerId))</code> चलाओ, फिर memory में group करो। N कितना भी हो, कुल दो queries। तब काम का जब children किसी दूसरी service या repository से आते हैं।</li>
 <li><b>Cartesian explosion</b>: एक query में दो collection Includes rows को गुणा कर देते हैं (10 orders और 10 addresses वाला customer = 100 joined rows)। <code>AsSplitQuery()</code> इसकी जगह हर collection के लिए एक SQL भेजता है। Mode चुने बिना कई collections load करो तो EF एक warning log करता है। Default <code>UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)</code> से set कर सकते हो और किसी query के लिए <code>AsSingleQuery()</code> से वापस आ सकते हो।</li>
-<li><b>Split-query का trade-off</b>: duplicated rows कम, पर round trips ज़्यादा। Transaction (Serializable या snapshot) के बिना split queries बीच में बदला हुआ data भी देख सकती हैं। <code>Skip</code>/<code>Take</code> वाली paging के लिए unique sort order चाहिए, ताकि हर split query वही rows देखे।</li>
+<li><b>Split-query का trade-off</b>: duplicated rows कम, पर round trips ज़्यादा। Transaction (Serializable या snapshot) के बिना split queries बीच में बदला हुआ data भी देख सकती हैं। <code>Skip</code>/<code>Take</code> वाली paging के लिए unique sort order चाहिए, ताकि हर split query वही rows देखे — EF Core 10 से पहले EF child query के अंदर ordering से key तक छोड़ सकता था; EF Core 10 ने यह ठीक किया, पर unique order देना फिर भी आपका काम है।</li>
 <li><code>TagWith("Orders page")</code> query में एक SQL comment जोड़ता है, ताकि Query Store, Profiler या logs में उसे जल्दी ढूँढ सको।</li>
 </ul>
 <p><b>कब use करें:</b> read screens के लिए projection, पूरी entities चाहिए तो <code>Include</code>, service boundaries के पार batch query, और जब दो या ज़्यादा collections बड़ी हों तो <code>AsSplitQuery()</code>। <b>कब नहीं:</b> आदत से हर query को split mode में मत डालो — छोटे one-to-many results के लिए एक JOIN आमतौर पर तेज़ होता है; और N+1 को आँख बंद करके caching से "fix" मत करो — पहले extra round trips हटाओ।</p>`,
@@ -299,7 +296,7 @@ window.TL_DAY = {
 <li><b>Fix 2 — projection</b>: <code>Select(c =&gt; new { c.Name, Total = c.Orders.Sum(o =&gt; o.Total) })</code> — sum <b>SQL Server</b> ek subquery mein karta hai; wapas sirf totals aate hain.</li>
 <li><b>Fix 3 — ek batch query</b>: parent ids ikattha karo, <b>ek</b> <code>Where(o =&gt; ids.Contains(o.CustomerId))</code> chalao, phir memory mein group karo. N kitna bhi ho, kul do queries. Tab kaam ka jab children kisi doosri service ya repository se aate hain.</li>
 <li><b>Cartesian explosion</b>: ek query mein do collection Includes rows ko guna kar dete hain (10 orders aur 10 addresses wala customer = 100 joined rows). <code>AsSplitQuery()</code> iski jagah har collection ke liye ek SQL bhejta hai. Mode chune bina kai collections load karo to EF ek warning log karta hai. Default <code>UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)</code> se set kar sakte ho aur kisi query ke liye <code>AsSingleQuery()</code> se wapas aa sakte ho.</li>
-<li><b>Split-query ka trade-off</b>: duplicated rows kam, par round trips zyaada. Transaction (Serializable ya snapshot) ke bina split queries beech mein badla hua data bhi dekh sakti hain. <code>Skip</code>/<code>Take</code> wali paging ke liye unique sort order chahiye, taaki har split query wahi rows dekhe.</li>
+<li><b>Split-query ka trade-off</b>: duplicated rows kam, par round trips zyaada. Transaction (Serializable ya snapshot) ke bina split queries beech mein badla hua data bhi dekh sakti hain. <code>Skip</code>/<code>Take</code> wali paging ke liye unique sort order chahiye, taaki har split query wahi rows dekhe — EF Core 10 se pehle EF child query ke andar ordering se key tak chhod sakta tha; EF Core 10 ne yeh theek kiya, par unique order dena phir bhi aapka kaam hai.</li>
 <li><code>TagWith("Orders page")</code> query mein ek SQL comment jodta hai, taaki Query Store, Profiler ya logs mein use jaldi dhoondh sako.</li>
 </ul>
 <p><b>Kab use karein:</b> read screens ke liye projection, poori entities chahiye to <code>Include</code>, service boundaries ke paar batch query, aur jab do ya zyaada collections badi hon to <code>AsSplitQuery()</code>. <b>Kab nahi:</b> aadat se har query ko split mode mein mat daalo — chhote one-to-many results ke liye ek JOIN aamtaur par tez hota hai; aur N+1 ko aankh band karke caching se "fix" mat karo — pehle extra round trips hatao.</p>`
@@ -562,7 +559,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><code>db.Database.SqlQuery&lt;T&gt;</code> returns non-entity types: scalars (EF Core 7) and unmapped DTOs (EF Core 8). To compose LINQ over a scalar query, name the column <code>Value</code> (<code>SELECT Id AS Value ...</code>).</li>
 <li><code>db.Database.ExecuteSql($"...")</code> runs INSERT/UPDATE/DELETE/EXEC and returns rows affected. It does not touch the change tracker, and it joins the current transaction if one is open.</li>
 <li>For views, map a <b>keyless entity</b>: <code>modelBuilder.Entity&lt;SalesRow&gt;().HasNoKey().ToView("vw_Sales")</code>, then query it with plain LINQ.</li>
-<li>EF's analyzer warning <b>EF1002</b> catches an interpolated string passed to <code>FromSqlRaw</code>/<code>ExecuteSqlRaw</code>. In EF Core 9 it does not flag <code>+</code> concatenation — code review still has to catch that.</li>
+<li>EF's analyzer warning <b>EF1002</b> catches an interpolated string passed to <code>FromSqlRaw</code>/<code>ExecuteSqlRaw</code>. In EF Core 9 it does not flag <code>+</code> concatenation; EF Core 10 adds a warning for concatenation inside the raw SQL methods. Code review is still the main guard.</li>
 </ul>
 <p><b>When to use:</b> tuned or complex reports, window functions, query hints, existing stored procedures and views. <b>When not:</b> as the default for CRUD; and never with values glued into the SQL text — if you cannot parameterize it, redesign it.</p>`,
         hi: `<p><b>Analogy — hotel की kitchen:</b> ज़्यादातर guests menu से order करते हैं (LINQ) और chef को ठीक पता होता है क्या करना है। कभी-कभी एक पुराना guest chef को अपनी <b>खुद की recipe</b> देता है (raw SQL)। Chef फिर भी उसे hotel की plates में परोसता है (आपकी entity types), और waiter ऊपर से garnish डाल सकता है (आपके SQL के ऊपर LINQ) — पर अब hotel guest की recipe पर भरोसा कर रहा है।</p>
@@ -574,7 +571,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><code>db.Database.SqlQuery&lt;T&gt;</code> non-entity types लौटाता है: scalars (EF Core 7) और unmapped DTOs (EF Core 8)। Scalar query पर LINQ compose करना हो तो column का नाम <code>Value</code> रखो (<code>SELECT Id AS Value ...</code>)।</li>
 <li><code>db.Database.ExecuteSql($"...")</code> INSERT/UPDATE/DELETE/EXEC चलाता है और affected rows लौटाता है। यह change tracker को नहीं छूता, और अगर कोई transaction खुला है तो उसी में शामिल होता है।</li>
 <li>Views के लिए एक <b>keyless entity</b> map करो: <code>modelBuilder.Entity&lt;SalesRow&gt;().HasNoKey().ToView("vw_Sales")</code>, फिर उसे सीधे LINQ से query करो।</li>
-<li>EF का analyzer warning <b>EF1002</b> तब पकड़ता है जब <code>FromSqlRaw</code>/<code>ExecuteSqlRaw</code> को interpolated string दी जाए। EF Core 9 में यह <code>+</code> से जोड़ी गई string को flag नहीं करता — उसे code review में ही पकड़ना होगा।</li>
+<li>EF का analyzer warning <b>EF1002</b> तब पकड़ता है जब <code>FromSqlRaw</code>/<code>ExecuteSqlRaw</code> को interpolated string दी जाए। EF Core 9 में यह <code>+</code> से जोड़ी गई string को flag नहीं करता; EF Core 10 raw SQL methods के अंदर string जोड़ने पर भी warning देता है। फिर भी असली पहरा code review का है।</li>
 </ul>
 <p><b>कब use करें:</b> tuned या complex reports, window functions, query hints, पहले से बने stored procedures और views। <b>कब नहीं:</b> CRUD के लिए default की तरह; और SQL text में चिपकाई गई values के साथ तो कभी नहीं — अगर parameterize नहीं कर सकते, तो design बदलो।</p>`,
         hg: `<p><b>Analogy — hotel ki kitchen:</b> zyaadatar guests menu se order karte hain (LINQ) aur chef ko theek pata hota hai kya karna hai. Kabhi-kabhi ek purana guest chef ko apni <b>khud ki recipe</b> deta hai (raw SQL). Chef phir bhi use hotel ki plates mein parosta hai (aapki entity types), aur waiter upar se garnish daal sakta hai (aapke SQL ke upar LINQ) — par ab hotel guest ki recipe par bharosa kar raha hai.</p>
@@ -586,7 +583,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><code>db.Database.SqlQuery&lt;T&gt;</code> non-entity types lautaata hai: scalars (EF Core 7) aur unmapped DTOs (EF Core 8). Scalar query par LINQ compose karna ho to column ka naam <code>Value</code> rakho (<code>SELECT Id AS Value ...</code>).</li>
 <li><code>db.Database.ExecuteSql($"...")</code> INSERT/UPDATE/DELETE/EXEC chalata hai aur affected rows lautaata hai. Yeh change tracker ko nahi chhoota, aur agar koi transaction khula hai to usi mein shaamil hota hai.</li>
 <li>Views ke liye ek <b>keyless entity</b> map karo: <code>modelBuilder.Entity&lt;SalesRow&gt;().HasNoKey().ToView("vw_Sales")</code>, phir use seedhe LINQ se query karo.</li>
-<li>EF ka analyzer warning <b>EF1002</b> tab pakadta hai jab <code>FromSqlRaw</code>/<code>ExecuteSqlRaw</code> ko interpolated string di jaaye. EF Core 9 mein yeh <code>+</code> se jodi gayi string ko flag nahi karta — use code review mein hi pakadna hoga.</li>
+<li>EF ka analyzer warning <b>EF1002</b> tab pakadta hai jab <code>FromSqlRaw</code>/<code>ExecuteSqlRaw</code> ko interpolated string di jaaye. EF Core 9 mein yeh <code>+</code> se jodi gayi string ko flag nahi karta; EF Core 10 raw SQL methods ke andar string jodne par bhi warning deta hai. Phir bhi asli pehra code review ka hai.</li>
 </ul>
 <p><b>Kab use karein:</b> tuned ya complex reports, window functions, query hints, pehle se bane stored procedures aur views. <b>Kab nahi:</b> CRUD ke liye default ki tarah; aur SQL text mein chipkaayi gayi values ke saath to kabhi nahi — agar parameterize nahi kar sakte, to design badlo.</p>`
       },
@@ -734,7 +731,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>Explicit transaction</b>: <code>using var tx = db.Database.BeginTransaction();</code> → several <code>SaveChanges()</code>, <code>ExecuteUpdate</code> or <code>ExecuteSql</code> calls → <code>tx.Commit();</code>. Disposing without <code>Commit()</code> rolls everything back. Isolation is the database default (Read Committed on SQL Server) unless you pass one: <code>BeginTransaction(IsolationLevel.Serializable)</code>.</li>
 <li><b>Savepoints</b> (EF Core 5+): inside your transaction, each <code>SaveChanges()</code> creates a savepoint first. If it fails, EF rolls back to that savepoint only, so your earlier work in the transaction is still there.</li>
 <li><b>Sharing a transaction</b> with Dapper or plain ADO.NET: use the same connection, take <code>db.Database.GetDbTransaction()</code> for the other code, or hand an existing <code>DbTransaction</code> to EF with <code>db.Database.UseTransaction(tx)</code>.</li>
-<li><b>Retries</b>: <code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure())</code> retries transient errors (Azure SQL failover, network blips). With retries on, a <code>BeginTransaction()</code> outside the strategy throws <code>InvalidOperationException</code> — you must run the whole unit inside <code>db.Database.CreateExecutionStrategy().Execute(...)</code>.</li>
+<li><b>Retries</b>: <code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure())</code> retries transient errors (Azure SQL failover, network blips). With retries on, if you open a transaction outside the strategy, the next <code>SaveChanges()</code> or query that the strategy runs throws <code>InvalidOperationException</code> — so run the whole unit inside <code>db.Database.CreateExecutionStrategy().Execute(...)</code>.</li>
 <li>The retried block must be safe to run again: start each attempt from a clean change tracker (or a new DbContext), and do not call external services inside it.</li>
 <li><b>TransactionScope</b>: works with EF Core, but its default isolation is <b>Serializable</b> (more blocking than you expect), <code>async</code> code needs <code>TransactionScopeAsyncFlowOption.Enabled</code>, and two different connections inside one scope can escalate to a distributed transaction, which modern .NET supports only on Windows and only when you opt in. Prefer <code>BeginTransaction()</code> on one connection.</li>
 </ul>
@@ -744,7 +741,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>Explicit transaction</b>: <code>using var tx = db.Database.BeginTransaction();</code> → कई <code>SaveChanges()</code>, <code>ExecuteUpdate</code> या <code>ExecuteSql</code> calls → <code>tx.Commit();</code>। <code>Commit()</code> के बिना dispose किया तो सब rollback। Isolation database का default रहता है (SQL Server पर Read Committed), जब तक आप खुद न दो: <code>BeginTransaction(IsolationLevel.Serializable)</code>।</li>
 <li><b>Savepoints</b> (EF Core 5+): आपके transaction के अंदर हर <code>SaveChanges()</code> पहले एक savepoint बनाता है। Fail हुआ तो EF सिर्फ़ उसी savepoint तक rollback करता है, इसलिए transaction में आपका पहले का काम बचा रहता है।</li>
 <li>Dapper या plain ADO.NET के साथ <b>transaction share करना</b>: वही connection use करो, दूसरे code के लिए <code>db.Database.GetDbTransaction()</code> लो, या पहले से बना <code>DbTransaction</code> <code>db.Database.UseTransaction(tx)</code> से EF को दो।</li>
-<li><b>Retries</b>: <code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure())</code> transient errors (Azure SQL failover, network की छोटी गड़बड़) को retry करता है। Retries चालू हों तो strategy के बाहर <code>BeginTransaction()</code> करने पर <code>InvalidOperationException</code> आता है — पूरा unit <code>db.Database.CreateExecutionStrategy().Execute(...)</code> के अंदर चलाना पड़ता है।</li>
+<li><b>Retries</b>: <code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure())</code> transient errors (Azure SQL failover, network की छोटी गड़बड़) को retry करता है। Retries चालू हों और आप strategy के बाहर transaction खोलो, तो strategy का चलाया अगला <code>SaveChanges()</code> या query <code>InvalidOperationException</code> throw करता है — इसलिए पूरा unit <code>db.Database.CreateExecutionStrategy().Execute(...)</code> के अंदर चलाओ।</li>
 <li>Retry होने वाला block दोबारा चलने लायक होना चाहिए: हर attempt साफ़ change tracker (या नए DbContext) से शुरू करो, और उसके अंदर external services call मत करो।</li>
 <li><b>TransactionScope</b>: EF Core के साथ चलता है, पर इसका default isolation <b>Serializable</b> है (उम्मीद से ज़्यादा blocking), <code>async</code> code के लिए <code>TransactionScopeAsyncFlowOption.Enabled</code> चाहिए, और एक scope में दो अलग connections distributed transaction तक escalate हो सकते हैं, जो modern .NET सिर्फ़ Windows पर और सिर्फ़ opt-in करने पर support करता है। एक connection पर <code>BeginTransaction()</code> बेहतर है।</li>
 </ul>
@@ -754,7 +751,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>Explicit transaction</b>: <code>using var tx = db.Database.BeginTransaction();</code> → kai <code>SaveChanges()</code>, <code>ExecuteUpdate</code> ya <code>ExecuteSql</code> calls → <code>tx.Commit();</code>. <code>Commit()</code> ke bina dispose kiya to sab rollback. Isolation database ka default rehta hai (SQL Server par Read Committed), jab tak aap khud na do: <code>BeginTransaction(IsolationLevel.Serializable)</code>.</li>
 <li><b>Savepoints</b> (EF Core 5+): aapke transaction ke andar har <code>SaveChanges()</code> pehle ek savepoint banata hai. Fail hua to EF sirf usi savepoint tak rollback karta hai, isliye transaction mein aapka pehle ka kaam bacha rehta hai.</li>
 <li>Dapper ya plain ADO.NET ke saath <b>transaction share karna</b>: wahi connection use karo, doosre code ke liye <code>db.Database.GetDbTransaction()</code> lo, ya pehle se bana <code>DbTransaction</code> <code>db.Database.UseTransaction(tx)</code> se EF ko do.</li>
-<li><b>Retries</b>: <code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure())</code> transient errors (Azure SQL failover, network ki chhoti gadbad) ko retry karta hai. Retries chaalu hon to strategy ke baahar <code>BeginTransaction()</code> karne par <code>InvalidOperationException</code> aata hai — poora unit <code>db.Database.CreateExecutionStrategy().Execute(...)</code> ke andar chalana padta hai.</li>
+<li><b>Retries</b>: <code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure())</code> transient errors (Azure SQL failover, network ki chhoti gadbad) ko retry karta hai. Retries chaalu hon aur aap strategy ke baahar transaction kholo, to strategy ka chalaaya agla <code>SaveChanges()</code> ya query <code>InvalidOperationException</code> throw karta hai — isliye poora unit <code>db.Database.CreateExecutionStrategy().Execute(...)</code> ke andar chalao.</li>
 <li>Retry hone wala block dobara chalne laayak hona chahiye: har attempt saaf change tracker (ya naye DbContext) se shuru karo, aur uske andar external services call mat karo.</li>
 <li><b>TransactionScope</b>: EF Core ke saath chalta hai, par iska default isolation <b>Serializable</b> hai (ummeed se zyaada blocking), <code>async</code> code ke liye <code>TransactionScopeAsyncFlowOption.Enabled</code> chahiye, aur ek scope mein do alag connections distributed transaction tak escalate ho sakte hain, jo modern .NET sirf Windows par aur sirf opt-in karne par support karta hai. Ek connection par <code>BeginTransaction()</code> behtar hai.</li>
 </ul>
@@ -958,7 +955,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>SQL Server</b>: <code>[Timestamp] public byte[] Version { get; set; }</code> (or <code>.IsRowVersion()</code>) creates a <code>rowversion</code> column. SQL Server changes it on <b>every</b> update. EF puts the original value in the <code>WHERE</code> and reads the new value back with <code>OUTPUT INSERTED.[Version]</code> — see the SQL below.</li>
 <li><b>Any column</b>: <code>[ConcurrencyCheck]</code> or <code>.IsConcurrencyToken()</code> adds that column to the <code>WHERE</code>. It only notices changes to <b>that</b> column, and you must change the value yourself — for example a <code>Version</code> integer you increase in a <code>SaveChanges</code> override.</li>
 <li>When the UPDATE/DELETE affects 0 rows, EF throws <code>DbUpdateConcurrencyException</code>. <code>ex.Entries</code> gives the failed entries; <code>entry.GetDatabaseValues()</code> reads the current row (<code>null</code> = someone deleted it).</li>
-<li><b>Store wins</b>: <code>entry.Reload()</code> — drop your change, show the latest data. <b>Client wins</b>: <code>entry.OriginalValues.SetValues(databaseValues)</code>, then save again — your values overwrite theirs. <b>Merge</b>: compare property by property and let the user decide.</li>
+<li><b>Store wins</b> ("database wins"): <code>entry.Reload()</code> — drop your change, show the latest data. <b>Client wins</b>: <code>entry.OriginalValues.SetValues(databaseValues)</code>, then save again — your values overwrite theirs. <b>Merge</b>: compare property by property and let the user decide.</li>
 <li><b>Web APIs</b>: the "original value" must be what the <b>user saw</b>, not what you loaded a millisecond ago. Send the version to the client (often as an <code>ETag</code>), take it back with the PUT, and set <code>db.Entry(product).Property(p =&gt; p.Version).OriginalValue = dto.Version</code> before saving. Return <code>409 Conflict</code> (or <code>412</code> with <code>If-Match</code>) on a conflict.</li>
 <li>Even without a token, an UPDATE/DELETE that hits 0 rows (for example, the row was deleted) raises the same exception.</li>
 </ul>
@@ -968,7 +965,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>SQL Server</b>: <code>[Timestamp] public byte[] Version { get; set; }</code> (या <code>.IsRowVersion()</code>) एक <code>rowversion</code> column बनाता है। SQL Server इसे <b>हर</b> update पर बदलता है। EF original value को <code>WHERE</code> में डालता है और नई value <code>OUTPUT INSERTED.[Version]</code> से वापस पढ़ता है — नीचे SQL देखो।</li>
 <li><b>कोई भी column</b>: <code>[ConcurrencyCheck]</code> या <code>.IsConcurrencyToken()</code> उस column को <code>WHERE</code> में जोड़ता है। यह सिर्फ़ <b>उसी</b> column के बदलाव पकड़ता है, और value आपको खुद बदलनी पड़ती है — जैसे एक <code>Version</code> integer जिसे आप <code>SaveChanges</code> override में बढ़ाते हो।</li>
 <li>जब UPDATE/DELETE 0 rows पर असर करे, EF <code>DbUpdateConcurrencyException</code> throw करता है। <code>ex.Entries</code> fail हुई entries देता है; <code>entry.GetDatabaseValues()</code> मौजूदा row पढ़ता है (<code>null</code> = किसी ने उसे delete कर दिया)।</li>
-<li><b>Store wins</b>: <code>entry.Reload()</code> — अपना बदलाव छोड़ो, latest data दिखाओ। <b>Client wins</b>: <code>entry.OriginalValues.SetValues(databaseValues)</code>, फिर दोबारा save — आपकी values उनकी values को overwrite करती हैं। <b>Merge</b>: property-by-property compare करो और user को तय करने दो।</li>
+<li><b>Store wins</b> ("database wins"): <code>entry.Reload()</code> — अपना बदलाव छोड़ो, latest data दिखाओ। <b>Client wins</b>: <code>entry.OriginalValues.SetValues(databaseValues)</code>, फिर दोबारा save — आपकी values उनकी values को overwrite करती हैं। <b>Merge</b>: property-by-property compare करो और user को तय करने दो।</li>
 <li><b>Web APIs</b>: "original value" वो होनी चाहिए जो <b>user ने देखी</b>, वो नहीं जो आपने एक millisecond पहले load की। Version client को भेजो (अक्सर <code>ETag</code> के रूप में), PUT के साथ वापस लो, और save से पहले <code>db.Entry(product).Property(p =&gt; p.Version).OriginalValue = dto.Version</code> set करो। Conflict पर <code>409 Conflict</code> (या <code>If-Match</code> के साथ <code>412</code>) लौटाओ।</li>
 <li>Token के बिना भी, अगर UPDATE/DELETE 0 rows पर लगे (जैसे row delete हो चुकी), तो यही exception आता है।</li>
 </ul>
@@ -978,7 +975,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>SQL Server</b>: <code>[Timestamp] public byte[] Version { get; set; }</code> (ya <code>.IsRowVersion()</code>) ek <code>rowversion</code> column banata hai. SQL Server ise <b>har</b> update par badalta hai. EF original value ko <code>WHERE</code> mein daalta hai aur nayi value <code>OUTPUT INSERTED.[Version]</code> se wapas padhta hai — neeche SQL dekho.</li>
 <li><b>Koi bhi column</b>: <code>[ConcurrencyCheck]</code> ya <code>.IsConcurrencyToken()</code> us column ko <code>WHERE</code> mein jodta hai. Yeh sirf <b>usi</b> column ke badlaav pakadta hai, aur value aapko khud badalni padti hai — jaise ek <code>Version</code> integer jise aap <code>SaveChanges</code> override mein badhaate ho.</li>
 <li>Jab UPDATE/DELETE 0 rows par asar kare, EF <code>DbUpdateConcurrencyException</code> throw karta hai. <code>ex.Entries</code> fail hui entries deta hai; <code>entry.GetDatabaseValues()</code> maujooda row padhta hai (<code>null</code> = kisi ne use delete kar diya).</li>
-<li><b>Store wins</b>: <code>entry.Reload()</code> — apna badlaav chhodo, latest data dikhao. <b>Client wins</b>: <code>entry.OriginalValues.SetValues(databaseValues)</code>, phir dobara save — aapki values unki values ko overwrite karti hain. <b>Merge</b>: property-by-property compare karo aur user ko tay karne do.</li>
+<li><b>Store wins</b> ("database wins"): <code>entry.Reload()</code> — apna badlaav chhodo, latest data dikhao. <b>Client wins</b>: <code>entry.OriginalValues.SetValues(databaseValues)</code>, phir dobara save — aapki values unki values ko overwrite karti hain. <b>Merge</b>: property-by-property compare karo aur user ko tay karne do.</li>
 <li><b>Web APIs</b>: "original value" woh honi chahiye jo <b>user ne dekhi</b>, woh nahi jo aapne ek millisecond pehle load ki. Version client ko bhejo (aksar <code>ETag</code> ke roop mein), PUT ke saath wapas lo, aur save se pehle <code>db.Entry(product).Property(p =&gt; p.Version).OriginalValue = dto.Version</code> set karo. Conflict par <code>409 Conflict</code> (ya <code>If-Match</code> ke saath <code>412</code>) lautaao.</li>
 <li>Token ke bina bhi, agar UPDATE/DELETE 0 rows par lage (jaise row delete ho chuki), to yahi exception aata hai.</li>
 </ul>
@@ -1428,7 +1425,7 @@ await db.Products
 <li><b>Compiled queries</b>: EF already caches the translation of each query shape. <code>EF.CompileQuery</code>/<code>EF.CompileAsyncQuery</code> also skip the cache lookup (hashing and comparing the expression tree) — a small gain that matters only for very hot, simple queries. Measure with a benchmark before adding them.</li>
 <li><b>Compiled model</b> (<code>dotnet ef dbcontext optimize</code>) is a different thing: it speeds up <b>startup</b> for models with hundreds of entities.</li>
 <li><b>DbContext pooling</b> (<code>AddDbContextPool</code>, Day 5) reuses context instances under high load. <b>Async</b> (<code>ToListAsync</code>) does not make one query faster, but frees threads so the server handles more requests.</li>
-<li><b>Big exports</b>: stream with <code>AsAsyncEnumerable()</code> instead of <code>ToListAsync()</code>, so rows are processed one by one instead of all held in memory.</li>
+<li><b>Big exports</b>: stream with <code>AsNoTracking()</code> + <code>AsAsyncEnumerable()</code> instead of <code>ToListAsync()</code>, so rows are processed one by one instead of all held in memory (no tracking, or the change tracker keeps every row anyway). Caveat: EF buffers the results itself when a retrying execution strategy is on, and for all but the last query of a split query (unless MARS is enabled).</li>
 <li><b>See everything</b>: <code>LogTo</code> or the <code>Microsoft.EntityFrameworkCore.Database.Command</code> log category at Information; <code>EnableSensitiveDataLogging()</code> (shows parameter values) in development only.</li>
 </ul>
 <p><b>When to use:</b> the basics (no-tracking reads, projections, paging, indexes, no N+1) on every query; compiled queries, pooling and compiled models only where a profiler or benchmark shows the need. <b>When not:</b> do not micro-optimize before you have looked at the SQL and the execution plan — most EF slowness is a missing index, a missing filter, or too many round trips.</p>`,
@@ -1440,7 +1437,7 @@ await db.Products
 <li><b>Compiled queries</b>: EF हर query shape का translation पहले से cache करता है। <code>EF.CompileQuery</code>/<code>EF.CompileAsyncQuery</code> cache lookup (expression tree की hashing और comparison) भी skip कर देते हैं — छोटा फ़ायदा, जो सिर्फ़ बहुत hot और simple queries में मायने रखता है। इन्हें जोड़ने से पहले benchmark से measure करो।</li>
 <li><b>Compiled model</b> (<code>dotnet ef dbcontext optimize</code>) अलग चीज़ है: यह सैकड़ों entities वाले models का <b>startup</b> तेज़ करता है।</li>
 <li><b>DbContext pooling</b> (<code>AddDbContextPool</code>, Day 5) high load में context instances दोबारा use करता है। <b>Async</b> (<code>ToListAsync</code>) एक query को तेज़ नहीं करता, पर threads खाली करता है ताकि server ज़्यादा requests संभाल सके।</li>
-<li><b>बड़े exports</b>: <code>ToListAsync()</code> की बजाय <code>AsAsyncEnumerable()</code> से stream करो, ताकि सारी rows memory में रखने की बजाय एक-एक करके process हों।</li>
+<li><b>बड़े exports</b>: <code>ToListAsync()</code> की बजाय <code>AsNoTracking()</code> + <code>AsAsyncEnumerable()</code> से stream करो, ताकि सारी rows memory में रखने की बजाय एक-एक करके process हों (tracking नहीं, वरना change tracker हर row फिर भी रख लेता है)। ध्यान दो: retrying execution strategy चालू हो तो EF results खुद buffer करता है, और split query में आख़िरी query को छोड़कर बाकी सबके results भी (जब तक MARS चालू न हो)।</li>
 <li><b>सब कुछ देखो</b>: <code>LogTo</code> या Information level पर <code>Microsoft.EntityFrameworkCore.Database.Command</code> log category; <code>EnableSensitiveDataLogging()</code> (parameter values दिखाता है) सिर्फ़ development में।</li>
 </ul>
 <p><b>कब use करें:</b> basics (no-tracking reads, projections, paging, indexes, N+1 नहीं) हर query पर; compiled queries, pooling और compiled models सिर्फ़ वहाँ जहाँ profiler या benchmark ज़रूरत दिखाए। <b>कब नहीं:</b> SQL और execution plan देखने से पहले micro-optimize मत करो — EF की ज़्यादातर धीमापन missing index, missing filter, या बहुत ज़्यादा round trips से आता है।</p>`,
@@ -1452,7 +1449,7 @@ await db.Products
 <li><b>Compiled queries</b>: EF har query shape ka translation pehle se cache karta hai. <code>EF.CompileQuery</code>/<code>EF.CompileAsyncQuery</code> cache lookup (expression tree ki hashing aur comparison) bhi skip kar dete hain — chhota faayda, jo sirf bahut hot aur simple queries mein maayne rakhta hai. Inhe jodne se pehle benchmark se measure karo.</li>
 <li><b>Compiled model</b> (<code>dotnet ef dbcontext optimize</code>) alag cheez hai: yeh saikdon entities wale models ka <b>startup</b> tez karta hai.</li>
 <li><b>DbContext pooling</b> (<code>AddDbContextPool</code>, Day 5) high load mein context instances dobara use karta hai. <b>Async</b> (<code>ToListAsync</code>) ek query ko tez nahi karta, par threads khaali karta hai taaki server zyaada requests sambhaal sake.</li>
-<li><b>Bade exports</b>: <code>ToListAsync()</code> ki bajaay <code>AsAsyncEnumerable()</code> se stream karo, taaki saari rows memory mein rakhne ki bajaay ek-ek karke process hon.</li>
+<li><b>Bade exports</b>: <code>ToListAsync()</code> ki bajaay <code>AsNoTracking()</code> + <code>AsAsyncEnumerable()</code> se stream karo, taaki saari rows memory mein rakhne ki bajaay ek-ek karke process hon (tracking nahi, warna change tracker har row phir bhi rakh leta hai). Dhyaan do: retrying execution strategy chaalu ho to EF results khud buffer karta hai, aur split query mein aakhri query ko chhodkar baaki sabke results bhi (jab tak MARS chaalu na ho).</li>
 <li><b>Sab kuch dekho</b>: <code>LogTo</code> ya Information level par <code>Microsoft.EntityFrameworkCore.Database.Command</code> log category; <code>EnableSensitiveDataLogging()</code> (parameter values dikhata hai) sirf development mein.</li>
 </ul>
 <p><b>Kab use karein:</b> basics (no-tracking reads, projections, paging, indexes, N+1 nahi) har query par; compiled queries, pooling aur compiled models sirf wahan jahan profiler ya benchmark zaroorat dikhaaye. <b>Kab nahi:</b> SQL aur execution plan dekhne se pehle micro-optimize mat karo — EF ka zyaadatar dheemapan missing index, missing filter, ya bahut zyaada round trips se aata hai.</p>`
@@ -1555,7 +1552,7 @@ var grid = db.Orders
     .Take(size);
 Console.WriteLine(grid.ToQueryString());
 
-/* Output (parameter names like @__p_0 can differ between EF Core versions):
+/* Output on EF Core 9 (EF Core 10 uses simpler parameter names, e.g. @p instead of @__p_0):
 CREATE TABLE [Orders] (
     [Id] int NOT NULL IDENTITY,
     [Status] nvarchar(20) NOT NULL,
@@ -1723,24 +1720,24 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         en: `<ul>
 <li><code>FromSql($"SELECT * FROM Customers WHERE City = {city}")</code> → SQL text has <code>@p0</code>; the value travels separately. Same for <code>ExecuteSql</code> and <code>SqlQuery</code>.</li>
 <li><code>FromSqlRaw("... WHERE City = '" + city + "'")</code> → the input becomes part of the SQL. Input <code>Pune' OR '1'='1</code> returns every row (see the puzzle).</li>
-<li>The analyzer warning <b>EF1002</b> flags interpolated strings passed to the <code>Raw</code> methods; it does not catch <code>+</code> concatenation, so code review must.</li>
+<li>The analyzer warning <b>EF1002</b> flags interpolated strings passed to the <code>Raw</code> methods. On EF Core 9 it does not catch <code>+</code> concatenation; EF Core 10 adds that warning. Code review must still check.</li>
 <li>Identifiers (table/column names, sort direction) cannot be parameters — map user choices through an allow-list.</li>
 </ul>
-<p>Follow-up: "Can you compose LINQ over FromSql?" — Yes, if the SQL is a composable <code>SELECT</code>; EF wraps it in a subquery. Not over <code>EXEC</code> — use <code>AsEnumerable()</code> after a stored procedure.</p>`,
+<p>Follow-up: "Can you compose LINQ over FromSql?" — Yes, if the SQL is a composable <code>SELECT</code>; EF wraps it in a subquery. Not over <code>EXEC</code> — to add LINQ after a stored procedure, call <code>AsEnumerable()</code> first.</p>`,
         hi: `<ul>
 <li><code>FromSql($"SELECT * FROM Customers WHERE City = {city}")</code> → SQL text में <code>@p0</code> होता है; value अलग से जाती है। <code>ExecuteSql</code> और <code>SqlQuery</code> के लिए भी यही।</li>
 <li><code>FromSqlRaw("... WHERE City = '" + city + "'")</code> → input SQL का हिस्सा बन जाता है। Input <code>Pune' OR '1'='1</code> हर row लौटा देता है (puzzle देखो)।</li>
-<li>Analyzer warning <b>EF1002</b> <code>Raw</code> methods को दी गई interpolated strings को flag करता है; <code>+</code> से जोड़ना नहीं पकड़ता, इसलिए code review को पकड़ना होगा।</li>
+<li>Analyzer warning <b>EF1002</b> <code>Raw</code> methods को दी गई interpolated strings को flag करता है। EF Core 9 पर यह <code>+</code> से जोड़ना नहीं पकड़ता; EF Core 10 वो warning भी जोड़ता है। Code review को फिर भी check करना है।</li>
 <li>Identifiers (table/column names, sort direction) parameters नहीं बन सकते — user की choices को एक allow-list से map करो।</li>
 </ul>
-<p>Follow-up: "क्या FromSql के ऊपर LINQ compose कर सकते हैं?" — हाँ, अगर SQL एक composable <code>SELECT</code> है; EF उसे subquery में लपेटता है। <code>EXEC</code> के ऊपर नहीं — stored procedure के बाद <code>AsEnumerable()</code> लगाओ।</p>`,
+<p>Follow-up: "क्या FromSql के ऊपर LINQ compose कर सकते हैं?" — हाँ, अगर SQL एक composable <code>SELECT</code> है; EF उसे subquery में लपेटता है। <code>EXEC</code> के ऊपर नहीं — stored procedure के बाद LINQ जोड़ना हो तो पहले <code>AsEnumerable()</code> call करो।</p>`,
         hg: `<ul>
 <li><code>FromSql($"SELECT * FROM Customers WHERE City = {city}")</code> → SQL text mein <code>@p0</code> hota hai; value alag se jaati hai. <code>ExecuteSql</code> aur <code>SqlQuery</code> ke liye bhi yahi.</li>
 <li><code>FromSqlRaw("... WHERE City = '" + city + "'")</code> → input SQL ka hissa ban jaata hai. Input <code>Pune' OR '1'='1</code> har row lauta deta hai (puzzle dekho).</li>
-<li>Analyzer warning <b>EF1002</b> <code>Raw</code> methods ko di gayi interpolated strings ko flag karta hai; <code>+</code> se jodna nahi pakadta, isliye code review ko pakadna hoga.</li>
+<li>Analyzer warning <b>EF1002</b> <code>Raw</code> methods ko di gayi interpolated strings ko flag karta hai. EF Core 9 par yeh <code>+</code> se jodna nahi pakadta; EF Core 10 woh warning bhi jodta hai. Code review ko phir bhi check karna hai.</li>
 <li>Identifiers (table/column names, sort direction) parameters nahi ban sakte — user ki choices ko ek allow-list se map karo.</li>
 </ul>
-<p>Follow-up: "Kya FromSql ke upar LINQ compose kar sakte hain?" — Haan, agar SQL ek composable <code>SELECT</code> hai; EF use subquery mein lapetta hai. <code>EXEC</code> ke upar nahi — stored procedure ke baad <code>AsEnumerable()</code> lagao.</p>`
+<p>Follow-up: "Kya FromSql ke upar LINQ compose kar sakte hain?" — Haan, agar SQL ek composable <code>SELECT</code> hai; EF use subquery mein lapetta hai. <code>EXEC</code> ke upar nahi — stored procedure ke baad LINQ jodna ho to pehle <code>AsEnumerable()</code> call karo.</p>`
       }
     },
     {
@@ -1826,7 +1823,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><code>db.Products.Where(p =&gt; p.Stock == 0).ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Price, p =&gt; p.Price * 1.1m))</code> → <code>UPDATE [p] SET [p].[Price] = [p].[Price] * 1.1 FROM [Products] AS [p] WHERE [p].[Stock] = 0</code>.</li>
 <li>Before EF Core 7 you loaded every row, changed it in C#, and <code>SaveChanges()</code> sent one UPDATE per row (batched, but still per row) — or you wrote raw SQL.</li>
 <li>They run immediately (no <code>SaveChanges()</code>), return rows affected, apply global query filters, and join an open transaction.</li>
-<li>Not updated: entities already tracked in memory. Not run: SaveChanges events, interceptors and overrides. Not checked: concurrency tokens (unless you add them to the <code>Where</code>).</li>
+<li>Not updated: entities already tracked in memory. Not run: SaveChanges events, SaveChanges interceptors and overrides (command interceptors still fire). Not checked: concurrency tokens (unless you add them to the <code>Where</code>).</li>
 </ul>
 <p>Follow-up: "How do you keep audit columns correct?" — set them in the same call: <code>.SetProperty(p =&gt; p.UpdatedOn, now)</code>.</p>
 <p>Follow-up: "Do they work with SQLite/PostgreSQL?" — Yes, they are relational features; each provider writes its own SQL.</p>`,
@@ -1834,7 +1831,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><code>db.Products.Where(p =&gt; p.Stock == 0).ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Price, p =&gt; p.Price * 1.1m))</code> → <code>UPDATE [p] SET [p].[Price] = [p].[Price] * 1.1 FROM [Products] AS [p] WHERE [p].[Stock] = 0</code>।</li>
 <li>EF Core 7 से पहले आप हर row load करते थे, C# में बदलते थे, और <code>SaveChanges()</code> हर row के लिए एक UPDATE भेजता था (batched, पर फिर भी हर row का) — या आप raw SQL लिखते थे।</li>
 <li>ये तुरंत चलते हैं (<code>SaveChanges()</code> नहीं), affected rows लौटाते हैं, global query filters लगाते हैं, और खुले transaction में शामिल होते हैं।</li>
-<li>Update नहीं होतीं: memory में पहले से tracked entities। नहीं चलते: SaveChanges events, interceptors और overrides। Check नहीं होते: concurrency tokens (जब तक आप उन्हें <code>Where</code> में न जोड़ो)।</li>
+<li>Update नहीं होतीं: memory में पहले से tracked entities। नहीं चलते: SaveChanges events, SaveChanges interceptors और overrides (command interceptors फिर भी चलते हैं)। Check नहीं होते: concurrency tokens (जब तक आप उन्हें <code>Where</code> में न जोड़ो)।</li>
 </ul>
 <p>Follow-up: "Audit columns सही कैसे रखोगे?" — उसी call में set करो: <code>.SetProperty(p =&gt; p.UpdatedOn, now)</code>।</p>
 <p>Follow-up: "क्या ये SQLite/PostgreSQL पर चलते हैं?" — हाँ, ये relational features हैं; हर provider अपना SQL लिखता है।</p>`,
@@ -1842,7 +1839,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><code>db.Products.Where(p =&gt; p.Stock == 0).ExecuteUpdate(s =&gt; s.SetProperty(p =&gt; p.Price, p =&gt; p.Price * 1.1m))</code> → <code>UPDATE [p] SET [p].[Price] = [p].[Price] * 1.1 FROM [Products] AS [p] WHERE [p].[Stock] = 0</code>.</li>
 <li>EF Core 7 se pehle aap har row load karte the, C# mein badalte the, aur <code>SaveChanges()</code> har row ke liye ek UPDATE bhejta tha (batched, par phir bhi har row ka) — ya aap raw SQL likhte the.</li>
 <li>Yeh turant chalte hain (<code>SaveChanges()</code> nahi), affected rows lautaate hain, global query filters lagaate hain, aur khule transaction mein shaamil hote hain.</li>
-<li>Update nahi hotin: memory mein pehle se tracked entities. Nahi chalte: SaveChanges events, interceptors aur overrides. Check nahi hote: concurrency tokens (jab tak aap unhe <code>Where</code> mein na jodo).</li>
+<li>Update nahi hotin: memory mein pehle se tracked entities. Nahi chalte: SaveChanges events, SaveChanges interceptors aur overrides (command interceptors phir bhi chalte hain). Check nahi hote: concurrency tokens (jab tak aap unhe <code>Where</code> mein na jodo).</li>
 </ul>
 <p>Follow-up: "Audit columns sahi kaise rakhoge?" — usi call mein set karo: <code>.SetProperty(p =&gt; p.UpdatedOn, now)</code>.</p>
 <p>Follow-up: "Kya yeh SQLite/PostgreSQL par chalte hain?" — Haan, yeh relational features hain; har provider apna SQL likhta hai.</p>`
@@ -1865,7 +1862,8 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>Database side</b>: indexes on filter/sort columns (EF only indexes keys and FKs), covering/filtered indexes, check the execution plan.</li>
 <li><b>No client evaluation</b>: EF Core 3.0+ throws if a filter cannot be translated — never "fix" that with an early <code>ToList()</code> on a big table.</li>
 </ul>
-<p>Follow-up: "How do you prove it is faster?" — compare query count, duration and logical reads (<code>SET STATISTICS IO ON</code>) before and after; for C# micro-paths use BenchmarkDotNet.</p>`,
+<p>Follow-up: "How do you prove it is faster?" — compare query count, duration and logical reads (<code>SET STATISTICS IO ON</code>) before and after; for C# micro-paths use BenchmarkDotNet.</p>
+<p>Follow-up: "How do you insert 100k+ rows?" — EF Core has no built-in bulk insert. <code>AddRange</code> + <code>SaveChanges</code> batches the INSERTs (tune with <code>UseSqlServer(cs, o =&gt; o.MaxBatchSize(...))</code>), but every row is still tracked and sent as INSERT statements — save in chunks and call <code>ChangeTracker.Clear()</code> between them. For real bulk loads use <code>SqlBulkCopy</code> on SQL Server, or a bulk-extensions library.</p>`,
         hi: `<ul>
 <li><b>कम round trips</b>: N+1 नहीं, loops में <code>SaveChanges()</code> नहीं, set-based बदलावों के लिए <code>ExecuteUpdate</code>/<code>ExecuteDelete</code>।</li>
 <li><b>कम data</b>: projections, paging (<code>OFFSET/FETCH</code>, गहरे pages के लिए keyset), और जब कई बड़ी collections rows को गुणा करें तो <code>AsSplitQuery()</code>।</li>
@@ -1873,7 +1871,8 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>Database side</b>: filter/sort columns पर indexes (EF सिर्फ़ keys और FKs पर index बनाता है), covering/filtered indexes, execution plan check करो।</li>
 <li><b>Client evaluation नहीं</b>: EF Core 3.0+ throw करता है अगर filter translate न हो — इसे बड़ी table पर पहले <code>ToList()</code> लगाकर कभी "fix" मत करो।</li>
 </ul>
-<p>Follow-up: "कैसे साबित करोगे कि तेज़ हुआ?" — पहले और बाद में query count, duration और logical reads (<code>SET STATISTICS IO ON</code>) compare करो; C# के micro-paths के लिए BenchmarkDotNet।</p>`,
+<p>Follow-up: "कैसे साबित करोगे कि तेज़ हुआ?" — पहले और बाद में query count, duration और logical reads (<code>SET STATISTICS IO ON</code>) compare करो; C# के micro-paths के लिए BenchmarkDotNet।</p>
+<p>Follow-up: "100k+ rows कैसे insert करोगे?" — EF Core में built-in bulk insert नहीं है। <code>AddRange</code> + <code>SaveChanges</code> INSERTs को batch करता है (<code>UseSqlServer(cs, o =&gt; o.MaxBatchSize(...))</code> से tune करो), पर हर row फिर भी track होती है और INSERT statements के रूप में जाती है — chunks में save करो और बीच में <code>ChangeTracker.Clear()</code> call करो। असली bulk loads के लिए SQL Server पर <code>SqlBulkCopy</code>, या कोई bulk-extensions library।</p>`,
         hg: `<ul>
 <li><b>Kam round trips</b>: N+1 nahi, loops mein <code>SaveChanges()</code> nahi, set-based badlaavon ke liye <code>ExecuteUpdate</code>/<code>ExecuteDelete</code>.</li>
 <li><b>Kam data</b>: projections, paging (<code>OFFSET/FETCH</code>, gehre pages ke liye keyset), aur jab kai badi collections rows ko guna karein to <code>AsSplitQuery()</code>.</li>
@@ -1881,43 +1880,50 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>Database side</b>: filter/sort columns par indexes (EF sirf keys aur FKs par index banata hai), covering/filtered indexes, execution plan check karo.</li>
 <li><b>Client evaluation nahi</b>: EF Core 3.0+ throw karta hai agar filter translate na ho — ise badi table par pehle <code>ToList()</code> lagaakar kabhi "fix" mat karo.</li>
 </ul>
-<p>Follow-up: "Kaise saabit karoge ki tez hua?" — pehle aur baad mein query count, duration aur logical reads (<code>SET STATISTICS IO ON</code>) compare karo; C# ke micro-paths ke liye BenchmarkDotNet.</p>`
+<p>Follow-up: "Kaise saabit karoge ki tez hua?" — pehle aur baad mein query count, duration aur logical reads (<code>SET STATISTICS IO ON</code>) compare karo; C# ke micro-paths ke liye BenchmarkDotNet.</p>
+<p>Follow-up: "100k+ rows kaise insert karoge?" — EF Core mein built-in bulk insert nahi hai. <code>AddRange</code> + <code>SaveChanges</code> INSERTs ko batch karta hai (<code>UseSqlServer(cs, o =&gt; o.MaxBatchSize(...))</code> se tune karo), par har row phir bhi track hoti hai aur INSERT statements ke roop mein jaati hai — chunks mein save karo aur beech mein <code>ChangeTracker.Clear()</code> call karo. Asli bulk loads ke liye SQL Server par <code>SqlBulkCopy</code>, ya koi bulk-extensions library.</p>`
       }
     },
     {
       id: "split-query",
       depth: "detailed",
-      q: "What is a cartesian explosion, and when do you use AsSplitQuery?",
-      answer: "Two or more collection Includes in one JOIN multiply rows — 10 orders × 10 addresses = 100 rows per customer. AsSplitQuery sends one SQL per collection: no duplicates, but more round trips.",
+      q: "When would you make split queries the default for a DbContext, and what can break?",
+      answer: "When most queries load several large collections. Set UseQuerySplittingBehavior(SplitQuery) and opt out with AsSingleQuery. What can break: more round trips, no single snapshot without a transaction, and paging without a unique order.",
       meaning: {
-        hi: "एक JOIN में दो या ज़्यादा collections Include करने से rows गुणा हो जाती हैं — 10 orders × 10 addresses = हर customer की 100 rows। AsSplitQuery इसकी जगह हर collection के लिए एक SQL भेजता है: duplicate data कम, round trips ज़्यादा।",
-        hg: "Ek JOIN mein do ya zyaada collections Include karne se rows guna ho jaati hain — 10 orders × 10 addresses = har customer ki 100 rows. AsSplitQuery iski jagah har collection ke liye ek SQL bhejta hai: duplicate data kam, round trips zyaada."
+        hi: "जब ज़्यादातर queries कई बड़ी collections load करती हों। UseQuerySplittingBehavior(SplitQuery) set करो और AsSingleQuery से बाहर निकलो। क्या टूट सकता है: ज़्यादा round trips, transaction के बिना एक snapshot नहीं, और unique order के बिना paging।",
+        hg: "Jab zyaadatar queries kai badi collections load karti hon. UseQuerySplittingBehavior(SplitQuery) set karo aur AsSingleQuery se baahar niklo. Kya toot sakta hai: zyaada round trips, transaction ke bina ek snapshot nahi, aur unique order ke bina paging."
       },
       explain: {
         en: `<ul>
-<li>Single query: <code>Customers LEFT JOIN Orders LEFT JOIN Addresses</code> → for each customer, rows = orders × addresses, and the customer's columns repeat on every row. A puzzle below counts this: 3 customers × 2 orders × 3 addresses = 18 rows for 15 child objects.</li>
-<li><code>AsSplitQuery()</code>: query 1 = customers, query 2 = orders joined to the same customer filter, query 3 = addresses. Each child row is sent once.</li>
-<li>Costs of split: more round trips (latency adds up), and without a Serializable/snapshot transaction the queries can see different data if rows change in between.</li>
-<li>Set globally with <code>UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)</code>; use <code>AsSingleQuery()</code> to go back for one query. EF logs a warning when you load several collections without choosing.</li>
-<li>Often the better fix is a <b>projection</b> that brings back only counts or a few child columns.</li>
+<li>Why split at all: two collection Includes multiply the JOIN rows (the <b>split-query-rows</b> puzzle: 18 rows for 15 children; Day 5 "include-sql" shows the single-query SQL).</li>
+<li>Good default when: your read models routinely include 2+ big collections (an order with lines, payments, shipments). Keep <code>AsSingleQuery()</code> for small or single-row lookups, where one round trip is cheaper.</li>
+<li><b>Latency</b>: each collection is another round trip; across a slow network or a busy server this can cost more than the duplicated rows saved.</li>
+<li><b>Consistency</b>: the queries run one after another, so without a Serializable/snapshot transaction a row added in between can show up in one query but not another.</li>
+<li><b>Paging</b>: <code>Skip</code>/<code>Take</code> needs a unique order (<code>ThenBy(c =&gt; c.Id)</code>). Before EF Core 10 the child query's ordering could even miss the key; EF Core 10 fixes that, but a non-unique order is still your bug.</li>
+<li><b>Memory</b>: EF buffers the results of all but the last split query (unless MARS is enabled), so a split query does not stream end to end.</li>
+<li><b>Diagnostics</b>: <code>ToQueryString()</code> shows only the first SQL — check the command log to see them all.</li>
 </ul>
-<p>Follow-up: "Split query with paging?" — make the ordering unique (<code>ThenBy(c =&gt; c.Id)</code>), otherwise the child queries may page over a different set of parents.</p>`,
+<p>TL angle: often the better fix is a projection that returns counts or a few child columns — then neither the explosion nor the extra round trips happen.</p>`,
         hi: `<ul>
-<li>Single query: <code>Customers LEFT JOIN Orders LEFT JOIN Addresses</code> → हर customer के लिए rows = orders × addresses, और customer के columns हर row पर दोहराए जाते हैं। नीचे का एक puzzle यही गिनता है: 3 customers × 2 orders × 3 addresses = 15 child objects के लिए 18 rows।</li>
-<li><code>AsSplitQuery()</code>: query 1 = customers, query 2 = उसी customer filter से जुड़े orders, query 3 = addresses। हर child row एक ही बार आती है।</li>
-<li>Split की कीमत: ज़्यादा round trips (latency जुड़ती जाती है), और Serializable/snapshot transaction के बिना, अगर बीच में rows बदलें तो queries अलग-अलग data देख सकती हैं।</li>
-<li>Globally <code>UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)</code> से set करो; किसी एक query के लिए वापस जाने को <code>AsSingleQuery()</code>। Mode चुने बिना कई collections load करो तो EF warning log करता है।</li>
-<li>अक्सर बेहतर fix एक <b>projection</b> है जो सिर्फ़ counts या child के कुछ columns लाता है।</li>
+<li>Split क्यों: दो collection Includes JOIN की rows को गुणा कर देते हैं (<b>split-query-rows</b> puzzle: 15 children के लिए 18 rows; Day 5 का "include-sql" single-query वाला SQL दिखाता है)।</li>
+<li>Default कब अच्छा: जब आपके read models में अक्सर 2+ बड़ी collections आती हैं (order के साथ lines, payments, shipments)। छोटे या एक-row वाले lookups के लिए <code>AsSingleQuery()</code> रखो, वहाँ एक round trip सस्ता है।</li>
+<li><b>Latency</b>: हर collection एक और round trip है; धीमे network या busy server पर यह बचाई गई duplicate rows से ज़्यादा महँगा पड़ सकता है।</li>
+<li><b>Consistency</b>: queries एक के बाद एक चलती हैं, इसलिए Serializable/snapshot transaction के बिना बीच में जुड़ी row एक query में दिख सकती है और दूसरी में नहीं।</li>
+<li><b>Paging</b>: <code>Skip</code>/<code>Take</code> को unique order चाहिए (<code>ThenBy(c =&gt; c.Id)</code>)। EF Core 10 से पहले child query की ordering से key तक छूट सकती थी; EF Core 10 ने यह ठीक किया, पर non-unique order फिर भी आपका bug है।</li>
+<li><b>Memory</b>: EF आख़िरी split query को छोड़कर बाकी सबके results buffer करता है (जब तक MARS चालू न हो), इसलिए split query शुरू से आख़िर तक stream नहीं होती।</li>
+<li><b>Diagnostics</b>: <code>ToQueryString()</code> सिर्फ़ पहला SQL दिखाता है — सब देखने के लिए command log देखो।</li>
 </ul>
-<p>Follow-up: "Paging के साथ split query?" — ordering unique रखो (<code>ThenBy(c =&gt; c.Id)</code>), वरना child queries parents के किसी अलग set पर page कर सकती हैं।</p>`,
+<p>TL angle: अक्सर बेहतर fix एक projection है जो counts या child के कुछ columns लौटाए — तब न explosion होता है न extra round trips।</p>`,
         hg: `<ul>
-<li>Single query: <code>Customers LEFT JOIN Orders LEFT JOIN Addresses</code> → har customer ke liye rows = orders × addresses, aur customer ke columns har row par dohraaye jaate hain. Neeche ka ek puzzle yahi ginta hai: 3 customers × 2 orders × 3 addresses = 15 child objects ke liye 18 rows.</li>
-<li><code>AsSplitQuery()</code>: query 1 = customers, query 2 = usi customer filter se jude orders, query 3 = addresses. Har child row ek hi baar aati hai.</li>
-<li>Split ki keemat: zyaada round trips (latency judti jaati hai), aur Serializable/snapshot transaction ke bina, agar beech mein rows badlein to queries alag-alag data dekh sakti hain.</li>
-<li>Globally <code>UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)</code> se set karo; kisi ek query ke liye wapas jaane ko <code>AsSingleQuery()</code>. Mode chune bina kai collections load karo to EF warning log karta hai.</li>
-<li>Aksar behtar fix ek <b>projection</b> hai jo sirf counts ya child ke kuch columns laata hai.</li>
+<li>Split kyun: do collection Includes JOIN ki rows ko guna kar dete hain (<b>split-query-rows</b> puzzle: 15 children ke liye 18 rows; Day 5 ka "include-sql" single-query wala SQL dikhata hai).</li>
+<li>Default kab achha: jab aapke read models mein aksar 2+ badi collections aati hain (order ke saath lines, payments, shipments). Chhote ya ek-row wale lookups ke liye <code>AsSingleQuery()</code> rakho, wahan ek round trip sasta hai.</li>
+<li><b>Latency</b>: har collection ek aur round trip hai; dheeme network ya busy server par yeh bachaayi gayi duplicate rows se zyaada mehnga pad sakta hai.</li>
+<li><b>Consistency</b>: queries ek ke baad ek chalti hain, isliye Serializable/snapshot transaction ke bina beech mein judi row ek query mein dikh sakti hai aur doosri mein nahi.</li>
+<li><b>Paging</b>: <code>Skip</code>/<code>Take</code> ko unique order chahiye (<code>ThenBy(c =&gt; c.Id)</code>). EF Core 10 se pehle child query ki ordering se key tak chhoot sakti thi; EF Core 10 ne yeh theek kiya, par non-unique order phir bhi aapka bug hai.</li>
+<li><b>Memory</b>: EF aakhri split query ko chhodkar baaki sabke results buffer karta hai (jab tak MARS chaalu na ho), isliye split query shuru se aakhir tak stream nahi hoti.</li>
+<li><b>Diagnostics</b>: <code>ToQueryString()</code> sirf pehla SQL dikhata hai — sab dekhne ke liye command log dekho.</li>
 </ul>
-<p>Follow-up: "Paging ke saath split query?" — ordering unique rakho (<code>ThenBy(c =&gt; c.Id)</code>), warna child queries parents ke kisi alag set par page kar sakti hain.</p>`
+<p>TL angle: aksar behtar fix ek projection hai jo counts ya child ke kuch columns lautaaye — tab na explosion hota hai na extra round trips.</p>`
       }
     },
     {
@@ -1993,7 +1999,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       id: "stored-procedures",
       depth: "detailed",
       q: "How do you call a stored procedure from EF Core?",
-      answer: "For rows mapped to an entity, FromSql($\"EXEC dbo.Proc {param}\") then AsEnumerable, since SQL Server cannot compose over EXEC. For other shapes, SqlQuery&lt;T&gt;; for commands, ExecuteSql. Output parameters need a SqlParameter.",
+      answer: "For entity rows, FromSql($\"EXEC dbo.Proc {param}\"); add AsEnumerable before any further LINQ, since SQL Server cannot compose over EXEC. Other shapes: SqlQuery&lt;T&gt;; commands: ExecuteSql. OUTPUT parameters need a SqlParameter.",
       meaning: {
         hi: "Entity से map होने वाली rows के लिए FromSql($\"EXEC dbo.Proc {param}\") और फिर AsEnumerable, क्योंकि SQL Server EXEC के ऊपर compose नहीं कर सकता। दूसरे shapes के लिए SqlQuery&lt;T&gt;; commands के लिए ExecuteSql। Output parameters के लिए SqlParameter चाहिए।",
         hg: "Entity se map hone wali rows ke liye FromSql($\"EXEC dbo.Proc {param}\") aur phir AsEnumerable, kyunki SQL Server EXEC ke upar compose nahi kar sakta. Doosre shapes ke liye SqlQuery&lt;T&gt;; commands ke liye ExecuteSql. Output parameters ke liye SqlParameter chahiye."
@@ -2129,7 +2135,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         en: `<ul>
 <li>Transient errors: Azure SQL failover, throttling, a dropped connection. Retrying after a short delay usually succeeds.</li>
 <li><code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null))</code> — single <code>SaveChanges()</code> calls and queries are retried automatically.</li>
-<li>With your own <code>BeginTransaction()</code> (or a <code>TransactionScope</code>) EF cannot retry just one statement in the middle, so it throws: "The configured execution strategy ... does not support user-initiated transactions." Wrap the whole unit: <code>await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =&gt; { ... })</code>.</li>
+<li>With your own <code>BeginTransaction()</code> (or a <code>TransactionScope</code>) EF cannot retry just one statement in the middle, so the next <code>SaveChanges()</code> or query throws: "The configured execution strategy ... does not support user-initiated transactions." Wrap the whole unit: <code>await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =&gt; { ... })</code>.</li>
 <li>Inside the lambda: start clean (<code>ChangeTracker.Clear()</code> or a new context), no external calls, no non-idempotent side effects.</li>
 <li>Edge case: if the connection drops <b>during commit</b>, you cannot know whether it committed. EF offers <code>ExecuteInTransaction(..., verifySucceeded)</code> so you can check before retrying.</li>
 </ul>
@@ -2137,7 +2143,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         hi: `<ul>
 <li>Transient errors: Azure SQL failover, throttling, टूटा connection। थोड़ी देर बाद retry करने पर आमतौर पर काम हो जाता है।</li>
 <li><code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null))</code> — अकेले <code>SaveChanges()</code> calls और queries अपने-आप retry होते हैं।</li>
-<li>आपके अपने <code>BeginTransaction()</code> (या <code>TransactionScope</code>) के साथ EF बीच का सिर्फ़ एक statement retry नहीं कर सकता, इसलिए throw करता है: "The configured execution strategy ... does not support user-initiated transactions." पूरे unit को लपेटो: <code>await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =&gt; { ... })</code>।</li>
+<li>आपके अपने <code>BeginTransaction()</code> (या <code>TransactionScope</code>) के साथ EF बीच का सिर्फ़ एक statement retry नहीं कर सकता, इसलिए अगला <code>SaveChanges()</code> या query throw करता है: "The configured execution strategy ... does not support user-initiated transactions." पूरे unit को लपेटो: <code>await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =&gt; { ... })</code>।</li>
 <li>Lambda के अंदर: साफ़ शुरुआत (<code>ChangeTracker.Clear()</code> या नया context), कोई external calls नहीं, कोई non-idempotent side effects नहीं।</li>
 <li>Edge case: अगर connection <b>commit के दौरान</b> टूटे, तो पता नहीं चलता कि commit हुआ या नहीं। EF <code>ExecuteInTransaction(..., verifySucceeded)</code> देता है ताकि retry से पहले check कर सको।</li>
 </ul>
@@ -2145,44 +2151,11 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         hg: `<ul>
 <li>Transient errors: Azure SQL failover, throttling, toota connection. Thodi der baad retry karne par aamtaur par kaam ho jaata hai.</li>
 <li><code>UseSqlServer(cs, o =&gt; o.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null))</code> — akele <code>SaveChanges()</code> calls aur queries apne-aap retry hote hain.</li>
-<li>Aapke apne <code>BeginTransaction()</code> (ya <code>TransactionScope</code>) ke saath EF beech ka sirf ek statement retry nahi kar sakta, isliye throw karta hai: "The configured execution strategy ... does not support user-initiated transactions." Poore unit ko lapeto: <code>await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =&gt; { ... })</code>.</li>
+<li>Aapke apne <code>BeginTransaction()</code> (ya <code>TransactionScope</code>) ke saath EF beech ka sirf ek statement retry nahi kar sakta, isliye agla <code>SaveChanges()</code> ya query throw karta hai: "The configured execution strategy ... does not support user-initiated transactions." Poore unit ko lapeto: <code>await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =&gt; { ... })</code>.</li>
 <li>Lambda ke andar: saaf shuruaat (<code>ChangeTracker.Clear()</code> ya naya context), koi external calls nahi, koi non-idempotent side effects nahi.</li>
 <li>Edge case: agar connection <b>commit ke dauraan</b> toote, to pata nahi chalta ki commit hua ya nahi. EF <code>ExecuteInTransaction(..., verifySucceeded)</code> deta hai taaki retry se pehle check kar sako.</li>
 </ul>
 <p>Follow-up: "Polly ya EF retries?" — database calls ke liye EF ki strategy (use SQL Server ke transient error numbers pata hain); Polly HTTP aur baaki dependencies ke liye (Day 16).</p>`
-      }
-    },
-    {
-      id: "transactionscope",
-      depth: "detailed",
-      q: "TransactionScope or BeginTransaction — which do you prefer with EF Core?",
-      answer: "BeginTransaction on one connection is simpler and explicit. TransactionScope works, but its default is Serializable, async needs TransactionScopeAsyncFlowOption.Enabled, and several connections can escalate to a distributed transaction.",
-      meaning: {
-        hi: "एक connection पर BeginTransaction ज़्यादा सरल और साफ़ है। TransactionScope चलता है, पर उसका default Serializable है, async के लिए TransactionScopeAsyncFlowOption.Enabled चाहिए, और कई connections distributed transaction तक escalate हो सकते हैं।",
-        hg: "Ek connection par BeginTransaction zyaada saral aur saaf hai. TransactionScope chalta hai, par uska default Serializable hai, async ke liye TransactionScopeAsyncFlowOption.Enabled chahiye, aur kai connections distributed transaction tak escalate ho sakte hain."
-      },
-      explain: {
-        en: `<ul>
-<li><code>new TransactionScope()</code> → <code>Transaction.Current.IsolationLevel</code> is <b>Serializable</b> (verified in the section demo). SQL Server's default for normal transactions is Read Committed — so code that "looked fine" can block much more under a scope. Pass <code>TransactionOptions</code> with <code>ReadCommitted</code>.</li>
-<li>Without <code>TransactionScopeAsyncFlowOption.Enabled</code>, the ambient transaction does not flow across <code>await</code> correctly.</li>
-<li>Two different connections (two DbContexts with separate connections, or EF + another database) inside one scope can escalate to a distributed transaction (MSDTC). Modern .NET supports that only on Windows and only after you opt in — on Linux containers it is not available.</li>
-<li>Where scopes still help: wrapping code you do not control that already uses ambient transactions, or tests that roll back everything.</li>
-</ul>
-<p>Follow-up: "Two DbContexts in one transaction?" — share one <code>DbConnection</code> and call <code>UseTransaction</code> on the second context.</p>`,
-        hi: `<ul>
-<li><code>new TransactionScope()</code> → <code>Transaction.Current.IsolationLevel</code> <b>Serializable</b> होता है (section demo में verify किया)। SQL Server में normal transactions का default Read Committed है — इसलिए जो code "ठीक दिखता था" वो scope के अंदर कहीं ज़्यादा block कर सकता है। <code>ReadCommitted</code> के साथ <code>TransactionOptions</code> दो।</li>
-<li><code>TransactionScopeAsyncFlowOption.Enabled</code> के बिना ambient transaction <code>await</code> के पार ठीक से flow नहीं होता।</li>
-<li>एक scope में दो अलग connections (अलग connections वाले दो DbContexts, या EF + कोई दूसरा database) distributed transaction (MSDTC) तक escalate हो सकते हैं। Modern .NET इसे सिर्फ़ Windows पर और opt-in करने के बाद ही support करता है — Linux containers पर यह उपलब्ध नहीं।</li>
-<li>Scopes कहाँ अब भी काम के हैं: ऐसा code लपेटना जो आपके control में नहीं और पहले से ambient transactions use करता है, या ऐसे tests जो सब कुछ rollback करते हैं।</li>
-</ul>
-<p>Follow-up: "दो DbContexts एक transaction में?" — एक ही <code>DbConnection</code> share करो और दूसरे context पर <code>UseTransaction</code> call करो।</p>`,
-        hg: `<ul>
-<li><code>new TransactionScope()</code> → <code>Transaction.Current.IsolationLevel</code> <b>Serializable</b> hota hai (section demo mein verify kiya). SQL Server mein normal transactions ka default Read Committed hai — isliye jo code "theek dikhta tha" woh scope ke andar kahin zyaada block kar sakta hai. <code>ReadCommitted</code> ke saath <code>TransactionOptions</code> do.</li>
-<li><code>TransactionScopeAsyncFlowOption.Enabled</code> ke bina ambient transaction <code>await</code> ke paar theek se flow nahi hota.</li>
-<li>Ek scope mein do alag connections (alag connections wale do DbContexts, ya EF + koi doosra database) distributed transaction (MSDTC) tak escalate ho sakte hain. Modern .NET ise sirf Windows par aur opt-in karne ke baad hi support karta hai — Linux containers par yeh uplabdh nahi.</li>
-<li>Scopes kahan ab bhi kaam ke hain: aisa code lapetna jo aapke control mein nahi aur pehle se ambient transactions use karta hai, ya aise tests jo sab kuch rollback karte hain.</li>
-</ul>
-<p>Follow-up: "Do DbContexts ek transaction mein?" — ek hi <code>DbConnection</code> share karo aur doosre context par <code>UseTransaction</code> call karo.</p>`
       }
     },
     {
@@ -2738,19 +2711,19 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li>Concatenation produces <code>WHERE City = 'Pune' OR '1'='1'</code>. <code>'1'='1'</code> is true for every row → <b>3</b>: the attacker sees every customer.</li>
 <li><code>FromSql($"...{city}")</code> sends <code>WHERE City = @p0</code> with the whole input as the value. No city is literally called <code>Pune' OR '1'='1</code> → <b>0</b>.</li>
 <li><code>FromSqlRaw</code> with a <code>{0}</code> placeholder also creates a parameter → <b>0</b>.</li>
-<li>Note: the EF1002 analyzer warns about interpolated strings in <code>FromSqlRaw</code>, but this <code>+</code> concatenation compiles with no warning — only code review catches it.</li>
+<li>Note: the EF1002 analyzer warns about interpolated strings in <code>FromSqlRaw</code>, but on EF Core 9 (this checker) the <code>+</code> concatenation compiles with no warning. EF Core 10 adds a concatenation warning — still, code review is the real guard.</li>
 </ul>`,
         hi: `<ul>
 <li>String जोड़ने से <code>WHERE City = 'Pune' OR '1'='1'</code> बनता है। <code>'1'='1'</code> हर row के लिए true है → <b>3</b>: attacker को हर customer दिख जाता है।</li>
 <li><code>FromSql($"...{city}")</code> <code>WHERE City = @p0</code> भेजता है और पूरा input value की तरह जाता है। किसी city का नाम सच में <code>Pune' OR '1'='1</code> नहीं है → <b>0</b>।</li>
 <li><code>{0}</code> placeholder वाला <code>FromSqlRaw</code> भी parameter बनाता है → <b>0</b>।</li>
-<li>ध्यान दो: EF1002 analyzer <code>FromSqlRaw</code> में interpolated strings पर warning देता है, पर यह <code>+</code> वाला जोड़ बिना किसी warning के compile हो जाता है — इसे सिर्फ़ code review पकड़ता है।</li>
+<li>ध्यान दो: EF1002 analyzer <code>FromSqlRaw</code> में interpolated strings पर warning देता है, पर EF Core 9 (यह checker) पर <code>+</code> वाला जोड़ बिना किसी warning के compile हो जाता है। EF Core 10 जोड़ने पर भी warning देता है — फिर भी असली पहरा code review का है।</li>
 </ul>`,
         hg: `<ul>
 <li>String jodne se <code>WHERE City = 'Pune' OR '1'='1'</code> banta hai. <code>'1'='1'</code> har row ke liye true hai → <b>3</b>: attacker ko har customer dikh jaata hai.</li>
 <li><code>FromSql($"...{city}")</code> <code>WHERE City = @p0</code> bhejta hai aur poora input value ki tarah jaata hai. Kisi city ka naam sach mein <code>Pune' OR '1'='1</code> nahi hai → <b>0</b>.</li>
 <li><code>{0}</code> placeholder wala <code>FromSqlRaw</code> bhi parameter banata hai → <b>0</b>.</li>
-<li>Dhyaan do: EF1002 analyzer <code>FromSqlRaw</code> mein interpolated strings par warning deta hai, par yeh <code>+</code> wala jod bina kisi warning ke compile ho jaata hai — ise sirf code review pakadta hai.</li>
+<li>Dhyaan do: EF1002 analyzer <code>FromSqlRaw</code> mein interpolated strings par warning deta hai, par EF Core 9 (yeh checker) par <code>+</code> wala jod bina kisi warning ke compile ho jaata hai. EF Core 10 jodne par bhi warning deta hai — phir bhi asli pehra code review ka hai.</li>
 </ul>`
       }
     },
@@ -2991,47 +2964,47 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
   ],
   revision: {
     en: [
-      "<b>N+1</b> = 1 query for the list + 1 per row. Find it by counting commands in the log; fix it with <code>Include</code>, a projection or one batch query.",
+      "<b>N+1</b> = 1 query for the list + 1 per row; the fix is to load in one go (<code>Include</code>, a projection or one batch query).",
       "<b>See the SQL</b>: <code>ToQueryString()</code> for one query, <code>LogTo</code> / Database.Command logging for all, <code>TagWith</code> to find it in Query Store.",
       "<b>Projection</b> (<code>Select</code> into a DTO) = only needed columns, COUNT/SUM done in SQL, nothing tracked.",
       "<b>Cartesian explosion</b>: two collection Includes multiply rows; <code>AsSplitQuery()</code> sends one SQL per collection, at the cost of more round trips.",
       "<b><code>FromSql($\"...{x}\")</code></b> sends x as a parameter — safe. <code>FromSqlRaw</code> with string concatenation = SQL injection.",
-      "<b>Other raw SQL</b>: <code>SqlQuery&lt;T&gt;</code> for scalars (EF Core 7) and unmapped DTOs (EF Core 8); <code>ExecuteSql</code> for commands; <code>AsEnumerable()</code> right after a stored procedure.",
+      "<b><code>SqlQuery&lt;T&gt;</code></b> returns non-entity results: scalars (EF Core 7) and unmapped DTOs (EF Core 8).",
       "<b>Transactions</b>: one <code>SaveChanges()</code> is atomic; <code>BeginTransaction()</code> ties several SaveChanges / ExecuteUpdate / raw SQL calls into one commit or rollback.",
       "<b>Retries</b>: <code>EnableRetryOnFailure()</code>; with retries on, run the whole transaction inside <code>CreateExecutionStrategy().Execute(...)</code>.",
       "<b>Optimistic concurrency</b>: <code>[Timestamp]</code> rowversion goes into the UPDATE's WHERE; 0 rows → <code>DbUpdateConcurrencyException</code> → store wins, client wins or merge.",
       "<b>ExecuteUpdate / ExecuteDelete</b> (EF Core 7): one set-based SQL statement, no loading — but tracked entities go stale and SaveChanges logic is skipped.",
       "<b>Client evaluation</b>: since EF Core 3.0 an untranslatable <code>Where</code> throws; only the final <code>Select</code> may call your C# methods.",
-      "<b>Performance</b>: read the SQL and the plan first; then AsNoTracking, paging and indexes. Compiled queries and pooling only for proven hot paths."
+      "<b>Performance</b>: measure first — read the SQL and its execution plan before reaching for compiled queries or pooling."
     ],
     meaning: {
       hi: [
-        "N+1 = list के लिए 1 query + हर row के लिए 1। Log में commands गिनकर पकड़ो; Include, projection या एक batch query से ठीक करो।",
+        "N+1 = list के लिए 1 query + हर row के लिए 1; fix है एक बार में load करना (Include, projection या एक batch query)।",
         "SQL देखो: एक query के लिए ToQueryString(), सबके लिए LogTo / Database.Command logging, और Query Store में ढूँढने के लिए TagWith।",
         "Projection (Select से DTO) = सिर्फ़ ज़रूरी columns, COUNT/SUM SQL में, कुछ भी track नहीं।",
         "Cartesian explosion: दो collection Includes rows को गुणा करते हैं; AsSplitQuery() हर collection के लिए एक SQL भेजता है, बदले में round trips ज़्यादा।",
         "FromSql($\"...{x}\") x को parameter बनाकर भेजता है — safe। FromSqlRaw के साथ string जोड़ना = SQL injection।",
-        "बाकी raw SQL: scalars (EF Core 7) और unmapped DTOs (EF Core 8) के लिए SqlQuery&lt;T&gt;; commands के लिए ExecuteSql; stored procedure के तुरंत बाद AsEnumerable()।",
+        "SqlQuery&lt;T&gt; non-entity results लौटाता है: scalars (EF Core 7) और unmapped DTOs (EF Core 8)।",
         "Transactions: एक SaveChanges() atomic है; BeginTransaction() कई SaveChanges / ExecuteUpdate / raw SQL calls को एक commit या rollback में बाँधता है।",
         "Retries: EnableRetryOnFailure(); retries चालू हों तो पूरा transaction CreateExecutionStrategy().Execute(...) के अंदर चलाओ।",
         "Optimistic concurrency: [Timestamp] rowversion UPDATE के WHERE में जाता है; 0 rows → DbUpdateConcurrencyException → store wins, client wins या merge।",
         "ExecuteUpdate / ExecuteDelete (EF Core 7): एक set-based SQL statement, कुछ load नहीं — पर tracked entities पुरानी पड़ जाती हैं और SaveChanges logic skip होता है।",
         "Client evaluation: EF Core 3.0 से translate न होने वाला Where throw करता है; सिर्फ़ final Select में आपके C# methods call हो सकते हैं।",
-        "Performance: पहले SQL और plan पढ़ो; फिर AsNoTracking, paging और indexes। Compiled queries और pooling सिर्फ़ साबित हुए hot paths के लिए।"
+        "Performance: पहले measure करो — compiled queries या pooling की तरफ़ जाने से पहले SQL और उसका execution plan पढ़ो।"
       ],
       hg: [
-        "N+1 = list ke liye 1 query + har row ke liye 1. Log mein commands ginkar pakdo; Include, projection ya ek batch query se theek karo.",
+        "N+1 = list ke liye 1 query + har row ke liye 1; fix hai ek baar mein load karna (Include, projection ya ek batch query).",
         "SQL dekho: ek query ke liye ToQueryString(), sabke liye LogTo / Database.Command logging, aur Query Store mein dhoondhne ke liye TagWith.",
         "Projection (Select se DTO) = sirf zaroori columns, COUNT/SUM SQL mein, kuch bhi track nahi.",
         "Cartesian explosion: do collection Includes rows ko guna karte hain; AsSplitQuery() har collection ke liye ek SQL bhejta hai, badle mein round trips zyaada.",
         "FromSql($\"...{x}\") x ko parameter banakar bhejta hai — safe. FromSqlRaw ke saath string jodna = SQL injection.",
-        "Baaki raw SQL: scalars (EF Core 7) aur unmapped DTOs (EF Core 8) ke liye SqlQuery&lt;T&gt;; commands ke liye ExecuteSql; stored procedure ke turant baad AsEnumerable().",
+        "SqlQuery&lt;T&gt; non-entity results lautaata hai: scalars (EF Core 7) aur unmapped DTOs (EF Core 8).",
         "Transactions: ek SaveChanges() atomic hai; BeginTransaction() kai SaveChanges / ExecuteUpdate / raw SQL calls ko ek commit ya rollback mein baandhta hai.",
         "Retries: EnableRetryOnFailure(); retries chaalu hon to poora transaction CreateExecutionStrategy().Execute(...) ke andar chalao.",
         "Optimistic concurrency: [Timestamp] rowversion UPDATE ke WHERE mein jaata hai; 0 rows → DbUpdateConcurrencyException → store wins, client wins ya merge.",
         "ExecuteUpdate / ExecuteDelete (EF Core 7): ek set-based SQL statement, kuch load nahi — par tracked entities purani pad jaati hain aur SaveChanges logic skip hota hai.",
         "Client evaluation: EF Core 3.0 se translate na hone wala Where throw karta hai; sirf final Select mein aapke C# methods call ho sakte hain.",
-        "Performance: pehle SQL aur plan padho; phir AsNoTracking, paging aur indexes. Compiled queries aur pooling sirf saabit hue hot paths ke liye."
+        "Performance: pehle measure karo — compiled queries ya pooling ki taraf jaane se pehle SQL aur uska execution plan padho."
       ]
     }
   },
@@ -3044,8 +3017,9 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 8</b> — <code>SqlQuery&lt;T&gt;</code> for unmapped types (any DTO, matched by column name).</li>
 <li><b>EF Core 9</b> — experimental NativeAOT support with <b>precompiled queries</b>: LINQ queries are translated to SQL at publish time instead of at runtime (a step beyond <code>EF.CompileQuery</code>).</li>
 <li><b>EF Core 10</b> — <code>ExecuteUpdateAsync</code> accepts a regular lambda for the setters, so you can add <code>SetProperty</code> calls conditionally (before, it had to be an expression tree); <b>named query filters</b> — several global filters per entity (for example soft delete + tenant) that you can switch off one at a time with <code>IgnoreQueryFilters(["SoftDelete"])</code>.</li>
+<li><b>EF Core 10, also</b> — split queries keep the same ordering (including the key) in every query, fixing a paging consistency bug; an analyzer warning for string concatenation inside raw SQL methods; simpler SQL parameter names (<code>@city</code> instead of <code>@__city_0</code>); and <code>ids.Contains(...)</code> now becomes <code>IN (@ids1, @ids2, ...)</code> with one parameter per value by default.</li>
 </ul>
-<p>This tutorial's checker runs every EF snippet on EF Core 9 (.NET 9 SDK). The printed SQL is real SQL Server SQL; alias and parameter names (such as <code>@__p_0</code>) can differ slightly in EF Core 10.</p>`,
+<p>This tutorial's checker runs every EF snippet on EF Core 9 (.NET 9 SDK). The printed SQL is real SQL Server SQL from EF Core 9; on EF Core 10 the parameter names are simpler and aliases can differ slightly.</p>`,
     hi: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 चाहिए)। आज के lesson की हर बात EF Core 10 में भी लागू है। कई blog answers नीचे के features से पहले के हैं — हर version ने यह <b>जोड़ा</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — split queries (<code>AsSplitQuery</code>); आपके अपने transaction के अंदर <code>SaveChanges()</code> चलने पर अपने-आप savepoints।</li>
@@ -3054,8 +3028,9 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 8</b> — unmapped types के लिए <code>SqlQuery&lt;T&gt;</code> (कोई भी DTO, column name से match)।</li>
 <li><b>EF Core 9</b> — <b>precompiled queries</b> के साथ experimental NativeAOT support: LINQ queries runtime की बजाय publish के समय SQL में translate होती हैं (<code>EF.CompileQuery</code> से एक कदम आगे)।</li>
 <li><b>EF Core 10</b> — <code>ExecuteUpdateAsync</code> setters के लिए एक normal lambda लेता है, इसलिए <code>SetProperty</code> calls शर्त के साथ जोड़ सकते हो (पहले expression tree ज़रूरी था); <b>named query filters</b> — हर entity पर कई global filters (जैसे soft delete + tenant) जिन्हें <code>IgnoreQueryFilters(["SoftDelete"])</code> से एक-एक करके बंद कर सकते हो।</li>
+<li><b>EF Core 10, और भी</b> — split queries हर query में एक जैसी ordering (key समेत) रखती हैं, जिससे paging का एक consistency bug ठीक हुआ; raw SQL methods के अंदर string जोड़ने पर analyzer warning; आसान SQL parameter names (<code>@__city_0</code> की जगह <code>@city</code>); और <code>ids.Contains(...)</code> अब by default <code>IN (@ids1, @ids2, ...)</code> बनता है, हर value का एक parameter।</li>
 </ul>
-<p>इस tutorial का checker हर EF snippet EF Core 9 (.NET 9 SDK) पर चलाता है। Print हुआ SQL असली SQL Server SQL है; alias और parameter names (जैसे <code>@__p_0</code>) EF Core 10 में थोड़े अलग हो सकते हैं।</p>`,
+<p>इस tutorial का checker हर EF snippet EF Core 9 (.NET 9 SDK) पर चलाता है। Print हुआ SQL EF Core 9 का असली SQL Server SQL है; EF Core 10 पर parameter names आसान होते हैं और aliases थोड़े अलग हो सकते हैं।</p>`,
     hg: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 chahiye). Aaj ke lesson ki har baat EF Core 10 mein bhi laagu hai. Kai blog answers neeche ke features se pehle ke hain — har version ne yeh <b>joda</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — split queries (<code>AsSplitQuery</code>); aapke apne transaction ke andar <code>SaveChanges()</code> chalne par apne-aap savepoints.</li>
@@ -3064,7 +3039,8 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 8</b> — unmapped types ke liye <code>SqlQuery&lt;T&gt;</code> (koi bhi DTO, column name se match).</li>
 <li><b>EF Core 9</b> — <b>precompiled queries</b> ke saath experimental NativeAOT support: LINQ queries runtime ki bajaay publish ke samay SQL mein translate hoti hain (<code>EF.CompileQuery</code> se ek kadam aage).</li>
 <li><b>EF Core 10</b> — <code>ExecuteUpdateAsync</code> setters ke liye ek normal lambda leta hai, isliye <code>SetProperty</code> calls shart ke saath jod sakte ho (pehle expression tree zaroori tha); <b>named query filters</b> — har entity par kai global filters (jaise soft delete + tenant) jinhe <code>IgnoreQueryFilters(["SoftDelete"])</code> se ek-ek karke band kar sakte ho.</li>
+<li><b>EF Core 10, aur bhi</b> — split queries har query mein ek jaisi ordering (key samet) rakhti hain, jisse paging ka ek consistency bug theek hua; raw SQL methods ke andar string jodne par analyzer warning; aasaan SQL parameter names (<code>@__city_0</code> ki jagah <code>@city</code>); aur <code>ids.Contains(...)</code> ab by default <code>IN (@ids1, @ids2, ...)</code> banta hai, har value ka ek parameter.</li>
 </ul>
-<p>Is tutorial ka checker har EF snippet EF Core 9 (.NET 9 SDK) par chalata hai. Print hua SQL asli SQL Server SQL hai; alias aur parameter names (jaise <code>@__p_0</code>) EF Core 10 mein thode alag ho sakte hain.</p>`
+<p>Is tutorial ka checker har EF snippet EF Core 9 (.NET 9 SDK) par chalata hai. Print hua SQL EF Core 9 ka asli SQL Server SQL hai; EF Core 10 par parameter names aasaan hote hain aur aliases thode alag ho sakte hain.</p>`
   }
 };
