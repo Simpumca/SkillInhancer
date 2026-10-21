@@ -251,7 +251,7 @@ window.TL_DAY = {
 <li><b>Not thread-safe</b>: two operations at the same time on one instance (for example <code>Task.WhenAll</code> over two queries on the same context) fail with <i>"A second operation was started on this context instance before a previous operation completed."</i> Always <code>await</code> each call before the next.</li>
 <li><b>Never a singleton</b>: one context for the whole app would be shared by parallel requests (thread-safety errors), its change tracker would grow forever (memory) and return stale tracked data. Injecting a scoped DbContext into a singleton is a <b>captive dependency</b>; with scope validation (on by default in the Development environment) it fails with <i>"Cannot consume scoped service ... from singleton ..."</i>.</li>
 <li><b>AddDbContextFactory</b>: registers <code>IDbContextFactory&lt;T&gt;</code> (a singleton). Call <code>CreateDbContext()</code> and dispose it yourself. Use it where there is no request scope or you need several contexts: <b>background services</b>, <b>Blazor Server</b> components, <b>parallel work</b> (one context per task).</li>
-<li><b>AddDbContextPool</b>: reuses context instances from a pool (default size 1024) and resets their state between requests. It saves allocation and setup cost in very high-throughput APIs. Rule: the context class must not keep its own per-request state (fields), because the instance is reused.</li>
+<li><b>AddDbContextPool</b>: reuses context instances from a pool (default size 1024) and resets their state between requests. It saves allocation and setup cost in very high-throughput APIs. Rules: the context class must not keep its own per-request state (fields), because the instance is reused; and its constructor should take only <code>DbContextOptions</code> (no scoped services), because it runs once per pooled instance, not once per request.</li>
 <li>In a <code>BackgroundService</code> (a singleton), create a scope per unit of work with <code>IServiceScopeFactory.CreateScope()</code> — or use the factory.</li>
 </ul>
 <p><b>When to use:</b> plain <code>AddDbContext</code> (Scoped) for normal web APIs; the factory for background jobs, Blazor Server and parallel tasks; pooling only after a load test shows context creation matters. <b>When not:</b> do not register DbContext as Singleton, do not store it in a static field, and do not share one instance across threads — and do not switch to pooling if your context class holds request-specific fields (for example a tenant id set per request) without resetting them.</p>`,
@@ -262,7 +262,7 @@ window.TL_DAY = {
 <li><b>Thread-safe नहीं</b>: एक instance पर एक साथ दो operations (जैसे एक ही context पर दो queries का <code>Task.WhenAll</code>) इस error से fail होते हैं: <i>"A second operation was started on this context instance before a previous operation completed."</i> अगली call से पहले हर call को <code>await</code> करो।</li>
 <li><b>Singleton कभी नहीं</b>: पूरे app का एक context parallel requests में share होगा (thread-safety errors), उसका change tracker हमेशा बढ़ता रहेगा (memory) और पुराना tracked data लौटाएगा। Scoped DbContext को singleton में inject करना <b>captive dependency</b> है; scope validation (Development environment में by default चालू) के साथ यह <i>"Cannot consume scoped service ... from singleton ..."</i> से fail होता है।</li>
 <li><b>AddDbContextFactory</b>: <code>IDbContextFactory&lt;T&gt;</code> register करता है (एक singleton)। <code>CreateDbContext()</code> call करो और उसे खुद dispose करो। इसे वहाँ use करो जहाँ request scope नहीं है या कई contexts चाहिए: <b>background services</b>, <b>Blazor Server</b> components, <b>parallel काम</b> (हर task का अपना context)।</li>
-<li><b>AddDbContextPool</b>: context instances को एक pool से दोबारा use करता है (default size 1024) और requests के बीच उनकी state reset करता है। बहुत ज़्यादा traffic वाली APIs में allocation और setup का खर्च बचाता है। नियम: context class अपनी per-request state (fields) न रखे, क्योंकि instance दोबारा use होता है।</li>
+<li><b>AddDbContextPool</b>: context instances को एक pool से दोबारा use करता है (default size 1024) और requests के बीच उनकी state reset करता है। बहुत ज़्यादा traffic वाली APIs में allocation और setup का खर्च बचाता है। नियम: context class अपनी per-request state (fields) न रखे, क्योंकि instance दोबारा use होता है; और उसका constructor सिर्फ़ <code>DbContextOptions</code> ले (कोई scoped services नहीं), क्योंकि वो हर request पर नहीं, हर pooled instance के लिए एक बार चलता है।</li>
 <li><code>BackgroundService</code> (एक singleton) में हर unit of work के लिए <code>IServiceScopeFactory.CreateScope()</code> से scope बनाओ — या factory use करो।</li>
 </ul>
 <p><b>कब use करें:</b> normal web APIs के लिए सीधा <code>AddDbContext</code> (Scoped); background jobs, Blazor Server और parallel tasks के लिए factory; pooling सिर्फ़ तब, जब load test दिखाए कि context बनाने का खर्च मायने रखता है। <b>कब नहीं:</b> DbContext को Singleton register मत करो, static field में मत रखो, और एक instance को threads के बीच share मत करो — और अगर आपकी context class request-specific fields रखती है (जैसे हर request पर set होने वाला tenant id), तो उन्हें reset किए बिना pooling पर मत जाओ।</p>`,
@@ -273,7 +273,7 @@ window.TL_DAY = {
 <li><b>Thread-safe nahi</b>: ek instance par ek saath do operations (jaise ek hi context par do queries ka <code>Task.WhenAll</code>) is error se fail hote hain: <i>"A second operation was started on this context instance before a previous operation completed."</i> Agli call se pehle har call ko <code>await</code> karo.</li>
 <li><b>Singleton kabhi nahi</b>: poore app ka ek context parallel requests mein share hoga (thread-safety errors), uska change tracker hamesha badhta rahega (memory) aur purana tracked data lautaayega. Scoped DbContext ko singleton mein inject karna <b>captive dependency</b> hai; scope validation (Development environment mein by default chaalu) ke saath yeh <i>"Cannot consume scoped service ... from singleton ..."</i> se fail hota hai.</li>
 <li><b>AddDbContextFactory</b>: <code>IDbContextFactory&lt;T&gt;</code> register karta hai (ek singleton). <code>CreateDbContext()</code> call karo aur use khud dispose karo. Ise wahan use karo jahan request scope nahi hai ya kai contexts chahiye: <b>background services</b>, <b>Blazor Server</b> components, <b>parallel kaam</b> (har task ka apna context).</li>
-<li><b>AddDbContextPool</b>: context instances ko ek pool se dobara use karta hai (default size 1024) aur requests ke beech unki state reset karta hai. Bahut zyaada traffic wali APIs mein allocation aur setup ka kharch bachaata hai. Niyam: context class apni per-request state (fields) na rakhe, kyonki instance dobara use hota hai.</li>
+<li><b>AddDbContextPool</b>: context instances ko ek pool se dobara use karta hai (default size 1024) aur requests ke beech unki state reset karta hai. Bahut zyaada traffic wali APIs mein allocation aur setup ka kharch bachaata hai. Niyam: context class apni per-request state (fields) na rakhe, kyonki instance dobara use hota hai; aur uska constructor sirf <code>DbContextOptions</code> le (koi scoped services nahi), kyonki woh har request par nahi, har pooled instance ke liye ek baar chalta hai.</li>
 <li><code>BackgroundService</code> (ek singleton) mein har unit of work ke liye <code>IServiceScopeFactory.CreateScope()</code> se scope banao — ya factory use karo.</li>
 </ul>
 <p><b>Kab use karein:</b> normal web APIs ke liye seedha <code>AddDbContext</code> (Scoped); background jobs, Blazor Server aur parallel tasks ke liye factory; pooling sirf tab, jab load test dikhaaye ki context banane ka kharch maayne rakhta hai. <b>Kab nahi:</b> DbContext ko Singleton register mat karo, static field mein mat rakho, aur ek instance ko threads ke beech share mat karo — aur agar aapki context class request-specific fields rakhti hai (jaise har request par set hone wala tenant id), to unhe reset kiye bina pooling par mat jao.</p>`
@@ -505,7 +505,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 <li><b>Review every migration</b> like SQL code in a pull request. If EF thinks a change can lose data (dropping a column, shrinking a length), it warns: <i>"An operation was scaffolded that may result in the loss of data."</i> You can add your own SQL with <code>migrationBuilder.Sql("...")</code> for data fixes.</li>
 <li><code>dotnet ef database update</code> applies all pending migrations and adds a row per migration to <code>__EFMigrationsHistory</code>. <code>dotnet ef database update &lt;OlderMigration&gt;</code> rolls back by running the <code>Down()</code> methods.</li>
 <li><code>dotnet ef migrations remove</code> deletes the last migration — only safe while it has not been applied anywhere shared.</li>
-<li><b>Production</b> (Microsoft's docs recommend SQL scripts first): a <b>SQL script</b> that a DBA or pipeline reviews and runs — <code>migrations script --idempotent</code> makes it safe to run on any version of the DB; or a <b>migration bundle</b> (<code>migrations bundle</code>, EF Core 6+) — a small executable your CD pipeline runs. Calling <code>db.Database.Migrate()</code> at app startup is easy, but with several instances they race, the app needs DDL rights, and nobody reviews the SQL.</li>
+<li><code>db.Database.EnsureCreated()</code> builds the schema straight from the model, <b>bypassing migrations</b> and writing no <code>__EFMigrationsHistory</code> rows. Use it for tests and demos (today's SQLite samples do); never mix it with migrations — a database created this way makes <code>Migrate()</code> fail later.</li>
+<li><b>Production</b> (Microsoft's docs recommend SQL scripts first): a <b>SQL script</b> that a DBA or pipeline reviews and runs — <code>migrations script --idempotent</code> makes it safe to run on any version of the DB; or a <b>migration bundle</b> (<code>migrations bundle</code>, EF Core 6+) — a small executable your CD pipeline runs. Calling <code>db.Database.Migrate()</code> at app startup is easy, but in production the app needs DDL rights, a failed migration blocks startup, and nobody reviews the SQL (EF Core 9 added a lock so several instances do not apply the same migration twice, but those issues remain).</li>
 </ul>
 <p><b>When to use:</b> migrations for every schema change in Code-First projects, committed with the code change, reviewed in the PR, and applied by the pipeline (script or bundle). <b>When not:</b> do not edit or delete a migration that is already applied to a shared database — add a new one; do not run <code>Migrate()</code> on startup for multi-instance production apps; and do not change the database by hand behind EF's back.</p>`,
         hi: `<p><b>Analogy — GST invoice और उसका credit note:</b> हर बिक्री का एक numbered invoice बनता है, और हर invoice को पलटने का एक matching तरीका होता है — credit note। दुकान का register दिखाता है कि कौन से invoices file हो चुके। Migration का <code>Up()</code> invoice है (बदलाव लगाओ), <code>Down()</code> credit note है (बदलाव वापस लो), और <code>__EFMigrationsHistory</code> filed register है।</p>
@@ -515,7 +516,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 <li><b>हर migration review करो</b>, pull request में SQL code की तरह। अगर EF को लगे कि किसी बदलाव से data जा सकता है (column drop करना, length छोटी करना), तो वो warning देता है: <i>"An operation was scaffolded that may result in the loss of data."</i> Data fixes के लिए <code>migrationBuilder.Sql("...")</code> से अपना SQL जोड़ सकते हो।</li>
 <li><code>dotnet ef database update</code> सारे pending migrations apply करता है और हर migration की एक row <code>__EFMigrationsHistory</code> में जोड़ता है। <code>dotnet ef database update &lt;OlderMigration&gt;</code> <code>Down()</code> methods चलाकर rollback करता है।</li>
 <li><code>dotnet ef migrations remove</code> आख़िरी migration delete करता है — यह तभी safe है जब वो किसी shared जगह apply न हुआ हो।</li>
-<li><b>Production</b> (Microsoft के docs सबसे पहले SQL scripts recommend करते हैं): एक <b>SQL script</b> जिसे DBA या pipeline review करके चलाए — <code>migrations script --idempotent</code> उसे DB के किसी भी version पर चलाने लायक safe बनाता है; या एक <b>migration bundle</b> (<code>migrations bundle</code>, EF Core 6+) — एक छोटा executable जिसे आपकी CD pipeline चलाती है। App startup पर <code>db.Database.Migrate()</code> call करना आसान है, पर कई instances हों तो वो आपस में race करते हैं, app को DDL rights चाहिए, और SQL कोई review नहीं करता।</li>
+<li><code>db.Database.EnsureCreated()</code> model से सीधे schema बनाता है, <b>migrations को bypass करके</b>, और <code>__EFMigrationsHistory</code> में कुछ नहीं लिखता। इसे tests और demos के लिए use करो (आज के SQLite samples यही करते हैं); migrations के साथ इसे कभी मत मिलाओ — ऐसे बने database पर बाद में <code>Migrate()</code> fail होता है।</li>
+<li><b>Production</b> (Microsoft के docs सबसे पहले SQL scripts recommend करते हैं): एक <b>SQL script</b> जिसे DBA या pipeline review करके चलाए — <code>migrations script --idempotent</code> उसे DB के किसी भी version पर चलाने लायक safe बनाता है; या एक <b>migration bundle</b> (<code>migrations bundle</code>, EF Core 6+) — एक छोटा executable जिसे आपकी CD pipeline चलाती है। App startup पर <code>db.Database.Migrate()</code> call करना आसान है, पर production में app को DDL rights चाहिए, failed migration startup रोक देता है, और SQL कोई review नहीं करता (EF Core 9 ने lock जोड़ा ताकि कई instances एक ही migration दो बार apply न करें, पर ये issues बने रहते हैं)।</li>
 </ul>
 <p><b>कब use करें:</b> Code-First projects में हर schema बदलाव के लिए migration — code change के साथ commit, PR में review, और pipeline से apply (script या bundle)। <b>कब नहीं:</b> जो migration किसी shared database पर apply हो चुका है उसे edit या delete मत करो — नया migration जोड़ो; multi-instance production apps में startup पर <code>Migrate()</code> मत चलाओ; और EF को बताए बिना database हाथ से मत बदलो।</p>`,
         hg: `<p><b>Analogy — GST invoice aur uska credit note:</b> har bikri ka ek numbered invoice banta hai, aur har invoice ko palatne ka ek matching tareeka hota hai — credit note. Dukaan ka register dikhaata hai ki kaunse invoices file ho chuke. Migration ka <code>Up()</code> invoice hai (badlaav lagao), <code>Down()</code> credit note hai (badlaav wapas lo), aur <code>__EFMigrationsHistory</code> filed register hai.</p>
@@ -525,7 +527,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 <li><b>Har migration review karo</b>, pull request mein SQL code ki tarah. Agar EF ko lage ki kisi badlaav se data ja sakta hai (column drop karna, length chhoti karna), to woh warning deta hai: <i>"An operation was scaffolded that may result in the loss of data."</i> Data fixes ke liye <code>migrationBuilder.Sql("...")</code> se apna SQL jod sakte ho.</li>
 <li><code>dotnet ef database update</code> saare pending migrations apply karta hai aur har migration ki ek row <code>__EFMigrationsHistory</code> mein jodta hai. <code>dotnet ef database update &lt;OlderMigration&gt;</code> <code>Down()</code> methods chalakar rollback karta hai.</li>
 <li><code>dotnet ef migrations remove</code> aakhri migration delete karta hai — yeh tabhi safe hai jab woh kisi shared jagah apply na hua ho.</li>
-<li><b>Production</b> (Microsoft ke docs sabse pehle SQL scripts recommend karte hain): ek <b>SQL script</b> jise DBA ya pipeline review karke chalaaye — <code>migrations script --idempotent</code> use DB ke kisi bhi version par chalaane laayak safe banata hai; ya ek <b>migration bundle</b> (<code>migrations bundle</code>, EF Core 6+) — ek chhota executable jise aapki CD pipeline chalaati hai. App startup par <code>db.Database.Migrate()</code> call karna aasaan hai, par kai instances hon to woh aapas mein race karte hain, app ko DDL rights chahiye, aur SQL koi review nahi karta.</li>
+<li><code>db.Database.EnsureCreated()</code> model se seedhe schema banata hai, <b>migrations ko bypass karke</b>, aur <code>__EFMigrationsHistory</code> mein kuch nahi likhta. Ise tests aur demos ke liye use karo (aaj ke SQLite samples yahi karte hain); migrations ke saath ise kabhi mat milao — aise bane database par baad mein <code>Migrate()</code> fail hota hai.</li>
+<li><b>Production</b> (Microsoft ke docs sabse pehle SQL scripts recommend karte hain): ek <b>SQL script</b> jise DBA ya pipeline review karke chalaaye — <code>migrations script --idempotent</code> use DB ke kisi bhi version par chalaane laayak safe banata hai; ya ek <b>migration bundle</b> (<code>migrations bundle</code>, EF Core 6+) — ek chhota executable jise aapki CD pipeline chalaati hai. App startup par <code>db.Database.Migrate()</code> call karna aasaan hai, par production mein app ko DDL rights chahiye, failed migration startup rok deta hai, aur SQL koi review nahi karta (EF Core 9 ne lock joda taaki kai instances ek hi migration do baar apply na karein, par yeh issues bane rehte hain).</li>
 </ul>
 <p><b>Kab use karein:</b> Code-First projects mein har schema badlaav ke liye migration — code change ke saath commit, PR mein review, aur pipeline se apply (script ya bundle). <b>Kab nahi:</b> jo migration kisi shared database par apply ho chuka hai use edit ya delete mat karo — naya migration jodo; multi-instance production apps mein startup par <code>Migrate()</code> mat chalao; aur EF ko bataaye bina database haath se mat badlo.</p>`
       },
@@ -626,7 +629,7 @@ public partial class AddCustomerCity : Migration
 <li><b>1:1</b>: <code>HasOne(...).WithOne(...).HasForeignKey&lt;IdCard&gt;(c =&gt; c.StudentId)</code> — the generic argument tells EF which side is the dependent. SQL: FK + <b>unique index</b>.</li>
 <li><b>N:N with skip navigations</b> (EF Core 5+): <code>Student.Courses</code> and <code>Course.Students</code> are enough. EF creates the join table with a composite PK and two FKs. You never see the join rows in code — you just do <code>student.Courses.Add(course)</code>.</li>
 <li><b>Payload</b>: when the link itself has data (enrolment date, grade), make it a normal entity (<code>Enrollment</code> with <code>StudentId</code>, <code>CourseId</code>, <code>EnrolledOn</code>) — two 1:N relationships. You can still keep skip navigations through it with <code>UsingEntity&lt;Enrollment&gt;()</code>.</li>
-<li><b>Delete behaviour</b>: required relationships default to <code>Cascade</code> (database <code>ON DELETE CASCADE</code>); optional ones to <code>ClientSetNull</code> (EF sets the FK to NULL for tracked dependents; the database has no action). <code>Restrict</code>/<code>NoAction</code> block the delete while children exist. SQL Server rejects "multiple cascade paths", so on complex models you switch some FKs to <code>Restrict</code>.</li>
+<li><b>Delete behaviour</b>: required relationships default to <code>Cascade</code> (database <code>ON DELETE CASCADE</code>); optional ones to <code>ClientSetNull</code> (EF sets the FK to NULL for tracked dependents; the database has no action). <code>Restrict</code>/<code>NoAction</code> put no cascade in the database, so the database blocks the delete while children exist. For a <b>required</b> FK the delete fails; for an <b>optional</b> FK, EF still sets the FK of <b>tracked</b> children to NULL (only <code>ClientNoAction</code> stops that). SQL Server rejects "multiple cascade paths", so on complex models you switch some FKs to <code>Restrict</code>.</li>
 <li><b>Querying across relationships</b> needs no manual JOIN: <code>db.Students.Where(s =&gt; s.Courses.Any(c =&gt; c.Title == "SQL"))</code> becomes a <code>WHERE EXISTS</code> over the join table.</li>
 </ul>
 <p><b>When to use:</b> skip navigations for pure link tables; an explicit join entity as soon as the link carries data; explicit Fluent API whenever the convention is not obvious to a reader (1:1, custom FK names, delete rules). <b>When not:</b> do not rely on cascade delete for business rules you have not agreed with the team — deleting one customer can silently delete years of orders; and do not hand-write join tables in code when a skip navigation is enough.</p>`,
@@ -636,7 +639,7 @@ public partial class AddCustomerCity : Migration
 <li><b>1:1</b>: <code>HasOne(...).WithOne(...).HasForeignKey&lt;IdCard&gt;(c =&gt; c.StudentId)</code> — generic argument EF को बताता है कि dependent कौन सी side है। SQL: FK + <b>unique index</b>।</li>
 <li><b>Skip navigations वाला N:N</b> (EF Core 5+): <code>Student.Courses</code> और <code>Course.Students</code> काफ़ी हैं। EF composite PK और दो FKs वाला join table बनाता है। Code में join rows कभी नहीं दिखतीं — आप बस <code>student.Courses.Add(course)</code> करते हो।</li>
 <li><b>Payload</b>: जब link का अपना data हो (enrolment date, grade), तो उसे normal entity बनाओ (<code>StudentId</code>, <code>CourseId</code>, <code>EnrolledOn</code> वाली <code>Enrollment</code>) — दो 1:N relationships। <code>UsingEntity&lt;Enrollment&gt;()</code> से उसके through skip navigations फिर भी रख सकते हो।</li>
-<li><b>Delete behaviour</b>: required relationships का default <code>Cascade</code> है (database में <code>ON DELETE CASCADE</code>); optional का <code>ClientSetNull</code> (EF tracked dependents का FK NULL कर देता है; database में कोई action नहीं)। <code>Restrict</code>/<code>NoAction</code> children रहते हुए delete रोक देते हैं। SQL Server "multiple cascade paths" मना करता है, इसलिए complex models में कुछ FKs को <code>Restrict</code> करना पड़ता है।</li>
+<li><b>Delete behaviour</b>: required relationships का default <code>Cascade</code> है (database में <code>ON DELETE CASCADE</code>); optional का <code>ClientSetNull</code> (EF tracked dependents का FK NULL कर देता है; database में कोई action नहीं)। <code>Restrict</code>/<code>NoAction</code> database में कोई cascade नहीं रखते, इसलिए children रहते हुए database delete रोक देता है। <b>Required</b> FK पर delete fail होता है; <b>optional</b> FK पर EF फिर भी <b>tracked</b> children का FK NULL कर देता है (इसे सिर्फ़ <code>ClientNoAction</code> रोकता है)। SQL Server "multiple cascade paths" मना करता है, इसलिए complex models में कुछ FKs को <code>Restrict</code> करना पड़ता है।</li>
 <li><b>Relationships पर query</b> के लिए हाथ से JOIN नहीं लिखना पड़ता: <code>db.Students.Where(s =&gt; s.Courses.Any(c =&gt; c.Title == "SQL"))</code> join table पर एक <code>WHERE EXISTS</code> बन जाता है।</li>
 </ul>
 <p><b>कब use करें:</b> सिर्फ़ link वाली tables के लिए skip navigations; link पर data आते ही explicit join entity; और जहाँ convention पढ़ने वाले को साफ़ न दिखे वहाँ explicit Fluent API (1:1, custom FK names, delete rules)। <b>कब नहीं:</b> जिन business rules पर team से बात नहीं हुई, उनके लिए cascade delete पर भरोसा मत करो — एक customer delete करने से सालों के orders चुपचाप delete हो सकते हैं; और जब skip navigation काफ़ी हो तो code में join tables हाथ से मत लिखो।</p>`,
@@ -646,7 +649,7 @@ public partial class AddCustomerCity : Migration
 <li><b>1:1</b>: <code>HasOne(...).WithOne(...).HasForeignKey&lt;IdCard&gt;(c =&gt; c.StudentId)</code> — generic argument EF ko batata hai ki dependent kaunsi side hai. SQL: FK + <b>unique index</b>.</li>
 <li><b>Skip navigations wala N:N</b> (EF Core 5+): <code>Student.Courses</code> aur <code>Course.Students</code> kaafi hain. EF composite PK aur do FKs wala join table banata hai. Code mein join rows kabhi nahi dikhti — aap bas <code>student.Courses.Add(course)</code> karte ho.</li>
 <li><b>Payload</b>: jab link ka apna data ho (enrolment date, grade), to use normal entity banao (<code>StudentId</code>, <code>CourseId</code>, <code>EnrolledOn</code> wali <code>Enrollment</code>) — do 1:N relationships. <code>UsingEntity&lt;Enrollment&gt;()</code> se uske through skip navigations phir bhi rakh sakte ho.</li>
-<li><b>Delete behaviour</b>: required relationships ka default <code>Cascade</code> hai (database mein <code>ON DELETE CASCADE</code>); optional ka <code>ClientSetNull</code> (EF tracked dependents ka FK NULL kar deta hai; database mein koi action nahi). <code>Restrict</code>/<code>NoAction</code> children rehte hue delete rok dete hain. SQL Server "multiple cascade paths" mana karta hai, isliye complex models mein kuch FKs ko <code>Restrict</code> karna padta hai.</li>
+<li><b>Delete behaviour</b>: required relationships ka default <code>Cascade</code> hai (database mein <code>ON DELETE CASCADE</code>); optional ka <code>ClientSetNull</code> (EF tracked dependents ka FK NULL kar deta hai; database mein koi action nahi). <code>Restrict</code>/<code>NoAction</code> database mein koi cascade nahi rakhte, isliye children rehte hue database delete rok deta hai. <b>Required</b> FK par delete fail hota hai; <b>optional</b> FK par EF phir bhi <b>tracked</b> children ka FK NULL kar deta hai (ise sirf <code>ClientNoAction</code> rokta hai). SQL Server "multiple cascade paths" mana karta hai, isliye complex models mein kuch FKs ko <code>Restrict</code> karna padta hai.</li>
 <li><b>Relationships par query</b> ke liye haath se JOIN nahi likhna padta: <code>db.Students.Where(s =&gt; s.Courses.Any(c =&gt; c.Title == "SQL"))</code> join table par ek <code>WHERE EXISTS</code> ban jaata hai.</li>
 </ul>
 <p><b>Kab use karein:</b> sirf link wali tables ke liye skip navigations; link par data aate hi explicit join entity; aur jahan convention padhne wale ko saaf na dikhe wahan explicit Fluent API (1:1, custom FK names, delete rules). <b>Kab nahi:</b> jin business rules par team se baat nahi hui, unke liye cascade delete par bharosa mat karo — ek customer delete karne se saalon ke orders chupchaap delete ho sakte hain; aur jab skip navigation kaafi ho to code mein join tables haath se mat likho.</p>`
@@ -1278,21 +1281,21 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>Default</b>: nothing related is loaded; navigations are <code>null</code>/empty unless the related entities are already tracked (fix-up).</li>
 <li><b>Eager</b>: <code>Include</code>/<code>ThenInclude</code>; filtered Include since EF Core 5. One round trip, but wide Includes mean big result sets.</li>
 <li><b>Explicit</b>: <code>db.Entry(c).Collection(x =&gt; x.Orders).Load()</code>, <code>.Reference(...).Load()</code>, or <code>.Query().Count()</code> to aggregate without loading.</li>
-<li><b>Lazy</b>: off by default. Needs <code>Microsoft.EntityFrameworkCore.Proxies</code> + <code>UseLazyLoadingProxies()</code> + <code>virtual</code> navigations (or an injected <code>ILazyLoader</code>). Each first access = one query.</li>
+<li><b>Lazy</b>: off by default. Usual setup: <code>Microsoft.EntityFrameworkCore.Proxies</code> + <code>UseLazyLoadingProxies()</code> + <code>virtual</code> navigations. Alternative without proxies: inject <code>ILazyLoader</code> into the entity — no Proxies package and no <code>virtual</code> needed. Each first access = one query.</li>
 </ul>
 <p>Follow-up: "Which do you prefer in a Web API?" — Eager (or a <code>Select</code> projection to a DTO) so the number of queries is visible in code. Lazy loading also clashes with JSON serialization (it walks every navigation) and fails after the context is disposed.</p>`,
         hi: `<ul>
 <li><b>Default</b>: कुछ भी related load नहीं होता; navigations <code>null</code>/खाली रहते हैं, जब तक related entities पहले से tracked न हों (fix-up)।</li>
 <li><b>Eager</b>: <code>Include</code>/<code>ThenInclude</code>; EF Core 5 से filtered Include। एक round trip, पर बड़े Includes मतलब बड़े result sets।</li>
 <li><b>Explicit</b>: <code>db.Entry(c).Collection(x =&gt; x.Orders).Load()</code>, <code>.Reference(...).Load()</code>, या load किए बिना aggregate के लिए <code>.Query().Count()</code>।</li>
-<li><b>Lazy</b>: by default बंद। चाहिए <code>Microsoft.EntityFrameworkCore.Proxies</code> + <code>UseLazyLoadingProxies()</code> + <code>virtual</code> navigations (या inject किया हुआ <code>ILazyLoader</code>)। हर पहली access = एक query।</li>
+<li><b>Lazy</b>: by default बंद। आम setup: <code>Microsoft.EntityFrameworkCore.Proxies</code> + <code>UseLazyLoadingProxies()</code> + <code>virtual</code> navigations। Proxies के बिना दूसरा तरीका: entity में <code>ILazyLoader</code> inject करो — न Proxies package चाहिए, न <code>virtual</code>। हर पहली access = एक query।</li>
 </ul>
 <p>Follow-up: "Web API में कौन सा पसंद करोगे?" — Eager (या DTO में <code>Select</code> projection), ताकि queries की गिनती code में दिखे। Lazy loading JSON serialization से भी टकराता है (वो हर navigation पर चलता है) और context dispose होने के बाद fail होता है।</p>`,
         hg: `<ul>
 <li><b>Default</b>: kuch bhi related load nahi hota; navigations <code>null</code>/khaali rehte hain, jab tak related entities pehle se tracked na hon (fix-up).</li>
 <li><b>Eager</b>: <code>Include</code>/<code>ThenInclude</code>; EF Core 5 se filtered Include. Ek round trip, par bade Includes matlab bade result sets.</li>
 <li><b>Explicit</b>: <code>db.Entry(c).Collection(x =&gt; x.Orders).Load()</code>, <code>.Reference(...).Load()</code>, ya load kiye bina aggregate ke liye <code>.Query().Count()</code>.</li>
-<li><b>Lazy</b>: by default band. Chahiye <code>Microsoft.EntityFrameworkCore.Proxies</code> + <code>UseLazyLoadingProxies()</code> + <code>virtual</code> navigations (ya inject kiya hua <code>ILazyLoader</code>). Har pehli access = ek query.</li>
+<li><b>Lazy</b>: by default band. Aam setup: <code>Microsoft.EntityFrameworkCore.Proxies</code> + <code>UseLazyLoadingProxies()</code> + <code>virtual</code> navigations. Proxies ke bina doosra tareeka: entity mein <code>ILazyLoader</code> inject karo — na Proxies package chahiye, na <code>virtual</code>. Har pehli access = ek query.</li>
 </ul>
 <p>Follow-up: "Web API mein kaunsa pasand karoge?" — Eager (ya DTO mein <code>Select</code> projection), taaki queries ki ginti code mein dikhe. Lazy loading JSON serialization se bhi takraata hai (woh har navigation par chalta hai) aur context dispose hone ke baad fail hota hai.</p>`
       }
@@ -1301,10 +1304,10 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       id: "tracking-vs-notracking",
       depth: "short",
       q: "What does AsNoTracking do, and when do you use it?",
-      answer: "AsNoTracking returns entities the context does not track — no snapshot, no identity map — so reads are faster and lighter. I use it for read-only queries; changes to those objects are never saved.",
+      answer: "AsNoTracking returns entities the context does not track — no snapshot, no identity map — so reads are faster and lighter. I use it for read-only queries; changes to those objects are not saved by SaveChanges.",
       meaning: {
-        hi: "AsNoTracking ऐसी entities लौटाता है जिन्हें context track नहीं करता — न snapshot, न identity map — इसलिए reads तेज़ और हल्के होते हैं। मैं इसे read-only queries के लिए use करता हूँ; उन objects के बदलाव कभी save नहीं होते।",
-        hg: "AsNoTracking aisi entities lautaata hai jinhe context track nahi karta — na snapshot, na identity map — isliye reads tez aur halke hote hain. Main ise read-only queries ke liye use karta hoon; un objects ke badlaav kabhi save nahi hote."
+        hi: "AsNoTracking ऐसी entities लौटाता है जिन्हें context track नहीं करता — न snapshot, न identity map — इसलिए reads तेज़ और हल्के होते हैं। मैं इसे read-only queries के लिए use करता हूँ; उन objects के बदलाव SaveChanges से save नहीं होते।",
+        hg: "AsNoTracking aisi entities lautaata hai jinhe context track nahi karta — na snapshot, na identity map — isliye reads tez aur halke hote hain. Main ise read-only queries ke liye use karta hoon; un objects ke badlaav SaveChanges se save nahi hote."
       },
       explain: {
         en: `<ul>
@@ -1463,21 +1466,21 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       explain: {
         en: `<ul>
 <li><b>AddDbContext</b>: context Scoped, options Scoped. Simple, safe, enough for most APIs.</li>
-<li><b>AddDbContextPool</b>: the context is still resolved per scope, but instances come from a pool (default <code>poolSize</code> 1024) and are reset when returned. Options become a singleton, so they cannot depend on per-request data (for example, a per-tenant connection string). Do not keep per-request fields in the context, or reset them yourself.</li>
+<li><b>AddDbContextPool</b>: the context is still resolved per scope, but instances come from a pool (default <code>poolSize</code> 1024) and are reset when returned. Options become a singleton, so they cannot depend on per-request data (for example, a per-tenant connection string). Do not keep per-request fields in the context, or reset them yourself. The constructor should take only <code>DbContextOptions</code> — it runs once per pooled instance, so injected scoped services would be shared across requests.</li>
 <li><b>AddDbContextFactory</b>: registers <code>IDbContextFactory&lt;T&gt;</code> as a singleton (and the context itself as Scoped too). You call <code>CreateDbContext()</code> and own disposal. <b>AddPooledDbContextFactory</b> combines both ideas.</li>
 <li>Blazor Server: one circuit lives for the whole user session, so a Scoped context would live too long and be shared by overlapping UI events — use the factory, one context per operation.</li>
 </ul>
 <p>TL angle: pick pooling only with evidence (profiling under load). The gain is real but small compared with fixing slow queries.</p>`,
         hi: `<ul>
 <li><b>AddDbContext</b>: context Scoped, options Scoped। आसान, safe, ज़्यादातर APIs के लिए काफ़ी।</li>
-<li><b>AddDbContextPool</b>: context अब भी हर scope में resolve होता है, पर instances एक pool से आते हैं (default <code>poolSize</code> 1024) और लौटाने पर reset होते हैं। Options singleton बन जाते हैं, इसलिए वो per-request data पर depend नहीं कर सकते (जैसे हर tenant की अलग connection string)। Context में per-request fields मत रखो, या उन्हें खुद reset करो।</li>
+<li><b>AddDbContextPool</b>: context अब भी हर scope में resolve होता है, पर instances एक pool से आते हैं (default <code>poolSize</code> 1024) और लौटाने पर reset होते हैं। Options singleton बन जाते हैं, इसलिए वो per-request data पर depend नहीं कर सकते (जैसे हर tenant की अलग connection string)। Context में per-request fields मत रखो, या उन्हें खुद reset करो। Constructor सिर्फ़ <code>DbContextOptions</code> ले — वो हर pooled instance के लिए एक बार चलता है, इसलिए inject की गई scoped services requests के बीच share हो जातीं।</li>
 <li><b>AddDbContextFactory</b>: <code>IDbContextFactory&lt;T&gt;</code> को singleton register करता है (और context को भी Scoped)। आप <code>CreateDbContext()</code> call करते हो और dispose करना आपकी ज़िम्मेदारी है। <b>AddPooledDbContextFactory</b> दोनों ideas को मिलाता है।</li>
 <li>Blazor Server: एक circuit पूरे user session तक चलता है, इसलिए Scoped context बहुत लंबा चलेगा और overlapping UI events में share होगा — factory use करो, हर operation का एक context।</li>
 </ul>
 <p>TL angle: pooling सिर्फ़ सबूत के साथ चुनो (load में profiling)। फ़ायदा असली है पर slow queries ठीक करने के मुक़ाबले छोटा।</p>`,
         hg: `<ul>
 <li><b>AddDbContext</b>: context Scoped, options Scoped. Aasaan, safe, zyaadatar APIs ke liye kaafi.</li>
-<li><b>AddDbContextPool</b>: context ab bhi har scope mein resolve hota hai, par instances ek pool se aate hain (default <code>poolSize</code> 1024) aur lautaane par reset hote hain. Options singleton ban jaate hain, isliye woh per-request data par depend nahi kar sakte (jaise har tenant ki alag connection string). Context mein per-request fields mat rakho, ya unhe khud reset karo.</li>
+<li><b>AddDbContextPool</b>: context ab bhi har scope mein resolve hota hai, par instances ek pool se aate hain (default <code>poolSize</code> 1024) aur lautaane par reset hote hain. Options singleton ban jaate hain, isliye woh per-request data par depend nahi kar sakte (jaise har tenant ki alag connection string). Context mein per-request fields mat rakho, ya unhe khud reset karo. Constructor sirf <code>DbContextOptions</code> le — woh har pooled instance ke liye ek baar chalta hai, isliye inject ki gayi scoped services requests ke beech share ho jaati.</li>
 <li><b>AddDbContextFactory</b>: <code>IDbContextFactory&lt;T&gt;</code> ko singleton register karta hai (aur context ko bhi Scoped). Aap <code>CreateDbContext()</code> call karte ho aur dispose karna aapki zimmedaari hai. <b>AddPooledDbContextFactory</b> dono ideas ko milaata hai.</li>
 <li>Blazor Server: ek circuit poore user session tak chalta hai, isliye Scoped context bahut lamba chalega aur overlapping UI events mein share hoga — factory use karo, har operation ka ek context.</li>
 </ul>
@@ -1496,21 +1499,21 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       explain: {
         en: `<ul>
 <li><b>SQL script</b>: <code>dotnet ef migrations script --idempotent -o migrate.sql</code>. "Idempotent" wraps each migration in a check against <code>__EFMigrationsHistory</code>, so the same script works on any DB version. A DBA can read it before it runs — this is the approach Microsoft's docs recommend first.</li>
-<li><b>Bundle</b> (EF Core 6+): <code>dotnet ef migrations bundle</code> builds a self-contained executable; the pipeline runs <code>efbundle --connection "..."</code>. No SDK or source code needed on the deployment agent.</li>
+<li><b>Bundle</b> (EF Core 6+): <code>dotnet ef migrations bundle</code> builds a small executable; the pipeline runs <code>efbundle --connection "..."</code>. By default it is framework-dependent: the deployment agent needs the .NET runtime, but not the SDK or the source code. Add <code>--self-contained</code> to include the runtime too.</li>
 <li><b>Migrate() at startup</b>: easy for dev/test and single-instance apps. Risks in production: several instances racing (EF Core 9 added a migration lock, but the other issues remain), the app's DB user needs DDL rights, a failed migration blocks app startup, and nobody reviewed the SQL.</li>
 <li><b>Backward compatibility</b>: during a rolling deploy, the old version runs against the new schema. Prefer additive changes (add a nullable column first, backfill, then make it required in a later release); avoid renames/drops in the same release.</li>
 </ul>
 <p>Follow-up: "How do you roll back?" — Ideally roll <b>forward</b> with a new fixing migration. <code>Down()</code> scripts exist (<code>migrations script From To</code>), but dropping columns loses data, so test rollback before relying on it.</p>`,
         hi: `<ul>
 <li><b>SQL script</b>: <code>dotnet ef migrations script --idempotent -o migrate.sql</code>। "Idempotent" हर migration को <code>__EFMigrationsHistory</code> के check में लपेट देता है, इसलिए वही script DB के किसी भी version पर चलती है। चलने से पहले DBA उसे पढ़ सकता है — Microsoft के docs सबसे पहले यही तरीका recommend करते हैं।</li>
-<li><b>Bundle</b> (EF Core 6+): <code>dotnet ef migrations bundle</code> एक self-contained executable बनाता है; pipeline <code>efbundle --connection "..."</code> चलाती है। Deployment agent पर SDK या source code नहीं चाहिए।</li>
+<li><b>Bundle</b> (EF Core 6+): <code>dotnet ef migrations bundle</code> एक छोटा executable बनाता है; pipeline <code>efbundle --connection "..."</code> चलाती है। By default यह framework-dependent है: deployment agent पर .NET runtime चाहिए, पर SDK या source code नहीं। Runtime भी साथ रखना हो तो <code>--self-contained</code> जोड़ो।</li>
 <li><b>Startup पर Migrate()</b>: dev/test और single-instance apps के लिए आसान। Production में risks: कई instances की race (EF Core 9 ने migration lock जोड़ा, पर बाकी issues बने रहते हैं), app के DB user को DDL rights चाहिए, failed migration app startup रोक देता है, और SQL किसी ने review नहीं किया।</li>
 <li><b>Backward compatibility</b>: rolling deploy के दौरान पुराना version नए schema पर चलता है। Additive बदलाव बेहतर हैं (पहले nullable column जोड़ो, data भरो, फिर अगली release में required बनाओ); एक ही release में renames/drops से बचो।</li>
 </ul>
 <p>Follow-up: "Rollback कैसे करोगे?" — बेहतर है नए fixing migration के साथ <b>आगे</b> roll करो। <code>Down()</code> scripts होते हैं (<code>migrations script From To</code>), पर columns drop करने से data जाता है, इसलिए भरोसा करने से पहले rollback test करो।</p>`,
         hg: `<ul>
 <li><b>SQL script</b>: <code>dotnet ef migrations script --idempotent -o migrate.sql</code>. "Idempotent" har migration ko <code>__EFMigrationsHistory</code> ke check mein lapet deta hai, isliye wahi script DB ke kisi bhi version par chalti hai. Chalne se pehle DBA use padh sakta hai — Microsoft ke docs sabse pehle yahi tareeka recommend karte hain.</li>
-<li><b>Bundle</b> (EF Core 6+): <code>dotnet ef migrations bundle</code> ek self-contained executable banata hai; pipeline <code>efbundle --connection "..."</code> chalaati hai. Deployment agent par SDK ya source code nahi chahiye.</li>
+<li><b>Bundle</b> (EF Core 6+): <code>dotnet ef migrations bundle</code> ek chhota executable banata hai; pipeline <code>efbundle --connection "..."</code> chalaati hai. By default yeh framework-dependent hai: deployment agent par .NET runtime chahiye, par SDK ya source code nahi. Runtime bhi saath rakhna ho to <code>--self-contained</code> jodo.</li>
 <li><b>Startup par Migrate()</b>: dev/test aur single-instance apps ke liye aasaan. Production mein risks: kai instances ki race (EF Core 9 ne migration lock joda, par baaki issues bane rehte hain), app ke DB user ko DDL rights chahiye, failed migration app startup rok deta hai, aur SQL kisi ne review nahi kiya.</li>
 <li><b>Backward compatibility</b>: rolling deploy ke dauraan purana version naye schema par chalta hai. Additive badlaav behtar hain (pehle nullable column jodo, data bharo, phir agli release mein required banao); ek hi release mein renames/drops se bacho.</li>
 </ul>
@@ -1626,16 +1629,17 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       id: "delete-behavior",
       depth: "detailed",
       q: "What happens to child rows when you delete a parent entity in EF Core?",
-      answer: "It depends on the delete behaviour. Required relationships default to Cascade, so children are deleted too. Optional ones default to ClientSetNull: EF sets the FK to NULL on tracked children. Restrict or NoAction block the delete.",
+      answer: "Required FKs default to Cascade, so children are deleted too. Optional FKs default to ClientSetNull: EF nulls the FK on tracked children. Restrict blocks the delete for required FKs and in the database.",
       meaning: {
-        hi: "यह delete behaviour पर depend करता है। Required relationships का default Cascade है, इसलिए children भी delete होते हैं। Optional का default ClientSetNull है: EF tracked children का FK NULL कर देता है। Restrict या NoAction delete रोक देते हैं।",
-        hg: "Yeh delete behaviour par depend karta hai. Required relationships ka default Cascade hai, isliye children bhi delete hote hain. Optional ka default ClientSetNull hai: EF tracked children ka FK NULL kar deta hai. Restrict ya NoAction delete rok dete hain."
+        hi: "Required FKs का default Cascade है, इसलिए children भी delete होते हैं। Optional का default ClientSetNull है: EF tracked children का FK NULL कर देता है। Restrict, required FKs पर और database के स्तर पर delete रोकता है।",
+        hg: "Required FKs ka default Cascade hai, isliye children bhi delete hote hain. Optional ka default ClientSetNull hai: EF tracked children ka FK NULL kar deta hai. Restrict, required FKs par aur database ke star par delete rokta hai."
       },
       explain: {
         en: `<ul>
 <li><b>Cascade</b>: EF deletes tracked children itself, and the database FK has <code>ON DELETE CASCADE</code> for the rest.</li>
 <li><b>ClientSetNull</b> (optional default): EF nulls the FK on <b>tracked</b> children; the database has no action, so untracked children make the DELETE fail with an FK violation.</li>
-<li><b>SetNull</b>: database <code>ON DELETE SET NULL</code> too. <b>Restrict</b>/<b>NoAction</b>: no cascade, the delete fails while children exist. <b>ClientCascade</b>: EF deletes tracked children, the database does nothing.</li>
+<li><b>SetNull</b>: database <code>ON DELETE SET NULL</code> too. <b>Restrict</b>/<b>NoAction</b>: no cascade in the database, so the database rejects the delete while children exist. For a <b>required</b> FK the delete fails. For an <b>optional</b> FK, EF still sets <b>tracked</b> children's FK to NULL and the delete succeeds; only <b>ClientNoAction</b> leaves them alone and lets the database FK block it. <b>ClientCascade</b>: EF deletes tracked children, the database does nothing.</li>
+<li>Practical rule: for an optional FK, whether the delete is blocked depends on whether the children happen to be loaded — so test the exact case (see the puzzle <i>restrict-optional-fk</i>).</li>
 <li>SQL Server refuses FKs that "may cause cycles or multiple cascade paths" — then set some relationships to <code>Restrict</code>/<code>NoAction</code>.</li>
 <li>Many business systems do not hard-delete at all: a <b>soft delete</b> flag (<code>IsDeleted</code>) plus a global query filter (Day 6 territory).</li>
 </ul>
@@ -1643,7 +1647,8 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         hi: `<ul>
 <li><b>Cascade</b>: EF tracked children खुद delete करता है, और बाकी के लिए database FK पर <code>ON DELETE CASCADE</code> होता है।</li>
 <li><b>ClientSetNull</b> (optional का default): EF <b>tracked</b> children का FK null करता है; database में कोई action नहीं, इसलिए untracked children होने पर DELETE FK violation से fail होता है।</li>
-<li><b>SetNull</b>: database में भी <code>ON DELETE SET NULL</code>। <b>Restrict</b>/<b>NoAction</b>: कोई cascade नहीं, children रहते हुए delete fail होता है। <b>ClientCascade</b>: EF tracked children delete करता है, database कुछ नहीं करता।</li>
+<li><b>SetNull</b>: database में भी <code>ON DELETE SET NULL</code>। <b>Restrict</b>/<b>NoAction</b>: database में कोई cascade नहीं, इसलिए children रहते हुए database delete मना कर देता है। <b>Required</b> FK पर delete fail होता है। <b>Optional</b> FK पर EF फिर भी <b>tracked</b> children का FK NULL कर देता है और delete हो जाता है; सिर्फ़ <b>ClientNoAction</b> उन्हें नहीं छूता और database FK को delete रोकने देता है। <b>ClientCascade</b>: EF tracked children delete करता है, database कुछ नहीं करता।</li>
+<li>Practical नियम: optional FK पर delete रुकेगा या नहीं, यह इस पर depend करता है कि children load हैं या नहीं — इसलिए ठीक वही case test करो (puzzle <i>restrict-optional-fk</i> देखो)।</li>
 <li>SQL Server उन FKs को मना करता है जो "may cause cycles or multiple cascade paths" — तब कुछ relationships को <code>Restrict</code>/<code>NoAction</code> करो।</li>
 <li>कई business systems hard-delete करते ही नहीं: एक <b>soft delete</b> flag (<code>IsDeleted</code>) और global query filter (Day 6 का इलाक़ा)।</li>
 </ul>
@@ -1651,7 +1656,8 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         hg: `<ul>
 <li><b>Cascade</b>: EF tracked children khud delete karta hai, aur baaki ke liye database FK par <code>ON DELETE CASCADE</code> hota hai.</li>
 <li><b>ClientSetNull</b> (optional ka default): EF <b>tracked</b> children ka FK null karta hai; database mein koi action nahi, isliye untracked children hone par DELETE FK violation se fail hota hai.</li>
-<li><b>SetNull</b>: database mein bhi <code>ON DELETE SET NULL</code>. <b>Restrict</b>/<b>NoAction</b>: koi cascade nahi, children rehte hue delete fail hota hai. <b>ClientCascade</b>: EF tracked children delete karta hai, database kuch nahi karta.</li>
+<li><b>SetNull</b>: database mein bhi <code>ON DELETE SET NULL</code>. <b>Restrict</b>/<b>NoAction</b>: database mein koi cascade nahi, isliye children rehte hue database delete mana kar deta hai. <b>Required</b> FK par delete fail hota hai. <b>Optional</b> FK par EF phir bhi <b>tracked</b> children ka FK NULL kar deta hai aur delete ho jaata hai; sirf <b>ClientNoAction</b> unhe nahi chhoota aur database FK ko delete rokne deta hai. <b>ClientCascade</b>: EF tracked children delete karta hai, database kuch nahi karta.</li>
+<li>Practical niyam: optional FK par delete rukega ya nahi, yeh is par depend karta hai ki children load hain ya nahi — isliye theek wahi case test karo (puzzle <i>restrict-optional-fk</i> dekho).</li>
 <li>SQL Server un FKs ko mana karta hai jo "may cause cycles or multiple cascade paths" — tab kuch relationships ko <code>Restrict</code>/<code>NoAction</code> karo.</li>
 <li>Kai business systems hard-delete karte hi nahi: ek <b>soft delete</b> flag (<code>IsDeleted</code>) aur global query filter (Day 6 ka ilaaka).</li>
 </ul>
@@ -2448,10 +2454,103 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 </ul>`
       }
     },
+    {
+      id: "restrict-optional-fk",
+      packages: ["Microsoft.EntityFrameworkCore.Sqlite"],
+      src: `using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+
+using var connection = new SqliteConnection("Data Source=:memory:");
+connection.Open();
+var options = new DbContextOptionsBuilder<SchoolContext>().UseSqlite(connection).Options;
+
+using (var setup = new SchoolContext(options))
+{
+    setup.Database.EnsureCreated();
+    setup.Teachers.Add(new Teacher { Name = "Rao", Students = { new Student { Name = "Asha" } } });
+    setup.Teachers.Add(new Teacher { Name = "Iyer", Students = { new Student { Name = "Ravi" } } });
+    setup.SaveChanges();
+}
+
+// 1. Delete a mentor WITH her students loaded (tracked)
+using (var db = new SchoolContext(options))
+{
+    var rao = db.Teachers.Include(t => t.Students).Single(t => t.Name == "Rao");
+    db.Teachers.Remove(rao);
+    Console.WriteLine($"saved = {db.SaveChanges()}");
+    var asha = db.Students.AsNoTracking().Single(s => s.Name == "Asha");
+    Console.WriteLine($"Asha.MentorId = {asha.MentorId?.ToString() ?? "null"}");
+}
+
+// 2. Delete a mentor WITHOUT loading her students
+using (var db = new SchoolContext(options))
+{
+    var iyer = db.Teachers.Single(t => t.Name == "Iyer");
+    db.Teachers.Remove(iyer);
+    try
+    {
+        db.SaveChanges();
+        Console.WriteLine("deleted");
+    }
+    catch (DbUpdateException)
+    {
+        Console.WriteLine("DbUpdateException: the database FK blocked the delete");
+    }
+}
+
+public class Teacher
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+    public List<Student> Students { get; } = [];
+}
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+    public int? MentorId { get; set; }              // optional FK
+    public Teacher? Mentor { get; set; }
+}
+
+public class SchoolContext(DbContextOptions<SchoolContext> options) : DbContext(options)
+{
+    public DbSet<Teacher> Teachers => Set<Teacher>();
+    public DbSet<Student> Students => Set<Student>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+        => modelBuilder.Entity<Student>()
+            .HasOne(s => s.Mentor)
+            .WithMany(t => t.Students)
+            .HasForeignKey(s => s.MentorId)
+            .OnDelete(DeleteBehavior.Restrict);      // "Restrict" — but the FK is optional
+}`,
+      answer: "saved = 2\nAsha.MentorId = null\nDbUpdateException: the database FK blocked the delete",
+      explain: {
+        en: `<ul>
+<li>The FK is <b>optional</b> (<code>int? MentorId</code>) and configured with <code>Restrict</code>, so the database FK has no cascade (<code>NO ACTION</code>).</li>
+<li><b>Case 1</b>: Asha is <b>tracked</b> (loaded with Include). For an optional relationship, EF still severs it: it sets Asha's <code>MentorId</code> to NULL (an UPDATE) and deletes Rao (a DELETE) → <b>saved = 2</b>, <b>MentorId = null</b>. "Restrict" did not stop anything.</li>
+<li><b>Case 2</b>: Ravi is <b>not loaded</b>, so EF knows nothing about him and sends only the DELETE. The database FK still points from Ravi to Iyer → the database rejects it → <b>DbUpdateException</b>.</li>
+<li>Lesson: for optional FKs, <code>Restrict</code>/<code>NoAction</code> block the delete only at the database level. If you want EF to leave tracked children alone too, use <code>DeleteBehavior.ClientNoAction</code>. For a <b>required</b> FK, the delete fails in both cases.</li>
+</ul>`,
+        hi: `<ul>
+<li>FK <b>optional</b> है (<code>int? MentorId</code>) और <code>Restrict</code> से configure है, इसलिए database FK में कोई cascade नहीं (<code>NO ACTION</code>)।</li>
+<li><b>Case 1</b>: Asha <b>tracked</b> है (Include से load)। Optional relationship में EF फिर भी रिश्ता तोड़ देता है: Asha का <code>MentorId</code> NULL करता है (एक UPDATE) और Rao को delete करता है (एक DELETE) → <b>saved = 2</b>, <b>MentorId = null</b>। "Restrict" ने कुछ नहीं रोका।</li>
+<li><b>Case 2</b>: Ravi <b>load नहीं</b> हुआ, इसलिए EF उसके बारे में कुछ नहीं जानता और सिर्फ़ DELETE भेजता है। Database FK अब भी Ravi से Iyer को point करता है → database मना कर देता है → <b>DbUpdateException</b>।</li>
+<li>सीख: optional FKs पर <code>Restrict</code>/<code>NoAction</code> delete को सिर्फ़ database के स्तर पर रोकते हैं। अगर EF भी tracked children को न छुए, तो <code>DeleteBehavior.ClientNoAction</code> use करो। <b>Required</b> FK पर delete दोनों cases में fail होता है।</li>
+</ul>`,
+        hg: `<ul>
+<li>FK <b>optional</b> hai (<code>int? MentorId</code>) aur <code>Restrict</code> se configure hai, isliye database FK mein koi cascade nahi (<code>NO ACTION</code>).</li>
+<li><b>Case 1</b>: Asha <b>tracked</b> hai (Include se load). Optional relationship mein EF phir bhi rishta tod deta hai: Asha ka <code>MentorId</code> NULL karta hai (ek UPDATE) aur Rao ko delete karta hai (ek DELETE) → <b>saved = 2</b>, <b>MentorId = null</b>. "Restrict" ne kuch nahi roka.</li>
+<li><b>Case 2</b>: Ravi <b>load nahi</b> hua, isliye EF uske baare mein kuch nahi jaanta aur sirf DELETE bhejta hai. Database FK ab bhi Ravi se Iyer ko point karta hai → database mana kar deta hai → <b>DbUpdateException</b>.</li>
+<li>Seekh: optional FKs par <code>Restrict</code>/<code>NoAction</code> delete ko sirf database ke star par rokte hain. Agar aap chahte ho ki EF bhi tracked children ko na chhuye, to <code>DeleteBehavior.ClientNoAction</code> use karo. <b>Required</b> FK par delete dono cases mein fail hota hai.</li>
+</ul>`
+      }
+    },
   ],
   revision: {
     en: [
-      "<b>DbContext</b> = a unit-of-work session: LINQ → SQL, tracks loaded entities, <code>SaveChanges()</code> writes all changes in one transaction. <b>DbSet&lt;T&gt;</b> = one table.",
+      "<b>DbContext</b> = a short-lived unit-of-work session: it tracks what you load, and <code>SaveChanges()</code> writes all changes in one transaction.",
       "<b>Lifetime</b>: <code>AddDbContext</code> = Scoped, one per HTTP request. Not thread-safe — never a singleton, never shared across parallel tasks.",
       "<b>Factory / pool</b>: <code>AddDbContextFactory</code> for background jobs, Blazor Server and parallel work; <code>AddDbContextPool</code> only for proven high-throughput needs.",
       "<b>Code-First</b> = C# model is the truth, migrations build the schema. <b>DB-First</b> = <code>dotnet ef dbcontext scaffold</code> from an existing database.",
@@ -2459,14 +2558,14 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
       "<b>Production migrations</b>: an idempotent SQL script or a bundle run by the pipeline — not <code>Migrate()</code> at startup on many instances.",
       "<b>Relationships</b>: FK on the many side; 1:1 = FK + unique index; N:N = join table, created for you by skip navigations (EF Core 5+).",
       "<b>Delete rules</b>: required FK → Cascade by default; optional FK → ClientSetNull. Review every <code>ON DELETE CASCADE</code>.",
-      "<b>Loading</b>: eager = <code>Include</code> (a JOIN); explicit = <code>Entry().Collection().Load()</code>; lazy = proxies + <code>virtual</code>, one query per navigation (N+1 risk). Nothing loads by default.",
-      "<b>Include SQL</b>: required reference → INNER JOIN; collection → LEFT JOIN + ORDER BY keys. Check it with <code>ToQueryString()</code>.",
+      "<b>Eager = <code>Include</code></b>: one query with a JOIN — INNER for a required reference, LEFT + ORDER BY keys for a collection.",
+      "<b>Lazy loading</b> (proxies + <code>virtual</code>) runs a hidden query per navigation — N+1 risk; prefer <code>Include</code> or an explicit <code>Load()</code>.",
       "<b>Tracking</b>: states Added / Unchanged / Modified / Deleted / Detached; the UPDATE contains only changed columns. <code>AsNoTracking()</code> for read-only queries.",
       "<b>Identity resolution</b>: one object per key in a context — a tracked query will not refresh it; <code>AsNoTrackingWithIdentityResolution()</code> dedupes without tracking."
     ],
     meaning: {
       hi: [
-        "DbContext = एक unit-of-work session: LINQ → SQL, load की गई entities track करता है, SaveChanges() सारे बदलाव एक transaction में लिखता है। DbSet&lt;T&gt; = एक table।",
+        "DbContext = कम समय का एक unit-of-work session: जो load करो उसे track करता है, और SaveChanges() सारे बदलाव एक transaction में लिखता है।",
         "Lifetime: AddDbContext = Scoped, हर HTTP request का एक। Thread-safe नहीं — कभी singleton नहीं, कभी parallel tasks में share नहीं।",
         "Factory / pool: background jobs, Blazor Server और parallel काम के लिए AddDbContextFactory; AddDbContextPool सिर्फ़ साबित हुई high-throughput ज़रूरत के लिए।",
         "Code-First = C# model truth है, migrations schema बनाते हैं। DB-First = पहले से बने database से dotnet ef dbcontext scaffold।",
@@ -2474,13 +2573,13 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         "Production migrations: pipeline से चलने वाली idempotent SQL script या bundle — कई instances पर startup में Migrate() नहीं।",
         "Relationships: FK many वाली side पर; 1:1 = FK + unique index; N:N = join table, जो skip navigations से आपके लिए बनता है (EF Core 5+)।",
         "Delete rules: required FK → by default Cascade; optional FK → ClientSetNull। हर ON DELETE CASCADE review करो।",
-        "Loading: eager = Include (एक JOIN); explicit = Entry().Collection().Load(); lazy = proxies + virtual, हर navigation की एक query (N+1 का ख़तरा)। By default कुछ load नहीं होता।",
-        "Include का SQL: required reference → INNER JOIN; collection → LEFT JOIN + keys पर ORDER BY। ToQueryString() से check करो।",
+        "Eager = Include: JOIN वाली एक query — required reference के लिए INNER, collection के लिए LEFT + keys पर ORDER BY।",
+        "Lazy loading (proxies + virtual) हर navigation पर एक छुपी query चलाता है — N+1 का ख़तरा; Include या explicit Load() बेहतर है।",
         "Tracking: states Added / Unchanged / Modified / Deleted / Detached; UPDATE में सिर्फ़ बदले columns। Read-only queries के लिए AsNoTracking()।",
         "Identity resolution: एक context में हर key का एक object — tracked query उसे refresh नहीं करती; AsNoTrackingWithIdentityResolution() बिना tracking के duplicates हटाता है।"
       ],
       hg: [
-        "DbContext = ek unit-of-work session: LINQ → SQL, load ki gayi entities track karta hai, SaveChanges() saare badlaav ek transaction mein likhta hai. DbSet&lt;T&gt; = ek table.",
+        "DbContext = kam samay ka ek unit-of-work session: jo load karo use track karta hai, aur SaveChanges() saare badlaav ek transaction mein likhta hai.",
         "Lifetime: AddDbContext = Scoped, har HTTP request ka ek. Thread-safe nahi — kabhi singleton nahi, kabhi parallel tasks mein share nahi.",
         "Factory / pool: background jobs, Blazor Server aur parallel kaam ke liye AddDbContextFactory; AddDbContextPool sirf saabit hui high-throughput zaroorat ke liye.",
         "Code-First = C# model truth hai, migrations schema banaate hain. DB-First = pehle se bane database se dotnet ef dbcontext scaffold.",
@@ -2488,15 +2587,15 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
         "Production migrations: pipeline se chalne wali idempotent SQL script ya bundle — kai instances par startup mein Migrate() nahi.",
         "Relationships: FK many wali side par; 1:1 = FK + unique index; N:N = join table, jo skip navigations se aapke liye banta hai (EF Core 5+).",
         "Delete rules: required FK → by default Cascade; optional FK → ClientSetNull. Har ON DELETE CASCADE review karo.",
-        "Loading: eager = Include (ek JOIN); explicit = Entry().Collection().Load(); lazy = proxies + virtual, har navigation ki ek query (N+1 ka khatra). By default kuch load nahi hota.",
-        "Include ka SQL: required reference → INNER JOIN; collection → LEFT JOIN + keys par ORDER BY. ToQueryString() se check karo.",
+        "Eager = Include: JOIN wali ek query — required reference ke liye INNER, collection ke liye LEFT + keys par ORDER BY.",
+        "Lazy loading (proxies + virtual) har navigation par ek chhupi query chalata hai — N+1 ka khatra; Include ya explicit Load() behtar hai.",
         "Tracking: states Added / Unchanged / Modified / Deleted / Detached; UPDATE mein sirf badle columns. Read-only queries ke liye AsNoTracking().",
         "Identity resolution: ek context mein har key ka ek object — tracked query use refresh nahi karti; AsNoTrackingWithIdentityResolution() bina tracking ke duplicates hataata hai."
       ]
     }
   },
   whatsNew: {
-    en: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, requires .NET 10). Everything in today's lesson works the same in EF Core 10. Many "old" answers online predate the features below — this is what each version <b>added</b>:</p>
+    en: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, requires .NET 10). The concepts in today's lesson are unchanged in EF Core 10. Many "old" answers online predate the features below — this is what each version <b>added</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — many-to-many with skip navigations (no join entity needed), filtered <code>Include</code>, split queries (<code>AsSplitQuery</code>), <code>AsNoTrackingWithIdentityResolution</code>.</li>
 <li><b>EF Core 6</b> — migration bundles (<code>dotnet ef migrations bundle</code>).</li>
@@ -2506,7 +2605,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 10</b> — the headline changes are on the query side (for example <code>LeftJoin</code>/<code>RightJoin</code>, Day 4); more EF Core 9/10 changes on Day 6.</li>
 </ul>
 <p>This tutorial's checker runs every EF snippet on EF Core 9 (.NET 9 SDK). The printed SQL is real SQL Server SQL from <code>ToQueryString()</code>/<code>GenerateCreateScript()</code>; alias and parameter names can differ slightly between EF Core versions.</p>`,
-    hi: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 चाहिए)। आज के lesson की हर चीज़ EF Core 10 में वैसे ही काम करती है। Online कई "पुराने" answers नीचे के features से पहले के हैं — हर version ने यह <b>जोड़ा</b>:</p>
+    hi: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 चाहिए)। आज के lesson के concepts EF Core 10 में नहीं बदले। Online कई "पुराने" answers नीचे के features से पहले के हैं — हर version ने यह <b>जोड़ा</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — skip navigations वाला many-to-many (join entity की ज़रूरत नहीं), filtered <code>Include</code>, split queries (<code>AsSplitQuery</code>), <code>AsNoTrackingWithIdentityResolution</code>।</li>
 <li><b>EF Core 6</b> — migration bundles (<code>dotnet ef migrations bundle</code>)।</li>
@@ -2516,7 +2615,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
 <li><b>EF Core 10</b> — मुख्य बदलाव query वाली side पर हैं (जैसे <code>LeftJoin</code>/<code>RightJoin</code>, Day 4); EF Core 9/10 के और बदलाव Day 6 में।</li>
 </ul>
 <p>इस tutorial का checker हर EF snippet EF Core 9 (.NET 9 SDK) पर चलाता है। Print हुआ SQL <code>ToQueryString()</code>/<code>GenerateCreateScript()</code> से आया असली SQL Server SQL है; alias और parameter names EF Core versions के बीच थोड़े अलग हो सकते हैं।</p>`,
-    hg: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 chahiye). Aaj ke lesson ki har cheez EF Core 10 mein waise hi kaam karti hai. Online kai "purane" answers neeche ke features se pehle ke hain — har version ne yeh <b>joda</b>:</p>
+    hg: `<p>Current: <b>EF Core 10</b> (LTS, Nov 2025, .NET 10 chahiye). Aaj ke lesson ke concepts EF Core 10 mein nahi badle. Online kai "purane" answers neeche ke features se pehle ke hain — har version ne yeh <b>joda</b>:</p>
 <ul>
 <li><b>EF Core 5</b> — skip navigations wala many-to-many (join entity ki zaroorat nahi), filtered <code>Include</code>, split queries (<code>AsSplitQuery</code>), <code>AsNoTrackingWithIdentityResolution</code>.</li>
 <li><b>EF Core 6</b> — migration bundles (<code>dotnet ef migrations bundle</code>).</li>
