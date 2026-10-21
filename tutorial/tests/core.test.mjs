@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import { loadCurriculum } from '../tools/load-content.mjs';
 
 const require = createRequire(import.meta.url);
-const { parseDay, pick, filterDepth, nextUndoneDay, makeStore, contentPath } = require('../assets/core.js');
+const { parseDay, pick, filterDepth, nextUndoneDay, makeStore, contentPath, estimateMinutes, formatMinutes } = require('../assets/core.js');
 
 const cur = loadCurriculum('content/curriculum.js');
 
@@ -60,4 +60,40 @@ test('store_roundtrip_json', () => {
 test('contentPath', () => {
   assert.equal(contentPath(3), 'content/day03.js');
   assert.equal(contentPath(12), 'content/day12.js');
+});
+
+// n plain words, wrapped in HTML so tag stripping is exercised.
+const words = n => '<p>' + Array(n).fill('word').join(' ') + '</p>';
+
+test('estimateMinutes_visible_words_and_puzzles', () => {
+  const day = {
+    summary: { en: words(400) },
+    sections: [
+      { depth: 'short', title: { en: '' }, body: { en: words(1600) } },
+      { depth: 'detailed', title: { en: '' }, body: { en: words(9000) }, code: [{ caption: { en: '' }, src: 'var a = 1;' }] }
+    ],
+    qa: [
+      { depth: 'short', q: words(100), answer: words(100), explain: { en: words(1500) } },
+      { depth: 'detailed', q: words(100), answer: words(100), explain: { en: words(797) } }
+    ],
+    puzzles: [{}, {}, {}, {}, {}],
+    revision: { en: [words(200), words(100)] }
+  };
+  // short: 400 + 1600 + 1700 + 300 = 4000 words / 200 wpm = 20 min; puzzles are detailed-only
+  assert.equal(estimateMinutes(day, 'short'), 20);
+  // detailed: 4000 + 9000 + 4 (code) + 997 = 14001 words = 70 min, + 5 puzzles x 3 min = 85 min
+  assert.equal(estimateMinutes(day, 'detailed'), 85);
+});
+
+test('estimateMinutes_rounds_to_5_min_with_minimum', () => {
+  assert.equal(estimateMinutes({ summary: { en: words(10) } }, 'short'), 5);
+  assert.equal(estimateMinutes({ summary: { en: words(1500) } }, 'short'), 10);   // 7.5 min -> 10
+  assert.equal(estimateMinutes({ summary: { en: words(1400) } }, 'short'), 5);    // 7 min -> 5
+  assert.equal(estimateMinutes({ summary: { en: words(400) }, whatsNew: { en: words(1600) } }, 'short'), 10);
+});
+
+test('formatMinutes', () => {
+  assert.equal(formatMinutes(20), '20 min');
+  assert.equal(formatMinutes(60), '1 h');
+  assert.equal(formatMinutes(105), '1 h 45 min');
 });

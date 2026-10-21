@@ -14,10 +14,11 @@
     en: {
       plan: '30-day plan', today: 'Today ▶', progress: '{done}/{total} days done',
       howTitle: 'How to use',
-      howText: 'Read <b>Short</b> (15 min) → then <b>Detailed</b> (40 min) → then answer the questions aloud (15–20 min).',
+      howText: 'Read <b>Short</b> first (~15–20 min) and answer its questions aloud. In <b>Detailed</b>, skip what you already read, then pick the questions you got wrong plus ~5 puzzles. Treat the rest as reference to revisit. Each day page shows a time estimate for the chosen depth.',
       week: 'Week', soon: 'Coming soon', day: 'Day',
       prev: '◀ Prev', next: 'Next ▶', home: '🏠 Home', short: 'Short', detailed: 'Detailed',
-      summary: '⚡ 2-minute summary', learn: '📘 Concept & code', whatsNew: '🆕 What’s new in .NET 9/10',
+      estimate: '⏱ ≈ {time} for this depth',
+      summary: '⚡ 2-minute summary', learn: '📘 Concept & code', whatsNew: '🆕 What’s new in recent versions',
       qa: '❓ Interview Q&A', showAnswer: 'Show answer ▼', meaning: '',
       puzzles: '🧩 Puzzles', puzzle: 'Puzzle', whatPrint: 'What will this print?',
       revision: '📝 Last-minute revision', markDone: 'Mark day as done ✓', isDone: 'Day done ✓ — click to undo',
@@ -28,15 +29,17 @@
       notFoundTitle: 'Day not found', notFoundText: 'This link does not match any day of the 30-day plan.',
       notReadyTitle: 'Coming in Phase 2', notReadyText: 'Day {n} is not written yet. Finish the ready days first!',
       missingTitle: 'Content file missing', missingText: 'Could not load <code>{file}</code>. Check that it exists in the <code>content</code> folder.',
+      errorTitle: 'Content file has an error', errorText: '<code>{file}</code> loaded but did not set up this day (a JavaScript error or a wrong <code>day</code> number). Run <code>node tools/validate.mjs</code> to find it.',
       backHome: '🏠 Back to Home'
     },
     hi: {
       plan: '30 दिन का प्लान', today: 'आज का दिन ▶', progress: '{total} में से {done} दिन पूरे',
       howTitle: 'कैसे पढ़ें',
-      howText: 'पहले <b>Short</b> पढ़ो (15 min) → फिर <b>Detailed</b> (40 min) → फिर सवालों के जवाब बोलकर दो (15–20 min)।',
+      howText: 'पहले <b>Short</b> पढ़ो (~15–20 min) और उसके सवालों के जवाब बोलकर दो। <b>Detailed</b> में जो पहले पढ़ चुके हो उसे छोड़ दो, फिर जिन सवालों में ग़लती हुई वो और ~5 पहेलियाँ चुनो। बाक़ी को reference मानो और बाद में दोबारा देखो। हर दिन के page पर चुनी हुई depth का time estimate दिखता है।',
       week: 'हफ़्ता', soon: 'जल्द आ रहा है', day: 'दिन',
       prev: '◀ पिछला', next: 'अगला ▶', home: '🏠 होम', short: 'Short', detailed: 'Detailed',
-      summary: '⚡ 2 मिनट में सार', learn: '📘 कॉन्सेप्ट और कोड', whatsNew: '🆕 .NET 9/10 में नया क्या है',
+      estimate: '⏱ इस depth के लिए ≈ {time}',
+      summary: '⚡ 2 मिनट में सार', learn: '📘 कॉन्सेप्ट और कोड', whatsNew: '🆕 हाल के versions में नया क्या है',
       qa: '❓ इंटरव्यू सवाल-जवाब', showAnswer: 'जवाब देखो ▼', meaning: 'मतलब:',
       puzzles: '🧩 पहेलियाँ', puzzle: 'पहेली', whatPrint: 'यह क्या print करेगा?',
       revision: '📝 आख़िरी मिनट रिवीज़न', markDone: 'दिन पूरा हुआ ✓', isDone: 'दिन पूरा ✓ — वापस लेने के लिए क्लिक करो',
@@ -47,15 +50,17 @@
       notFoundTitle: 'यह दिन नहीं मिला', notFoundText: 'यह लिंक 30 दिन के प्लान के किसी दिन से मेल नहीं खाता।',
       notReadyTitle: 'Phase 2 में आएगा', notReadyText: 'दिन {n} अभी लिखा नहीं गया है। पहले तैयार दिन पूरे करो!',
       missingTitle: 'कंटेंट फ़ाइल नहीं मिली', missingText: '<code>{file}</code> लोड नहीं हुई। देखो कि फ़ाइल <code>content</code> फ़ोल्डर में है।',
+      errorTitle: 'कंटेंट फ़ाइल में गड़बड़ है', errorText: '<code>{file}</code> लोड हुई पर इस दिन का data नहीं बना (JavaScript error या ग़लत <code>day</code> number)। ढूँढने के लिए <code>node tools/validate.mjs</code> चलाओ।',
       backHome: '🏠 होम पर वापस'
     },
     hg: {
       plan: '30 din ka plan', today: 'Aaj ka din ▶', progress: '{total} mein se {done} din poore',
       howTitle: 'Kaise padhein',
-      howText: 'Pehle <b>Short</b> padho (15 min) → phir <b>Detailed</b> (40 min) → phir questions ke answers bolkar do (15–20 min).',
+      howText: 'Pehle <b>Short</b> padho (~15–20 min) aur uske questions ke answers bolkar do. <b>Detailed</b> mein jo pehle padh chuke ho use chhod do, phir jin questions mein galti hui woh aur ~5 puzzles chuno. Baaki ko reference maano aur baad mein dobara dekho. Har din ke page par chuni hui depth ka time estimate dikhta hai.',
       week: 'Week', soon: 'Jaldi aa raha hai', day: 'Day',
       prev: '◀ Pichla', next: 'Agla ▶', home: '🏠 Home', short: 'Short', detailed: 'Detailed',
-      summary: '⚡ 2 minute mein summary', learn: '📘 Concept aur code', whatsNew: '🆕 .NET 9/10 mein naya kya hai',
+      estimate: '⏱ Is depth ke liye ≈ {time}',
+      summary: '⚡ 2 minute mein summary', learn: '📘 Concept aur code', whatsNew: '🆕 Haal ke versions mein naya kya hai',
       qa: '❓ Interview sawaal-jawaab', showAnswer: 'Jawaab dekho ▼', meaning: 'Matlab:',
       puzzles: '🧩 Puzzles', puzzle: 'Puzzle', whatPrint: 'Ye kya print karega?',
       revision: '📝 Last-minute revision', markDone: 'Din poora hua ✓', isDone: 'Din poora ✓ — undo ke liye click karo',
@@ -66,6 +71,7 @@
       notFoundTitle: 'Ye din nahi mila', notFoundText: 'Ye link 30 din ke plan ke kisi din se match nahi karta.',
       notReadyTitle: 'Phase 2 mein aayega', notReadyText: 'Day {n} abhi likha nahi gaya hai. Pehle ready din poore karo!',
       missingTitle: 'Content file nahi mili', missingText: '<code>{file}</code> load nahi hui. Check karo ki file <code>content</code> folder mein hai.',
+      errorTitle: 'Content file mein gadbad hai', errorText: '<code>{file}</code> load hui par is din ka data nahi bana (JavaScript error ya galat <code>day</code> number). Dhoondhne ke liye <code>node tools/validate.mjs</code> chalao.',
       backHome: '🏠 Home par wapas'
     }
   };
@@ -205,7 +211,7 @@
   // ---------- Day page ----------
   var dayNum = 0;
   var dayData = null;   // window.TL_DAY once loaded
-  var dayState = 'loading'; // loading | ready | missing
+  var dayState = 'loading'; // loading | ready | missing | error
 
   function messageCard(title, text) {
     return h('div', { 'class': 'wrap' }, [h('div', { 'class': 'card message' }, [
@@ -261,7 +267,8 @@
 
     out.push(h('header', { 'class': 'day-head' }, [
       h('span', { 'class': 'eyebrow', text: t('day') + ' ' + dayNum + ' · ' + t('week') + ' ' + c.week }),
-      h('h1', { html: C.pick(d.title, lang) })
+      h('h1', { html: C.pick(d.title, lang) }),
+      h('p', { 'class': 'estimate', text: t('estimate', { time: C.formatMinutes(C.estimateMinutes(d, depth)) }) })
     ]));
 
     out.push(block(t('summary'), [h('div', { 'class': 'card summary', html: C.pick(d.summary, lang) })]));
@@ -349,15 +356,70 @@
     }
   }
 
+  // ---------- Keep open answers and scroll position across re-renders (language/depth switch) ----------
+  // Items are the cards with a stable id: s-<section>, q-<question>, p-<puzzle>.
+  var openState = {};   // item id -> its <details> open?  (kept for items hidden at the current depth)
+
+  function dayItems() {
+    return Array.prototype.slice.call(document.querySelectorAll('#app main.day [id]'));
+  }
+
+  function topLimit() {
+    var bar = document.querySelector('#app .topbar');
+    return bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0;
+  }
+
+  // Remembers open <details> and the topmost visible item (+ the items above it, as fallbacks
+  // when that item is not shown at the new depth).
+  function captureView() {
+    var items = dayItems();
+    if (!items.length) return null;
+    items.forEach(function (el) {
+      var d = el.querySelector('details');
+      if (d) openState[el.id] = d.open;
+    });
+    if (window.scrollY < 1) return { anchor: null };
+    var limit = topLimit();
+    for (var i = 0; i < items.length; i++) {
+      var r = items[i].getBoundingClientRect();
+      if (r.bottom > limit) {
+        return { anchor: items[i].id, offset: r.top, fallback: items.slice(0, i).reverse().map(function (el) { return el.id; }) };
+      }
+    }
+    return { anchor: null };
+  }
+
+  function restoreView(view) {
+    dayItems().forEach(function (el) {
+      var d = el.querySelector('details');
+      if (d && openState[el.id]) d.open = true;
+    });
+    if (!view || !view.anchor) return;
+    var ids = [view.anchor].concat(view.fallback);
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (!el) continue;
+      var want = i === 0 ? view.offset : topLimit();
+      window.scrollBy(0, el.getBoundingClientRect().top - want);
+      return;
+    }
+  }
+
   function renderDay() {
     var title = dayData ? dayData.title : findDay(dayNum).title;
     document.title = t('day') + ' ' + dayNum + ': ' + C.pick(title, lang).replace(/<[^>]*>/g, '') + ' · TL Prep';
+    var view = captureView();
     var body;
+    var file = C.contentPath(dayNum);
     if (dayState === 'ready') body = renderDayContent(dayData);
-    else if (dayState === 'missing') body = messageCard(t('missingTitle'), t('missingText', { file: C.contentPath(dayNum) }));
+    else if (dayState === 'missing') body = messageCard(t('missingTitle'), t('missingText', { file: file }));
+    else if (dayState === 'error') body = messageCard(t('errorTitle'), t('errorText', { file: file }));
     else body = h('p', { 'class': 'loading', text: t('loading') });
     mount([topbar(), body]);
-    if (dayState === 'ready') highlight();
+    if (dayState === 'ready') {
+      highlight();
+      restoreView(view);
+    }
   }
 
   function renderDayError(reason, n) {
@@ -378,9 +440,10 @@
     renderDay();
     var s = document.createElement('script');
     s.src = C.contentPath(dayNum);
+    // onerror = file not found; onload without a valid TL_DAY = the file has a JS error or a wrong day.
     s.onload = function () {
       var d = window.TL_DAY;
-      if (d && d.day === dayNum) { dayData = d; dayState = 'ready'; } else { dayState = 'missing'; }
+      if (d && d.day === dayNum) { dayData = d; dayState = 'ready'; } else { dayState = 'error'; }
       renderDay();
     };
     s.onerror = function () { dayState = 'missing'; renderDay(); };

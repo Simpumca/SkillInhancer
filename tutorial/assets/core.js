@@ -73,12 +73,54 @@
     return 'content/day' + (day < 10 ? '0' : '') + day + '.js';
   }
 
+  // Words in authored HTML/code: tags and entities count as spaces.
+  function countWords(s) {
+    var text = String(s || '').replace(/<[^>]*>/g, ' ').replace(/&[#\w]+;/g, ' ');
+    var parts = text.split(/\s+/);
+    var n = 0;
+    for (var i = 0; i < parts.length; i++) if (parts[i]) n++;
+    return n;
+  }
+
+  // Rough study time for one day at a depth: English words of what that depth shows
+  // (summary, sections + code, Q&A, what's new, revision) at 200 wpm, plus 3 min per puzzle
+  // (puzzles are detailed-only). Rounded to the nearest 5 min, at least 5.
+  function estimateMinutes(day, depth) {
+    var words = 0;
+    function add(s) { words += countWords(s); }
+    function addCode(list) {
+      (list || []).forEach(function (c) { add(pick(c.caption, 'en')); add(c.src); });
+    }
+    add(pick(day.summary, 'en'));
+    filterDepth(day.sections, depth).forEach(function (s) {
+      add(pick(s.title, 'en')); add(pick(s.body, 'en')); addCode(s.code);
+    });
+    filterDepth(day.qa, depth).forEach(function (q) {
+      add(q.q); add(q.answer); add(pick(q.explain, 'en')); addCode(q.code);
+    });
+    add(pick(day.whatsNew, 'en'));
+    ((day.revision && day.revision.en) || []).forEach(add);
+    var puzzles = depth === 'detailed' ? (day.puzzles || []).length : 0;
+    var minutes = words / 200 + puzzles * 3;
+    return Math.max(5, Math.round(minutes / 5) * 5);
+  }
+
+  // 20 -> "20 min", 60 -> "1 h", 105 -> "1 h 45 min".
+  function formatMinutes(minutes) {
+    if (minutes < 60) return minutes + ' min';
+    var h = Math.floor(minutes / 60);
+    var m = minutes % 60;
+    return h + ' h' + (m ? ' ' + m + ' min' : '');
+  }
+
   return {
     parseDay: parseDay,
     pick: pick,
     filterDepth: filterDepth,
     nextUndoneDay: nextUndoneDay,
     makeStore: makeStore,
-    contentPath: contentPath
+    contentPath: contentPath,
+    estimateMinutes: estimateMinutes,
+    formatMinutes: formatMinutes
   };
 });
