@@ -1,6 +1,6 @@
 # TL Prep — .NET Tech Lead in 30 Days
 
-An offline study site for .NET Tech Lead interview preparation. Every day has a short summary, concept sections with analogies and code, interview Q&A, "what will this print?" puzzles, and a last-minute revision list. Days 1–14 are ready. Week 1 (days 1–7): OOP, C# Core, C# Advanced, LINQ, EF Core Parts 1 and 2, and a revision day. Week 2 (days 8–14): SOLID and DI, creational patterns, structural and behavioural patterns, enterprise patterns, ASP.NET Core fundamentals, Web API, and a revision day. Days 15–30 are not written yet.
+An offline study site for .NET Tech Lead interview preparation. Every day has a short summary, concept sections with analogies and code, interview Q&A, "what will this print?" puzzles, and a last-minute revision list. Days 1–21 are ready. Week 1 (days 1–7): OOP, C# Core, C# Advanced, LINQ, EF Core Parts 1 and 2, and a revision day. Week 2 (days 8–14): SOLID and DI, creational patterns, structural and behavioural patterns, enterprise patterns, ASP.NET Core fundamentals, Web API, and a revision day. Week 3 (days 15–21): Architecture, Microservices, System Design for TL rounds, SQL Server, PostgreSQL and data comparisons, Azure, and DevOps. Days 22–30 are not written yet.
 
 ## How to open
 
@@ -10,7 +10,7 @@ An offline study site for .NET Tech Lead interview preparation. Every day has a 
 
 ## How it works
 
-- **Home** shows the 30-day plan, your progress (`done/14` while 14 days are ready) and a **Today ▶** button that opens the first day you have not finished. Days 15–30 show as "Coming soon".
+- **Home** shows the 30-day plan, your progress (`done/21` while 21 days are ready) and a **Today ▶** button that opens the first day you have not finished. Days 22–30 show as "Coming soon".
 - **Language**: English, Hindi (Devanagari) or Hinglish (Roman script). Interview answers and revision lines stay in English, because interviews are in English. In Hindi and Hinglish mode, a short meaning appears below each one.
 - **Depth**: **Short** shows the summary, the key sections, the 8 most-asked questions and the revision list. **Detailed** adds everything else, including the puzzles.
 - **Progress**: "Mark day as done" on a day page. Click it again to undo.
