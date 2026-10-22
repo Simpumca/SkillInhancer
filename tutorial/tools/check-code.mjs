@@ -79,7 +79,11 @@ const SQL_SERVER = '(localdb)\\MSSQLLocalDB';
 const SQL_UNAVAILABLE = 'sql tooling unavailable';
 const sqlcmdExe = () => process.env.TL_SQLCMD || 'sqlcmd';
 
-export const sqlDbName = (key) => `tlsnip_${key}`.replace(/[^A-Za-z0-9]/g, '_').slice(0, 100);
+// Per-process suffix keeps concurrent runs apart; the key part is truncated first, the pid is always kept (max 128 chars).
+export const sqlDbName = (key, pid = process.pid) => {
+  const suffix = `_${pid}`;
+  return `tlsnip_${key}`.replace(/[^A-Za-z0-9]/g, '_').slice(0, 128 - suffix.length) + suffix;
+};
 
 function sqlcmd(args, timeout = 60000) {
   const r = spawnSync(sqlcmdExe(), ['-S', SQL_SERVER, ...args], { encoding: 'utf8', timeout });
@@ -106,7 +110,7 @@ const sqlError = (out) => {
 export function checkSqlSnippet(snip) {
   if (!sqlToolingAvailable()) return { status: 'SKIP', detail: SQL_UNAVAILABLE };
   const db = sqlDbName(snip.key);
-  const dir = path.join(SNIPPETS_DIR, snip.key);
+  const dir = path.join(SNIPPETS_DIR, `${snip.key}-sql-${process.pid}`);
   mkdirSync(dir, { recursive: true });
   const file = path.join(dir, 'snippet.sql');
   writeFileSync(file, 'SET NOCOUNT ON;\n' + snip.src);
@@ -127,11 +131,13 @@ export function checkSqlSnippet(snip) {
     return { status: 'PASS' };
   } finally {
     dropSqlDb(db);
+    rmSync(dir, { recursive: true, force: true });
   }
 }
 
 function dropSqlDb(db) {
-  sqlcmd(['-b', '-Q', `IF DB_ID(N'${db}') IS NOT NULL BEGIN ALTER DATABASE [${db}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [${db}]; END`]);
+  const r = sqlcmd(['-b', '-Q', `IF DB_ID(N'${db}') IS NOT NULL BEGIN ALTER DATABASE [${db}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [${db}]; END`]);
+  if (r.status !== 0 || r.timedOut) console.error(`WARN could not drop ${db}`);
 }
 
 export function checkSnippet(snip) {
@@ -167,7 +173,6 @@ export function checkSnippet(snip) {
   return { status: 'PASS' };
 }
 
-  
 function resolveTargets(argv) {
   const files = [];
   for (let i = 0; i < argv.length; i++) {

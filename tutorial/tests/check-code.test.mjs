@@ -104,8 +104,11 @@ test('csproj_unaffected_by_lang', () => {
 
 test('sql_db_name_sanitised_and_capped', async () => {
   const { sqlDbName } = await import('../tools/check-code.mjs');
-  assert.equal(sqlDbName('day18-sec-a.b-0'), 'tlsnip_day18_sec_a_b_0');
-  assert.equal(sqlDbName('x'.repeat(300)).length, 100);
+  assert.equal(sqlDbName('day18-sec-a.b-0', 4242), 'tlsnip_day18_sec_a_b_0_4242');
+  const long = sqlDbName('x'.repeat(300), 4242);
+  assert.equal(long.length, 128);
+  assert.ok(long.endsWith('_4242'));
+  assert.notEqual(sqlDbName('k', 1), sqlDbName('k', 2));
 });
 
 test('cli_sql_fixture_passes', (t) => {
@@ -122,8 +125,13 @@ test('cli_sql_wrong_expected_and_bad_sql_fail', (t) => {
   const r = runCli('tests/fixtures/day-sql-bad.js');
   assert.equal(r.status, 1, r.stdout + r.stderr);
   assert.match(r.stdout, /FAIL day95-sec-sql-0: output mismatch/);
-  assert.match(r.stdout, /FAIL day95-sec-sql-1/);
+  assert.match(r.stdout, /FAIL day95-sec-sql-1.*Msg 208/);
   assert.match(r.stdout, /FAIL day95-puz-sum/);
+  assert.doesNotMatch(r.stderr, /WARN could not drop/);
+  // No leftover throw-away database after failing snippets.
+  const q = spawnSync('sqlcmd', ['-S', '(localdb)\\MSSQLLocalDB', '-h', '-1', '-W', '-Q',
+    "SET NOCOUNT ON; SELECT COUNT(*) FROM sys.databases WHERE name LIKE 'tlsnip[_]day95%'"], { encoding: 'utf8', timeout: 60000 });
+  assert.equal(q.stdout.trim(), '0', q.stdout + q.stderr);
 });
 
 test('cli_sql_unavailable_skips_and_strict_fails', () => {
@@ -135,4 +143,5 @@ test('cli_sql_unavailable_skips_and_strict_fails', () => {
   assert.doesNotMatch(a.stdout, /FAIL/);
   const b = run('--strict');
   assert.equal(b.status, 1, b.stdout + b.stderr);
+  assert.match(b.stdout, /SKIP day96-puz-sum \(sql tooling unavailable\)/);
 });
