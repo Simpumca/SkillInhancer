@@ -14,7 +14,7 @@ window.TL_CURRICULUM = [
   { day: 12, week: 2, title: { en: "ASP.NET Core Fundamentals", hi: "ASP.NET Core की बुनियाद", hg: "ASP.NET Core ki buniyad" }, ready: true },
   { day: 13, week: 2, title: { en: "Web API", hi: "वेब API", hg: "Web API" }, ready: true },
   { day: 14, week: 2, title: { en: "Week 2 Revision + Quiz", hi: "हफ़्ता 2 रिवीज़न + क्विज़", hg: "Week 2 Revision + Quiz" }, ready: true },
-  { day: 15, week: 3, title: { en: "Architecture", hi: "आर्किटेक्चर", hg: "Architecture" }, ready: false },
+  { day: 15, week: 3, title: { en: "Architecture", hi: "आर्किटेक्चर", hg: "Architecture" }, ready: true },
   { day: 16, week: 3, title: { en: "Microservices Deep Dive", hi: "माइक्रोसर्विसेज़ डीप डाइव", hg: "Microservices Deep Dive" }, ready: false },
   { day: 17, week: 3, title: { en: "System Design for TL Rounds", hi: "TL राउंड्स के लिए सिस्टम डिज़ाइन", hg: "System Design for TL Rounds" }, ready: false },
   { day: 18, week: 3, title: { en: "SQL Server", hi: "SQL Server (एसक्यूएल सर्वर)", hg: "SQL Server" }, ready: false },
