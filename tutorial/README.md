@@ -19,7 +19,7 @@ An offline study site for .NET Tech Lead interview preparation. Every day has a 
 
 ## How to run the checks
 
-You need **Node.js 22+** and the **.NET SDK 9+**. The EF Core days (5, 6, 7, 11) and the ASP.NET Core days (12, 13, 14) also need NuGet access the first time, to restore packages such as `Microsoft.EntityFrameworkCore.*` and `Microsoft.AspNetCore.TestHost`. Run every command from the `tutorial/` folder:
+You need **Node.js 22+** and the **.NET SDK 9+**. Days 5–14 need NuGet access the first time, to restore packages such as `Microsoft.EntityFrameworkCore.*` and `Microsoft.AspNetCore.TestHost`. Run every command from the `tutorial/` folder:
 
 ```sh
 node --test                    # unit tests for the site logic and the tools

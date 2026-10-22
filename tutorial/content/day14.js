@@ -227,7 +227,7 @@ window.TL_DAY = {
         en: `<p><b>Picture — the railway station gates:</b> every passenger passes the gates in order, and any gate can turn you back (<b>middleware</b>).</p>
 <p><b>Must say:</b></p>
 <ul>
-<li>Program.cs: register services, build, add middleware in order, map endpoints, run. <code>WebApplication</code> adds <code>UseRouting</code> and <code>UseEndpoints</code> implicitly; call <code>UseRouting</code> yourself only to place it earlier.</li>
+<li>Program.cs: register services, build, add middleware in order, map endpoints, run. <code>WebApplication</code> adds <code>UseRouting</code> and <code>UseEndpoints</code> implicitly, with <code>UseRouting</code> at the start; call it yourself to control where it runs (usually later, for example after <code>UseStaticFiles</code>).</li>
 <li>Code before <code>next</code> runs in order, code after <code>next</code> runs in reverse. Short-circuit = not calling <code>next</code>; earlier middleware still runs its after-code.</li>
 <li><code>Use</code> may call next, <code>Run</code> is terminal, <code>Map</code> branches away, <code>UseWhen</code> branches and rejoins.</li>
 <li><code>UseAuthentication</code> sets <code>HttpContext.User</code> and calls next; authorization produces 401 or 403.</li>
@@ -238,7 +238,7 @@ window.TL_DAY = {
         hi: `<p><b>तस्वीर — railway station के gates:</b> हर यात्री gates से क्रम में गुज़रता है, और कोई भी gate आपको वापस भेज सकता है (<b>middleware</b>)।</p>
 <p><b>ज़रूर बोलना:</b></p>
 <ul>
-<li>Program.cs: services register करो, build करो, middleware क्रम से जोड़ो, endpoints map करो, run करो। <code>WebApplication</code> <code>UseRouting</code> और <code>UseEndpoints</code> अपने आप जोड़ता है; <code>UseRouting</code> सिर्फ़ उसे पहले रखने के लिए खुद बुलाओ।</li>
+<li>Program.cs: services register करो, build करो, middleware क्रम से जोड़ो, endpoints map करो, run करो। <code>WebApplication</code> <code>UseRouting</code> और <code>UseEndpoints</code> अपने आप जोड़ता है, <code>UseRouting</code> शुरू में रखकर; वो कहाँ चले यह तय करने के लिए <code>UseRouting</code> खुद बुलाओ (आम तौर पर देर से, जैसे <code>UseStaticFiles</code> के बाद)।</li>
 <li><code>next</code> से पहले का code क्रम में चलता है, <code>next</code> के बाद का उल्टे क्रम में। Short-circuit = <code>next</code> न बुलाना; पहले वाले middleware का after-code फिर भी चलता है।</li>
 <li><code>Use</code> next बुला सकता है, <code>Run</code> आख़िरी है, <code>Map</code> अलग शाखा में ले जाता है, <code>UseWhen</code> शाखा बनाकर वापस जुड़ता है।</li>
 <li><code>UseAuthentication</code> <code>HttpContext.User</code> सेट करता है और next बुलाता है; authorization 401 या 403 देता है।</li>
@@ -249,7 +249,7 @@ window.TL_DAY = {
         hg: `<p><b>Tasveer — railway station ke gates:</b> har yatri gates se kram mein guzarta hai, aur koi bhi gate aapko wapas bhej sakta hai (<b>middleware</b>).</p>
 <p><b>Zaroor bolna:</b></p>
 <ul>
-<li>Program.cs: services register karo, build karo, middleware kram se jodo, endpoints map karo, run karo. <code>WebApplication</code> <code>UseRouting</code> aur <code>UseEndpoints</code> apne aap jodta hai; <code>UseRouting</code> sirf use pehle rakhne ke liye khud bulao.</li>
+<li>Program.cs: services register karo, build karo, middleware kram se jodo, endpoints map karo, run karo. <code>WebApplication</code> <code>UseRouting</code> aur <code>UseEndpoints</code> apne aap jodta hai, <code>UseRouting</code> shuru mein rakhkar; woh kahan chale yeh tay karne ke liye <code>UseRouting</code> khud bulao (aam taur par der se, jaise <code>UseStaticFiles</code> ke baad).</li>
 <li><code>next</code> se pehle ka code kram mein chalta hai, <code>next</code> ke baad ka ulte kram mein. Short-circuit = <code>next</code> na bulana; pehle wale middleware ka after-code phir bhi chalta hai.</li>
 <li><code>Use</code> next bula sakta hai, <code>Run</code> aakhri hai, <code>Map</code> alag shaakha mein le jaata hai, <code>UseWhen</code> shaakha banakar wapas judta hai.</li>
 <li><code>UseAuthentication</code> <code>HttpContext.User</code> set karta hai aur next bulata hai; authorization 401 ya 403 deta hai.</li>
@@ -278,31 +278,31 @@ window.TL_DAY = {
 <li>A JWT is signed, not encrypted: non-secret payload, short lifetime. The refresh token is held by the client or BFF, and the auth server tracks, rotates and revokes it.</li>
 <li>CORS is enforced by browsers only and is not authentication. Output caching lets the server decide and evict by tag; <code>HybridCache</code> came with .NET 9 (stable package March 2025, runs on .NET 8).</li>
 <li>ETag: <code>If-None-Match</code> gives 304 on a read, <code>If-Match</code> gives 412 on a stale write. Rate limiting: set <code>RejectionStatusCode</code> to 429 (default 503).</li>
-<li>Use <code>IHttpClientFactory</code> with <code>AddStandardResilienceHandler</code> (3 retries, so up to 4 calls); disable retries for unsafe methods like POST.</li>
+<li>Use <code>IHttpClientFactory</code> with <code>AddStandardResilienceHandler</code> (3 retries, so up to 4 calls); disable retries for unsafe methods like POST (<code>DisableForUnsafeHttpMethods</code>) or make the call idempotent (idempotency key).</li>
 </ul>`,
         hi: `<p><b>तस्वीर — courier की रसीद:</b> status code डिलीवरी slip है, ETag पार्सल का tag है, और JWT बंद-पर-पारदर्शी लिफ़ाफ़ा है (signed, encrypted नहीं)।</p>
 <p><b>ज़रूर बोलना:</b></p>
 <ul>
-<li>Safe = सिर्फ़ पढ़ना (GET, HEAD, OPTIONS)। Idempotent में PUT और DELETE जुड़ते हैं। POST idempotent नहीं है और PATCH के होने की गारंटी नहीं। PUT बदलता है पूरा; PATCH सिर्फ़ बदलाव भेजता है।</li>
+<li>Safe = सिर्फ़ पढ़ना (GET, HEAD, OPTIONS)। Idempotent में PUT और DELETE जुड़ते हैं। POST idempotent नहीं है और PATCH के होने की गारंटी नहीं। PUT पूरा resource बदलता है; PATCH सिर्फ़ बदलाव भेजता है।</li>
 <li>Create के बाद <code>Location</code> के साथ 201; 401 authenticated नहीं, 403 इजाज़त नहीं, 409 conflict, 429 throttled।</li>
 <li><code>[ApiController]</code> के साथ, ग़लत model पर action चलने से पहले 400 <code>ValidationProblemDetails</code> मिलता है।</li>
 <li><code>UseExceptionHandler</code> आपकी <code>IExceptionHandler</code> classes को बुलाता है; <code>AddProblemDetails</code> RFC 9457 का रूप देता है।</li>
 <li>JWT signed है, encrypted नहीं: payload में secret नहीं, lifetime छोटी। Refresh token client या BFF के पास रहता है, और auth server उसे track, rotate और revoke करता है।</li>
 <li>CORS सिर्फ़ browsers लागू करते हैं और authentication नहीं है। Output caching में server तय करता है और tag से हटाता है; <code>HybridCache</code> .NET 9 के साथ आया (stable package मार्च 2025, .NET 8 पर चलता है)।</li>
 <li>ETag: <code>If-None-Match</code> से read पर 304, <code>If-Match</code> से पुराने write पर 412। Rate limiting: <code>RejectionStatusCode</code> 429 रखो (default 503)।</li>
-<li><code>IHttpClientFactory</code> के साथ <code>AddStandardResilienceHandler</code> (3 retries, यानी 4 calls तक); POST जैसे unsafe methods पर retries बंद करो।</li>
+<li><code>IHttpClientFactory</code> के साथ <code>AddStandardResilienceHandler</code> (3 retries, यानी 4 calls तक); POST जैसे unsafe methods पर retries बंद करो (<code>DisableForUnsafeHttpMethods</code>) या call को idempotent बनाओ (idempotency key)।</li>
 </ul>`,
         hg: `<p><b>Tasveer — courier ki raseed:</b> status code delivery slip hai, ETag parcel ka tag hai, aur JWT band-par-paardarshi lifafa hai (signed, encrypted nahi).</p>
 <p><b>Zaroor bolna:</b></p>
 <ul>
-<li>Safe = sirf padhna (GET, HEAD, OPTIONS). Idempotent mein PUT aur DELETE jud jaate hain. POST idempotent nahi hai aur PATCH ke hone ki guarantee nahi. PUT poora badalta hai; PATCH sirf badlaav bhejta hai.</li>
+<li>Safe = sirf padhna (GET, HEAD, OPTIONS). Idempotent mein PUT aur DELETE jud jaate hain. POST idempotent nahi hai aur PATCH ke hone ki guarantee nahi. PUT poora resource badalta hai; PATCH sirf badlaav bhejta hai.</li>
 <li>Create ke baad <code>Location</code> ke saath 201; 401 authenticated nahi, 403 ijaazat nahi, 409 conflict, 429 throttled.</li>
 <li><code>[ApiController]</code> ke saath, galat model par action chalne se pehle 400 <code>ValidationProblemDetails</code> milta hai.</li>
 <li><code>UseExceptionHandler</code> aapki <code>IExceptionHandler</code> classes ko bulata hai; <code>AddProblemDetails</code> RFC 9457 ka roop deta hai.</li>
 <li>JWT signed hai, encrypted nahi: payload mein secret nahi, lifetime chhoti. Refresh token client ya BFF ke paas rehta hai, aur auth server use track, rotate aur revoke karta hai.</li>
 <li>CORS sirf browsers lagu karte hain aur authentication nahi hai. Output caching mein server tay karta hai aur tag se hatata hai; <code>HybridCache</code> .NET 9 ke saath aaya (stable package March 2025, .NET 8 par chalta hai).</li>
 <li>ETag: <code>If-None-Match</code> se read par 304, <code>If-Match</code> se purane write par 412. Rate limiting: <code>RejectionStatusCode</code> 429 rakho (default 503).</li>
-<li><code>IHttpClientFactory</code> ke saath <code>AddStandardResilienceHandler</code> (3 retries, yaani 4 calls tak); POST jaise unsafe methods par retries band karo.</li>
+<li><code>IHttpClientFactory</code> ke saath <code>AddStandardResilienceHandler</code> (3 retries, yaani 4 calls tak); POST jaise unsafe methods par retries band karo (<code>DisableForUnsafeHttpMethods</code>) ya call ko idempotent banao (idempotency key).</li>
 </ul>`
       }
     }
@@ -413,8 +413,8 @@ window.TL_DAY = {
       q: "Which one ends up outermost: a Scrutor Decorate, a middleware, an AddHttpMessageHandler?",
       answer: "Middleware and AddHttpMessageHandler: the first one registered is outermost. Scrutor is the opposite: the last Decorate call is outermost.",
       meaning: {
-        hi: "Middleware और AddHttpMessageHandler में पहला registered सबसे बाहर होता है। Scrutor में आख़िरी Decorate call सबसे बाहर होती है। तीनों के नियम अलग हैं, इसलिए हर एक जाँचो।",
-        hg: "Middleware aur AddHttpMessageHandler mein pehla registered sabse bahar hota hai. Scrutor mein aakhri Decorate call sabse bahar hoti hai. Teenon ke niyam alag hain, isliye har ek jaancho."
+        hi: "Middleware और AddHttpMessageHandler में पहला registered सबसे बाहर होता है। Scrutor में आख़िरी Decorate call सबसे बाहर होती है।",
+        hg: "Middleware aur AddHttpMessageHandler mein pehla registered sabse bahar hota hai. Scrutor mein aakhri Decorate call sabse bahar hoti hai."
       },
       explain: {
         en: `<ul>
@@ -1023,9 +1023,9 @@ foreach (var path in new[] { "/square?n=4", "/square", "/square?n=four", "/greet
 await app.StopAsync();`,
       answer: "/square?n=4 -> 200 16\n/square -> 400 (empty)\n/square?n=four -> 400 (empty)\n/greet -> 200 hi guest\n/page -> 200 page 1\n/page?page=3 -> 200 page 3",
       explain: {
-        en: "<p>Minimal APIs bind simple parameters from the route or the query string. <code>int n</code> is required: a missing value or text that is not an integer gives <b>400 Bad Request</b> before your lambda runs, so the lambda is never called. <code>string? name</code> is optional (nullable), so a missing value becomes <code>null</code>. <code>int page = 1</code> is optional because of its default value. Interview point: nullability and defaults decide what is required in Minimal APIs. The 400 body is empty here because this setup did not add <code>AddProblemDetails</code>.</p>",
-        hi: "<p>Minimal APIs सादे parameters को route या query string से bind करते हैं। <code>int n</code> ज़रूरी है: value न हो या integer न हो तो आपकी lambda चलने से पहले <b>400 Bad Request</b> मिलता है, यानी lambda बुलाई ही नहीं जाती। <code>string? name</code> optional (nullable) है, इसलिए ग़ैरहाज़िर value <code>null</code> बनती है। <code>int page = 1</code> default value की वजह से optional है। Interview point: Minimal APIs में nullability और defaults तय करते हैं कि क्या ज़रूरी है। यहाँ 400 की body खाली है क्योंकि इस setup में <code>AddProblemDetails</code> नहीं जोड़ा गया।</p>",
-        hg: "<p>Minimal APIs saade parameters ko route ya query string se bind karte hain. <code>int n</code> zaroori hai: value na ho ya integer na ho to aapki lambda chalne se pehle <b>400 Bad Request</b> milta hai, yaani lambda bulayi hi nahi jaati. <code>string? name</code> optional (nullable) hai, isliye gaihaazir value <code>null</code> banti hai. <code>int page = 1</code> default value ki wajah se optional hai. Interview point: Minimal APIs mein nullability aur defaults tay karte hain ki kya zaroori hai. Yahan 400 ki body khaali hai kyunki is setup mein <code>AddProblemDetails</code> nahi joda gaya.</p>"
+        en: "<p>Minimal APIs bind simple parameters from the route or the query string. <code>int n</code> is required: a missing value or text that is not an integer gives <b>400 Bad Request</b> before your lambda runs, so the lambda is never called. <code>string? name</code> is optional (nullable), so a missing value becomes <code>null</code>. <code>int page = 1</code> is optional because of its default value. Interview point: nullability and defaults decide what is required in Minimal APIs. The 400 body is empty because nothing here writes one (no <code>UseStatusCodePages</code> with <code>AddProblemDetails</code>). The default environment is Production; in Development, <code>ThrowOnBadRequest</code> makes the developer exception page write a body.</p>",
+        hi: "<p>Minimal APIs सादे parameters को route या query string से bind करते हैं। <code>int n</code> ज़रूरी है: value न हो या integer न हो तो आपकी lambda चलने से पहले <b>400 Bad Request</b> मिलता है, यानी lambda बुलाई ही नहीं जाती। <code>string? name</code> optional (nullable) है, इसलिए ग़ैरहाज़िर value <code>null</code> बनती है। <code>int page = 1</code> default value की वजह से optional है। Interview point: Minimal APIs में nullability और defaults तय करते हैं कि क्या ज़रूरी है। यहाँ 400 की body खाली है क्योंकि यहाँ कुछ उसे लिखता ही नहीं (<code>UseStatusCodePages</code> के साथ <code>AddProblemDetails</code> नहीं)। Default environment Production है; Development में <code>ThrowOnBadRequest</code> की वजह से developer exception page body लिखता है।</p>",
+        hg: "<p>Minimal APIs saade parameters ko route ya query string se bind karte hain. <code>int n</code> zaroori hai: value na ho ya integer na ho to aapki lambda chalne se pehle <b>400 Bad Request</b> milta hai, yaani lambda bulayi hi nahi jaati. <code>string? name</code> optional (nullable) hai, isliye gaihaazir value <code>null</code> banti hai. <code>int page = 1</code> default value ki wajah se optional hai. Interview point: Minimal APIs mein nullability aur defaults tay karte hain ki kya zaroori hai. Yahan 400 ki body khaali hai kyunki yahan kuch use likhta hi nahi (<code>UseStatusCodePages</code> ke saath <code>AddProblemDetails</code> nahi). Default environment Production hai; Development mein <code>ThrowOnBadRequest</code> ki wajah se developer exception page body likhta hai.</p>"
       }
     },
     {
@@ -1130,39 +1130,39 @@ await app.StopAsync();`,
   revision: {
     en: [
       "<b>SOLID</b> = five habits that make change cheap; guidelines, not laws.",
-      "<b>DIP</b> is the principle, <b>DI</b> the technique, the container the tool; register only in the composition root.",
+      "<b>DIP</b> is the principle, <b>DI</b> the technique, the container the tool.",
       "<b>Decorator, Proxy and Adapter</b> share the wrapper shape; the intent differs: add behaviour, control access, change interface.",
       "<b>Wrapper order</b>: middleware and <code>AddHttpMessageHandler</code> register the outermost first; with Scrutor the last <code>Decorate</code> is outermost.",
       "<code>DbSet</code> is already a repository and <code>DbContext</code> a unit of work; wrap them only for a clear reason.",
       "<b>Captive dependency</b>: <code>ValidateScopes</code> catches singleton to scoped, not singleton to transient.",
       "<b>Middleware</b>: code before <code>next</code> runs in order, code after <code>next</code> runs in reverse.",
       "<b>Idempotent</b> methods are GET, HEAD, OPTIONS, PUT and DELETE; POST is not, and PATCH is not guaranteed to be.",
-      "<b>Status codes</b>: 201 with Location after create, 401 not authenticated, 403 not allowed, 409 conflict, 429 throttled.",
+      "<b>Status codes</b>: 201 with Location after create; 401 means not authenticated, 403 means not allowed.",
       "A <b>JWT</b> is signed, not encrypted: keep the payload non-secret and the lifetime short."
     ],
     meaning: {
       hi: [
         "SOLID = पाँच आदतें जो बदलाव सस्ता करती हैं; guidelines हैं, कानून नहीं।",
-        "DIP सिद्धांत है, DI तकनीक, container औज़ार; register सिर्फ़ composition root में करो।",
+        "DIP सिद्धांत है, DI तकनीक, container औज़ार।",
         "Decorator, Proxy और Adapter का wrapper आकार एक है; मक़सद अलग: behaviour जोड़ना, access नियंत्रित करना, interface बदलना।",
         "Wrapper का क्रम: middleware और AddHttpMessageHandler में पहला registered सबसे बाहर; Scrutor में आख़िरी Decorate सबसे बाहर।",
         "DbSet पहले से repository है और DbContext unit of work; इन्हें साफ़ वजह होने पर ही wrap करो।",
         "Captive dependency: ValidateScopes singleton से scoped पकड़ता है, singleton से transient नहीं।",
         "Middleware: next से पहले का code क्रम में चलता है, next के बाद का उल्टे क्रम में।",
         "Idempotent methods हैं GET, HEAD, OPTIONS, PUT और DELETE; POST नहीं है, और PATCH के होने की गारंटी नहीं।",
-        "Status codes: create के बाद Location के साथ 201, 401 authenticated नहीं, 403 इजाज़त नहीं, 409 conflict, 429 throttled।",
+        "Status codes: create के बाद Location के साथ 201; 401 यानी authenticated नहीं, 403 यानी इजाज़त नहीं।",
         "JWT signed है, encrypted नहीं: payload में secret नहीं, lifetime छोटी।"
       ],
       hg: [
         "SOLID = paanch aadatein jo badlaav sasta karti hain; guidelines hain, kanoon nahi.",
-        "DIP siddhant hai, DI technique, container aujaar; register sirf composition root mein karo.",
+        "DIP siddhant hai, DI technique, container aujaar.",
         "Decorator, Proxy aur Adapter ka wrapper aakaar ek hai; maqsad alag: behaviour jodna, access control karna, interface badalna.",
         "Wrapper ka kram: middleware aur AddHttpMessageHandler mein pehla registered sabse bahar; Scrutor mein aakhri Decorate sabse bahar.",
         "DbSet pehle se repository hai aur DbContext unit of work; inhe saaf wajah hone par hi wrap karo.",
         "Captive dependency: ValidateScopes singleton se scoped pakadta hai, singleton se transient nahi.",
         "Middleware: next se pehle ka code kram mein chalta hai, next ke baad ka ulte kram mein.",
         "Idempotent methods hain GET, HEAD, OPTIONS, PUT aur DELETE; POST nahi hai, aur PATCH ke hone ki guarantee nahi.",
-        "Status codes: create ke baad Location ke saath 201, 401 authenticated nahi, 403 ijaazat nahi, 409 conflict, 429 throttled.",
+        "Status codes: create ke baad Location ke saath 201; 401 yaani authenticated nahi, 403 yaani ijaazat nahi.",
         "JWT signed hai, encrypted nahi: payload mein secret nahi, lifetime chhoti."
       ]
     }
