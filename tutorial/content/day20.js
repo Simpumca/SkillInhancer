@@ -9,34 +9,34 @@ window.TL_DAY = {
   summary: {
     en: `<p>Azure is your weakest topic (2/10), and that is fine: a Tech Lead is not asked to click through the portal. The questions are "<b>which service would you pick, why, and how do you keep it secure and observable?</b>" Today you learn the map from the ground up, and the few facts interviewers test.</p>
 <ul>
-<li><b>Hosting:</b> App Service (a managed web host: plan, slots, scale up and out, Always On) for most web APIs; Azure Functions for event-driven code (isolated worker model; the in-process model's support ends 10 November 2026); Container Apps or AKS when you need containers. Pick the simplest that fits.</li>
+<li><b>Hosting:</b> App Service (a managed web host: plan, slots, scale up and out, Always On) for most web APIs; Azure Functions for event-driven code (isolated worker model; the in-process model's support ends (or ended) 10 November 2026); Container Apps or AKS when you need containers. Pick the simplest that fits.</li>
 <li><b>Functions plans:</b> Flex Consumption (serverless, can scale to zero, always-ready instances optional), Premium (pre-warmed), Dedicated (App Service plan), and the legacy Consumption plan. Scale to zero saves money but has cold starts.</li>
 <li><b>Messaging, the classic "which one?":</b> <b>Service Bus</b> for business commands (queues, topics, sessions, dead-letter, duplicate detection); <b>Event Grid</b> to route "something happened" events (push); <b>Event Hubs</b> for high-volume streams (partitions, consumer groups). Storage Queues are the simple, cheap-and-basic option.</li>
 <li><b>Identity first:</b> no secrets in appsettings (Day 12). Use a <b>Managed Identity</b>, <code>DefaultAzureCredential</code> in code, and <b>Key Vault</b> for the secrets that remain.</li>
 <li><b>Edge and data:</b> API Management is the managed gateway (policies: rate limit, JWT validation; YARP comparison from Day 16). Azure SQL: vCore or DTU, serverless, elastic pools; RCSI is on by default in Azure SQL Database (Day 18).</li>
-<li><b>Observability first:</b> Application Insights and Azure Monitor with OpenTelemetry (<code>UseAzureMonitor()</code>), so traces, metrics and logs exist before the first incident.</li>
+<li><b>Observability first:</b> Application Insights and Azure Monitor with OpenTelemetry (the newer Microsoft.OpenTelemetry distro for new apps; existing apps keep <code>UseAzureMonitor()</code>), so traces, metrics and logs exist before the first incident.</li>
 </ul>
-<p>No prices here, and for quotas, tiers and limits the rule is "check the current docs". Plan (about 1 hour 15 minutes): Short mode, then Q&amp;A aloud, then the code sections (all compile-checked, no Azure account needed), then the seven puzzles, which run offline.</p>`,
+<p>No prices here, and for quotas, tiers and limits the rule is "check the current docs". Plan (about 20 minutes for Short plus about 2 hours for Detailed, as the page estimate shows): Short mode, then Q&amp;A aloud, then the code sections (all compile-checked, no Azure account needed), then the seven puzzles, which run offline.</p>`,
     hi: `<p>Azure तुम्हारा सबसे कमज़ोर topic है (2/10), और यह ठीक है: Tech Lead से portal पर click करना नहीं पूछा जाता। सवाल होता है "<b>कौन-सी service चुनोगे, क्यों, और उसे secure और observable कैसे रखोगे?</b>" आज तुम map को ground से सीखोगे, और वे कुछ facts जो interviewers पूछते हैं।</p>
 <ul>
-<li><b>Hosting:</b> ज़्यादातर web APIs के लिए App Service (managed web host: plan, slots, scale up और out, Always On); event-driven code के लिए Azure Functions (isolated worker model; in-process model का support 10 November 2026 को खत्म होता है); containers चाहिए तो Container Apps या AKS। जो सबसे simple फिट बैठे वही चुनो।</li>
+<li><b>Hosting:</b> ज़्यादातर web APIs के लिए App Service (managed web host: plan, slots, scale up और out, Always On); event-driven code के लिए Azure Functions (isolated worker model; in-process model का support 10 November 2026 को खत्म होता है (या हो चुका है)); containers चाहिए तो Container Apps या AKS। जो सबसे simple फिट बैठे वही चुनो।</li>
 <li><b>Functions plans:</b> Flex Consumption (serverless, zero तक scale हो सकता है, always-ready instances optional), Premium (pre-warmed), Dedicated (App Service plan), और legacy Consumption plan। Scale to zero पैसे बचाता है पर cold start आता है।</li>
 <li><b>Messaging, classic "कौन-सा?":</b> business commands के लिए <b>Service Bus</b> (queues, topics, sessions, dead-letter, duplicate detection); "कुछ हुआ" वाले events route करने के लिए <b>Event Grid</b> (push); high-volume streams के लिए <b>Event Hubs</b> (partitions, consumer groups)। Storage Queues सादा और basic option है।</li>
 <li><b>Identity पहले:</b> appsettings में secrets नहीं (Day 12)। <b>Managed Identity</b>, code में <code>DefaultAzureCredential</code>, और बचे हुए secrets के लिए <b>Key Vault</b>।</li>
 <li><b>Edge और data:</b> API Management managed gateway है (policies: rate limit, JWT validation; YARP से तुलना Day 16 में)। Azure SQL: vCore या DTU, serverless, elastic pools; Azure SQL Database में RCSI by default on है (Day 18)।</li>
 <li><b>Observability पहले:</b> OpenTelemetry (<code>UseAzureMonitor()</code>) के साथ Application Insights और Azure Monitor, ताकि पहले incident से पहले ही traces, metrics और logs मौजूद हों।</li>
 </ul>
-<p>यहाँ कोई prices नहीं हैं, और quotas, tiers, limits के लिए rule है "current docs check करो"। Plan (लगभग 1 घंटा 15 मिनट): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर code sections (सब compile-check हुए हैं, Azure account नहीं चाहिए), फिर सात puzzles जो offline चलते हैं।</p>`,
+<p>यहाँ कोई prices नहीं हैं, और quotas, tiers, limits के लिए rule है "current docs check करो"। Plan (Short लगभग 20 मिनट, Detailed लगभग 2 घंटे अलग से, जैसा page का estimate दिखाता है): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर code sections (सब compile-check हुए हैं, Azure account नहीं चाहिए), फिर सात puzzles जो offline चलते हैं।</p>`,
     hg: `<p>Azure tumhara sabse kamzor topic hai (2/10), aur yeh theek hai: Tech Lead se portal par click karna nahi poocha jaata. Sawaal hota hai "<b>kaun-si service chunoge, kyun, aur use secure aur observable kaise rakhoge?</b>" Aaj tum map ko ground se seekhoge, aur woh kuch facts jo interviewers poochte hain.</p>
 <ul>
-<li><b>Hosting:</b> zyadatar web APIs ke liye App Service (managed web host: plan, slots, scale up aur out, Always On); event-driven code ke liye Azure Functions (isolated worker model; in-process model ka support 10 November 2026 ko khatam hota hai); containers chahiye to Container Apps ya AKS. Jo sabse simple fit baithe wahi chuno.</li>
+<li><b>Hosting:</b> zyadatar web APIs ke liye App Service (managed web host: plan, slots, scale up aur out, Always On); event-driven code ke liye Azure Functions (isolated worker model; in-process model ka support 10 November 2026 ko khatam hota hai (ya ho chuka hai)); containers chahiye to Container Apps ya AKS. Jo sabse simple fit baithe wahi chuno.</li>
 <li><b>Functions plans:</b> Flex Consumption (serverless, zero tak scale ho sakta hai, always-ready instances optional), Premium (pre-warmed), Dedicated (App Service plan), aur legacy Consumption plan. Scale to zero paise bachata hai par cold start aata hai.</li>
 <li><b>Messaging, classic "kaun-sa?":</b> business commands ke liye <b>Service Bus</b> (queues, topics, sessions, dead-letter, duplicate detection); "kuch hua" wale events route karne ke liye <b>Event Grid</b> (push); high-volume streams ke liye <b>Event Hubs</b> (partitions, consumer groups). Storage Queues saada aur basic option hai.</li>
 <li><b>Identity pehle:</b> appsettings mein secrets nahi (Day 12). <b>Managed Identity</b>, code mein <code>DefaultAzureCredential</code>, aur bache hue secrets ke liye <b>Key Vault</b>.</li>
 <li><b>Edge aur data:</b> API Management managed gateway hai (policies: rate limit, JWT validation; YARP se tulna Day 16 mein). Azure SQL: vCore ya DTU, serverless, elastic pools; Azure SQL Database mein RCSI by default on hai (Day 18).</li>
 <li><b>Observability pehle:</b> OpenTelemetry (<code>UseAzureMonitor()</code>) ke saath Application Insights aur Azure Monitor, taaki pehle incident se pehle hi traces, metrics aur logs maujood hon.</li>
 </ul>
-<p>Yahan koi prices nahi hain, aur quotas, tiers, limits ke liye rule hai "current docs check karo". Plan (lagbhag 1 ghanta 15 minute): pehle Short mode, phir Q&amp;A zor se, phir code sections (sab compile-check hue hain, Azure account nahi chahiye), phir saat puzzles jo offline chalte hain.</p>`
+<p>Yahan koi prices nahi hain, aur quotas, tiers, limits ke liye rule hai "current docs check karo". Plan (Short lagbhag 20 minute, Detailed lagbhag 2 ghante alag se, jaisa page ka estimate dikhata hai): pehle Short mode, phir Q&amp;A zor se, phir code sections (sab compile-check hue hain, Azure account nahi chahiye), phir saat puzzles jo offline chalte hain.</p>`
   },
   sections: [
     {
@@ -51,34 +51,34 @@ window.TL_DAY = {
         en: `<p><b>Picture — a shop in a managed mall:</b> you rent a shop (<b>App Service</b>); the mall provides the building, power and security, and several shops can share one floor (the <b>plan</b>). A <b>Function</b> is a tiffin kitchen that cooks only when an order arrives; the delay while the kitchen opens is the <b>cold start</b>.</p>
 <ul>
 <li><b>App Service:</b> the <b>plan</b> is the compute (VMs) and apps in the same plan share it. <b>Scale up</b> = a bigger plan size; <b>scale out</b> = more instances (manual or autoscale rules). <b>Always On</b> keeps the app loaded so the first request after idle is not slow (not available on the lowest tiers; check current tiers).</li>
-<li><b>Deployment slots:</b> a staging copy of the app with its own URL. Deploy there, test, then <b>swap</b>: the platform warms the slot up and switches traffic, and a bad release is undone by swapping back. Settings marked as <b>slot settings</b> ("sticky") stay with the slot and do not move in a swap. Slots need a plan tier that supports them.</li>
+<li><b>Deployment slots:</b> a staging copy of the app with its own URL. Deploy there, test, then <b>swap</b>: the platform warms the slot up and switches traffic, and a bad release is undone by swapping back; <b>swap with preview</b> is a two-phase option. Settings marked as <b>slot settings</b> ("sticky") stay with the slot and do not move in a swap. Slots need a plan tier that supports them.</li>
 <li><b>Linux vs Windows:</b> modern .NET runs well on Linux; pick Windows mainly for .NET Framework or other Windows-only needs.</li>
 <li><b>Azure Functions:</b> a <b>trigger</b> starts the function (HTTP, timer, Service Bus, queue, blob, Event Grid, Event Hubs); <b>bindings</b> declare inputs and outputs. For .NET use the <b>isolated worker model</b> (your own <code>Program.cs</code>, DI, and your choice of .NET version). The older <b>in-process model</b> reaches the end of support on <b>10 November 2026</b>, so new work must be isolated.</li>
 <li><b>Hosting plans:</b> <b>Flex Consumption</b> (serverless, Linux, scales to zero, optional always-ready instances, VNet integration; the recommended serverless plan for new apps); <b>Premium</b> (pre-warmed and always-ready instances, VNet, no cold start for those); <b>Dedicated</b> (an App Service plan you already run); legacy <b>Consumption</b> (Linux Consumption is being retired, Windows still exists; check current status).</li>
 <li><b>Durable Functions:</b> an extension where an <b>orchestrator</b> function runs a long workflow in code (steps, waits, retries). It is like the saga from Day 16, and the orchestrator code must be deterministic because it is replayed.</li>
-<li><b>Containers:</b> <b>Container Apps</b> = containers with scale to zero and event-driven scaling, no Kubernetes to run; <b>AKS</b> = full Kubernetes, maximum control and your own operations.</li>
+<li><b>Containers:</b> <b>Container Apps</b> = containers with scale to zero and event-driven scaling, no Kubernetes to run (scaling is KEDA-based, Dapr is optional); <b>AKS</b> = full Kubernetes, maximum control and your own operations.</li>
 </ul>
 <p><b>When to use / when not:</b> start with App Service for a web API (simplest), Functions for event-driven or bursty work, Container Apps when you already ship containers, and AKS only when you need Kubernetes features and have people to run it. Do not pick Functions for a long, chatty, always-busy API just because it says "serverless"; and do not pick AKS because it looks impressive.</p>`,
         hi: `<p><b>Picture — managed mall में एक shop:</b> तुम shop किराए पर लेते हो (<b>App Service</b>); mall building, बिजली और security देता है, और कई shops एक floor (<b>plan</b>) share कर सकती हैं। <b>Function</b> एक tiffin kitchen है जो order आने पर ही पकाती है; kitchen खुलने में जो देर लगती है वह <b>cold start</b> है।</p>
 <ul>
 <li><b>App Service:</b> <b>plan</b> compute (VMs) है और एक plan की apps उसे share करती हैं। <b>Scale up</b> = बड़ा plan size; <b>scale out</b> = ज़्यादा instances (manual या autoscale rules)। <b>Always On</b> app को loaded रखता है ताकि idle के बाद पहली request slow न हो (सबसे नीचे के tiers पर नहीं मिलता; current tiers check करो)।</li>
-<li><b>Deployment slots:</b> app की staging copy जिसका अपना URL होता है। वहाँ deploy करो, test करो, फिर <b>swap</b>: platform slot को warm-up करके traffic switch करता है, और खराब release वापस swap करके undo हो जाती है। जो settings <b>slot settings</b> ("sticky") mark हैं वे slot के साथ रहती हैं और swap में नहीं हिलतीं। Slots के लिए ऐसा plan tier चाहिए जो उन्हें support करे।</li>
-<li><b>Linux बनाम Windows:</b> modern .NET Linux पर अच्छा चलता है; Windows मुख्य रूप से .NET Framework या दूसरी Windows-only ज़रूरतों के लिए चुनो।</li>
+<li><b>Deployment slots:</b> app की staging copy जिसका अपना URL होता है। वहाँ deploy करो, test करो, फिर <b>swap</b>: platform slot को warm-up करके traffic switch करता है, और खराब release वापस swap करके undo हो जाती है; <b>swap with preview</b> two-phase option है। जो settings <b>slot settings</b> ("sticky") mark हैं वे slot के साथ रहती हैं और swap में नहीं हिलतीं। Slots के लिए ऐसा plan tier चाहिए जो उन्हें support करे।</li>
+<li><b>Linux बनाम Windows:</b> modern .NET Linux पर अच्छा चलता है; Windows mainly .NET Framework या दूसरी Windows-only ज़रूरतों के लिए चुनो।</li>
 <li><b>Azure Functions:</b> <b>trigger</b> function को शुरू करता है (HTTP, timer, Service Bus, queue, blob, Event Grid, Event Hubs); <b>bindings</b> inputs और outputs declare करते हैं। .NET के लिए <b>isolated worker model</b> use करो (अपना <code>Program.cs</code>, DI, और .NET version की तुम्हारी choice)। पुराने <b>in-process model</b> का support <b>10 November 2026</b> को खत्म होता है, इसलिए नया काम isolated में ही हो।</li>
 <li><b>Hosting plans:</b> <b>Flex Consumption</b> (serverless, Linux, zero तक scale, optional always-ready instances, VNet integration; नए apps के लिए recommended serverless plan); <b>Premium</b> (pre-warmed और always-ready instances, VNet, उन instances पर cold start नहीं); <b>Dedicated</b> (App Service plan जो तुम पहले से चला रहे हो); legacy <b>Consumption</b> (Linux Consumption retire हो रहा है, Windows अभी है; current status check करो)।</li>
 <li><b>Durable Functions:</b> एक extension जिसमें <b>orchestrator</b> function लंबा workflow code में चलाता है (steps, waits, retries)। यह Day 16 के saga जैसा है, और orchestrator code deterministic होना चाहिए क्योंकि वह replay होता है।</li>
-<li><b>Containers:</b> <b>Container Apps</b> = scale to zero और event-driven scaling वाले containers, Kubernetes चलाना नहीं पड़ता; <b>AKS</b> = पूरा Kubernetes, maximum control और operations खुद की।</li>
+<li><b>Containers:</b> <b>Container Apps</b> = scale to zero और event-driven scaling वाले containers, Kubernetes चलाना नहीं पड़ता (scaling KEDA-based है, Dapr optional); <b>AKS</b> = पूरा Kubernetes, maximum control और operations खुद संभालने पड़ते हैं।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> web API के लिए App Service से शुरू करो (सबसे simple), event-driven या bursty काम के लिए Functions, जब containers पहले से ship करते हो तब Container Apps, और AKS तभी जब Kubernetes features चाहिए और चलाने वाले लोग हों। लंबी, chatty, हमेशा busy API के लिए सिर्फ़ "serverless" सुनकर Functions मत चुनो; और AKS इसलिए मत चुनो कि वह impressive दिखता है।</p>`,
         hg: `<p><b>Picture — managed mall mein ek shop:</b> tum shop kiraye par lete ho (<b>App Service</b>); mall building, bijli aur security deta hai, aur kai shops ek floor (<b>plan</b>) share kar sakti hain. <b>Function</b> ek tiffin kitchen hai jo order aane par hi pakati hai; kitchen khulne mein jo der lagti hai woh <b>cold start</b> hai.</p>
 <ul>
 <li><b>App Service:</b> <b>plan</b> compute (VMs) hai aur ek plan ki apps use share karti hain. <b>Scale up</b> = bada plan size; <b>scale out</b> = zyada instances (manual ya autoscale rules). <b>Always On</b> app ko loaded rakhta hai taaki idle ke baad pehli request slow na ho (sabse neeche ke tiers par nahi milta; current tiers check karo).</li>
-<li><b>Deployment slots:</b> app ki staging copy jiska apna URL hota hai. Wahan deploy karo, test karo, phir <b>swap</b>: platform slot ko warm-up karke traffic switch karta hai, aur kharab release wapas swap karke undo ho jaati hai. Jo settings <b>slot settings</b> ("sticky") mark hain woh slot ke saath rehti hain aur swap mein nahi hilti. Slots ke liye aisa plan tier chahiye jo unhe support kare.</li>
-<li><b>Linux vs Windows:</b> modern .NET Linux par achha chalta hai; Windows mukhya roop se .NET Framework ya dusri Windows-only zaroorton ke liye chuno.</li>
+<li><b>Deployment slots:</b> app ki staging copy jiska apna URL hota hai. Wahan deploy karo, test karo, phir <b>swap</b>: platform slot ko warm-up karke traffic switch karta hai, aur kharab release wapas swap karke undo ho jaati hai; <b>swap with preview</b> two-phase option hai. Jo settings <b>slot settings</b> ("sticky") mark hain woh slot ke saath rehti hain aur swap mein nahi hilti. Slots ke liye aisa plan tier chahiye jo unhe support kare.</li>
+<li><b>Linux vs Windows:</b> modern .NET Linux par achha chalta hai; Windows mainly .NET Framework ya dusri Windows-only zaroorton ke liye chuno.</li>
 <li><b>Azure Functions:</b> <b>trigger</b> function ko shuru karta hai (HTTP, timer, Service Bus, queue, blob, Event Grid, Event Hubs); <b>bindings</b> inputs aur outputs declare karte hain. .NET ke liye <b>isolated worker model</b> use karo (apna <code>Program.cs</code>, DI, aur .NET version ki tumhari choice). Purane <b>in-process model</b> ka support <b>10 November 2026</b> ko khatam hota hai, isliye naya kaam isolated mein hi ho.</li>
 <li><b>Hosting plans:</b> <b>Flex Consumption</b> (serverless, Linux, zero tak scale, optional always-ready instances, VNet integration; naye apps ke liye recommended serverless plan); <b>Premium</b> (pre-warmed aur always-ready instances, VNet, un instances par cold start nahi); <b>Dedicated</b> (App Service plan jo tum pehle se chala rahe ho); legacy <b>Consumption</b> (Linux Consumption retire ho raha hai, Windows abhi hai; current status check karo).</li>
 <li><b>Durable Functions:</b> ek extension jisme <b>orchestrator</b> function lamba workflow code mein chalata hai (steps, waits, retries). Yeh Day 16 ke saga jaisa hai, aur orchestrator code deterministic hona chahiye kyunki woh replay hota hai.</li>
-<li><b>Containers:</b> <b>Container Apps</b> = scale to zero aur event-driven scaling wale containers, Kubernetes chalana nahi padta; <b>AKS</b> = poora Kubernetes, maximum control aur operations khud ki.</li>
+<li><b>Containers:</b> <b>Container Apps</b> = scale to zero aur event-driven scaling wale containers, Kubernetes chalana nahi padta (scaling KEDA-based hai, Dapr optional); <b>AKS</b> = poora Kubernetes, maximum control aur operations khud sambhalne padte hain.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> web API ke liye App Service se shuru karo (sabse simple), event-driven ya bursty kaam ke liye Functions, jab containers pehle se ship karte ho tab Container Apps, aur AKS tabhi jab Kubernetes features chahiye aur chalane wale log hon. Lambi, chatty, hamesha busy API ke liye sirf "serverless" sunkar Functions mat chuno; aur AKS isliye mat chuno ki woh impressive dikhta hai.</p>`
       }
@@ -94,8 +94,8 @@ window.TL_DAY = {
       body: {
         en: `<p><b>Picture — three Indian postal ideas:</b> <b>Service Bus</b> is registered post with acknowledgement: it keeps the letter safely until the right person signs for it. <b>Event Grid</b> is a loudspeaker announcement: "the train has arrived", pushed to everyone who subscribed. <b>Event Hubs</b> is a railway track carrying a continuous flow of trains: huge volume, read in order within a lane.</p>
 <ul>
-<li><b>Service Bus (a broker for business messages):</b> <b>queues</b> (competing consumers) and <b>topics with subscriptions</b> (each subscription gets its own copy, with filters). Features: <b>peek-lock</b> (lock the message, then complete or abandon), <b>dead-letter queue</b>, <b>sessions</b> (FIFO order per session id), <b>duplicate detection</b>, <b>scheduled messages</b>, delivery counting. Use it for orders, payments, commands.</li>
-<li><b>Event Grid (event routing, push):</b> sources (Azure services or your own topics) publish events and Event Grid <b>pushes</b> them to handlers (Functions, webhooks, queues) with retries. It carries a notification that something happened ("a blob was created"), not a durable work queue. Use it to react to changes.</li>
+<li><b>Service Bus (a broker for business messages):</b> <b>queues</b> (competing consumers) and <b>topics with subscriptions</b> (each subscription gets its own copy, with filters). Features: <b>peek-lock</b> (lock the message, then complete or abandon), <b>dead-letter queue</b>, <b>sessions</b> (FIFO order per session id), <b>duplicate detection</b>, <b>scheduled messages</b>, delivery counting (topics, sessions and duplicate detection need Standard or Premium; Basic has queues only). Use it for orders, payments, commands.</li>
+<li><b>Event Grid (event routing, push):</b> sources (Azure services or your own topics) publish events and Event Grid <b>pushes</b> them to handlers (Functions, webhooks, queues) with retries and backoff, and can dead-letter undelivered events to blob storage if configured. It carries a notification that something happened ("a blob was created"), not a durable work queue. Use it to react to changes.</li>
 <li><b>Event Hubs (streaming):</b> a log of events split into <b>partitions</b>; consumers read in order inside a partition and each <b>consumer group</b> has its own position. Built for very high throughput telemetry and clickstreams, with a Kafka-compatible endpoint. Use it for streams, not for "process this order once".</li>
 <li><b>Storage Queues:</b> a simple, large, cheap queue inside a storage account. No topics, no sessions, no built-in duplicate detection; the Functions queue trigger moves a failing message to a <code>-poison</code> queue after <code>maxDequeueCount</code> (default 5). Fine for basic background jobs.</li>
 <li><b>Choosing:</b> need ordering, DLQ, topics, transactions or careful handling of business commands: Service Bus. Need "notify me when X happens": Event Grid. Need very high event volume for analytics: Event Hubs. Need only a plain, simple backlog: Storage Queue.</li>
@@ -103,20 +103,20 @@ window.TL_DAY = {
 <p><b>When to use / when not:</b> do not use Event Hubs as a task queue (no per-message lock or DLQ), do not rely on Event Grid alone when the receiver needs a durable backlog (put a queue behind it), and do not use Service Bus for raw telemetry volume. Delivery is at-least-once in all of them, so every consumer must be idempotent (Day 16).</p>`,
         hi: `<p><b>Picture — तीन भारतीय डाक वाले ideas:</b> <b>Service Bus</b> acknowledgement वाली registered post है: सही आदमी के sign करने तक चिट्ठी safe रखता है। <b>Event Grid</b> loudspeaker announcement है: "train आ गई", जो subscribe किए हर आदमी तक push होती है। <b>Event Hubs</b> railway track है जिस पर trains का लगातार flow चलता है: बहुत बड़ा volume, एक lane के अंदर order में पढ़ना।</p>
 <ul>
-<li><b>Service Bus (business messages का broker):</b> <b>queues</b> (competing consumers) और <b>subscriptions वाले topics</b> (हर subscription को अपनी copy मिलती है, filters के साथ)। Features: <b>peek-lock</b> (message lock करो, फिर complete या abandon), <b>dead-letter queue</b>, <b>sessions</b> (हर session id में FIFO order), <b>duplicate detection</b>, <b>scheduled messages</b>, delivery counting। Orders, payments, commands के लिए use करो।</li>
-<li><b>Event Grid (event routing, push):</b> sources (Azure services या तुम्हारे अपने topics) events publish करते हैं और Event Grid उन्हें handlers (Functions, webhooks, queues) तक retries के साथ <b>push</b> करता है। यह "कुछ हुआ" की notification ले जाता है ("blob बना"), durable work queue नहीं है। बदलावों पर react करने के लिए use करो।</li>
+<li><b>Service Bus (business messages का broker):</b> <b>queues</b> (competing consumers) और <b>subscriptions वाले topics</b> (हर subscription को अपनी copy मिलती है, filters के साथ)। Features: <b>peek-lock</b> (message lock करो, फिर complete या abandon), <b>dead-letter queue</b>, <b>sessions</b> (हर session id में FIFO order), <b>duplicate detection</b>, <b>scheduled messages</b>, delivery counting (topics, sessions और duplicate detection के लिए Standard या Premium चाहिए; Basic में सिर्फ़ queues हैं)। Orders, payments, commands के लिए use करो।</li>
+<li><b>Event Grid (event routing, push):</b> sources (Azure services या तुम्हारे अपने topics) events publish करते हैं और Event Grid उन्हें handlers (Functions, webhooks, queues) तक retries और backoff के साथ <b>push</b> करता है, और configure हो तो undelivered events को blob storage में dead-letter कर सकता है। यह "कुछ हुआ" की notification ले जाता है ("blob बना"), durable work queue नहीं है। बदलावों पर react करने के लिए use करो।</li>
 <li><b>Event Hubs (streaming):</b> events का एक log जो <b>partitions</b> में बँटा है; consumers एक partition के अंदर order में पढ़ते हैं और हर <b>consumer group</b> की अपनी position होती है। बहुत high throughput telemetry और clickstreams के लिए बना है, Kafka-compatible endpoint के साथ। Streams के लिए use करो, "यह order एक बार process करो" के लिए नहीं।</li>
 <li><b>Storage Queues:</b> storage account के अंदर simple, बड़ी, सस्ती queue। Topics नहीं, sessions नहीं, built-in duplicate detection नहीं; Functions का queue trigger fail होते message को <code>maxDequeueCount</code> (default 5) के बाद <code>-poison</code> queue में भेज देता है। Basic background jobs के लिए ठीक।</li>
-<li><b>चुनाव:</b> ordering, DLQ, topics, transactions या business commands का सावधानी वाला handling चाहिए: Service Bus। "X होने पर बताओ" चाहिए: Event Grid। Analytics के लिए बहुत high event volume चाहिए: Event Hubs। सिर्फ़ सादा backlog चाहिए: Storage Queue।</li>
+<li><b>चुनाव:</b> ordering, DLQ, topics, transactions या business commands का careful handling चाहिए: Service Bus। "X होने पर बताओ" चाहिए: Event Grid। Analytics के लिए बहुत high event volume चाहिए: Event Hubs। सिर्फ़ सादा backlog चाहिए: Storage Queue।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> Event Hubs को task queue मत बनाओ (per-message lock या DLQ नहीं), जब receiver को durable backlog चाहिए तब Event Grid अकेला मत रखो (उसके पीछे queue लगाओ), और raw telemetry volume के लिए Service Bus मत लो। इन सब में delivery at-least-once है, इसलिए हर consumer idempotent होना चाहिए (Day 16)।</p>`,
         hg: `<p><b>Picture — teen Indian daak wale ideas:</b> <b>Service Bus</b> acknowledgement wali registered post hai: sahi aadmi ke sign karne tak chitthi safe rakhta hai. <b>Event Grid</b> loudspeaker announcement hai: "train aa gayi", jo subscribe kiye har aadmi tak push hoti hai. <b>Event Hubs</b> railway track hai jis par trains ka lagatar flow chalta hai: bahut bada volume, ek lane ke andar order mein padhna.</p>
 <ul>
-<li><b>Service Bus (business messages ka broker):</b> <b>queues</b> (competing consumers) aur <b>subscriptions wale topics</b> (har subscription ko apni copy milti hai, filters ke saath). Features: <b>peek-lock</b> (message lock karo, phir complete ya abandon), <b>dead-letter queue</b>, <b>sessions</b> (har session id mein FIFO order), <b>duplicate detection</b>, <b>scheduled messages</b>, delivery counting. Orders, payments, commands ke liye use karo.</li>
-<li><b>Event Grid (event routing, push):</b> sources (Azure services ya tumhare apne topics) events publish karte hain aur Event Grid unhe handlers (Functions, webhooks, queues) tak retries ke saath <b>push</b> karta hai. Yeh "kuch hua" ki notification le jaata hai ("blob bana"), durable work queue nahi hai. Badlaavon par react karne ke liye use karo.</li>
+<li><b>Service Bus (business messages ka broker):</b> <b>queues</b> (competing consumers) aur <b>subscriptions wale topics</b> (har subscription ko apni copy milti hai, filters ke saath). Features: <b>peek-lock</b> (message lock karo, phir complete ya abandon), <b>dead-letter queue</b>, <b>sessions</b> (har session id mein FIFO order), <b>duplicate detection</b>, <b>scheduled messages</b>, delivery counting (topics, sessions aur duplicate detection ke liye Standard ya Premium chahiye; Basic mein sirf queues hain). Orders, payments, commands ke liye use karo.</li>
+<li><b>Event Grid (event routing, push):</b> sources (Azure services ya tumhare apne topics) events publish karte hain aur Event Grid unhe handlers (Functions, webhooks, queues) tak retries aur backoff ke saath <b>push</b> karta hai, aur configure ho to undelivered events ko blob storage mein dead-letter kar sakta hai. Yeh "kuch hua" ki notification le jaata hai ("blob bana"), durable work queue nahi hai. Badlaavon par react karne ke liye use karo.</li>
 <li><b>Event Hubs (streaming):</b> events ka ek log jo <b>partitions</b> mein banta hai; consumers ek partition ke andar order mein padhte hain aur har <b>consumer group</b> ki apni position hoti hai. Bahut high throughput telemetry aur clickstreams ke liye bana hai, Kafka-compatible endpoint ke saath. Streams ke liye use karo, "yeh order ek baar process karo" ke liye nahi.</li>
 <li><b>Storage Queues:</b> storage account ke andar simple, badi, sasti queue. Topics nahi, sessions nahi, built-in duplicate detection nahi; Functions ka queue trigger fail hote message ko <code>maxDequeueCount</code> (default 5) ke baad <code>-poison</code> queue mein bhej deta hai. Basic background jobs ke liye theek.</li>
-<li><b>Chunav:</b> ordering, DLQ, topics, transactions ya business commands ka saavdhaani wala handling chahiye: Service Bus. "X hone par batao" chahiye: Event Grid. Analytics ke liye bahut high event volume chahiye: Event Hubs. Sirf saada backlog chahiye: Storage Queue.</li>
+<li><b>Chunav:</b> ordering, DLQ, topics, transactions ya business commands ka careful handling chahiye: Service Bus. "X hone par batao" chahiye: Event Grid. Analytics ke liye bahut high event volume chahiye: Event Hubs. Sirf saada backlog chahiye: Storage Queue.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> Event Hubs ko task queue mat banao (per-message lock ya DLQ nahi), jab receiver ko durable backlog chahiye tab Event Grid akela mat rakho (uske peeche queue lagao), aur raw telemetry volume ke liye Service Bus mat lo. In sab mein delivery at-least-once hai, isliye har consumer idempotent hona chahiye (Day 16).</p>`
       }
@@ -145,7 +145,7 @@ window.TL_DAY = {
 <li><b>Managed Identity:</b> किसी Azure resource (App Service, Function, Container App, VM) के लिए Microsoft Entra ID में एक identity। <b>System-assigned</b> resource के साथ बनती है और उसी के साथ delete होती है (एक resource, एक identity)। <b>User-assigned</b> एक अलग resource है जो तुम एक बार बनाकर कई resources से जोड़ सकते हो; किसी एक app के delete होने पर भी रहती है।</li>
 <li><b>RBAC से access:</b> identity को target पर एक role मिलता है (जैसे Key Vault secrets reader role, Storage Blob data role, Service Bus data sender या receiver role, या identity से mapped database user)। सबसे छोटा role सबसे छोटे scope पर दो।</li>
 <li><b>DefaultAzureCredential:</b> code में एक line जो credentials को order में तब तक try करती है जब तक कोई चल न जाए: environment variables, workload identity, <b>managed identity</b>, Visual Studio, Visual Studio Code, Azure CLI, Azure PowerShell, Azure Developer CLI (browser sign-in default से off है)। Laptop पर यह तुम्हारा developer login use करती है; Azure में managed identity, बिना code बदले। Exact chain package versions के साथ बदल सकती है, इसलिए docs check करो।</li>
-<li><b>Production में specific credential:</b> docs सलाह देते हैं कि broad chain की जगह <code>ManagedIdentityCredential</code> जैसा specific credential लगाओ, ताकि failures debug करना आसान हो और behaviour किसी भटके हुए environment variable पर निर्भर न हो।</li>
+<li><b>Production में specific credential:</b> docs सलाह देते हैं कि broad chain की जगह <code>ManagedIdentityCredential</code> जैसा specific credential लगाओ, ताकि failures debug करना आसान हो और behaviour किसी भटके हुए environment variable पर depend न करे।</li>
 <li><b>Key Vault:</b> उन secrets, keys और certificates की store जो बचे रह जाते हैं (जैसे third-party API keys)। Startup पर <b>Key Vault configuration provider</b> (<code>AddAzureKeyVault</code>) से पढ़ो, या App Service को app setting में <b>Key Vault reference</b> से inject करने दो। Vault में secret के नाम का <code>--</code> configuration key के <code>:</code> से map होता है।</li>
 <li><b>Day 12 से link:</b> secrets source control वाले <code>appsettings.json</code> में नहीं जाते। Local में user secrets या developer login; production में identity plus Key Vault।</li>
 </ul>
@@ -155,7 +155,7 @@ window.TL_DAY = {
 <li><b>Managed Identity:</b> kisi Azure resource (App Service, Function, Container App, VM) ke liye Microsoft Entra ID mein ek identity. <b>System-assigned</b> resource ke saath banti hai aur usi ke saath delete hoti hai (ek resource, ek identity). <b>User-assigned</b> ek alag resource hai jo tum ek baar banakar kai resources se jod sakte ho; kisi ek app ke delete hone par bhi rehti hai.</li>
 <li><b>RBAC se access:</b> identity ko target par ek role milta hai (jaise Key Vault secrets reader role, Storage Blob data role, Service Bus data sender ya receiver role, ya identity se mapped database user). Sabse chhota role sabse chhote scope par do.</li>
 <li><b>DefaultAzureCredential:</b> code mein ek line jo credentials ko order mein tab tak try karti hai jab tak koi chal na jaye: environment variables, workload identity, <b>managed identity</b>, Visual Studio, Visual Studio Code, Azure CLI, Azure PowerShell, Azure Developer CLI (browser sign-in default se off hai). Laptop par yeh tumhara developer login use karti hai; Azure mein managed identity, bina code badle. Exact chain package versions ke saath badal sakti hai, isliye docs check karo.</li>
-<li><b>Production mein specific credential:</b> docs salah dete hain ki broad chain ki jagah <code>ManagedIdentityCredential</code> jaisa specific credential lagao, taaki failures debug karna aasaan ho aur behaviour kisi bhatke hue environment variable par nirbhar na ho.</li>
+<li><b>Production mein specific credential:</b> docs salah dete hain ki broad chain ki jagah <code>ManagedIdentityCredential</code> jaisa specific credential lagao, taaki failures debug karna aasaan ho aur behaviour kisi bhatke hue environment variable par depend na kare.</li>
 <li><b>Key Vault:</b> un secrets, keys aur certificates ki store jo bache rah jaate hain (jaise third-party API keys). Startup par <b>Key Vault configuration provider</b> (<code>AddAzureKeyVault</code>) se padho, ya App Service ko app setting mein <b>Key Vault reference</b> se inject karne do. Vault mein secret ke naam ka <code>--</code> configuration key ke <code>:</code> se map hota hai.</li>
 <li><b>Day 12 se link:</b> secrets source control wale <code>appsettings.json</code> mein nahi jaate. Local mein user secrets ya developer login; production mein identity plus Key Vault.</li>
 </ul>
@@ -173,7 +173,7 @@ window.TL_DAY = {
       body: {
         en: `<p><b>Analogy — a kirana shop with a back door:</b> the Function is the shopkeeper who wakes only when a customer rings the bell (the trigger). A slot swap is rehearsing the new shop layout in the godown, then switching the signboards in one move.</p>
 <ul>
-<li>The <b>isolated worker</b> project is a normal host: <code>Program.cs</code> builds the host (DI, configuration, logging), and each function is a method with <code>[Function]</code> and a trigger attribute. The snippet needs these packages: <code>Microsoft.Azure.Functions.Worker@2.*</code>, <code>Microsoft.Azure.Functions.Worker.Extensions.ServiceBus@5.*</code> (it brings the Service Bus types), and <code>Microsoft.Extensions.Hosting@10.*</code>.</li>
+<li>The <b>isolated worker</b> project is a normal host: <code>Program.cs</code> builds the host (DI, configuration, logging), and each function is a method with <code>[Function]</code> and a trigger attribute. The snippet needs these packages: <code>Microsoft.Azure.Functions.Worker@2.*</code>, <code>Microsoft.Azure.Functions.Worker.Extensions.ServiceBus@5.*</code> (it brings the Service Bus types), and <code>Microsoft.Extensions.Hosting@10.*</code>. A real project also references <code>Microsoft.Azure.Functions.Worker.Sdk</code> (the Hosting pin is only a compile-check detail), and the current template builds the host with <code>FunctionsApplication.CreateBuilder(args)</code>.</li>
 <li>With the Service Bus trigger you can take <code>ServiceBusReceivedMessage</code> plus <code>ServiceBusMessageActions</code> and settle the message yourself: <b>complete</b> on success, <b>dead-letter</b> a poison message with a reason, and let an exception mean "retry" (the delivery count goes up, Day 16 idea). The handler reads <code>MessageId</code> to stay idempotent.</li>
 <li>The connection uses <code>Connection = "ServiceBus"</code>: the platform reads app settings such as <code>ServiceBus__fullyQualifiedNamespace</code> and signs in with the app's managed identity, so no connection string with a key is needed.</li>
 <li>The <b>bash</b> snippet (not run here) shows the slot flow with the Azure CLI: create the <code>staging</code> slot, mark a setting as a <b>slot setting</b> so it does not travel with the swap, turn on Always On, then swap. Option names are from the Azure CLI <code>az webapp</code> commands; run <code>az webapp deployment slot swap -h</code> to confirm them for your CLI version.</li>
@@ -181,7 +181,7 @@ window.TL_DAY = {
 <p><b>When to use:</b> Function + trigger for "when this message or event arrives, do one small thing"; slots for any production web app where a bad deploy costs money. <b>When not:</b> do not put a 30-minute job inside a trigger without checking the plan's limits (use Durable Functions or a worker), and do not rely on the slot swap to hide a breaking database change (the database is shared, so use expand/contract migrations: add first, remove later).</p>`,
         hi: `<p><b>Analogy — पीछे के दरवाज़े वाली kirana shop:</b> Function वह दुकानदार है जो ग्राहक के bell बजाने (trigger) पर ही जागता है। Slot swap का मतलब है नई shop layout की godown में rehearsal, फिर signboards एक ही बार में बदल देना।</p>
 <ul>
-<li><b>Isolated worker</b> project एक normal host है: <code>Program.cs</code> host बनाता है (DI, configuration, logging), और हर function <code>[Function]</code> और trigger attribute वाला method है। Snippet को ये packages चाहिए: <code>Microsoft.Azure.Functions.Worker@2.*</code>, <code>Microsoft.Azure.Functions.Worker.Extensions.ServiceBus@5.*</code> (यह Service Bus types लाता है), और <code>Microsoft.Extensions.Hosting@10.*</code>।</li>
+<li><b>Isolated worker</b> project एक normal host है: <code>Program.cs</code> host बनाता है (DI, configuration, logging), और हर function <code>[Function]</code> और trigger attribute वाला method है। Snippet को ये packages चाहिए: <code>Microsoft.Azure.Functions.Worker@2.*</code>, <code>Microsoft.Azure.Functions.Worker.Extensions.ServiceBus@5.*</code> (यह Service Bus types लाता है), और <code>Microsoft.Extensions.Hosting@10.*</code>। असली project में <code>Microsoft.Azure.Functions.Worker.Sdk</code> भी reference होता है (Hosting pin सिर्फ़ compile-check की detail है), और current template host को <code>FunctionsApplication.CreateBuilder(args)</code> से बनाता है।</li>
 <li>Service Bus trigger के साथ तुम <code>ServiceBusReceivedMessage</code> और <code>ServiceBusMessageActions</code> ले सकते हो और message को खुद settle कर सकते हो: success पर <b>complete</b>, poison message को reason के साथ <b>dead-letter</b>, और exception का मतलब "retry" (delivery count बढ़ता है, Day 16 वाला idea)। Handler idempotent रहने के लिए <code>MessageId</code> पढ़ता है।</li>
 <li>Connection <code>Connection = "ServiceBus"</code> use करता है: platform <code>ServiceBus__fullyQualifiedNamespace</code> जैसी app settings पढ़ता है और app की managed identity से sign in करता है, इसलिए key वाली connection string नहीं चाहिए।</li>
 <li><b>bash</b> snippet (यहाँ चलता नहीं) Azure CLI से slot flow दिखाता है: <code>staging</code> slot बनाओ, एक setting को <b>slot setting</b> mark करो ताकि वह swap के साथ न जाए, Always On चालू करो, फिर swap। Option names Azure CLI के <code>az webapp</code> commands से हैं; अपने CLI version पर confirm करने के लिए <code>az webapp deployment slot swap -h</code> चलाओ।</li>
@@ -189,7 +189,7 @@ window.TL_DAY = {
 <p><b>कब use करें:</b> "यह message या event आए तो एक छोटा काम करो" के लिए Function + trigger; जिस production web app में खराब deploy से नुकसान होता है उसके लिए slots। <b>कब नहीं:</b> plan की limits देखे बिना trigger के अंदर 30 मिनट का job मत रखो (Durable Functions या worker use करो), और breaking database change छुपाने के लिए slot swap पर भरोसा मत करो (database shared है, इसलिए expand/contract migrations: पहले जोड़ो, बाद में हटाओ)।</p>`,
         hg: `<p><b>Analogy — peeche ke darwaze wali kirana shop:</b> Function woh dukaandaar hai jo grahak ke bell bajaane (trigger) par hi jaagta hai. Slot swap ka matlab hai nayi shop layout ki godown mein rehearsal, phir signboards ek hi baar mein badal dena.</p>
 <ul>
-<li><b>Isolated worker</b> project ek normal host hai: <code>Program.cs</code> host banata hai (DI, configuration, logging), aur har function <code>[Function]</code> aur trigger attribute wala method hai. Snippet ko yeh packages chahiye: <code>Microsoft.Azure.Functions.Worker@2.*</code>, <code>Microsoft.Azure.Functions.Worker.Extensions.ServiceBus@5.*</code> (yeh Service Bus types laata hai), aur <code>Microsoft.Extensions.Hosting@10.*</code>.</li>
+<li><b>Isolated worker</b> project ek normal host hai: <code>Program.cs</code> host banata hai (DI, configuration, logging), aur har function <code>[Function]</code> aur trigger attribute wala method hai. Snippet ko yeh packages chahiye: <code>Microsoft.Azure.Functions.Worker@2.*</code>, <code>Microsoft.Azure.Functions.Worker.Extensions.ServiceBus@5.*</code> (yeh Service Bus types laata hai), aur <code>Microsoft.Extensions.Hosting@10.*</code>. Asli project mein <code>Microsoft.Azure.Functions.Worker.Sdk</code> bhi reference hota hai (Hosting pin sirf compile-check ki detail hai), aur current template host ko <code>FunctionsApplication.CreateBuilder(args)</code> se banata hai.</li>
 <li>Service Bus trigger ke saath tum <code>ServiceBusReceivedMessage</code> aur <code>ServiceBusMessageActions</code> le sakte ho aur message ko khud settle kar sakte ho: success par <b>complete</b>, poison message ko reason ke saath <b>dead-letter</b>, aur exception ka matlab "retry" (delivery count badhta hai, Day 16 wala idea). Handler idempotent rehne ke liye <code>MessageId</code> padhta hai.</li>
 <li>Connection <code>Connection = "ServiceBus"</code> use karta hai: platform <code>ServiceBus__fullyQualifiedNamespace</code> jaisi app settings padhta hai aur app ki managed identity se sign in karta hai, isliye key wali connection string nahi chahiye.</li>
 <li><b>bash</b> snippet (yahan chalta nahi) Azure CLI se slot flow dikhata hai: <code>staging</code> slot banao, ek setting ko <b>slot setting</b> mark karo taaki woh swap ke saath na jaye, Always On chalu karo, phir swap. Option names Azure CLI ke <code>az webapp</code> commands se hain; apne CLI version par confirm karne ke liye <code>az webapp deployment slot swap -h</code> chalao.</li>
@@ -488,16 +488,16 @@ az role assignment create \\
         {
           lang: "json",
           caption: {
-            en: "App Service app setting that uses a Key Vault reference (no code change; the platform resolves it with the app's identity)",
-            hi: "Key Vault reference वाली App Service app setting (code में बदलाव नहीं; platform app की identity से resolve करता है)",
-            hg: "Key Vault reference wali App Service app setting (code mein badlaav nahi; platform app ki identity se resolve karta hai)"
+            en: "App Service app setting that uses a Key Vault reference (no code change; the platform resolves it with the app's identity; usually a slot setting)",
+            hi: "Key Vault reference वाली App Service app setting (code में बदलाव नहीं; platform app की identity से resolve करता है; आम तौर पर slot setting)",
+            hg: "Key Vault reference wali App Service app setting (code mein badlaav nahi; platform app ki identity se resolve karta hai; aam taur par slot setting)"
           },
           check: "none",
           src: `[
   {
     "name": "Payments__ApiKey",
     "value": "@Microsoft.KeyVault(SecretUri=https://kv-orders-prod.vault.azure.net/secrets/Payments--ApiKey/)",
-    "slotSetting": false
+    "slotSetting": true
   }
 ]`
         }
@@ -582,11 +582,35 @@ public static class OrderTelemetry
 }`
         },
         {
+          caption: {
+            en: "The newer distro for new apps: Microsoft.OpenTelemetry with UseMicrosoftOpenTelemetry (compile-checked; one distro per app, never both)",
+            hi: "नए apps के लिए नया distro: UseMicrosoftOpenTelemetry के साथ Microsoft.OpenTelemetry (compile-checked; एक app में एक ही distro, दोनों कभी नहीं)",
+            hg: "Naye apps ke liye naya distro: UseMicrosoftOpenTelemetry ke saath Microsoft.OpenTelemetry (compile-checked; ek app mein ek hi distro, dono kabhi nahi)"
+          },
+          check: "compile",
+          frameworks: ["aspnetcore"],
+          packages: ["Microsoft.OpenTelemetry@1.*"],
+          src: `using Microsoft.AspNetCore.Builder;
+using Microsoft.OpenTelemetry;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Reads APPLICATIONINSIGHTS_CONNECTION_STRING from the environment.
+builder.UseMicrosoftOpenTelemetry(options =>
+{
+    options.Exporters = ExportTarget.AzureMonitor;
+});
+
+var app = builder.Build();
+app.MapGet("/ping", () => "ok");
+app.Run();`
+        },
+        {
           lang: "text",
           caption: {
-            en: "API Management policy (XML, display-only): validate the JWT, rate-limit per caller, add a header (replace the placeholders)",
-            hi: "API Management policy (XML, display-only): JWT validate करो, हर caller पर rate-limit, एक header जोड़ो (placeholders बदलो)",
-            hg: "API Management policy (XML, display-only): JWT validate karo, har caller par rate-limit, ek header jodo (placeholders badlo)"
+            en: "API Management policy (XML, display-only): validate the JWT, rate-limit per caller, add a header (replace the placeholders; the audience must match your app, v2 tokens carry the client-id GUID as aud; validate-azure-ad-token is an Entra-specific alternative)",
+            hi: "API Management policy (XML, display-only): JWT validate करो, हर caller पर rate-limit, एक header जोड़ो (placeholders बदलो; audience तुम्हारी app से match हो, v2 tokens में client-id GUID ही aud होता है; validate-azure-ad-token Entra-specific विकल्प है)",
+            hg: "API Management policy (XML, display-only): JWT validate karo, har caller par rate-limit, ek header jodo (placeholders badlo; audience tumhari app se match ho, v2 tokens mein client-id GUID hi aud hota hai; validate-azure-ad-token Entra-specific vikalp hai)"
           },
           check: "none",
           src: `<policies>
@@ -632,8 +656,9 @@ public static class OrderTelemetry
 <ul>
 <li><b>Blob Storage tiers:</b> Hot, Cool, Cold, Archive. The cooler the tier, the cheaper to store and the dearer to read; Archive is <b>offline</b>, so you must rehydrate a blob (hours) before reading it. Cooler tiers have minimum retention periods (check current rules). A <b>lifecycle management</b> rule can move or delete blobs by age automatically.</li>
 <li><b>Queue vs Table:</b> Queue Storage is the simple backlog (compare with Service Bus on the messaging card above). Table Storage is a cheap key-value store addressed by <code>PartitionKey</code> and <code>RowKey</code>; no joins, limited querying. Cosmos DB covers richer cases (Day 19).</li>
+<li><b>Cache:</b> <b>Azure Cache for Redis</b> (Basic, Standard and Premium tiers) is being retired; its successor is <b>Azure Managed Redis</b>. Check the current retirement notice and dates before planning a new cache (caching patterns: Day 13).</li>
 <li><b>Access to storage:</b> use the managed identity and a data role (the snippet uses <code>DefaultAzureCredential</code>); if you must give a customer a link, use a short-lived SAS and prefer one backed by the identity (a user delegation SAS) over the account key.</li>
-<li><b>Azure SQL Database</b> purchasing: <b>DTU</b> is a simple bundled unit; <b>vCore</b> lets you choose CPU and memory separately. <b>Serverless</b> (a vCore option) can <b>auto-pause</b> when idle and resume on the first connection, so the first call can be slow or fail briefly: use retry logic (<code>EnableRetryOnFailure</code>, Day 6). <b>Elastic pools</b> let many databases share one budget of resources, good for many small tenant databases with different peak times.</li>
+<li><b>Azure SQL Database</b> purchasing: <b>DTU</b> is a simple bundled unit; <b>vCore</b> lets you pick vCores and a hardware generation (memory comes with that choice) and size storage separately. <b>Serverless</b> (a vCore option) can <b>auto-pause</b> when idle and resume on the first connection, so the first call can be slow or fail briefly: use retry logic (<code>EnableRetryOnFailure</code>, Day 6). <b>Elastic pools</b> let many databases share one budget of resources, good for many small tenant databases with different peak times.</li>
 <li><b>Behaviour you know from Day 18:</b> in Azure SQL Database <b>RCSI is on by default</b> (READ COMMITTED reads use row versions, not shared locks), but in a SQL Server instance it is off unless you enable it. Use <code>Authentication=Active Directory Default</code> in the connection string for passwordless access.</li>
 <li><b>Environments and landing zones (brief):</b> keep dev, test and prod apart (separate subscriptions or at least resource groups), organise with management groups, apply <b>Azure Policy</b> and tags, name resources consistently, and define everything as code (Bicep or Terraform; the pipelines are Day 21). A <b>landing zone</b> is that prepared foundation (network, identity, policy, logging) a team's workloads land on.</li>
 <li><b>Cost awareness, no prices:</b> <b>scale to zero</b> (Flex Consumption, Container Apps, serverless SQL) costs little when idle but adds cold-start delay; <b>always-on</b> (Premium always-ready instances, App Service Always On, provisioned databases) costs steadily but answers fast. Right-size, shut down dev/test out of hours, set budgets and alerts, and tag for ownership. For real numbers use the Azure pricing calculator at decision time.</li>
@@ -642,9 +667,10 @@ public static class OrderTelemetry
         hi: `<p><b>Analogy — godown जिसमें shelves इस हिसाब से हैं कि चीज़ कितनी बार चाहिए:</b> सामने की shelf (<b>Hot</b>) रोज़ के stock के लिए, पीछे वाली (<b>Cool</b>, <b>Cold</b>) धीमे बिकने वाले माल के लिए, और दूसरे शहर का sealed warehouse (<b>Archive</b>) पुराने records के लिए: रखना सस्ता, मँगाना धीमा।</p>
 <ul>
 <li><b>Blob Storage tiers:</b> Hot, Cool, Cold, Archive। जितना ठंडा tier, रखना उतना सस्ता और पढ़ना उतना महँगा; Archive <b>offline</b> है, इसलिए पढ़ने से पहले blob को rehydrate करना पड़ता है (घंटे लगते हैं)। ठंडे tiers में minimum retention periods होते हैं (current rules check करो)। <b>Lifecycle management</b> rule उम्र के हिसाब से blobs को अपने-आप move या delete कर सकता है।</li>
-<li><b>Queue बनाम Table:</b> Queue Storage simple backlog है (ऊपर messaging card में Service Bus से तुलना)। Table Storage सस्ता key-value store है जिसे <code>PartitionKey</code> और <code>RowKey</code> से address करते हैं; joins नहीं, querying सीमित। ज़्यादा rich cases के लिए Cosmos DB (Day 19)।</li>
+<li><b>Queue बनाम Table:</b> Queue Storage simple backlog है (ऊपर messaging card में Service Bus से तुलना)। Table Storage सस्ता key-value store है जिसे <code>PartitionKey</code> और <code>RowKey</code> से address करते हैं; joins नहीं, querying limited। ज़्यादा rich cases के लिए Cosmos DB (Day 19)।</li>
+<li><b>Cache:</b> <b>Azure Cache for Redis</b> (Basic, Standard और Premium tiers) retire हो रहा है; उसका successor <b>Azure Managed Redis</b> है। नया cache सोचने से पहले current retirement notice और dates check करो (caching patterns: Day 13)।</li>
 <li><b>Storage का access:</b> managed identity और data role use करो (snippet <code>DefaultAzureCredential</code> use करता है); अगर customer को link देना ही पड़े तो short-lived SAS दो और account key की जगह identity-backed SAS (user delegation SAS) को prefer करो।</li>
-<li><b>Azure SQL Database</b> purchasing: <b>DTU</b> एक simple bundled unit है; <b>vCore</b> में CPU और memory अलग चुनते हैं और इसमें ज़्यादा control मिलता है। <b>Serverless</b> (vCore का एक option) idle होने पर <b>auto-pause</b> हो सकता है और पहले connection पर resume होता है, इसलिए पहली call slow हो सकती है या थोड़ी देर fail: retry logic लगाओ (<code>EnableRetryOnFailure</code>, Day 6)। <b>Elastic pools</b> में कई databases resources का एक budget share करते हैं, अलग-अलग peak time वाले कई छोटे tenant databases के लिए अच्छा।</li>
+<li><b>Azure SQL Database</b> purchasing: <b>DTU</b> एक simple bundled unit है; <b>vCore</b> में vCores और hardware generation चुनते हैं (memory उसी choice के साथ आती है) और storage अलग size करते हैं। <b>Serverless</b> (vCore का एक option) idle होने पर <b>auto-pause</b> हो सकता है और पहले connection पर resume होता है, इसलिए पहली call slow हो सकती है या थोड़ी देर fail: retry logic लगाओ (<code>EnableRetryOnFailure</code>, Day 6)। <b>Elastic pools</b> में कई databases resources का एक budget share करते हैं, अलग-अलग peak time वाले कई छोटे tenant databases के लिए अच्छा।</li>
 <li><b>जो Day 18 से जानते हो:</b> Azure SQL Database में <b>RCSI by default on है</b> (READ COMMITTED reads shared locks की जगह row versions use करती हैं), पर SQL Server instance में यह off रहता है जब तक तुम enable न करो। Passwordless access के लिए connection string में <code>Authentication=Active Directory Default</code> use करो।</li>
 <li><b>Environments और landing zones (brief):</b> dev, test और prod अलग रखो (अलग subscriptions या कम से कम resource groups), management groups से organise करो, <b>Azure Policy</b> और tags लगाओ, resources के नाम consistent रखो, और सब कुछ code में define करो (Bicep या Terraform; pipelines Day 21 में)। <b>Landing zone</b> वही तैयार foundation है (network, identity, policy, logging) जिस पर team के workloads उतरते हैं।</li>
 <li><b>Cost awareness, बिना prices:</b> <b>scale to zero</b> (Flex Consumption, Container Apps, serverless SQL) idle में कम खर्च करता है पर cold-start देरी जोड़ता है; <b>always-on</b> (Premium always-ready instances, App Service Always On, provisioned databases) लगातार खर्च करता है पर जल्दी जवाब देता है। Right-size करो, dev/test को office hours के बाद बंद करो, budgets और alerts लगाओ, और ownership के लिए tag करो। असली numbers के लिए decision के समय Azure pricing calculator use करो।</li>
@@ -653,9 +679,10 @@ public static class OrderTelemetry
         hg: `<p><b>Analogy — godown jisme shelves is hisaab se hain ki cheez kitni baar chahiye:</b> saamne ki shelf (<b>Hot</b>) roz ke stock ke liye, peeche wali (<b>Cool</b>, <b>Cold</b>) dheeme bikne wale maal ke liye, aur dusre shehar ka sealed warehouse (<b>Archive</b>) purane records ke liye: rakhna sasta, mangana dheema.</p>
 <ul>
 <li><b>Blob Storage tiers:</b> Hot, Cool, Cold, Archive. Jitna thanda tier, rakhna utna sasta aur padhna utna mehnga; Archive <b>offline</b> hai, isliye padhne se pehle blob ko rehydrate karna padta hai (ghante lagte hain). Thande tiers mein minimum retention periods hote hain (current rules check karo). <b>Lifecycle management</b> rule umar ke hisaab se blobs ko apne-aap move ya delete kar sakta hai.</li>
-<li><b>Queue vs Table:</b> Queue Storage simple backlog hai (upar messaging card mein Service Bus se tulna). Table Storage sasta key-value store hai jise <code>PartitionKey</code> aur <code>RowKey</code> se address karte hain; joins nahi, querying seemit. Zyada rich cases ke liye Cosmos DB (Day 19).</li>
+<li><b>Queue vs Table:</b> Queue Storage simple backlog hai (upar messaging card mein Service Bus se tulna). Table Storage sasta key-value store hai jise <code>PartitionKey</code> aur <code>RowKey</code> se address karte hain; joins nahi, querying limited. Zyada rich cases ke liye Cosmos DB (Day 19).</li>
+<li><b>Cache:</b> <b>Azure Cache for Redis</b> (Basic, Standard aur Premium tiers) retire ho raha hai; uska successor <b>Azure Managed Redis</b> hai. Naya cache sochne se pehle current retirement notice aur dates check karo (caching patterns: Day 13).</li>
 <li><b>Storage ka access:</b> managed identity aur data role use karo (snippet <code>DefaultAzureCredential</code> use karta hai); agar customer ko link dena hi pade to short-lived SAS do aur account key ki jagah identity-backed SAS (user delegation SAS) ko prefer karo.</li>
-<li><b>Azure SQL Database</b> purchasing: <b>DTU</b> ek simple bundled unit hai; <b>vCore</b> mein CPU aur memory alag chunte hain aur ismein zyada control milta hai. <b>Serverless</b> (vCore ka ek option) idle hone par <b>auto-pause</b> ho sakta hai aur pehle connection par resume hota hai, isliye pehli call slow ho sakti hai ya thodi der fail: retry logic lagao (<code>EnableRetryOnFailure</code>, Day 6). <b>Elastic pools</b> mein kai databases resources ka ek budget share karte hain, alag-alag peak time wale kai chhote tenant databases ke liye achha.</li>
+<li><b>Azure SQL Database</b> purchasing: <b>DTU</b> ek simple bundled unit hai; <b>vCore</b> mein vCores aur hardware generation chunte hain (memory usi choice ke saath aati hai) aur storage alag size karte hain. <b>Serverless</b> (vCore ka ek option) idle hone par <b>auto-pause</b> ho sakta hai aur pehle connection par resume hota hai, isliye pehli call slow ho sakti hai ya thodi der fail: retry logic lagao (<code>EnableRetryOnFailure</code>, Day 6). <b>Elastic pools</b> mein kai databases resources ka ek budget share karte hain, alag-alag peak time wale kai chhote tenant databases ke liye achha.</li>
 <li><b>Jo Day 18 se jaante ho:</b> Azure SQL Database mein <b>RCSI by default on hai</b> (READ COMMITTED reads shared locks ki jagah row versions use karti hain), par SQL Server instance mein yeh off rehta hai jab tak tum enable na karo. Passwordless access ke liye connection string mein <code>Authentication=Active Directory Default</code> use karo.</li>
 <li><b>Environments aur landing zones (brief):</b> dev, test aur prod alag rakho (alag subscriptions ya kam se kam resource groups), management groups se organise karo, <b>Azure Policy</b> aur tags lagao, resources ke naam consistent rakho, aur sab kuch code mein define karo (Bicep ya Terraform; pipelines Day 21 mein). <b>Landing zone</b> wahi taiyaar foundation hai (network, identity, policy, logging) jis par team ke workloads utarte hain.</li>
 <li><b>Cost awareness, bina prices:</b> <b>scale to zero</b> (Flex Consumption, Container Apps, serverless SQL) idle mein kam kharch karta hai par cold-start deri jodta hai; <b>always-on</b> (Premium always-ready instances, App Service Always On, provisioned databases) lagatar kharch karta hai par jaldi jawab deta hai. Right-size karo, dev/test ko office hours ke baad band karo, budgets aur alerts lagao, aur ownership ke liye tag karo. Asli numbers ke liye decision ke samay Azure pricing calculator use karo.</li>
@@ -712,7 +739,7 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
       id: "which-messaging-service",
       depth: "short",
       q: "Service Bus, Event Grid or Event Hubs: how do you choose?",
-      answer: "Service Bus for business commands needing reliable handling (queues, topics, DLQ, sessions). Event Grid to push 'something happened' notifications. Event Hubs for very high-volume event streams read by partition.",
+      answer: "Service Bus for business commands needing reliable handling (queues, topics, DLQ, sessions); Event Grid to push 'something happened' notifications. Event Hubs is for very high-volume event streams read by partition.",
       meaning: {
         hi: "Business commands के लिए Service Bus। 'कुछ हुआ' notifications push करने के लिए Event Grid। बहुत high-volume streams के लिए Event Hubs।",
         hg: "Business commands ke liye Service Bus. 'Kuch hua' notifications push karne ke liye Event Grid. Bahut high-volume streams ke liye Event Hubs."
@@ -847,10 +874,10 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
       id: "inprocess-vs-isolated",
       depth: "short",
       q: "In-process vs isolated worker model for .NET Functions: which one and why?",
-      answer: "Isolated worker. Your function runs in its own process with normal DI and Program.cs, and in-process support ends on 10 November 2026.",
+      answer: "Isolated worker. Your function runs in its own process with normal DI and Program.cs, and in-process support ends (or ended) on 10 November 2026.",
       meaning: {
-        hi: "Isolated worker। तुम्हारा function अपने process में normal DI और Program.cs के साथ चलता है, और in-process का support 10 November 2026 को खत्म होता है।",
-        hg: "Isolated worker. Tumhara function apne process mein normal DI aur Program.cs ke saath chalta hai, aur in-process ka support 10 November 2026 ko khatam hota hai."
+        hi: "Isolated worker। तुम्हारा function अपने process में normal DI और Program.cs के साथ चलता है, और in-process का support 10 November 2026 को खत्म होता है (या हो चुका है)।",
+        hg: "Isolated worker. Tumhara function apne process mein normal DI aur Program.cs ke saath chalta hai, aur in-process ka support 10 November 2026 ko khatam hota hai (ya ho chuka hai)."
       },
       explain: {
         en: `<ul>
@@ -883,17 +910,17 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
         en: `<ul>
 <li>Layers: identity first (Storage, Service Bus, Azure SQL), Key Vault for true secrets, user secrets locally (Day 12), and a secret scanner in CI (Day 21).</li>
 <li>Vault secret <code>A--B</code> maps to configuration key <code>A:B</code>; the vault source added last wins over earlier sources.</li>
-<li>Follow-up: "How do you rotate a secret?" Rotate in the vault; apps using a Key Vault reference pick up new versions, and a startup-loaded provider needs a restart or a reload strategy.</li>
+<li>Follow-up: "How do you rotate a secret?" Rotate in the vault; apps using a Key Vault reference pick up new versions within about 24 hours (cached; a config change or the refresh API forces it), and a startup-loaded provider needs a restart or a reload strategy.</li>
 </ul>`,
         hi: `<ul>
 <li>Layers: पहले identity (Storage, Service Bus, Azure SQL), असली secrets के लिए Key Vault, local में user secrets (Day 12), और CI में secret scanner (Day 21)।</li>
 <li>Vault का secret <code>A--B</code> configuration key <code>A:B</code> से map होता है; सबसे आखिर में जुड़ा vault source पहले के sources पर जीतता है।</li>
-<li>Follow-up: "Secret rotate कैसे करते हो?" Vault में rotate करो; Key Vault reference वाली apps नए versions उठा लेती हैं, और startup पर load करने वाले provider को restart या reload strategy चाहिए।</li>
+<li>Follow-up: "Secret rotate कैसे करते हो?" Vault में rotate करो; Key Vault reference वाली apps लगभग 24 घंटे में नए versions उठा लेती हैं (cached; config change या refresh API से तुरंत), और startup पर load करने वाले provider को restart या reload strategy चाहिए।</li>
 </ul>`,
         hg: `<ul>
 <li>Layers: pehle identity (Storage, Service Bus, Azure SQL), asli secrets ke liye Key Vault, local mein user secrets (Day 12), aur CI mein secret scanner (Day 21).</li>
 <li>Vault ka secret <code>A--B</code> configuration key <code>A:B</code> se map hota hai; sabse aakhir mein juda vault source pehle ke sources par jeetta hai.</li>
-<li>Follow-up: "Secret rotate kaise karte ho?" Vault mein rotate karo; Key Vault reference wali apps naye versions utha leti hain, aur startup par load karne wale provider ko restart ya reload strategy chahiye.</li>
+<li>Follow-up: "Secret rotate kaise karte ho?" Vault mein rotate karo; Key Vault reference wali apps lagbhag 24 ghante mein naye versions utha leti hain (cached; config change ya refresh API se turant), aur startup par load karne wale provider ko restart ya reload strategy chahiye.</li>
 </ul>`
       }
     },
@@ -955,14 +982,14 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
       id: "service-bus-dead-letter",
       depth: "detailed",
       q: "Why do messages land in a Service Bus dead-letter queue and what do you do about it?",
-      answer: "Mostly because the delivery count exceeded MaxDeliveryCount (default 10), the message expired, or the app dead-lettered it. You inspect the reason, fix the cause, then resubmit.",
+      answer: "Mostly because the delivery count exceeded MaxDeliveryCount (default 10), the app dead-lettered it, or it expired with dead-lettering on expiration enabled. You inspect the reason, fix the cause, then resubmit.",
       meaning: {
-        hi: "ज़्यादातर इसलिए कि delivery count MaxDeliveryCount (default 10) से ऊपर गया, message expire हुआ, या app ने खुद dead-letter किया। Reason देखो, कारण ठीक करो, फिर resubmit करो।",
-        hg: "Zyadatar isliye ki delivery count MaxDeliveryCount (default 10) se upar gaya, message expire hua, ya app ne khud dead-letter kiya. Reason dekho, kaaran theek karo, phir resubmit karo."
+        hi: "ज़्यादातर इसलिए कि delivery count MaxDeliveryCount (default 10) से ऊपर गया, expiration पर dead-lettering enabled होने से message expire हुआ, या app ने खुद dead-letter किया। Reason देखो, कारण ठीक करो, फिर resubmit करो।",
+        hg: "Zyadatar isliye ki delivery count MaxDeliveryCount (default 10) se upar gaya, expiration par dead-lettering enabled hone se message expire hua, ya app ne khud dead-letter kiya. Reason dekho, kaaran theek karo, phir resubmit karo."
       },
       explain: {
         en: `<ul>
-<li>Each queue and subscription has its own DLQ. System reasons include <code>MaxDeliveryCountExceeded</code> and <code>TTLExpiredException</code>; the app can set its own reason and description. There is no automatic cleanup: messages stay until someone completes them.</li>
+<li>Each queue and subscription has its own DLQ. System reasons include <code>MaxDeliveryCountExceeded</code> and <code>TTLExpiredException</code> (expired messages are dead-lettered only if dead-lettering on expiration is enabled, which is off by default; otherwise they are dropped); the app can set its own reason and description. There is no automatic cleanup: messages stay until someone completes them.</li>
 <li>Operate it: alert on DLQ depth, read it with a receiver whose sub-queue is <code>DeadLetter</code>, find the pattern, fix the bug, then resend (Service Bus Explorer or a small tool). Do not just purge.</li>
 <li>Follow-up: "A message is poison on the first try?" Dead-letter it immediately with a reason instead of burning ten retries. Puzzle 1 simulates the delivery count.</li>
 </ul>`,
@@ -990,17 +1017,17 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
       explain: {
         en: `<ul>
 <li>Pick the session id from the entity whose events must stay ordered (order id, customer id). Different sessions run in parallel, so throughput scales with the number of sessions.</li>
-<li>The cost: one hot session is a bottleneck, and the queue must be created with sessions enabled; every message then needs a session id (a null id is dead-lettered).</li>
+<li>The cost: one hot session is a bottleneck, and the queue must be created with sessions enabled; every message then needs a session id (sending without one is rejected with an error).</li>
 <li>Follow-up: "Is ordering enough for correctness?" No. Retries and redelivery still happen, so handlers stay idempotent and carry a version or sequence check (Day 16).</li>
 </ul>`,
         hi: `<ul>
 <li>Session id उस entity से चुनो जिसके events order में रहने चाहिए (order id, customer id)। अलग sessions parallel चलते हैं, इसलिए throughput sessions की गिनती के साथ बढ़ता है।</li>
-<li>कीमत: एक hot session bottleneck है, और queue sessions enabled के साथ बनानी पड़ती है; फिर हर message को session id चाहिए (null id dead-letter हो जाती है)।</li>
+<li>कीमत: एक hot session bottleneck है, और queue sessions enabled के साथ बनानी पड़ती है; फिर हर message को session id चाहिए (बिना id के send करने पर error आता है और message reject होता है)।</li>
 <li>Follow-up: "क्या ordering correctness के लिए काफ़ी है?" नहीं। Retries और redelivery फिर भी होती हैं, इसलिए handlers idempotent रहें और version या sequence check रखें (Day 16)।</li>
 </ul>`,
         hg: `<ul>
 <li>Session id us entity se chuno jiske events order mein rehne chahiye (order id, customer id). Alag sessions parallel chalte hain, isliye throughput sessions ki ginti ke saath badhta hai.</li>
-<li>Keemat: ek hot session bottleneck hai, aur queue sessions enabled ke saath banani padti hai; phir har message ko session id chahiye (null id dead-letter ho jaati hai).</li>
+<li>Keemat: ek hot session bottleneck hai, aur queue sessions enabled ke saath banani padti hai; phir har message ko session id chahiye (bina id ke send karne par error aata hai aur message reject hota hai).</li>
 <li>Follow-up: "Kya ordering correctness ke liye kaafi hai?" Nahi. Retries aur redelivery phir bhi hoti hain, isliye handlers idempotent rahein aur version ya sequence check rakhein (Day 16).</li>
 </ul>`
       }
@@ -1043,17 +1070,17 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
       },
       explain: {
         en: `<ul>
-<li>Pick Storage Queue for a plain work backlog where you only need "add, take, delete" (thumbnail jobs, simple background tasks). The Functions queue trigger retries a failing message up to <code>maxDequeueCount</code> (default 5), then moves it to a <code>&lt;queue&gt;-poison</code> queue. Puzzle 7 simulates it.</li>
+<li>Pick Storage Queue for a plain work backlog where you only need "add, take, delete" (thumbnail jobs, simple background tasks). The Functions queue trigger retries a failing message up to <code>maxDequeueCount</code> (default 5), then moves it to a <code>&lt;queue&gt;-poison</code> queue.</li>
 <li>Pick Service Bus when you need publish/subscribe, ordering, an engine-managed DLQ, scheduled delivery or transactions.</li>
 <li>Follow-up: "Can you start with Storage Queue and move later?" Yes if the producer and consumer are behind an interface (Day 8, Day 11) and handlers are idempotent.</li>
 </ul>`,
         hi: `<ul>
-<li>सादे work backlog के लिए Storage Queue चुनो जहाँ सिर्फ़ "add, take, delete" चाहिए (thumbnail jobs, सादे background tasks)। Functions का queue trigger fail होते message को <code>maxDequeueCount</code> (default 5) तक retry करता है, फिर <code>&lt;queue&gt;-poison</code> queue में भेज देता है। Puzzle 7 इसे simulate करता है।</li>
+<li>सादे work backlog के लिए Storage Queue चुनो जहाँ सिर्फ़ "add, take, delete" चाहिए (thumbnail jobs, सादे background tasks)। Functions का queue trigger fail होते message को <code>maxDequeueCount</code> (default 5) तक retry करता है, फिर <code>&lt;queue&gt;-poison</code> queue में भेज देता है।</li>
 <li>जब publish/subscribe, ordering, engine-managed DLQ, scheduled delivery या transactions चाहिए तब Service Bus चुनो।</li>
 <li>Follow-up: "Storage Queue से शुरू करके बाद में बदल सकते हो?" हाँ, अगर producer और consumer interface के पीछे हैं (Day 8, Day 11) और handlers idempotent हैं।</li>
 </ul>`,
         hg: `<ul>
-<li>Saade work backlog ke liye Storage Queue chuno jahan sirf "add, take, delete" chahiye (thumbnail jobs, saade background tasks). Functions ka queue trigger fail hote message ko <code>maxDequeueCount</code> (default 5) tak retry karta hai, phir <code>&lt;queue&gt;-poison</code> queue mein bhej deta hai. Puzzle 7 ise simulate karta hai.</li>
+<li>Saade work backlog ke liye Storage Queue chuno jahan sirf "add, take, delete" chahiye (thumbnail jobs, saade background tasks). Functions ka queue trigger fail hote message ko <code>maxDequeueCount</code> (default 5) tak retry karta hai, phir <code>&lt;queue&gt;-poison</code> queue mein bhej deta hai.</li>
 <li>Jab publish/subscribe, ordering, engine-managed DLQ, scheduled delivery ya transactions chahiye tab Service Bus chuno.</li>
 <li>Follow-up: "Storage Queue se shuru karke baad mein badal sakte ho?" Haan, agar producer aur consumer interface ke peeche hain (Day 8, Day 11) aur handlers idempotent hain.</li>
 </ul>`
@@ -1144,7 +1171,7 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
       id: "app-insights-opentelemetry",
       depth: "detailed",
       q: "How do you set up observability for a .NET app on Azure?",
-      answer: "Use OpenTelemetry with the Azure Monitor distro (UseAzureMonitor) so traces, metrics and logs flow to Application Insights. Set the connection string from the environment and name each service.",
+      answer: "Use OpenTelemetry through Microsoft's distro: Microsoft.OpenTelemetry for new apps, while existing apps keep UseAzureMonitor(). Telemetry reaches Application Insights; set the connection string in the environment.",
       meaning: {
         hi: "OpenTelemetry को Azure Monitor distro (UseAzureMonitor) के साथ use करो ताकि traces, metrics और logs Application Insights में जाएँ। Connection string environment से set करो और हर service को नाम दो।",
         hg: "OpenTelemetry ko Azure Monitor distro (UseAzureMonitor) ke saath use karo taaki traces, metrics aur logs Application Insights mein jaayein. Connection string environment se set karo aur har service ko naam do."
@@ -1171,10 +1198,10 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
       id: "azure-sql-dtu-vcore-serverless",
       depth: "detailed",
       q: "Azure SQL Database: DTU vs vCore, serverless and elastic pools?",
-      answer: "DTU bundles compute, memory and I/O into one unit; vCore lets you size CPU and memory separately. Serverless auto-pauses when idle, and elastic pools share resources across many databases.",
+      answer: "DTU bundles compute, memory and I/O into one unit; vCore lets you pick vCores and hardware generation, with storage sized separately. Serverless can auto-pause when idle.",
       meaning: {
-        hi: "DTU compute, memory और I/O को एक unit में bundle करता है; vCore में CPU और memory अलग size करते हैं। Serverless idle में auto-pause होता है, और elastic pools कई databases में resources share करते हैं।",
-        hg: "DTU compute, memory aur I/O ko ek unit mein bundle karta hai; vCore mein CPU aur memory alag size karte hain. Serverless idle mein auto-pause hota hai, aur elastic pools kai databases mein resources share karte hain."
+        hi: "DTU compute, memory और I/O को एक unit में bundle करता है; vCore में vCores और hardware generation चुनते हैं, storage अलग size होता है। Serverless idle में auto-pause हो सकता है।",
+        hg: "DTU compute, memory aur I/O ko ek unit mein bundle karta hai; vCore mein vCores aur hardware generation chunte hain, storage alag size hota hai. Serverless idle mein auto-pause ho sakta hai."
       },
       explain: {
         en: `<ul>
@@ -1264,12 +1291,12 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
 <li>Follow-up: "How do you stop drift?" Infrastructure as code (Bicep or Terraform), Azure Policy to deny or audit non-compliant resources, and no manual portal changes in prod.</li>
 </ul>`,
         hi: `<ul>
-<li>Separation से blast radius, access और budget सीमित रहते हैं: developers को dev में wide access और prod में read-only मिल सकता है, और prod के बदलाव सिर्फ़ pipeline से जाते हैं (Day 21)।</li>
+<li>Separation से blast radius, access और budget limited रहते हैं: developers को dev में wide access और prod में read-only मिल सकता है, और prod के बदलाव सिर्फ़ pipeline से जाते हैं (Day 21)।</li>
 <li><b>Landing zone</b> वह तैयार base है (network, identity, policy, logging, naming) जिसमें नए workloads जुड़ते हैं, ताकि हर team उसे दोबारा न बनाए।</li>
 <li>Follow-up: "Drift कैसे रोकते हो?" Infrastructure as code (Bicep या Terraform), non-compliant resources को deny या audit करने के लिए Azure Policy, और prod में portal से manual changes नहीं।</li>
 </ul>`,
         hg: `<ul>
-<li>Separation se blast radius, access aur budget seemit rehte hain: developers ko dev mein wide access aur prod mein read-only mil sakta hai, aur prod ke badlaav sirf pipeline se jaate hain (Day 21).</li>
+<li>Separation se blast radius, access aur budget limited rehte hain: developers ko dev mein wide access aur prod mein read-only mil sakta hai, aur prod ke badlaav sirf pipeline se jaate hain (Day 21).</li>
 <li><b>Landing zone</b> woh taiyaar base hai (network, identity, policy, logging, naming) jisme naye workloads jude hain, taaki har team use dobara na banaye.</li>
 <li>Follow-up: "Drift kaise rokte ho?" Infrastructure as code (Bicep ya Terraform), non-compliant resources ko deny ya audit karne ke liye Azure Policy, aur prod mein portal se manual changes nahi.</li>
 </ul>`
@@ -1292,12 +1319,12 @@ if (args.Length > 100) await UploadReportAsync(container, Stream.Null);   // nev
 </ul>`,
         hi: `<ul>
 <li>Option को traffic के shape से match करो: spiky या कम (Flex Consumption, Container Apps, serverless SQL) बनाम steady और latency-sensitive (App Service always on, Premium always-ready, provisioned database)।</li>
-<li>जो levers lead के हाथ में हैं: SKUs right-size करो, dev/test को office hours के बाद बंद करो, unused resources delete करो, sampling से telemetry volume सीमित करो, storage के tiers चुनो, और tag व owner के हिसाब से monthly cost report देखो।</li>
+<li>जो levers lead के हाथ में हैं: SKUs right-size करो, dev/test को office hours के बाद बंद करो, unused resources delete करो, sampling से telemetry volume limited करो, storage के tiers चुनो, और tag व owner के हिसाब से monthly cost report देखो।</li>
 <li>Follow-up: "Manager को कौन-सा number दोगे?" Azure pricing calculator और असली usage metrics से बना estimate दो, assumptions लिखकर; याद से अंदाज़ा कभी नहीं।</li>
 </ul>`,
         hg: `<ul>
 <li>Option ko traffic ke shape se match karo: spiky ya kam (Flex Consumption, Container Apps, serverless SQL) vs steady aur latency-sensitive (App Service always on, Premium always-ready, provisioned database).</li>
-<li>Jo levers lead ke haath mein hain: SKUs right-size karo, dev/test ko office hours ke baad band karo, unused resources delete karo, sampling se telemetry volume seemit karo, storage ke tiers chuno, aur tag va owner ke hisaab se monthly cost report dekho.</li>
+<li>Jo levers lead ke haath mein hain: SKUs right-size karo, dev/test ko office hours ke baad band karo, unused resources delete karo, sampling se telemetry volume limited karo, storage ke tiers chuno, aur tag va owner ke hisaab se monthly cost report dekho.</li>
 <li>Follow-up: "Manager ko kaun-sa number doge?" Azure pricing calculator aur asli usage metrics se bana estimate do, assumptions likhkar; yaad se andaaza kabhi nahi.</li>
 </ul>`
       }
@@ -1402,8 +1429,8 @@ t=702 random-1c7: accepted
 queue holds 5 messages, 3 dropped`,
       explain: {
         en: `<p>Inside the 600-second window a repeated <code>MessageId</code> is dropped, but the sender still sees success. At t=601 the first id has aged out of the window, so the same id is accepted again (and remembered afresh): duplicate detection is not a permanent guarantee. The last two sends use random ids, so a retry of the same business event would slip through. That is why the <code>MessageId</code> should come from a business key, and why the consumer still needs to be idempotent. This is a toy model; real Service Bus has a default window of 10 minutes, minimum 20 seconds, maximum 7 days.</p>`,
-        hi: `<p>600-second window के अंदर दोहराई गई <code>MessageId</code> drop हो जाती है, पर sender को फिर भी success दिखता है। t=601 पर पहली id window से बाहर हो चुकी है, इसलिए वही id फिर accept होती है (और नए सिरे से याद रखी जाती है): duplicate detection स्थायी guarantee नहीं है। आखिरी दो sends random ids इस्तेमाल करते हैं, इसलिए उसी business event का retry निकल जाएगा। इसीलिए <code>MessageId</code> business key से आनी चाहिए, और consumer को फिर भी idempotent होना चाहिए। यह toy model है; असली Service Bus में default window 10 minutes, minimum 20 seconds, maximum 7 days है।</p>`,
-        hg: `<p>600-second window ke andar dohraayi gayi <code>MessageId</code> drop ho jaati hai, par sender ko phir bhi success dikhta hai. t=601 par pehli id window se bahar ho chuki hai, isliye wahi id phir accept hoti hai (aur naye sire se yaad rakhi jaati hai): duplicate detection sthaayi guarantee nahi hai. Aakhri do sends random ids istemaal karte hain, isliye usi business event ka retry nikal jaayega. Isiliye <code>MessageId</code> business key se aani chahiye, aur consumer ko phir bhi idempotent hona chahiye. Yeh toy model hai; asli Service Bus mein default window 10 minutes, minimum 20 seconds, maximum 7 days hai.</p>`
+        hi: `<p>600-second window के अंदर दोहराई गई <code>MessageId</code> drop हो जाती है, पर sender को फिर भी success दिखता है। t=601 पर पहली id window से बाहर हो चुकी है, इसलिए वही id फिर accept होती है (और नए सिरे से याद रखी जाती है): duplicate detection permanent guarantee नहीं है। आखिरी दो sends random ids इस्तेमाल करते हैं, इसलिए उसी business event का retry निकल जाएगा। इसीलिए <code>MessageId</code> business key से आनी चाहिए, और consumer को फिर भी idempotent होना चाहिए। यह toy model है; असली Service Bus में default window 10 minutes, minimum 20 seconds, maximum 7 days है।</p>`,
+        hg: `<p>600-second window ke andar dohraayi gayi <code>MessageId</code> drop ho jaati hai, par sender ko phir bhi success dikhta hai. t=601 par pehli id window se bahar ho chuki hai, isliye wahi id phir accept hoti hai (aur naye sire se yaad rakhi jaati hai): duplicate detection permanent guarantee nahi hai. Aakhri do sends random ids istemaal karte hain, isliye usi business event ka retry nikal jaayega. Isiliye <code>MessageId</code> business key se aani chahiye, aur consumer ko phir bhi idempotent hona chahiye. Yeh toy model hai; asli Service Bus mein default window 10 minutes, minimum 20 seconds, maximum 7 days hai.</p>`
       }
     },
     {
@@ -1633,12 +1660,12 @@ events still stored: 6`,
       "Duplicate detection drops a repeated MessageId inside a time window (default 10 minutes); keep consumers idempotent anyway.",
       "Prefer a Managed Identity over any secret: system-assigned dies with its resource, user-assigned is shared.",
       "DefaultAzureCredential tries a fixed chain in order; in production use a specific credential such as ManagedIdentityCredential.",
-      "Key Vault holds the secrets that remain: <code>--</code> in the secret name becomes <code>:</code>, and the vault source must be added last to win.",
-      "In-process Azure Functions support ends on 10 November 2026; use the isolated worker model.",
+      "Key Vault holds the remaining secrets; add its configuration source after the sources it should override.",
+      "In-process Azure Functions support ends (or ended) on 10 November 2026; use the isolated worker model.",
       "Flex Consumption can scale to zero and offers always-ready instances; scale-to-zero trades idle cost for cold starts.",
       "In a slot swap, slot settings stay with the slot: make the environment name and connection strings sticky.",
       "API Management applies policies such as validate-jwt and rate-limit-by-key at the edge; YARP is gateway code you own.",
-      "OpenTelemetry with UseAzureMonitor() sends traces, metrics and logs to Application Insights; set it up before the first incident.",
+      "Use OpenTelemetry for Application Insights: Microsoft.OpenTelemetry for new apps, UseAzureMonitor() stays in existing ones; never initialise both.",
       "Azure SQL Database has RCSI on by default; serverless can auto-pause, so add retry logic."
     ],
     meaning: {
@@ -1648,12 +1675,12 @@ events still stored: 6`,
         "Duplicate detection time window (default 10 minutes) के अंदर दोहराई MessageId को drop करता है; फिर भी consumers idempotent रखो।",
         "किसी भी secret से बेहतर Managed Identity: system-assigned अपने resource के साथ खत्म होती है, user-assigned shared होती है।",
         "DefaultAzureCredential एक fixed chain को order में try करता है; production में ManagedIdentityCredential जैसा specific credential use करो।",
-        "Key Vault बचे हुए secrets रखता है: secret के नाम में <code>--</code> का <code>:</code> बन जाता है, और जीतने के लिए vault source आखिर में जुड़ना चाहिए।",
-        "In-process Azure Functions का support 10 November 2026 को खत्म होता है; isolated worker model use करो।",
+        "Key Vault बचे हुए secrets रखता है; उसका configuration source उन sources के बाद जोड़ो जिन्हें उसे override करना है।",
+        "In-process Azure Functions का support 10 November 2026 को खत्म होता है (या हो चुका है); isolated worker model use करो।",
         "Flex Consumption zero तक scale हो सकता है और always-ready instances देता है; scale-to-zero idle cost के बदले cold starts देता है।",
         "Slot swap में slot settings slot के साथ रहती हैं: environment name और connection strings को sticky रखो।",
         "API Management edge पर validate-jwt और rate-limit-by-key जैसी policies लगाता है; YARP तुम्हारा अपना gateway code है।",
-        "UseAzureMonitor() वाला OpenTelemetry traces, metrics और logs Application Insights भेजता है; पहले incident से पहले इसे लगाओ।",
+        "Application Insights के लिए OpenTelemetry: नए apps में Microsoft.OpenTelemetry, मौजूदा apps में UseAzureMonitor() रहता है; दोनों कभी initialise मत करो।",
         "Azure SQL Database में RCSI by default on है; serverless auto-pause हो सकता है, इसलिए retry logic जोड़ो।"
       ],
       hg: [
@@ -1662,31 +1689,31 @@ events still stored: 6`,
         "Duplicate detection time window (default 10 minutes) ke andar dohraayi MessageId ko drop karta hai; phir bhi consumers idempotent rakho.",
         "Kisi bhi secret se behtar Managed Identity: system-assigned apne resource ke saath khatam hoti hai, user-assigned shared hoti hai.",
         "DefaultAzureCredential ek fixed chain ko order mein try karta hai; production mein ManagedIdentityCredential jaisa specific credential use karo.",
-        "Key Vault bache hue secrets rakhta hai: secret ke naam mein <code>--</code> ka <code>:</code> ban jaata hai, aur jeetne ke liye vault source aakhir mein judna chahiye.",
-        "In-process Azure Functions ka support 10 November 2026 ko khatam hota hai; isolated worker model use karo.",
+        "Key Vault bache hue secrets rakhta hai; uska configuration source un sources ke baad jodo jinhe use override karna hai.",
+        "In-process Azure Functions ka support 10 November 2026 ko khatam hota hai (ya ho chuka hai); isolated worker model use karo.",
         "Flex Consumption zero tak scale ho sakta hai aur always-ready instances deta hai; scale-to-zero idle cost ke badle cold starts deta hai.",
         "Slot swap mein slot settings slot ke saath rehti hain: environment name aur connection strings ko sticky rakho.",
         "API Management edge par validate-jwt aur rate-limit-by-key jaisi policies lagata hai; YARP tumhara apna gateway code hai.",
-        "UseAzureMonitor() wala OpenTelemetry traces, metrics aur logs Application Insights bhejta hai; pehle incident se pehle ise lagao.",
+        "Application Insights ke liye OpenTelemetry: naye apps mein Microsoft.OpenTelemetry, maujooda apps mein UseAzureMonitor() rehta hai; dono kabhi initialise mat karo.",
         "Azure SQL Database mein RCSI by default on hai; serverless auto-pause ho sakta hai, isliye retry logic jodo."
       ]
     }
   },
   whatsNew: {
     en: `<ul>
-<li><b>Functions in .NET:</b> support for the in-process model ends on 10 November 2026 (Azure Functions docs); the isolated worker model supports current .NET versions including .NET 10.</li>
+<li><b>Functions in .NET:</b> support for the in-process model ends (or ended) on 10 November 2026 (Azure Functions docs); the isolated worker model supports current .NET versions including .NET 10.</li>
 <li><b>Functions hosting:</b> Flex Consumption is the recommended serverless plan for new apps; the Consumption plan is labelled legacy and Linux Consumption is being retired (the docs give 30 September 2028; check the current notice).</li>
 <li><b>Application Insights with OpenTelemetry:</b> the Azure Monitor OpenTelemetry Distro (<code>Azure.Monitor.OpenTelemetry.AspNetCore</code>, <code>UseAzureMonitor()</code>) continues to work; the current docs also introduce a newer <code>Microsoft.OpenTelemetry</code> distro for new apps.</li>
 <li><b>Azure.Identity:</b> <code>AZURE_TOKEN_CREDENTIALS</code> can name one specific credential from package version 1.15.0; the default chain also includes Azure Developer CLI and a broker credential, and its list can change between versions.</li>
 </ul>`,
     hi: `<ul>
-<li><b>.NET में Functions:</b> in-process model का support 10 November 2026 को खत्म होता है (Azure Functions docs); isolated worker model .NET 10 समेत current .NET versions को support करता है।</li>
+<li><b>.NET में Functions:</b> in-process model का support 10 November 2026 को खत्म होता है (या हो चुका है) (Azure Functions docs); isolated worker model .NET 10 समेत current .NET versions को support करता है।</li>
 <li><b>Functions hosting:</b> नए apps के लिए Flex Consumption recommended serverless plan है; Consumption plan को legacy कहा गया है और Linux Consumption retire हो रहा है (docs 30 September 2028 बताते हैं; current notice check करो)।</li>
 <li><b>OpenTelemetry के साथ Application Insights:</b> Azure Monitor OpenTelemetry Distro (<code>Azure.Monitor.OpenTelemetry.AspNetCore</code>, <code>UseAzureMonitor()</code>) चलता रहता है; current docs नए apps के लिए नया <code>Microsoft.OpenTelemetry</code> distro भी introduce करते हैं।</li>
 <li><b>Azure.Identity:</b> package version 1.15.0 से <code>AZURE_TOKEN_CREDENTIALS</code> में एक specific credential का नाम दे सकते हैं; default chain में Azure Developer CLI और broker credential भी हैं, और उसकी list versions के बीच बदल सकती है।</li>
 </ul>`,
     hg: `<ul>
-<li><b>.NET mein Functions:</b> in-process model ka support 10 November 2026 ko khatam hota hai (Azure Functions docs); isolated worker model .NET 10 samet current .NET versions ko support karta hai.</li>
+<li><b>.NET mein Functions:</b> in-process model ka support 10 November 2026 ko khatam hota hai (ya ho chuka hai) (Azure Functions docs); isolated worker model .NET 10 samet current .NET versions ko support karta hai.</li>
 <li><b>Functions hosting:</b> naye apps ke liye Flex Consumption recommended serverless plan hai; Consumption plan ko legacy kaha gaya hai aur Linux Consumption retire ho raha hai (docs 30 September 2028 batate hain; current notice check karo).</li>
 <li><b>OpenTelemetry ke saath Application Insights:</b> Azure Monitor OpenTelemetry Distro (<code>Azure.Monitor.OpenTelemetry.AspNetCore</code>, <code>UseAzureMonitor()</code>) chalta rehta hai; current docs naye apps ke liye naya <code>Microsoft.OpenTelemetry</code> distro bhi introduce karte hain.</li>
 <li><b>Azure.Identity:</b> package version 1.15.0 se <code>AZURE_TOKEN_CREDENTIALS</code> mein ek specific credential ka naam de sakte hain; default chain mein Azure Developer CLI aur broker credential bhi hain, aur uski list versions ke beech badal sakti hai.</li>
