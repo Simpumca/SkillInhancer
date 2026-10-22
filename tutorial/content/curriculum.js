@@ -8,7 +8,7 @@ window.TL_CURRICULUM = [
   { day: 6, week: 1, title: { en: "EF Core Part 2", hi: "EF Core भाग 2", hg: "EF Core Part 2" }, ready: true },
   { day: 7, week: 1, title: { en: "Week 1 Revision + Mixed Quiz", hi: "हफ़्ता 1 रिवीज़न + मिक्स्ड क्विज़", hg: "Week 1 Revision + Mixed Quiz" }, ready: true },
   { day: 8, week: 2, title: { en: "SOLID Principles", hi: "SOLID सिद्धांत", hg: "SOLID Principles" }, ready: true },
-  { day: 9, week: 2, title: { en: "Creational Patterns", hi: "क्रिएशनल पैटर्न्स", hg: "Creational Patterns" }, ready: false },
+  { day: 9, week: 2, title: { en: "Creational Patterns", hi: "क्रिएशनल पैटर्न्स", hg: "Creational Patterns" }, ready: true },
   { day: 10, week: 2, title: { en: "Structural + Behavioral Patterns", hi: "स्ट्रक्चरल + बिहेवियरल पैटर्न्स", hg: "Structural + Behavioral Patterns" }, ready: false },
   { day: 11, week: 2, title: { en: "Enterprise Patterns + DI", hi: "एंटरप्राइज़ पैटर्न्स + DI", hg: "Enterprise Patterns + DI" }, ready: false },
   { day: 12, week: 2, title: { en: "ASP.NET Core Fundamentals", hi: "ASP.NET Core की बुनियाद", hg: "ASP.NET Core ki buniyad" }, ready: false },
