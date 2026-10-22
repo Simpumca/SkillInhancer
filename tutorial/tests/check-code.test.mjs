@@ -145,3 +145,20 @@ test('cli_sql_unavailable_skips_and_strict_fails', () => {
   assert.equal(b.status, 1, b.stdout + b.stderr);
   assert.match(b.stdout, /SKIP day96-puz-sum \(sql tooling unavailable\)/);
 });
+
+test('csproj_package_versions', () => {
+  const t = csproj(['Foo', 'Azure.Identity@1.*', 'Yarp.ReverseProxy@2.3.0']);
+  assert.match(t, /<PackageReference Include="Foo" Version="9\.\*" \/>/);
+  assert.match(t, /<PackageReference Include="Azure\.Identity" Version="1\.\*" \/>/);
+  assert.match(t, /<PackageReference Include="Yarp\.ReverseProxy" Version="2\.3\.0" \/>/);
+});
+
+test('localdb_start_attempted_once_and_failure_ignored', async () => {
+  const { makeLocalDbStarter } = await import('../tools/check-code.mjs');
+  const calls = [];
+  const start = makeLocalDbStarter((cmd, args, opts) => { calls.push([cmd, args, opts.timeout]); throw new Error('boom'); });
+  start(); start();
+  assert.equal(calls.length, 1);
+  assert.deepEqual(calls[0][1], ['start', 'MSSQLLocalDB']);
+  assert.equal(calls[0][2], 30000);
+});

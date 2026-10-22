@@ -19,7 +19,7 @@ An offline study site for .NET Tech Lead interview preparation. Every day has a 
 
 ## How to run the checks
 
-You need **Node.js 22+** and the **.NET SDK 9+**. SQL snippets also need SQL Server LocalDB and `sqlcmd` on the PATH. Days 5–14 need NuGet access the first time, to restore packages such as `Microsoft.EntityFrameworkCore.*` and `Microsoft.AspNetCore.TestHost`. Run every command from the `tutorial/` folder:
+You need **Node.js 22+** and the **.NET SDK 9+**. SQL snippets also need SQL Server LocalDB and `sqlcmd` on the PATH (the checker runs `sqllocaldb start MSSQLLocalDB` once before probing, so a cold instance does not cause SKIPs). Days 5–14 need NuGet access the first time, to restore packages such as `Microsoft.EntityFrameworkCore.*` and `Microsoft.AspNetCore.TestHost`. Run every command from the `tutorial/` folder:
 
 ```sh
 node --test                    # unit tests for the site logic and the tools
@@ -39,6 +39,7 @@ node tools/check-code.mjs --strict day14  # any SKIP (for example no SQL tooling
    - `sections[]` have an `id`, a `depth` (`"short"` or `"detailed"`), a `title`, a `body` and optional `code[]` with `{ caption, src, check, packages?, expected? }`.
    - `qa[]` have an `id`, a `depth`, `q`, `answer` (English), `meaning: { hi, hg }` and `explain`.
    - `puzzles[]` have an `id`, `src` (a full runnable program), `answer` (the exact output) and `explain`.
+   - `packages` entries are NuGet package names added to the snippet project. `"Name"` pins `Version="9.*"`; `"Name@version"` pins that version instead, e.g. `"Azure.Identity@1.*"` or `"Yarp.ReverseProxy@2.3.0"`. The validator rejects malformed specs (`bad package spec X`).
    - `puzzles[]` and `code[]` items may carry `frameworks: ["aspnetcore"]`. The checker then adds the shared ASP.NET Core framework reference to the snippet project (and the validator rejects unknown framework names). Web puzzles also add `packages: ["Microsoft.AspNetCore.TestHost"]`, call `builder.Logging.ClearProviders()` (otherwise the default console logger writes `info:` lines into the output) and run in-process with `builder.WebHost.UseTestServer()`, `await app.StartAsync()` and `app.GetTestClient()`.
    - `code[]` items and `puzzles[]` may carry `lang`: `"csharp"` (default), `"sql"`, `"yaml"`, `"dockerfile"`, `"bash"`, `"json"` or `"text"`. It only sets the highlighting (Prism grammar). Only `csharp` and `sql` may use `check: "compile"` or `"run"`; every other language must use `check: "none"`, and puzzles must be `csharp` or `sql`. Unknown values fail validation.
    - `sql` snippets and puzzles are run on SQL Server LocalDB (`(localdb)\MSSQLLocalDB`) with `sqlcmd`. Each one gets its own throw-away database `tlsnip_<key>`, which is dropped afterwards, even on failure. `SET NOCOUNT ON;` is added at the top, a SQL error fails the snippet, and the output is compared with `expected` (or the puzzle `answer`) the same way as for C#. If `sqlcmd` or LocalDB is not available, the snippet is reported as SKIP ("sql tooling unavailable"); use `--strict` to make that an error.

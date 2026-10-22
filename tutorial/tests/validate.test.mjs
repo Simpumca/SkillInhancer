@@ -257,3 +257,16 @@ test('curriculum_titles_scanned_for_raw_tags', async () => {
   c[3].title.en = 'Bad <T> title';
   assert.ok(validateCurriculum(c).includes('curriculum[3].title.en: raw tag <T> (escape as &lt;T&gt;)'));
 });
+
+test('packages_spec_validation', () => {
+  let d = good();
+  d.sections[0].code[0].packages = ['Foo', 'Azure.Identity@1.*', 'Yarp.ReverseProxy@2.3.0', 'OpenTelemetry.Extensions.Hosting@1.*'];
+  d.puzzles[0].packages = ['Foo@1.0.0-beta.1'];
+  assert.deepEqual(validateDay(d, RELAXED), []);
+  d = good();
+  d.sections[0].code[0].packages = ['Foo@'];
+  assert.ok(validateDay(d, RELAXED).includes('sections[0].code[0]: bad package spec Foo@'));
+  d = good();
+  d.puzzles[0].packages = ['Foo bar'];
+  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: bad package spec Foo bar'));
+});

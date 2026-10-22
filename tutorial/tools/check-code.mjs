@@ -34,7 +34,10 @@ const FRAMEWORK_REFS = { aspnetcore: 'Microsoft.AspNetCore.App' };
 export function csproj(packages = [], frameworks = []) {
   for (const f of frameworks) if (!FRAMEWORK_REFS[f]) throw new Error(`unknown framework ${f}`);
   const fwRefs = frameworks.map(f => `    <FrameworkReference Include="${FRAMEWORK_REFS[f]}" />`).join('\n');
-  const refs = packages.map(p => `    <PackageReference Include="${p}" Version="9.*" />`).join('\n');
+  const refs = packages.map(p => {
+    const [name, version = '9.*'] = p.split('@');
+    return `    <PackageReference Include="${name}" Version="${version}" />`;
+  }).join('\n');
   return `<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -91,9 +94,21 @@ function sqlcmd(args, timeout = 60000) {
   return { status: r.status, stdout, stderr, out: stdout + stderr, timedOut: r.error?.code === 'ETIMEDOUT', missing: r.error?.code === 'ENOENT' };
 }
 
+// A cold LocalDB instance can make the first probe time out; start it once per run, ignoring any failure.
+export function makeLocalDbStarter(run = spawnSync) {
+  let done = false;
+  return () => {
+    if (done) return;
+    done = true;
+    try { run(process.env.TL_SQLLOCALDB || 'sqllocaldb', ['start', 'MSSQLLocalDB'], { encoding: 'utf8', timeout: 30000 }); } catch { /* ignore */ }
+  };
+}
+const startLocalDb = makeLocalDbStarter();
+
 let sqlAvailable;
 function sqlToolingAvailable() {
   if (sqlAvailable === undefined) {
+    startLocalDb();
     const p = sqlcmd(['-b', '-Q', 'SELECT 1'], 90000);
     sqlAvailable = !p.missing && !p.timedOut && p.status === 0;
   }

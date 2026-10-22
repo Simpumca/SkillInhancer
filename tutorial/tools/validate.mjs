@@ -31,6 +31,17 @@ function checkFrameworks(item, label, errors) {
   for (const x of f) if (!FRAMEWORKS.includes(x)) errors.push(`${label}: unknown framework ${x}`);
 }
 
+const PACKAGE_SPEC = /^[A-Za-z0-9_.\-]+(@[0-9A-Za-z.*\-+]+)?$/;
+// packages?: "Name" or "Name@version" strings.
+function checkPackages(item, label, errors) {
+  if (item.packages === undefined) return;
+  if (!Array.isArray(item.packages) || !item.packages.every(x => typeof x === 'string')) {
+    errors.push(`${label}: packages must be an array of strings`);
+    return;
+  }
+  for (const x of item.packages) if (!PACKAGE_SPEC.test(x)) errors.push(`${label}: bad package spec ${x}`);
+}
+
 function checkScript(lang, text, label, errors) {
   if (lang === 'hi' && !DEVANAGARI.test(text)) errors.push(`${label}: hi has no Devanagari`);
   if (lang === 'hg' && DEVANAGARI.test(text)) errors.push(`${label}: hg contains Devanagari`);
@@ -68,6 +79,7 @@ function checkCode(list, label, errors) {
       errors.push(`${l}: lang ${c.lang} must use check:"none"`);
     }
     checkFrameworks(c, l, errors);
+    checkPackages(c, l, errors);
   });
 }
 
@@ -193,6 +205,7 @@ export function validateDay(day, opts = {}) {
     const l = `puzzles[${i}]`;
     if (!isObj(p)) { errors.push(`${l}: not an object`); return; }
     checkFrameworks(p, l, errors);
+    checkPackages(p, l, errors);
     if (checkLang(p, l, errors) && p.lang !== undefined && !CHECKABLE_LANGS.includes(p.lang)) {
       errors.push(`${l}: puzzle lang ${p.lang} must be csharp or sql`);
     }
