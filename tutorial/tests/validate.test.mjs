@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadDay, loadCurriculum } from '../tools/load-content.mjs';
@@ -72,7 +73,9 @@ test('curriculum_has_30', () => {
   assert.equal(c.length, 30);
   c.forEach((e, i) => {
     assert.equal(e.day, i + 1);
-    assert.equal(e.ready, e.day <= 7);
+    // ready days must have a content file; days 1-7 are always ready
+    if (e.day <= 7) assert.equal(e.ready, true);
+    if (e.ready) assert.ok(existsSync('content/day' + String(e.day).padStart(2, '0') + '.js'));
     for (const k of ['en', 'hi', 'hg']) assert.ok(e.title[k] && e.title[k].length > 0);
     assert.ok(/[ऀ-ॿ]/.test(e.title.hi));
     assert.ok(!/[ऀ-ॿ]/.test(e.title.hg));
