@@ -119,7 +119,7 @@ window.TL_DAY = {
 <p><b>API gateway — आम ज़िम्मेदारियाँ:</b> routing, authentication/token validation, rate limiting, TLS termination, response caching, request logging और correlation ids। <b>Business logic बाहर रखो</b> — वरना gateway नया monolith और single point of failure बन जाता है।</p>
 <ul>
 <li><b>YARP</b> (Yet Another Reverse Proxy, NuGet <code>Yarp.ReverseProxy</code>): Microsoft का reverse-proxy toolkit जिसे आप ASP.NET Core app के अंदर host करते हैं; routes और clusters से configure होता है।</li>
-<li><b>BFF</b> (Backend for Frontend): हर client type (web, mobile) का एक gateway/API, उस client की screens के हिसाब से बना, और उसी team की मिल्कियत जिसके पास client है।</li>
+<li><b>BFF</b> (Backend for Frontend): हर client type (web, mobile) का एक gateway/API, उस client की screens के हिसाब से बना, और उसी team की ownership जिसके पास client है।</li>
 <li><b>Managed gateways</b> जैसे Azure API Management — Day 20।</li>
 </ul>
 <p><b>Sync (HTTP/gRPC):</b> सरल, तुरंत जवाब, समझना आसान। पर caller और callee को एक ही समय up रहना पड़ता है (<b>temporal coupling</b>), latency chain में जुड़ती जाती है, और availability गुणा होकर घटती है (99.9% वाली तीन services का लगभग 99.7%)।</p>
@@ -130,7 +130,7 @@ window.TL_DAY = {
 <p><b>API gateway — aam zimmedaariyan:</b> routing, authentication/token validation, rate limiting, TLS termination, response caching, request logging aur correlation ids. <b>Business logic bahar rakho</b> — warna gateway naya monolith aur single point of failure ban jaata hai.</p>
 <ul>
 <li><b>YARP</b> (Yet Another Reverse Proxy, NuGet <code>Yarp.ReverseProxy</code>): Microsoft ka reverse-proxy toolkit jise aap ASP.NET Core app ke andar host karte hain; routes aur clusters se configure hota hai.</li>
-<li><b>BFF</b> (Backend for Frontend): har client type (web, mobile) ka ek gateway/API, us client ki screens ke hisaab se bana, aur usi team ki milkiyat jiske paas client hai.</li>
+<li><b>BFF</b> (Backend for Frontend): har client type (web, mobile) ka ek gateway/API, us client ki screens ke hisaab se bana, aur usi team ki ownership jiske paas client hai.</li>
 <li><b>Managed gateways</b> jaise Azure API Management — Day 20.</li>
 </ul>
 <p><b>Sync (HTTP/gRPC):</b> saral, turant jawaab, samajhna aasaan. Par caller aur callee ko ek hi samay up rehna padta hai (<b>temporal coupling</b>), latency chain mein judti jaati hai, aur availability guna hokar ghatti hai (99.9% wali teen services ka lagbhag 99.7%).</p>
@@ -152,8 +152,6 @@ window.TL_DAY = {
 <ul>
 <li><b>Queue</b>: each message goes to <b>one</b> consumer (point-to-point; commands, work items).</li>
 <li><b>Topic / subscription</b>: each subscription gets a <b>copy</b> (publish-subscribe; events like <code>OrderPlaced</code>).</li>
-<li><b>Competing consumers</b>: many instances read one queue to scale out. Side effect: messages can finish out of order.</li>
-<li><b>Ordering</b>: usually guaranteed only within a partition or session (for example per order id), not across the whole queue. Design so that it does not matter, or key by aggregate id.</li>
 <li><b>At-least-once delivery</b> (the usual default): the broker redelivers until you acknowledge, so you can see the <b>same message twice</b>. "Exactly-once" in practice means at-least-once plus an <b>idempotent consumer</b>.</li>
 <li><b>Dead-letter queue (DLQ)</b>: after too many failed attempts, a <b>poison message</b> is moved aside so it stops blocking the rest. Someone must watch the DLQ, alert on it, and replay or fix.</li>
 </ul>
@@ -168,14 +166,12 @@ window.TL_DAY = {
 <ul>
 <li><b>Queue</b>: हर message <b>एक</b> consumer को जाता है (point-to-point; commands, work items)।</li>
 <li><b>Topic / subscription</b>: हर subscription को <b>कॉपी</b> मिलती है (publish-subscribe; <code>OrderPlaced</code> जैसे events)।</li>
-<li><b>Competing consumers</b>: scale out के लिए कई instances एक queue पढ़ते हैं। साइड इफ़ेक्ट: messages उल्टे-सीधे order में ख़त्म हो सकते हैं।</li>
-<li><b>Ordering</b>: आम तौर पर सिर्फ़ एक partition या session के अंदर guaranteed है (जैसे order id के हिसाब से), पूरी queue में नहीं। ऐसा design करो कि order मायने न रखे, या aggregate id से key करो।</li>
 <li><b>At-least-once delivery</b> (आम default): जब तक आप acknowledge नहीं करते broker दोबारा देता रहता है, इसलिए <b>वही message दो बार</b> दिख सकता है। "Exactly-once" का मतलब practice में at-least-once और <b>idempotent consumer</b> है।</li>
 <li><b>Dead-letter queue (DLQ)</b>: बहुत बार fail होने पर <b>poison message</b> किनारे कर दिया जाता है ताकि बाकी न रुकें। किसी को DLQ देखना, उस पर alert लगाना, और replay या fix करना होता है।</li>
 </ul>
 <p><b>Dual-write problem:</b> "order save करो, फिर OrderPlaced publish करो" दो systems हैं जिनमें shared transaction नहीं। दोनों के बीच app crash हो सकता है: order save हुआ पर event खो गया।</p>
 <ul>
-<li><b>Transactional Outbox</b> (यह Day 15 के forward-reference को पूरा करता है): event को data की <b>उसी database transaction</b> में <code>Outbox</code> table में लिखो। Relay unsent rows पढ़ता है, publish करता है और sent mark करता है। Publish के बाद crash से message दोहर सकता है, इसलिए delivery at-least-once है।</li>
+<li><b>Transactional Outbox</b> (यह Day 15 के forward-reference को पूरा करता है): event को data की <b>उसी database transaction</b> में <code>Outbox</code> table में लिखो। Relay unsent rows पढ़ता है, publish करता है और sent mark करता है। Publish के बाद crash से message duplicate हो सकता है, इसलिए delivery at-least-once है।</li>
 <li><b>Inbox / idempotent consumer</b>: consumer handle हुए messages के ids (unique message id वाली table) अपने effect की <b>उसी transaction</b> में रखता है, और दोहराव skip करता है। Outbox = "कभी न खोए"; inbox = "दो बार apply न हो"।</li>
 </ul>
 <p>Azure Service Bus की specifics (sessions, locks, topics, DLQ settings) — Day 20।</p>
@@ -184,14 +180,12 @@ window.TL_DAY = {
 <ul>
 <li><b>Queue</b>: har message <b>ek</b> consumer ko jaata hai (point-to-point; commands, work items).</li>
 <li><b>Topic / subscription</b>: har subscription ko <b>copy</b> milti hai (publish-subscribe; <code>OrderPlaced</code> jaise events).</li>
-<li><b>Competing consumers</b>: scale out ke liye kai instances ek queue padhte hain. Side effect: messages ulte-seedhe order mein khatam ho sakte hain.</li>
-<li><b>Ordering</b>: aam taur par sirf ek partition ya session ke andar guaranteed hai (jaise order id ke hisaab se), poori queue mein nahi. Aisa design karo ki order maayne na rakhe, ya aggregate id se key karo.</li>
 <li><b>At-least-once delivery</b> (aam default): jab tak aap acknowledge nahi karte broker dobara deta rehta hai, isliye <b>wahi message do baar</b> dikh sakta hai. "Exactly-once" ka matlab practice mein at-least-once aur <b>idempotent consumer</b> hai.</li>
 <li><b>Dead-letter queue (DLQ)</b>: bahut baar fail hone par <b>poison message</b> kinare kar diya jaata hai taaki baaki na rukein. Kisi ko DLQ dekhna, us par alert lagana, aur replay ya fix karna hota hai.</li>
 </ul>
 <p><b>Dual-write problem:</b> "order save karo, phir OrderPlaced publish karo" do systems hain jinmein shared transaction nahi. Dono ke beech app crash ho sakta hai: order save hua par event kho gaya.</p>
 <ul>
-<li><b>Transactional Outbox</b> (yeh Day 15 ke forward-reference ko poora karta hai): event ko data ki <b>usi database transaction</b> mein <code>Outbox</code> table mein likho. Relay unsent rows padhta hai, publish karta hai aur sent mark karta hai. Publish ke baad crash se message dohar sakta hai, isliye delivery at-least-once hai.</li>
+<li><b>Transactional Outbox</b> (yeh Day 15 ke forward-reference ko poora karta hai): event ko data ki <b>usi database transaction</b> mein <code>Outbox</code> table mein likho. Relay unsent rows padhta hai, publish karta hai aur sent mark karta hai. Publish ke baad crash se message duplicate ho sakta hai, isliye delivery at-least-once hai.</li>
 <li><b>Inbox / idempotent consumer</b>: consumer handle hue messages ke ids (unique message id wali table) apne effect ki <b>usi transaction</b> mein rakhta hai, aur dohrav skip karta hai. Outbox = "kabhi na khoye"; inbox = "do baar apply na ho".</li>
 </ul>
 <p>Azure Service Bus ki specifics (sessions, locks, topics, DLQ settings) — Day 20.</p>
@@ -214,7 +208,7 @@ window.TL_DAY = {
 <li><b>Choreography</b>: no boss. Each service reacts to events and publishes the next one (<code>OrderPlaced</code> → payment service → <code>PaymentTaken</code> → stock service ...). Few moving parts and loose coupling, but the flow is hidden across services and hard to see or change.</li>
 <li><b>Orchestration</b>: a coordinator (saga orchestrator / process manager) sends commands and tracks the state. The flow is in one place and easy to read, and compensation is explicit; the cost is one more component and some coupling to it.</li>
 </ul>
-<p><b>Data ownership:</b> <b>database per service</b>. Others get the data only through the owner's API or events — no reading another service's tables. A shared database is the top cause of the distributed monolith.</p>
+<p><b>Data ownership:</b> <b>database per service</b>. Others get the data only through the owner's API or events — no reading another service's tables. A shared database is a common cause of the distributed monolith.</p>
 <ul>
 <li><b>API composition</b>: the gateway or a composer calls several services and merges the answers — fine for small queries.</li>
 <li><b>CQRS read model</b> (Day 11): a service subscribes to events and keeps a local, query-shaped copy for fast joins and reports. It is eventually consistent.</li>
@@ -227,7 +221,7 @@ window.TL_DAY = {
 <li><b>Choreography</b>: कोई boss नहीं। हर service events पर react करती है और अगला event publish करती है (<code>OrderPlaced</code> → payment service → <code>PaymentTaken</code> → stock service ...)। कम हिस्से और loose coupling, पर flow services में बिखरा रहता है और देखना या बदलना मुश्किल।</li>
 <li><b>Orchestration</b>: एक coordinator (saga orchestrator / process manager) commands भेजता है और state रखता है। Flow एक जगह है और पढ़ना आसान, compensation साफ़; कीमत है एक और component और उससे कुछ coupling।</li>
 </ul>
-<p><b>Data ownership:</b> <b>हर service का अपना database</b>। दूसरे data सिर्फ़ मालिक की API या events से लेते हैं — किसी और service की tables नहीं पढ़ते। Shared database distributed monolith की सबसे बड़ी वजह है।</p>
+<p><b>Data ownership:</b> <b>हर service का अपना database</b>। दूसरे data सिर्फ़ मालिक की API या events से लेते हैं — किसी और service की tables नहीं पढ़ते। Shared database distributed monolith की एक आम वजह है।</p>
 <ul>
 <li><b>API composition</b>: gateway या composer कई services को call करके जवाब जोड़ता है — छोटे queries के लिए ठीक।</li>
 <li><b>CQRS read model</b> (Day 11): एक service events subscribe करके अपने पास query के आकार की local कॉपी रखती है, तेज़ joins और reports के लिए। यह eventually consistent है।</li>
@@ -240,7 +234,7 @@ window.TL_DAY = {
 <li><b>Choreography</b>: koi boss nahi. Har service events par react karti hai aur agla event publish karti hai (<code>OrderPlaced</code> → payment service → <code>PaymentTaken</code> → stock service ...). Kam hisse aur loose coupling, par flow services mein bikhra rehta hai aur dekhna ya badalna mushkil.</li>
 <li><b>Orchestration</b>: ek coordinator (saga orchestrator / process manager) commands bhejta hai aur state rakhta hai. Flow ek jagah hai aur padhna aasaan, compensation saaf; keemat hai ek aur component aur usse kuch coupling.</li>
 </ul>
-<p><b>Data ownership:</b> <b>har service ka apna database</b>. Doosre data sirf maalik ki API ya events se lete hain — kisi aur service ki tables nahi padhte. Shared database distributed monolith ki sabse badi wajah hai.</p>
+<p><b>Data ownership:</b> <b>har service ka apna database</b>. Doosre data sirf maalik ki API ya events se lete hain — kisi aur service ki tables nahi padhte. Shared database distributed monolith ki ek aam wajah hai.</p>
 <ul>
 <li><b>API composition</b>: gateway ya composer kai services ko call karke jawaab jodta hai — chhote queries ke liye theek.</li>
 <li><b>CQRS read model</b> (Day 11): ek service events subscribe karke apne paas query ke aakar ki local copy rakhti hai, tez joins aur reports ke liye. Yeh eventually consistent hai.</li>
@@ -270,7 +264,7 @@ window.TL_DAY = {
 <p><b>Observability — three pillars:</b> <b>logs</b> (what happened, structured), <b>metrics</b> (numbers over time: rate, errors, latency), <b>traces</b> (one request's path across services).</p>
 <ul>
 <li><b>OpenTelemetry</b> is the vendor-neutral standard. In .NET, traces use <code>System.Diagnostics.ActivitySource</code> and <code>Activity</code>; ASP.NET Core and HttpClient create activities automatically once OpenTelemetry instrumentation is added.</li>
-<li><b>W3C trace context</b>: the <code>traceparent</code> header (<code>00-traceId-spanId-flags</code>) carries the trace across HTTP calls; for messages, put it in message headers so the consumer continues the trace.</li>
+<li><b>W3C trace context</b>: the <code>traceparent</code> header (<code>00-traceId-spanId-flags</code>) carries the trace across HTTP calls; for messages, many SDKs propagate it in message properties; with a custom outbox relay you store it and restore it yourself.</li>
 <li><b>Correlation id</b>: one id in every log line of one request (the trace id works well). Search by it to see the whole story.</li>
 </ul>
 <p><b>When to use:</b> timeouts and retries on every remote call; breakers and bulkheads on important or slow dependencies; tracing from the very first service. <b>When not:</b> do not retry non-idempotent calls blindly, do not stack many retry layers (retries multiply), and do not add a fallback that hides real errors from the dashboard.</p>`,
@@ -281,13 +275,13 @@ window.TL_DAY = {
 <li><b>Exponential backoff + jitter के साथ retry</b>: सिर्फ़ transient errors (timeouts, 503, 429) के लिए, और सिर्फ़ तब जब call <b>idempotent</b> हो (Day 13)। Jitter retries को फैला देता है ताकि clients service पर साथ में न टूटें।</li>
 <li><b>Circuit breaker</b>: बहुत failures के बाद कुछ देर call बंद (Closed → Open → Half-open trial)। यह बीमार service को बचाता है और callers को तेज़ रखता है।</li>
 <li><b>Bulkhead</b>: resources अलग रखो (हर dependency का अपना pool/limit) ताकि एक धीमी dependency सारे threads या connections न खा जाए।</li>
-<li><b>Fallback</b>: call fail होने पर घटा हुआ जवाब (cached या default)।</li>
+<li><b>Fallback</b>: call fail होने पर degraded जवाब (cached या default)।</li>
 </ul>
 <p>.NET में: <b>Polly v8</b> (<code>ResiliencePipeline</code>) और HttpClient के लिए <code>Microsoft.Extensions.Http.Resilience</code> (<code>AddStandardResilienceHandler</code>, <code>AddResilienceHandler</code>)। Standard handler के defaults Day 13 में हैं — यहाँ ध्यान इस पर है कि <b>कौन-सा</b> pattern <b>कौन-सी</b> समस्या सुलझाता है। बिना backoff या budget के retries छोटे outage को <b>retry storm</b> बना सकती हैं।</p>
-<p><b>Observability — तीन खंभे:</b> <b>logs</b> (क्या हुआ, structured), <b>metrics</b> (समय के साथ आँकड़े: rate, errors, latency), <b>traces</b> (एक request का services में रास्ता)।</p>
+<p><b>Observability — three pillars:</b> <b>logs</b> (क्या हुआ, structured), <b>metrics</b> (समय के साथ आँकड़े: rate, errors, latency), <b>traces</b> (एक request का services में रास्ता)।</p>
 <ul>
 <li><b>OpenTelemetry</b> vendor-neutral standard है। .NET में traces <code>System.Diagnostics.ActivitySource</code> और <code>Activity</code> से बनते हैं; OpenTelemetry instrumentation जोड़ते ही ASP.NET Core और HttpClient अपने आप activities बनाते हैं।</li>
-<li><b>W3C trace context</b>: <code>traceparent</code> header (<code>00-traceId-spanId-flags</code>) trace को HTTP calls के पार ले जाता है; messages के लिए उसे message headers में रखो ताकि consumer trace आगे बढ़ाए।</li>
+<li><b>W3C trace context</b>: <code>traceparent</code> header (<code>00-traceId-spanId-flags</code>) trace को HTTP calls के पार ले जाता है; messages के लिए कई SDKs उसे message properties में आगे ले जाते हैं; custom outbox relay में उसे ख़ुद store और restore करना पड़ता है।</li>
 <li><b>Correlation id</b>: एक request की हर log line में एक id (trace id अच्छा चलता है)। उससे search करके पूरी कहानी दिखती है।</li>
 </ul>
 <p><b>कब use करें:</b> हर remote call पर timeouts और retries; ज़रूरी या धीमी dependencies पर breakers और bulkheads; पहली service से ही tracing। <b>कब नहीं:</b> non-idempotent calls को आँख मूँदकर retry मत करो, कई retry layers मत चढ़ाओ (retries गुणा होती हैं), और ऐसा fallback मत जोड़ो जो असली errors को dashboard से छुपा दे।</p>`,
@@ -298,13 +292,13 @@ window.TL_DAY = {
 <li><b>Exponential backoff + jitter ke saath retry</b>: sirf transient errors (timeouts, 503, 429) ke liye, aur sirf tab jab call <b>idempotent</b> ho (Day 13). Jitter retries ko faila deta hai taaki clients service par saath mein na toote.</li>
 <li><b>Circuit breaker</b>: bahut failures ke baad kuch der call band (Closed → Open → Half-open trial). Yeh beemar service ko bachata hai aur callers ko tez rakhta hai.</li>
 <li><b>Bulkhead</b>: resources alag rakho (har dependency ka apna pool/limit) taaki ek dheemi dependency saare threads ya connections na kha jaaye.</li>
-<li><b>Fallback</b>: call fail hone par ghata hua jawaab (cached ya default).</li>
+<li><b>Fallback</b>: call fail hone par degraded jawaab (cached ya default).</li>
 </ul>
 <p>.NET mein: <b>Polly v8</b> (<code>ResiliencePipeline</code>) aur HttpClient ke liye <code>Microsoft.Extensions.Http.Resilience</code> (<code>AddStandardResilienceHandler</code>, <code>AddResilienceHandler</code>). Standard handler ke defaults Day 13 mein hain — yahan dhyaan is par hai ki <b>kaun-sa</b> pattern <b>kaun-si</b> samasya suljhata hai. Bina backoff ya budget ke retries chhote outage ko <b>retry storm</b> bana sakti hain.</p>
-<p><b>Observability — teen khambhe:</b> <b>logs</b> (kya hua, structured), <b>metrics</b> (samay ke saath aankde: rate, errors, latency), <b>traces</b> (ek request ka services mein raasta).</p>
+<p><b>Observability — three pillars:</b> <b>logs</b> (kya hua, structured), <b>metrics</b> (samay ke saath aankde: rate, errors, latency), <b>traces</b> (ek request ka services mein raasta).</p>
 <ul>
 <li><b>OpenTelemetry</b> vendor-neutral standard hai. .NET mein traces <code>System.Diagnostics.ActivitySource</code> aur <code>Activity</code> se bante hain; OpenTelemetry instrumentation jodte hi ASP.NET Core aur HttpClient apne aap activities banate hain.</li>
-<li><b>W3C trace context</b>: <code>traceparent</code> header (<code>00-traceId-spanId-flags</code>) trace ko HTTP calls ke paar le jaata hai; messages ke liye use message headers mein rakho taaki consumer trace aage badhaye.</li>
+<li><b>W3C trace context</b>: <code>traceparent</code> header (<code>00-traceId-spanId-flags</code>) trace ko HTTP calls ke paar le jaata hai; messages ke liye kai SDKs use message properties mein aage le jaate hain; custom outbox relay mein use khud store aur restore karna padta hai.</li>
 <li><b>Correlation id</b>: ek request ki har log line mein ek id (trace id achha chalta hai). Usse search karke poori kahaani dikhti hai.</li>
 </ul>
 <p><b>Kab use karein:</b> har remote call par timeouts aur retries; zaroori ya dheemi dependencies par breakers aur bulkheads; pehli service se hi tracing. <b>Kab nahi:</b> non-idempotent calls ko aankh moondkar retry mat karo, kai retry layers mat chadhao (retries guna hoti hain), aur aisa fallback mat jodo jo asli errors ko dashboard se chhupa de.</p>`
@@ -327,7 +321,7 @@ window.TL_DAY = {
 <li>A background relay reads unsent rows <b>in id order</b>, publishes, then marks <code>SentAt</code>. A crash between publish and mark means a duplicate on restart: at-least-once.</li>
 <li>Run <b>one</b> relay (or lock the rows) if per-aggregate order matters; clean up old sent rows regularly.</li>
 </ul>
-<p><b>Inbox side (consumer):</b> the consumer inserts the <code>MessageId</code> into an inbox table <b>in the same transaction</b> as its effect. The key is unique, so a second parallel delivery fails on the key and is retried and then skipped. Marking the message <i>before</i> the work in a separate step would lose it if the work fails (see puzzle 1).</p>
+<p><b>Inbox side (consumer):</b> the consumer inserts the <code>MessageId</code> into an inbox table <b>in the same transaction</b> as its effect. The key is unique, so a second parallel delivery fails on the key and is retried and then skipped.</p>
 <p>Other tools: <b>idempotency keys</b> from the client for HTTP (Day 13); natural idempotence (<code>SET status = 'Paid'</code> instead of <code>amount += x</code>); CDC (change data capture) tools can also read the outbox table instead of a polling relay.</p>
 <p><b>When to use:</b> whenever a state change must also produce an event for another service (the dual-write problem). <b>When not:</b> if the event is only an in-process notification, or a lost event is truly acceptable — an outbox adds a table, a relay and clean-up to run.</p>`,
         hi: `<p><b>तस्वीर — courier का register और delivery की पर्ची:</b> दुकान courier request उसी <b>पल</b> register में लिखती है जब sale खाते में लिखती है (एक कलम, एक पन्ना)। बाद में एक runner unsent entries courier को पहुँचाता है। अगर runner parcel देकर register पर tick लगाने से पहले बेहोश हो जाए, तो अगला runner फिर दे देगा — इसलिए लेने वाला <b>मिली पर्चियों की list</b> रखता है और जो पर्ची देख चुका है उसे मना कर देता है।</p>
@@ -336,9 +330,9 @@ window.TL_DAY = {
 <li>Handler business बदलाव <b>और</b> एक <code>OutboxMessage</code> row <b>एक</b> <code>SaveChangesAsync</code> (एक transaction) से save करता है। Request के अंदर broker call नहीं।</li>
 <li>Row में पक्का <code>MessageId</code> (consumers इसी से dedupe करते हैं) और मौजूदा <code>traceparent</code> रहता है, ताकि trace consumer में आगे चले।</li>
 <li>Background relay unsent rows <b>id के order में</b> पढ़ता है, publish करता है, फिर <code>SentAt</code> mark करता है। Publish और mark के बीच crash का मतलब restart पर duplicate: at-least-once।</li>
-<li>अगर per-aggregate order मायने रखता है तो <b>एक</b> relay चलाओ (या rows lock करो); पुराने sent rows नियमित साफ़ करो।</li>
+<li>अगर per-aggregate order मायने रखता है तो <b>एक</b> relay चलाओ (या rows lock करो); पुराने sent rows regularly साफ़ करो।</li>
 </ul>
-<p><b>Inbox की तरफ़ (consumer):</b> consumer <code>MessageId</code> को अपने effect की <b>उसी transaction</b> में inbox table में insert करता है। Key unique है, इसलिए दूसरी parallel delivery key पर fail होती है, retry होती है और फिर skip हो जाती है। Message को काम से <i>पहले</i> अलग step में mark करने पर काम fail होने पर वह खो जाता (puzzle 1 देखो)।</p>
+<p><b>Inbox की तरफ़ (consumer):</b> consumer <code>MessageId</code> को अपने effect की <b>उसी transaction</b> में inbox table में insert करता है। Key unique है, इसलिए दूसरी parallel delivery key पर fail होती है, retry होती है और फिर skip हो जाती है।</p>
 <p>दूसरे औज़ार: HTTP के लिए client की <b>idempotency keys</b> (Day 13); natural idempotence (<code>amount += x</code> की जगह <code>SET status = 'Paid'</code>); CDC (change data capture) tools polling relay की जगह outbox table भी पढ़ सकते हैं।</p>
 <p><b>कब use करें:</b> जब भी एक state बदलाव को दूसरी service के लिए event भी बनाना हो (dual-write problem)। <b>कब नहीं:</b> अगर event सिर्फ़ in-process notification है, या event का खोना सच में चलेगा — outbox एक table, एक relay और clean-up जोड़ता है जिन्हें चलाना पड़ता है।</p>`,
         hg: `<p><b>Tasveer — courier ka register aur delivery ki parchi:</b> dukaan courier request usi <b>pal</b> register mein likhti hai jab sale khaate mein likhti hai (ek kalam, ek panna). Baad mein ek runner unsent entries courier ko pahunchata hai. Agar runner parcel dekar register par tick lagane se pehle behosh ho jaaye, to agla runner phir de dega — isliye lene wala <b>mili parchiyon ki list</b> rakhta hai aur jo parchi dekh chuka hai use mana kar deta hai.</p>
@@ -347,9 +341,9 @@ window.TL_DAY = {
 <li>Handler business badlaav <b>aur</b> ek <code>OutboxMessage</code> row <b>ek</b> <code>SaveChangesAsync</code> (ek transaction) se save karta hai. Request ke andar broker call nahi.</li>
 <li>Row mein pakka <code>MessageId</code> (consumers isi se dedupe karte hain) aur maujooda <code>traceparent</code> rehta hai, taaki trace consumer mein aage chale.</li>
 <li>Background relay unsent rows <b>id ke order mein</b> padhta hai, publish karta hai, phir <code>SentAt</code> mark karta hai. Publish aur mark ke beech crash ka matlab restart par duplicate: at-least-once.</li>
-<li>Agar per-aggregate order maayne rakhta hai to <b>ek</b> relay chalao (ya rows lock karo); purane sent rows niyamit saaf karo.</li>
+<li>Agar per-aggregate order maayne rakhta hai to <b>ek</b> relay chalao (ya rows lock karo); purane sent rows regularly saaf karo.</li>
 </ul>
-<p><b>Inbox ki taraf (consumer):</b> consumer <code>MessageId</code> ko apne effect ki <b>usi transaction</b> mein inbox table mein insert karta hai. Key unique hai, isliye doosri parallel delivery key par fail hoti hai, retry hoti hai aur phir skip ho jaati hai. Message ko kaam se <i>pehle</i> alag step mein mark karne par kaam fail hone par woh kho jaata (puzzle 1 dekho).</p>
+<p><b>Inbox ki taraf (consumer):</b> consumer <code>MessageId</code> ko apne effect ki <b>usi transaction</b> mein inbox table mein insert karta hai. Key unique hai, isliye doosri parallel delivery key par fail hoti hai, retry hoti hai aur phir skip ho jaati hai.</p>
 <p>Doosre auzaar: HTTP ke liye client ki <b>idempotency keys</b> (Day 13); natural idempotence (<code>amount += x</code> ki jagah <code>SET status = 'Paid'</code>); CDC (change data capture) tools polling relay ki jagah outbox table bhi padh sakte hain.</p>
 <p><b>Kab use karein:</b> jab bhi ek state badlaav ko doosri service ke liye event bhi banana ho (dual-write problem). <b>Kab nahi:</b> agar event sirf in-process notification hai, ya event ka khona sach mein chalega — outbox ek table, ek relay aur clean-up jodta hai jinhe chalana padta hai.</p>`
       },
@@ -469,7 +463,7 @@ public class PaymentTakenConsumer(ShopDbContext db, TimeProvider clock)
 <li>A compensation can fail too. Do not hide it: retry (with backoff), and when retries run out <b>park</b> it for a human with an alert.</li>
 <li>In a real system the orchestrator is <b>durable</b>: it stores its state after each step (a table, or a workflow engine such as Durable Functions or a saga library) and talks to services by <b>messages</b> (through an outbox), so a restart resumes instead of forgetting. Every step and compensation must be <b>idempotent</b>, because messages repeat.</li>
 </ul>
-<p><b>Design hints:</b> put the step that is hardest to undo (shipping, sending an email, calling a bank) <b>last</b>; give the user a visible state (<code>Pending</code>, <code>Confirmed</code>, <code>Cancelled</code>) because the result is eventual; avoid "pivot" mistakes by deciding which step is the point of no return.</p>
+<p><b>Design hints:</b> steps that cannot be compensated (email, irreversible transfers) go <b>after</b> the last step that can fail (the pivot); refundable card charges are fine mid-saga; give the user a visible state (<code>Pending</code>, <code>Confirmed</code>, <code>Cancelled</code>) because the result is eventual; avoid "pivot" mistakes by deciding which step is the point of no return.</p>
 <p><b>Choreography vs orchestration — which one?</b> Choreography suits two or three services with a simple chain. Once there are more steps, branches or timeouts, the hidden flow is painful — use an orchestrator.</p>
 <p><b>When to use a Saga:</b> a long business process over several services, with a plausible failure in the middle. <b>When not:</b> a single service/database can use one normal transaction; an in-memory loop like this one is only a teaching model, not a production orchestrator.</p>`,
         hi: `<p><b>तस्वीर — checklist वाला wedding planner:</b> planner पहले hall book करता है, फिर caterer, फिर band। Band मना कर दे तो planner checklist खोलता है और caterer cancel करता है, फिर hall — इसी order में — और जिस vendor ने refund नहीं दिया उसे note कर लेता है ताकि कोई इंसान follow up करे।</p>
@@ -480,7 +474,7 @@ public class PaymentTakenConsumer(ShopDbContext db, TimeProvider clock)
 <li>Compensation भी fail हो सकती है। छुपाओ मत: retry करो (backoff के साथ), और retries ख़त्म हों तो alert के साथ इंसान के लिए <b>park</b> करो।</li>
 <li>असली system में orchestrator <b>durable</b> होता है: हर step के बाद अपनी state store करता है (table, या Durable Functions जैसा workflow engine या saga library) और services से <b>messages</b> (outbox से) बात करता है, ताकि restart पर वह भूले नहीं, आगे बढ़े। हर step और compensation <b>idempotent</b> होनी चाहिए, क्योंकि messages दोहराते हैं।</li>
 </ul>
-<p><b>Design hints:</b> जिस step को पलटना सबसे मुश्किल है (shipping, email भेजना, bank call) उसे <b>आख़िर</b> में रखो; user को दिखने वाली state दो (<code>Pending</code>, <code>Confirmed</code>, <code>Cancelled</code>) क्योंकि नतीजा eventual है; तय करो कि कौन-सा step "point of no return" है।</p>
+<p><b>Design hints:</b> जिन steps की compensation नहीं हो सकती (email, irreversible transfers) उन्हें आख़िरी fail हो सकने वाले step (pivot) के <b>बाद</b> रखो; refund हो सकने वाली card charges saga के बीच में ठीक हैं; user को दिखने वाली state दो (<code>Pending</code>, <code>Confirmed</code>, <code>Cancelled</code>) क्योंकि नतीजा eventual है; तय करो कि कौन-सा step "point of no return" है।</p>
 <p><b>Choreography बनाम orchestration — कौन-सी?</b> दो-तीन services की सीधी chain के लिए choreography ठीक है। Steps, branches या timeouts बढ़ें तो छुपा हुआ flow तकलीफ़ देता है — orchestrator लो।</p>
 <p><b>Saga कब use करें:</b> कई services पर लंबा business process, जिसमें बीच में failure मुमकिन है। <b>कब नहीं:</b> एक service/database एक normal transaction से कर सकता है; इस जैसा in-memory loop सिर्फ़ समझाने का model है, production orchestrator नहीं।</p>`,
         hg: `<p><b>Tasveer — checklist wala wedding planner:</b> planner pehle hall book karta hai, phir caterer, phir band. Band mana kar de to planner checklist kholta hai aur caterer cancel karta hai, phir hall — isi order mein — aur jis vendor ne refund nahi diya use note kar leta hai taaki koi insaan follow up kare.</p>
@@ -491,7 +485,7 @@ public class PaymentTakenConsumer(ShopDbContext db, TimeProvider clock)
 <li>Compensation bhi fail ho sakti hai. Chhupao mat: retry karo (backoff ke saath), aur retries khatam hon to alert ke saath insaan ke liye <b>park</b> karo.</li>
 <li>Asli system mein orchestrator <b>durable</b> hota hai: har step ke baad apni state store karta hai (table, ya Durable Functions jaisa workflow engine ya saga library) aur services se <b>messages</b> (outbox se) baat karta hai, taaki restart par woh bhoole nahi, aage badhe. Har step aur compensation <b>idempotent</b> honi chahiye, kyunki messages dohrate hain.</li>
 </ul>
-<p><b>Design hints:</b> jis step ko palatna sabse mushkil hai (shipping, email bhejna, bank call) use <b>aakhir</b> mein rakho; user ko dikhne wali state do (<code>Pending</code>, <code>Confirmed</code>, <code>Cancelled</code>) kyunki nateeja eventual hai; tay karo ki kaun-sa step "point of no return" hai.</p>
+<p><b>Design hints:</b> jin steps ki compensation nahi ho sakti (email, irreversible transfers) unhe aakhri fail ho sakne wale step (pivot) ke <b>baad</b> rakho; refund ho sakne wali card charges saga ke beech mein theek hain; user ko dikhne wali state do (<code>Pending</code>, <code>Confirmed</code>, <code>Cancelled</code>) kyunki nateeja eventual hai; tay karo ki kaun-sa step "point of no return" hai.</p>
 <p><b>Choreography vs orchestration — kaun-si?</b> do-teen services ki seedhi chain ke liye choreography theek hai. Steps, branches ya timeouts badhein to chhupa hua flow takleef deta hai — orchestrator lo.</p>
 <p><b>Saga kab use karein:</b> kai services par lamba business process, jismein beech mein failure mumkin hai. <b>Kab nahi:</b> ek service/database ek normal transaction se kar sakta hai; is jaisa in-memory loop sirf samjhane ka model hai, production orchestrator nahi.</p>`
       },
@@ -578,30 +572,30 @@ final state: NeedsAttention`
         en: `<p><b>Picture — a chain of checks at an airport:</b> each gate has a job. One checks the time limit, one decides if you may try again, one closes the gate when too many fail. The <b>order</b> of the gates matters.</p>
 <p><b>Order in a pipeline (outer to inner):</b> concurrency limit (bulkhead) → retry → circuit breaker → per-attempt timeout. The retry wraps the breaker, so each attempt is counted by the breaker, and each attempt has its own short timeout. Add a total timeout around everything if the caller has a deadline.</p>
 <ul>
-<li><b>Polly v8</b>: <code>ResiliencePipelineBuilder</code> and strategy options (<code>RetryStrategyOptions</code>, <code>CircuitBreakerStrategyOptions</code>). Packages: <code>Polly.Core</code>, and <code>Polly.Extensions</code> for DI.</li>
+<li><b>Polly v8</b>: <code>ResiliencePipelineBuilder</code> and strategy options (<code>RetryStrategyOptions</code>, <code>CircuitBreakerStrategyOptions</code>). Packages: <code>Polly.Core</code>, <code>Polly.RateLimiting</code> (for <code>AddConcurrencyLimiter</code>), and <code>Polly.Extensions</code> for DI.</li>
 <li><b>HttpClient</b>: <code>Microsoft.Extensions.Http.Resilience</code>. Use <code>AddStandardResilienceHandler()</code> when the defaults fit (Day 13), or <code>AddResilienceHandler</code> to build your own pipeline for one downstream.</li>
 <li><b>Safe retries only</b>: handle transient failures (timeouts, network errors, 5xx, 429); disable retries for unsafe methods such as POST unless the server is idempotent (idempotency key, Day 13).</li>
-<li>Delays use <b>exponential backoff with jitter</b> (see puzzle 4). Retries are also multiplied across layers: two layers that each retry three times can send 4 x 4 = 16 calls to the last service — retry at <b>one</b> layer, and honour <code>Retry-After</code> if the server sends it.</li>
+<li>Delays use <b>exponential backoff with jitter</b> (see puzzle 4). Retries multiply across layers (see the backoff Q&A) — retry at <b>one</b> layer, and honour <code>Retry-After</code> if the server sends it.</li>
 <li>Pick numbers from measurements (real latency percentiles), not guesses; log every retry and every breaker state change, so the dashboard shows it.</li>
 </ul>
 <p><b>When to use:</b> every call that crosses a process or network boundary. <b>When not:</b> do not add retries in front of a non-idempotent call; do not use a long timeout "just in case" (it ties up threads); do not stack retry in the gateway, the client and the SDK all at once.</p>`,
         hi: `<p><b>तस्वीर — airport की जाँच की कड़ी:</b> हर gate का एक काम है। एक time limit देखता है, एक तय करता है कि आप फिर कोशिश कर सकते हैं या नहीं, एक gate बंद करता है जब बहुत लोग fail हों। Gates का <b>order</b> मायने रखता है।</p>
 <p><b>Pipeline में order (बाहर से अंदर):</b> concurrency limit (bulkhead) → retry → circuit breaker → per-attempt timeout। Retry breaker को लपेटती है, इसलिए हर attempt breaker गिनता है, और हर attempt का अपना छोटा timeout है। Caller की deadline हो तो सबके बाहर एक total timeout जोड़ो।</p>
 <ul>
-<li><b>Polly v8</b>: <code>ResiliencePipelineBuilder</code> और strategy options (<code>RetryStrategyOptions</code>, <code>CircuitBreakerStrategyOptions</code>)। Packages: <code>Polly.Core</code>, और DI के लिए <code>Polly.Extensions</code>।</li>
+<li><b>Polly v8</b>: <code>ResiliencePipelineBuilder</code> और strategy options (<code>RetryStrategyOptions</code>, <code>CircuitBreakerStrategyOptions</code>)। Packages: <code>Polly.Core</code>, <code>Polly.RateLimiting</code> (<code>AddConcurrencyLimiter</code> के लिए), और DI के लिए <code>Polly.Extensions</code>।</li>
 <li><b>HttpClient</b>: <code>Microsoft.Extensions.Http.Resilience</code>। Defaults फ़िट हों तो <code>AddStandardResilienceHandler()</code> (Day 13), या किसी एक downstream के लिए अपनी pipeline बनाने को <code>AddResilienceHandler</code>।</li>
 <li><b>सिर्फ़ safe retries</b>: transient failures (timeouts, network errors, 5xx, 429) handle करो; POST जैसे unsafe methods पर retries बंद करो जब तक server idempotent न हो (idempotency key, Day 13)।</li>
-<li>Delays <b>exponential backoff + jitter</b> से (puzzle 4 देखो)। Retries layers में गुणा भी होती हैं: दो layers जो हर एक तीन बार retry करें, आख़िरी service पर 4 x 4 = 16 calls भेज सकती हैं — retry <b>एक</b> layer पर करो, और server <code>Retry-After</code> भेजे तो उसे मानो।</li>
+<li>Delays <b>exponential backoff + jitter</b> से (puzzle 4 देखो)। Retries layers में गुणा होती हैं (backoff वाला Q&A देखो) — retry <b>एक</b> layer पर करो, और server <code>Retry-After</code> भेजे तो उसे मानो।</li>
 <li>Numbers measurement से चुनो (असली latency percentiles), अंदाज़े से नहीं; हर retry और breaker state change को log करो, ताकि dashboard में दिखे।</li>
 </ul>
 <p><b>कब use करें:</b> हर वह call जो process या network की सीमा पार करे। <b>कब नहीं:</b> non-idempotent call के आगे retries मत लगाओ; "कहीं ज़रूरत पड़े" सोचकर लंबा timeout मत रखो (threads फँसते हैं); gateway, client और SDK तीनों में एक साथ retry मत चढ़ाओ।</p>`,
         hg: `<p><b>Tasveer — airport ki jaanch ki kadi:</b> har gate ka ek kaam hai. Ek time limit dekhta hai, ek tay karta hai ki aap phir koshish kar sakte hain ya nahi, ek gate band karta hai jab bahut log fail hon. Gates ka <b>order</b> maayne rakhta hai.</p>
 <p><b>Pipeline mein order (bahar se andar):</b> concurrency limit (bulkhead) → retry → circuit breaker → per-attempt timeout. Retry breaker ko lapetti hai, isliye har attempt breaker ginta hai, aur har attempt ka apna chhota timeout hai. Caller ki deadline ho to sabke bahar ek total timeout jodo.</p>
 <ul>
-<li><b>Polly v8</b>: <code>ResiliencePipelineBuilder</code> aur strategy options (<code>RetryStrategyOptions</code>, <code>CircuitBreakerStrategyOptions</code>). Packages: <code>Polly.Core</code>, aur DI ke liye <code>Polly.Extensions</code>.</li>
+<li><b>Polly v8</b>: <code>ResiliencePipelineBuilder</code> aur strategy options (<code>RetryStrategyOptions</code>, <code>CircuitBreakerStrategyOptions</code>). Packages: <code>Polly.Core</code>, <code>Polly.RateLimiting</code> (<code>AddConcurrencyLimiter</code> ke liye), aur DI ke liye <code>Polly.Extensions</code>.</li>
 <li><b>HttpClient</b>: <code>Microsoft.Extensions.Http.Resilience</code>. Defaults fit hon to <code>AddStandardResilienceHandler()</code> (Day 13), ya kisi ek downstream ke liye apni pipeline banane ko <code>AddResilienceHandler</code>.</li>
 <li><b>Sirf safe retries</b>: transient failures (timeouts, network errors, 5xx, 429) handle karo; POST jaise unsafe methods par retries band karo jab tak server idempotent na ho (idempotency key, Day 13).</li>
-<li>Delays <b>exponential backoff + jitter</b> se (puzzle 4 dekho). Retries layers mein guna bhi hoti hain: do layers jo har ek teen baar retry karein, aakhri service par 4 x 4 = 16 calls bhej sakti hain — retry <b>ek</b> layer par karo, aur server <code>Retry-After</code> bheje to use mano.</li>
+<li>Delays <b>exponential backoff + jitter</b> se (puzzle 4 dekho). Retries layers mein guna hoti hain (backoff wala Q&A dekho) — retry <b>ek</b> layer par karo, aur server <code>Retry-After</code> bheje to use mano.</li>
 <li>Numbers measurement se chuno (asli latency percentiles), andaaze se nahi; har retry aur breaker state change ko log karo, taaki dashboard mein dikhe.</li>
 </ul>
 <p><b>Kab use karein:</b> har woh call jo process ya network ki seema paar kare. <b>Kab nahi:</b> non-idempotent call ke aage retries mat lagao; "kahin zaroorat pade" soch kar lamba timeout mat rakho (threads phanste hain); gateway, client aur SDK teeno mein ek saath retry mat chadhao.</p>`
@@ -673,7 +667,7 @@ public static class PaymentsClientSetup
                     UseJitter = true,
                     Delay = TimeSpan.FromMilliseconds(200)
                 };
-                retry.DisableForUnsafeHttpMethods();       // POST is retried only with an idempotency key (Day 13)
+                retry.DisableForUnsafeHttpMethods();       // POST is not retried here; retry it only when it carries an idempotency key (Day 13)
                 pipeline.AddRetry(retry);
 
                 pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
@@ -705,7 +699,7 @@ public static class PaymentsClientSetup
 <ul>
 <li>Create an <code>ActivitySource</code> once (static, one per component) and start activities for meaningful work: <code>using var activity = Source.StartActivity("ChargeCard")</code>. It is <code>null</code> when nobody listens, so use <code>activity?.SetTag(...)</code>.</li>
 <li>ASP.NET Core reads the incoming <code>traceparent</code>, and HttpClient writes it on outgoing calls, so HTTP hops join one trace by themselves once OpenTelemetry instrumentation is registered.</li>
-<li><b>Messages</b> have no automatic hop: put the <code>traceparent</code> into message headers (the outbox row stores it) and, in the consumer, start an activity with that parent context (kind <code>Consumer</code>).</li>
+<li><b>Messages</b>: many messaging SDKs (for example the Azure Service Bus client, MassTransit, NServiceBus) propagate the trace context in message properties. With a hand-written outbox relay or a raw client you store the <code>traceparent</code> (the outbox row does) and, in the consumer, start an activity with that parent context (kind <code>Consumer</code>).</li>
 <li>Tag with <b>business identifiers</b> (order id), never with secrets or personal data. Sample in production (for example keep a percentage of traces) to control cost.</li>
 <li>Export with <b>OTLP</b> to a collector or backend (Jaeger, Grafana Tempo, Azure Monitor and others); logs should also carry the trace id.</li>
 </ul>
@@ -716,7 +710,7 @@ public static class PaymentsClientSetup
 <ul>
 <li><code>ActivitySource</code> एक बार बनाओ (static, हर component का एक) और काम के हिस्सों के लिए activities शुरू करो: <code>using var activity = Source.StartActivity("ChargeCard")</code>। कोई सुन न रहा हो तो यह <code>null</code> होता है, इसलिए <code>activity?.SetTag(...)</code> लिखो।</li>
 <li>ASP.NET Core आने वाला <code>traceparent</code> पढ़ता है, और HttpClient बाहर जाने वाली calls पर लिखता है, इसलिए OpenTelemetry instrumentation register होते ही HTTP hops अपने आप एक trace में जुड़ जाते हैं।</li>
-<li><b>Messages</b> में अपने आप hop नहीं जुड़ता: <code>traceparent</code> को message headers में रखो (outbox row उसे store करती है) और consumer में उस parent context के साथ activity शुरू करो (kind <code>Consumer</code>)।</li>
+<li><b>Messages</b>: कई messaging SDKs (जैसे Azure Service Bus client, MassTransit, NServiceBus) trace context को message properties में आगे ले जाते हैं। हाथ से लिखे outbox relay या raw client में <code>traceparent</code> आपको store करना होता है (outbox row करती है) और consumer में उसी parent context के साथ activity शुरू करनी होती है (kind <code>Consumer</code>)।</li>
 <li><b>Business identifiers</b> (order id) से tag करो, secrets या personal data से कभी नहीं। खर्च काबू में रखने के लिए production में sampling करो (जैसे traces का एक percentage रखो)।</li>
 <li><b>OTLP</b> से collector या backend (Jaeger, Grafana Tempo, Azure Monitor वग़ैरह) को export करो; logs में भी trace id होना चाहिए।</li>
 </ul>
@@ -727,7 +721,7 @@ public static class PaymentsClientSetup
 <ul>
 <li><code>ActivitySource</code> ek baar banao (static, har component ka ek) aur kaam ke hisson ke liye activities shuru karo: <code>using var activity = Source.StartActivity("ChargeCard")</code>. Koi sun na raha ho to yeh <code>null</code> hota hai, isliye <code>activity?.SetTag(...)</code> likho.</li>
 <li>ASP.NET Core aane wala <code>traceparent</code> padhta hai, aur HttpClient bahar jaane wali calls par likhta hai, isliye OpenTelemetry instrumentation register hote hi HTTP hops apne aap ek trace mein jud jaate hain.</li>
-<li><b>Messages</b> mein apne aap hop nahi judta: <code>traceparent</code> ko message headers mein rakho (outbox row use store karti hai) aur consumer mein us parent context ke saath activity shuru karo (kind <code>Consumer</code>).</li>
+<li><b>Messages</b>: kai messaging SDKs (jaise Azure Service Bus client, MassTransit, NServiceBus) trace context ko message properties mein aage le jaate hain. Haath se likhe outbox relay ya raw client mein <code>traceparent</code> aapko store karna hota hai (outbox row karti hai) aur consumer mein usi parent context ke saath activity shuru karni hoti hai (kind <code>Consumer</code>).</li>
 <li><b>Business identifiers</b> (order id) se tag karo, secrets ya personal data se kabhi nahi. Kharcha kaabu mein rakhne ke liye production mein sampling karo (jaise traces ka ek percentage rakho).</li>
 <li><b>OTLP</b> se collector ya backend (Jaeger, Grafana Tempo, Azure Monitor waghairah) ko export karo; logs mein bhi trace id hona chahiye.</li>
 </ul>
@@ -768,7 +762,11 @@ public static class PaymentsClientSetup
             hg: "Gateway Program.cs aur OpenTelemetry setup (packages yahan run-check nahi hue: Yarp.ReverseProxy, OpenTelemetry.*)"
           },
           check: "none",
-          src: `// Packages: Yarp.ReverseProxy, OpenTelemetry.Extensions.Hosting,
+          src: `using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
+// Packages: Yarp.ReverseProxy, OpenTelemetry.Extensions.Hosting,
 // OpenTelemetry.Instrumentation.AspNetCore, OpenTelemetry.Instrumentation.Http,
 // OpenTelemetry.Exporter.OpenTelemetryProtocol
 var builder = WebApplication.CreateBuilder(args);
@@ -888,14 +886,14 @@ public class OrderConsumer
 <li>आम काम: path या host से route करना, tokens validate करना, throttle करना, TLS terminate करना, कुछ responses cache करना, correlation ids जोड़ना, access logs जमा करना।</li>
 <li>ख़तरे: single point of failure (कई instances चलाओ) और बढ़ता logic का ढेर। इसे पतला रखो; business rules services में रहते हैं।</li>
 <li>.NET में self-hosted आम पसंद <b>YARP</b> (<code>Yarp.ReverseProxy</code>) है, जो routes और clusters से configure होता है।</li>
-<li><b>BFF</b> (Backend for Frontend) हर client type का gateway/API है, उस client की screens के हिसाब से बना और उसी team की मिल्कियत — वह एक screen के लिए कई service calls मिला सकता है। हर client के लिए एक बहुत बड़ा shared gateway मत बनाओ।</li>
+<li><b>BFF</b> (Backend for Frontend) हर client type का gateway/API है, उस client की screens के हिसाब से बना और उसी team की ownership — वह एक screen के लिए कई service calls मिला सकता है। हर client के लिए एक बहुत बड़ा shared gateway मत बनाओ।</li>
 <li>Follow-up: "Gateway बनाम service mesh?" — gateway north-south traffic (clients से system तक) सँभालता है; mesh services के बीच east-west traffic (mTLS, retries) सँभालता है और आम तौर पर बाद का कदम है।</li>
 </ul>`,
         hg: `<ul>
 <li>Aam kaam: path ya host se route karna, tokens validate karna, throttle karna, TLS terminate karna, kuch responses cache karna, correlation ids jodna, access logs jama karna.</li>
 <li>Khatre: single point of failure (kai instances chalao) aur badhta logic ka dher. Ise patla rakho; business rules services mein rehte hain.</li>
 <li>.NET mein self-hosted aam pasand <b>YARP</b> (<code>Yarp.ReverseProxy</code>) hai, jo routes aur clusters se configure hota hai.</li>
-<li><b>BFF</b> (Backend for Frontend) har client type ka gateway/API hai, us client ki screens ke hisaab se bana aur usi team ki milkiyat — woh ek screen ke liye kai service calls mila sakta hai. Har client ke liye ek bahut bada shared gateway mat banao.</li>
+<li><b>BFF</b> (Backend for Frontend) har client type ka gateway/API hai, us client ki screens ke hisaab se bana aur usi team ki ownership — woh ek screen ke liye kai service calls mila sakta hai. Har client ke liye ek bahut bada shared gateway mat banao.</li>
 <li>Follow-up: "Gateway vs service mesh?" — gateway north-south traffic (clients se system tak) sambhalta hai; mesh services ke beech east-west traffic (mTLS, retries) sambhalta hai aur aam taur par baad ka kadam hai.</li>
 </ul>`
       }
@@ -912,23 +910,20 @@ public class OrderConsumer
       explain: {
         en: `<ul>
 <li><b>Temporal coupling</b>: with sync calls, both services must be up at the same moment; with a broker in between, the receiver can be down and catch up later.</li>
-<li>Availability multiplies down a sync chain (three services at 99.9% give about 99.7%), and latency adds up.</li>
 <li>Async costs: eventual consistency, duplicates, ordering questions, harder debugging, and a UI that must show "pending".</li>
-<li>gRPC (HTTP/2, protobuf contracts) fits internal, low-latency, streaming calls; REST/JSON fits public and browser-facing APIs.</li>
+<li>gRPC (HTTP/2, protobuf contracts) fits internal, low-latency, streaming calls; REST/JSON fits public and browser-facing APIs (browsers need gRPC-Web or JSON transcoding to reach gRPC).</li>
 <li>Follow-up: "Order service needs the price from Catalog" — a read the user waits on: sync call (or a local copy of prices). "Order placed, send email and update stock" — events, async.</li>
 </ul>`,
         hi: `<ul>
 <li><b>Temporal coupling</b>: sync calls में दोनों services एक ही पल up होनी चाहिए; बीच में broker हो तो receiver down रहकर बाद में पकड़ सकता है।</li>
-<li>Sync chain में availability गुणा होकर घटती है (99.9% वाली तीन services का लगभग 99.7%), और latency जुड़ती जाती है।</li>
 <li>Async की कीमत: eventual consistency, duplicates, ordering के सवाल, मुश्किल debugging, और ऐसा UI जो "pending" दिखाए।</li>
-<li>gRPC (HTTP/2, protobuf contracts) internal, कम latency, streaming calls के लिए ठीक है; REST/JSON public और browser वाली APIs के लिए।</li>
+<li>gRPC (HTTP/2, protobuf contracts) internal, कम latency, streaming calls के लिए ठीक है; REST/JSON public और browser वाली APIs के लिए (browsers को gRPC तक पहुँचने के लिए gRPC-Web या JSON transcoding चाहिए)।</li>
 <li>Follow-up: "Order service को Catalog से price चाहिए" — user जिस read का इंतज़ार कर रहा है: sync call (या prices की local कॉपी)। "Order place हुआ, email भेजो और stock update करो" — events, async।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Temporal coupling</b>: sync calls mein dono services ek hi pal up honi chahiye; beech mein broker ho to receiver down rehkar baad mein pakad sakta hai.</li>
-<li>Sync chain mein availability guna hokar ghatti hai (99.9% wali teen services ka lagbhag 99.7%), aur latency judti jaati hai.</li>
 <li>Async ki keemat: eventual consistency, duplicates, ordering ke sawaal, mushkil debugging, aur aisa UI jo "pending" dikhaye.</li>
-<li>gRPC (HTTP/2, protobuf contracts) internal, kam latency, streaming calls ke liye theek hai; REST/JSON public aur browser wali APIs ke liye.</li>
+<li>gRPC (HTTP/2, protobuf contracts) internal, kam latency, streaming calls ke liye theek hai; REST/JSON public aur browser wali APIs ke liye (browsers ko gRPC tak pahunchne ke liye gRPC-Web ya JSON transcoding chahiye).</li>
 <li>Follow-up: "Order service ko Catalog se price chahiye" — user jis read ka intezaar kar raha hai: sync call (ya prices ki local copy). "Order place hua, email bhejo aur stock update karo" — events, async.</li>
 </ul>`
       }
@@ -983,14 +978,14 @@ public class OrderConsumer
         hi: `<ul>
 <li>समस्या: "DB में save करो, फिर broker को publish करो" में shared transaction नहीं है। बीच में crash: data save, event खोया (या उल्टा, अगर पहले publish करो)।</li>
 <li>हल: एक <code>SaveChanges</code> data और एक <code>OutboxMessage</code> row लिखता है। Relay (background service) unsent rows id के order में पढ़ता है, publish करता है, sent mark करता है।</li>
-<li>नतीजा: events <b>कभी खोते नहीं</b>, पर <b>दोहर</b> सकते हैं (publish के बाद, mark से पहले crash) — इसलिए consumers idempotent होने चाहिए (inbox)। Puzzle 2 देखो।</li>
+<li>नतीजा: events <b>कभी खोते नहीं</b>, पर <b>duplicate हो</b> सकते हैं (publish के बाद, mark से पहले crash) — इसलिए consumers idempotent होने चाहिए (inbox)। Puzzle 2 देखो।</li>
 <li>Variants: polling relay, या CDC tool जो table का change log पढ़े। पुराने sent rows साफ़ करो। यह Day 15 के domain events वाले जवाब के "SaveChanges के बाद dispatch" का reliable रूप है।</li>
 <li>Follow-up: "सीधे distributed transaction क्यों नहीं?" — ज़्यादातर brokers और cloud services उसे support नहीं करते, और वह resources lock करती है।</li>
 </ul>`,
         hg: `<ul>
 <li>Samasya: "DB mein save karo, phir broker ko publish karo" mein shared transaction nahi hai. Beech mein crash: data save, event khoya (ya ulta, agar pehle publish karo).</li>
 <li>Hal: ek <code>SaveChanges</code> data aur ek <code>OutboxMessage</code> row likhta hai. Relay (background service) unsent rows id ke order mein padhta hai, publish karta hai, sent mark karta hai.</li>
-<li>Nateeja: events <b>kabhi khoye nahi</b>, par <b>dohar</b> sakte hain (publish ke baad, mark se pehle crash) — isliye consumers idempotent hone chahiye (inbox). Puzzle 2 dekho.</li>
+<li>Nateeja: events <b>kabhi khoye nahi</b>, par <b>duplicate ho</b> sakte hain (publish ke baad, mark se pehle crash) — isliye consumers idempotent hone chahiye (inbox). Puzzle 2 dekho.</li>
 <li>Variants: polling relay, ya CDC tool jo table ka change log padhe. Purane sent rows saaf karo. Yeh Day 15 ke domain events wale jawaab ke "SaveChanges ke baad dispatch" ka reliable roop hai.</li>
 <li>Follow-up: "Seedhe distributed transaction kyun nahi?" — zyadatar brokers aur cloud services use support nahi karte, aur woh resources lock karti hai.</li>
 </ul>`
@@ -1050,15 +1045,15 @@ public class OrderConsumer
 <li>Retry "छोटी हिचकी" का जवाब है: timeout या 503 जो पल भर में चला जाए। Exponential backoff + jitter से रुको, attempts कम रखो, और सिर्फ़ उन calls के लिए जो दोहराने पर safe हैं (Day 13)।</li>
 <li>Circuit breaker "सच में down है" का जवाब है: failure ratio के बाद वह open होकर calls तुरंत reject करता है (fail fast), फिर एक trial जाने देता है (half-open)। Puzzle 5 देखो।</li>
 <li>Order: retry बाहर, breaker अंदर, और per-attempt timeout सबसे अंदर — ताकि हर attempt breaker के लिए गिना जाए। Open circuit को आगे की retries से service पर हथौड़ा चलाने से रोकना चाहिए।</li>
-<li><b>Fallback</b> तभी जोड़ो जब घटा हुआ जवाब ईमानदार हो (cached price), और फिर भी log करो।</li>
-<li>Follow-up: "Retry storm से कैसे बचोगे?" — एक retry layer, backoff + jitter, एक breaker, और <code>Retry-After</code> का सम्मान।</li>
+<li><b>Fallback</b> तभी जोड़ो जब degraded जवाब ईमानदार हो (cached price), और फिर भी log करो।</li>
+<li>Follow-up: "Retry storm से कैसे बचोगे?" — एक retry layer, backoff + jitter, एक breaker, और <code>Retry-After</code> को मानो।</li>
 </ul>`,
         hg: `<ul>
 <li>Retry "chhoti hichki" ka jawaab hai: timeout ya 503 jo pal bhar mein chala jaaye. Exponential backoff + jitter se ruko, attempts kam rakho, aur sirf un calls ke liye jo dohrane par safe hain (Day 13).</li>
 <li>Circuit breaker "sach mein down hai" ka jawaab hai: failure ratio ke baad woh open hokar calls turant reject karta hai (fail fast), phir ek trial jaane deta hai (half-open). Puzzle 5 dekho.</li>
 <li>Order: retry bahar, breaker andar, aur per-attempt timeout sabse andar — taaki har attempt breaker ke liye gina jaaye. Open circuit ko aage ki retries se service par hathauda chalane se rokna chahiye.</li>
-<li><b>Fallback</b> tabhi jodo jab ghata hua jawaab imaandaar ho (cached price), aur phir bhi log karo.</li>
-<li>Follow-up: "Retry storm se kaise bachoge?" — ek retry layer, backoff + jitter, ek breaker, aur <code>Retry-After</code> ka samman.</li>
+<li><b>Fallback</b> tabhi jodo jab degraded jawaab imaandaar ho (cached price), aur phir bhi log karo.</li>
+<li>Follow-up: "Retry storm se kaise bachoge?" — ek retry layer, backoff + jitter, ek breaker, aur <code>Retry-After</code> ko mano.</li>
 </ul>`
       }
     },
@@ -1076,21 +1071,21 @@ public class OrderConsumer
 <li><b>Three pillars</b>: logs (events), metrics (numbers over time), traces (one request's path). Traces connect the other two.</li>
 <li>In .NET: <code>ActivitySource</code> + <code>Activity</code> (System.Diagnostics) for spans, OpenTelemetry SDK + exporters (OTLP) to ship them. ASP.NET Core and HttpClient instrumentation join HTTP hops automatically.</li>
 <li><code>traceparent</code> = <code>00-&lt;trace id&gt;-&lt;span id&gt;-&lt;flags&gt;</code>. Same trace id across the system; each span has its own id and points to its parent. See puzzle 6.</li>
-<li>Messages need manual propagation: store <code>traceparent</code> in the message (the outbox row) and start the consumer's activity with it as parent.</li>
+<li>Messages: many SDKs propagate it in message properties; with a custom outbox relay you store it (the outbox row) and restore it as the consumer's parent yourself.</li>
 <li>Follow-up: "A request is slow — how do you find out why?" — open the trace, find the longest span, check its logs (same trace id) and metrics. Sample traces in production to control cost.</li>
 </ul>`,
         hi: `<ul>
-<li><b>तीन खंभे</b>: logs (घटनाएँ), metrics (समय के साथ आँकड़े), traces (एक request का रास्ता)। Traces बाकी दोनों को जोड़ते हैं।</li>
+<li><b>three pillars</b>: logs (घटनाएँ), metrics (समय के साथ आँकड़े), traces (एक request का रास्ता)। Traces बाकी दोनों को जोड़ते हैं।</li>
 <li>.NET में: spans के लिए <code>ActivitySource</code> + <code>Activity</code> (System.Diagnostics), और उन्हें भेजने के लिए OpenTelemetry SDK + exporters (OTLP)। ASP.NET Core और HttpClient instrumentation HTTP hops अपने आप जोड़ते हैं।</li>
 <li><code>traceparent</code> = <code>00-&lt;trace id&gt;-&lt;span id&gt;-&lt;flags&gt;</code>। पूरे system में एक trace id; हर span का अपना id है और वह अपने parent की तरफ़ इशारा करता है। Puzzle 6 देखो।</li>
-<li>Messages में हाथ से आगे ले जाना पड़ता है: <code>traceparent</code> को message (outbox row) में रखो और consumer की activity उसे parent बनाकर शुरू करो।</li>
+<li>Messages: कई SDKs उसे message properties में आगे ले जाते हैं; custom outbox relay में उसे store (outbox row) और consumer के parent के रूप में restore ख़ुद करना पड़ता है।</li>
 <li>Follow-up: "Request धीमी है — वजह कैसे ढूँढोगे?" — trace खोलो, सबसे लंबा span ढूँढो, उसके logs (वही trace id) और metrics देखो। खर्च काबू में रखने के लिए production में traces sample करो।</li>
 </ul>`,
         hg: `<ul>
-<li><b>Teen khambhe</b>: logs (ghatnayein), metrics (samay ke saath aankde), traces (ek request ka raasta). Traces baaki dono ko jodte hain.</li>
+<li><b>Three pillars</b>: logs (ghatnayein), metrics (samay ke saath aankde), traces (ek request ka raasta). Traces baaki dono ko jodte hain.</li>
 <li>.NET mein: spans ke liye <code>ActivitySource</code> + <code>Activity</code> (System.Diagnostics), aur unhe bhejne ke liye OpenTelemetry SDK + exporters (OTLP). ASP.NET Core aur HttpClient instrumentation HTTP hops apne aap jodte hain.</li>
 <li><code>traceparent</code> = <code>00-&lt;trace id&gt;-&lt;span id&gt;-&lt;flags&gt;</code>. Poore system mein ek trace id; har span ka apna id hai aur woh apne parent ki taraf ishaara karta hai. Puzzle 6 dekho.</li>
-<li>Messages mein haath se aage le jaana padta hai: <code>traceparent</code> ko message (outbox row) mein rakho aur consumer ki activity use parent banakar shuru karo.</li>
+<li>Messages: kai SDKs use message properties mein aage le jaate hain; custom outbox relay mein use store (outbox row) aur consumer ke parent ke roop mein restore khud karna padta hai.</li>
 <li>Follow-up: "Request dheemi hai — wajah kaise dhoondhoge?" — trace kholo, sabse lamba span dhoondho, uske logs (wahi trace id) aur metrics dekho. Kharcha kaabu mein rakhne ke liye production mein traces sample karo.</li>
 </ul>`
       }
@@ -1115,7 +1110,7 @@ public class OrderConsumer
 <li>निशानियाँ: release trains, एक बदलाव पाँच repos में, shared database या shared tables, domain types की "common" library, ऐसी services जो पाँच दूसरी के बिना start नहीं होतीं, technical layers के हिसाब से सीमाएँ।</li>
 <li>तकलीफ़ क्यों: एक service की failure सब में फैलती है (availability गुणा होकर घटती है), और teams आज़ाद नहीं रहतीं — मुख्य फ़ायदा चला गया।</li>
 <li>इलाज: सीमाएँ business capabilities के आसपास दोबारा खींचो (bounded contexts, Day 15), हर service को अपना data दो, बातूनी sync calls की जगह events या local read model लाओ, contracts version करो ताकि services अलग-अलग deploy हो सकें।</li>
-<li>TL angle: नापो — services कितनी बार स्वतंत्र रूप से deploy होती हैं? एक feature कितनी services छूता है? जवाब "सब" हो तो modular monolith में वापस मिला दो; यह एक जायज़ फ़ैसला है।</li>
+<li>TL angle: नापो — services कितनी बार independently deploy होती हैं? एक feature कितनी services छूता है? जवाब "सब" हो तो modular monolith में वापस मिला दो; यह एक जायज़ फ़ैसला है।</li>
 </ul>`,
         hg: `<ul>
 <li>Nishaaniyan: release trains, ek badlaav paanch repos mein, shared database ya shared tables, domain types ki "common" library, aisi services jo paanch doosri ke bina start nahi hotin, technical layers ke hisaab se seemayein.</li>
@@ -1129,10 +1124,10 @@ public class OrderConsumer
       id: "yarp-vs-apim",
       depth: "detailed",
       q: "YARP or Azure API Management — how would you choose?",
-      answer: "YARP is a reverse-proxy library you code and host yourself, so it is flexible and cheap to run. Azure API Management is a managed gateway with policies, subscriptions and a developer portal (Day 20).",
+      answer: "YARP is a reverse-proxy library you code and host yourself, so it is flexible and has no licence cost. Azure API Management is a managed gateway with policies, subscriptions and a developer portal (Day 20).",
       meaning: {
-        hi: "YARP एक reverse-proxy library है जिसे आप खुद code और host करते हैं, इसलिए flexible और चलाने में सस्ती है। Azure API Management एक managed gateway है, जिसमें policies, subscriptions और developer portal हैं (Day 20)।",
-        hg: "YARP ek reverse-proxy library hai jise aap khud code aur host karte hain, isliye flexible aur chalane mein sasti hai. Azure API Management ek managed gateway hai, jismein policies, subscriptions aur developer portal hain (Day 20)."
+        hi: "YARP एक reverse-proxy library है जिसे आप खुद code और host करते हैं, इसलिए flexible है और उसका कोई licence cost नहीं। Azure API Management एक managed gateway है, जिसमें policies, subscriptions और developer portal हैं (Day 20)।",
+        hg: "YARP ek reverse-proxy library hai jise aap khud code aur host karte hain, isliye flexible hai aur uska koi licence cost nahi. Azure API Management ek managed gateway hai, jismein policies, subscriptions aur developer portal hain (Day 20)."
       },
       explain: {
         en: `<ul>
@@ -1144,13 +1139,13 @@ public class OrderConsumer
         hi: `<ul>
 <li><b>YARP</b>: आप मालिक हैं — अपना C# logic, अपनी hosting, अपनी scaling और patching। .NET team के internal gateway या BFF के लिए अच्छा।</li>
 <li><b>Managed gateway</b> (Azure API Management, Day 20 में): चलाने को कम, built-in policies, बाहरी consumers के लिए API products और keys, analytics। आज़ादी कम, और खर्च की line देखनी पड़ती है।</li>
-<li>इस हिसाब से चुनो कि API कौन use करेगा (public partners या internal), team की skills, कितना custom logic चाहिए, और operations की क्षमता। दोनों मिलाए भी जा सकते हैं: किनारे पर managed gateway, उसके पीछे YARP BFFs।</li>
+<li>इस हिसाब से चुनो कि API कौन use करेगा (public partners या internal), team की skills, कितना custom logic चाहिए, और operations की capacity। दोनों मिलाए भी जा सकते हैं: किनारे पर managed gateway, उसके पीछे YARP BFFs।</li>
 <li>जो भी लो, business logic बाहर रखो और एक से ज़्यादा instance चलाओ।</li>
 </ul>`,
         hg: `<ul>
 <li><b>YARP</b>: aap maalik hain — apna C# logic, apni hosting, apni scaling aur patching. .NET team ke internal gateway ya BFF ke liye achha.</li>
 <li><b>Managed gateway</b> (Azure API Management, Day 20 mein): chalane ko kam, built-in policies, bahari consumers ke liye API products aur keys, analytics. Aazaadi kam, aur kharche ki line dekhni padti hai.</li>
-<li>Is hisaab se chuno ki API kaun use karega (public partners ya internal), team ki skills, kitna custom logic chahiye, aur operations ki kshamta. Dono milaye bhi ja sakte hain: kinare par managed gateway, uske peeche YARP BFFs.</li>
+<li>Is hisaab se chuno ki API kaun use karega (public partners ya internal), team ki skills, kitna custom logic chahiye, aur operations ki capacity. Dono milaye bhi ja sakte hain: kinare par managed gateway, uske peeche YARP BFFs.</li>
 <li>Jo bhi lo, business logic bahar rakho aur ek se zyada instance chalao.</li>
 </ul>`
       }
@@ -1167,21 +1162,21 @@ public class OrderConsumer
       explain: {
         en: `<ul>
 <li><b>Queue</b>: point-to-point. Several instances can compete for messages (scale-out), but each message is processed by one.</li>
-<li><b>Topic</b>: publish-subscribe. The publisher does not know who listens; each subscription has its own copy, its own pace and its own dead-letter queue.</li>
+<li><b>Topic</b>: publish-subscribe. The publisher does not know who listens; each subscription has its own copy, its own pace and usually its own dead-letter queue (Service Bus has one per queue and per subscription).</li>
 <li>Naming habit: commands are imperative ("ChargeCard") and sent to one owner; events are past-tense facts ("OrderPlaced") and published to many.</li>
 <li>Adding a new subscriber to a topic does not change the publisher — that is the decoupling gain. The cost is that the publisher's event becomes a contract (see versioning).</li>
 <li>The concepts are the same in most brokers; Azure Service Bus specifics (sessions, filters, locks) are on Day 20.</li>
 </ul>`,
         hi: `<ul>
 <li><b>Queue</b>: point-to-point। कई instances messages के लिए होड़ लगा सकते हैं (scale-out), पर हर message एक ही process करता है।</li>
-<li><b>Topic</b>: publish-subscribe। Publisher को पता नहीं कौन सुन रहा है; हर subscription की अपनी कॉपी, अपनी रफ़्तार और अपनी dead-letter queue होती है।</li>
+<li><b>Topic</b>: publish-subscribe। Publisher को पता नहीं कौन सुन रहा है; हर subscription की अपनी कॉपी, अपनी रफ़्तार और आम तौर पर अपनी dead-letter queue होती है (Service Bus में हर queue और हर subscription की एक होती है)।</li>
 <li>नाम की आदत: commands आदेश के रूप में ("ChargeCard") और एक मालिक को भेजे जाते हैं; events past-tense के facts ("OrderPlaced") और कई को publish होते हैं।</li>
 <li>Topic में नया subscriber जोड़ने से publisher नहीं बदलता — यही decoupling का फ़ायदा है। कीमत यह है कि publisher का event एक contract बन जाता है (versioning देखो)।</li>
 <li>Concepts ज़्यादातर brokers में एक जैसे हैं; Azure Service Bus की specifics (sessions, filters, locks) Day 20 में।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Queue</b>: point-to-point. Kai instances messages ke liye hod laga sakte hain (scale-out), par har message ek hi process karta hai.</li>
-<li><b>Topic</b>: publish-subscribe. Publisher ko pata nahi kaun sun raha hai; har subscription ki apni copy, apni raftaar aur apni dead-letter queue hoti hai.</li>
+<li><b>Topic</b>: publish-subscribe. Publisher ko pata nahi kaun sun raha hai; har subscription ki apni copy, apni raftaar aur aam taur par apni dead-letter queue hoti hai (Service Bus mein har queue aur har subscription ki ek hoti hai).</li>
 <li>Naam ki aadat: commands aadesh ke roop mein ("ChargeCard") aur ek maalik ko bheje jaate hain; events past-tense ke facts ("OrderPlaced") aur kai ko publish hote hain.</li>
 <li>Topic mein naya subscriber jodne se publisher nahi badalta — yahi decoupling ka faayda hai. Keemat yeh hai ki publisher ka event ek contract ban jaata hai (versioning dekho).</li>
 <li>Concepts zyadatar brokers mein ek jaise hain; Azure Service Bus ki specifics (sessions, filters, locks) Day 20 mein.</li>
@@ -1364,7 +1359,7 @@ public class OrderConsumer
         hi: `<ul>
 <li><b>Database per service</b>: सिर्फ़ मालिक अपनी tables पढ़ता या लिखता है। दूसरे उसकी API या events use करते हैं। Shared database tight coupling वापस ले आता है (distributed monolith)।</li>
 <li><b>API composition</b>: gateway/BFF (या composer service) services को parallel में बुलाकर नतीजे मिलाता है। सरल है; पर latency सबसे धीमी call जितनी, और एक service down हो तो screen टूटती है — partial results सँभालो।</li>
-<li><b>Read model</b> (Day 11, CQRS): एक service दूसरों के events subscribe करके अपनी query-आकार की table रखती है। तेज़, स्वतंत्र, पर eventually consistent, और उसे idempotent event handling और rebuild plan चाहिए।</li>
+<li><b>Read model</b> (Day 11, CQRS): एक service दूसरों के events subscribe करके अपनी query-आकार की table रखती है। तेज़, independent, पर eventually consistent, और उसे idempotent event handling और rebuild plan चाहिए।</li>
 <li>Analytics के लिए आम जवाब है events या CDC से भरा <b>reporting store</b> (warehouse)।</li>
 <li>Follow-up: "Customer का नाम बदला — पुराने orders का क्या?" — हर case में तय करो: orders order के वक़्त के नाम का snapshot रखते हैं (एक fact), जबकि profile page मौजूदा नाम दिखाता है।</li>
 </ul>`,
@@ -1422,19 +1417,19 @@ public class OrderConsumer
       explain: {
         en: `<ul>
 <li><b>AppHost</b>: describes the services, databases and brokers of the system in C#, starts them together locally, and shows logs, traces and metrics in a dashboard — helpful because microservices are painful to run and debug on a laptop.</li>
-<li><b>ServiceDefaults</b>: a shared project; each service calls <code>AddServiceDefaults()</code> to get OpenTelemetry, default health check endpoints, service discovery and resilient HttpClient settings in one line.</li>
+<li><b>ServiceDefaults</b>: a shared project; each service calls <code>AddServiceDefaults()</code> to get OpenTelemetry, default health check endpoints (mapped by <code>app.MapDefaultEndpoints()</code>), service discovery and resilient HttpClient settings in one line.</li>
 <li><b>Service discovery</b> in short: services call each other by logical name instead of a hard-coded address; the platform (Aspire locally, Kubernetes or DNS in production) resolves it.</li>
 <li>Aspire is not a replacement for production orchestration such as Kubernetes; it can generate or help deploy manifests. Product naming and features move quickly (the ".NET" prefix was dropped in newer releases), so check the current docs.</li>
 </ul>`,
         hi: `<ul>
-<li><b>AppHost</b>: system की services, databases और brokers को C# में बयान करता है, उन्हें local में साथ start करता है, और dashboard में logs, traces और metrics दिखाता है — काम का है क्योंकि microservices को laptop पर चलाना और debug करना तकलीफ़देह है।</li>
-<li><b>ServiceDefaults</b>: एक shared project; हर service <code>AddServiceDefaults()</code> बुलाकर एक line में OpenTelemetry, default health check endpoints, service discovery और resilient HttpClient settings पाती है।</li>
+<li><b>AppHost</b>: system की services, databases और brokers को C# में describe करता है, उन्हें local में साथ start करता है, और dashboard में logs, traces और metrics दिखाता है — काम का है क्योंकि microservices को laptop पर चलाना और debug करना तकलीफ़देह है।</li>
+<li><b>ServiceDefaults</b>: एक shared project; हर service <code>AddServiceDefaults()</code> बुलाकर एक line में OpenTelemetry, default health check endpoints (mapped by <code>app.MapDefaultEndpoints()</code>), service discovery और resilient HttpClient settings पाती है।</li>
 <li><b>Service discovery</b> छोटे में: services एक-दूसरे को hard-coded address की जगह logical नाम से बुलाती हैं; platform (local में Aspire, production में Kubernetes या DNS) उसे resolve करता है।</li>
 <li>Aspire, Kubernetes जैसे production orchestration की जगह नहीं है; वह manifests बना सकता है या deploy में मदद कर सकता है। Product का नाम और features जल्दी बदलते हैं (नए releases में ".NET" prefix हटा दिया गया), इसलिए मौजूदा docs देखो।</li>
 </ul>`,
         hg: `<ul>
-<li><b>AppHost</b>: system ki services, databases aur brokers ko C# mein bayaan karta hai, unhe local mein saath start karta hai, aur dashboard mein logs, traces aur metrics dikhata hai — kaam ka hai kyunki microservices ko laptop par chalana aur debug karna takleefdeh hai.</li>
-<li><b>ServiceDefaults</b>: ek shared project; har service <code>AddServiceDefaults()</code> bulakar ek line mein OpenTelemetry, default health check endpoints, service discovery aur resilient HttpClient settings paati hai.</li>
+<li><b>AppHost</b>: system ki services, databases aur brokers ko C# mein describe karta hai, unhe local mein saath start karta hai, aur dashboard mein logs, traces aur metrics dikhata hai — kaam ka hai kyunki microservices ko laptop par chalana aur debug karna takleefdeh hai.</li>
+<li><b>ServiceDefaults</b>: ek shared project; har service <code>AddServiceDefaults()</code> bulakar ek line mein OpenTelemetry, default health check endpoints (mapped by <code>app.MapDefaultEndpoints()</code>), service discovery aur resilient HttpClient settings paati hai.</li>
 <li><b>Service discovery</b> chhote mein: services ek-doosre ko hard-coded address ki jagah logical naam se bulati hain; platform (local mein Aspire, production mein Kubernetes ya DNS) use resolve karta hai.</li>
 <li>Aspire, Kubernetes jaise production orchestration ki jagah nahi hai; woh manifests bana sakta hai ya deploy mein madad kar sakta hai. Product ka naam aur features jaldi badalte hain (naye releases mein ".NET" prefix hata diya gaya), isliye maujooda docs dekho.</li>
 </ul>`
@@ -1458,14 +1453,14 @@ public class OrderConsumer
 <li>Pick the first service by pain and border clarity, extract it behind the monolith (strangler), and measure: deploy frequency, lead time, incidents. System-design practice for this is Day 17.</li>
 </ul>`,
         hi: `<ul>
-<li><b>Observability पहले</b>: trace id वाले structured logs, तीनों signals एक जगह, rate/errors/latency के dashboards, लक्षणों (users को तकलीफ़) पर alerts, सिर्फ़ CPU पर नहीं।</li>
+<li><b>Observability पहले</b>: trace id वाले structured logs, तीनों signals एक जगह, rate/errors/latency के dashboards, symptoms (users को तकलीफ़) पर alerts, सिर्फ़ CPU पर नहीं।</li>
 <li><b>Delivery</b>: हर service की एक pipeline, दोहराए जा सकने वाले deploys, rollback, health और readiness endpoints, feature flags ताकि deploy और release अलग रहें।</li>
 <li><b>Team topology</b>: एक service की एक owning team (Conway's law, Day 15); जो team बहुत सारी services की मालिक है वह चेतावनी है। तय करो कि किसकी on-call किस पर है।</li>
 <li><b>Technical rules</b>: database per service, contract/versioning policy, template या Aspire-जैसे defaults से बाँटा गया default resilience setup (timeouts, retries, breaker), हर सीमा के फ़ैसले का ADR।</li>
 <li>पहली service दर्द और साफ़ सीमा से चुनो, monolith के पीछे से निकालो (strangler), और नापो: deploy frequency, lead time, incidents। इसकी system-design practice Day 17 में है।</li>
 </ul>`,
         hg: `<ul>
-<li><b>Observability pehle</b>: trace id wale structured logs, teeno signals ek jagah, rate/errors/latency ke dashboards, lakshanon (users ko takleef) par alerts, sirf CPU par nahi.</li>
+<li><b>Observability pehle</b>: trace id wale structured logs, teeno signals ek jagah, rate/errors/latency ke dashboards, symptoms (users ko takleef) par alerts, sirf CPU par nahi.</li>
 <li><b>Delivery</b>: har service ki ek pipeline, dohraye ja sakne wale deploys, rollback, health aur readiness endpoints, feature flags taaki deploy aur release alag rahein.</li>
 <li><b>Team topology</b>: ek service ki ek owning team (Conway's law, Day 15); jo team bahut saari services ki maalik hai woh chetavni hai. Tay karo ki kiski on-call kis par hai.</li>
 <li><b>Technical rules</b>: database per service, contract/versioning policy, template ya Aspire-jaise defaults se baanta gaya default resilience setup (timeouts, retries, breaker), har seema ke faisle ka ADR.</li>
@@ -1663,18 +1658,21 @@ compensate ReserveStock: release the stock`,
 <li>Compensation runs in <b>reverse order</b> of completion — the <code>Stack</code> gives that for free: SendEmail, then ChargeCard, then ReserveStock.</li>
 <li>The failed step (<code>Ship</code>) is <b>not</b> compensated: it never committed. Only completed steps are undone.</li>
 <li>A compensation is a new business action, not a rollback: an email cannot be unsent, so "apology email" is the semantic undo. Compensations should be <b>idempotent</b> too, because they can be retried.</li>
+<li>The email step is early here only to show a semantic undo; in a real design send it <b>after</b> Ship, once no step that can fail is left.</li>
 </ul>`,
         hi: `<ul>
 <li>Saga में global transaction (2PC) नहीं होती, इसलिए step 4 fail होने पर पहले की local transactions commit हो चुकी हैं। Saga उन्हें <b>compensate</b> करती है।</li>
 <li>Compensation पूरे होने के <b>उल्टे order</b> में चलती है — <code>Stack</code> यह अपने आप दे देता है: SendEmail, फिर ChargeCard, फिर ReserveStock।</li>
 <li>Fail हुआ step (<code>Ship</code>) compensate <b>नहीं</b> होता: वह कभी commit ही नहीं हुआ। सिर्फ़ पूरे हुए steps undo होते हैं।</li>
 <li>Compensation एक नई business action है, rollback नहीं: email वापस नहीं हो सकता, इसलिए "apology email" semantic undo है। Compensations भी <b>idempotent</b> होनी चाहिए, क्योंकि उन्हें retry किया जा सकता है।</li>
+<li>Email step यहाँ सिर्फ़ semantic undo दिखाने के लिए पहले रखा है; असली design में उसे Ship के <b>बाद</b> भेजो, जब fail हो सकने वाला कोई step न बचे।</li>
 </ul>`,
         hg: `<ul>
 <li>Saga mein global transaction (2PC) nahi hoti, isliye step 4 fail hone par pehle ki local transactions commit ho chuki hain. Saga unhe <b>compensate</b> karti hai.</li>
 <li>Compensation poore hone ke <b>ulte order</b> mein chalti hai — <code>Stack</code> yeh apne aap de deta hai: SendEmail, phir ChargeCard, phir ReserveStock.</li>
 <li>Fail hua step (<code>Ship</code>) compensate <b>nahi</b> hota: woh kabhi commit hi nahi hua. Sirf poore hue steps undo hote hain.</li>
 <li>Compensation ek nayi business action hai, rollback nahi: email wapas nahi ho sakta, isliye "apology email" semantic undo hai. Compensations bhi <b>idempotent</b> honi chahiye, kyunki unhe retry kiya ja sakta hai.</li>
+<li>Email step yahan sirf semantic undo dikhane ke liye pehle rakha hai; asli design mein use Ship ke <b>baad</b> bhejo, jab fail ho sakne wala koi step na bache.</li>
 </ul>`
       }
     },
@@ -1820,6 +1818,7 @@ t+90s trial ok: trial succeeded, circuit Closed`,
 <li>Open: calls are rejected <b>immediately</b> without touching the sick service (fail fast). At t+10s the 30 s break has not passed, so the call is rejected even though the service might be fine.</li>
 <li>After the break (t+30s) the next call is a <b>trial</b> (half-open). It succeeded, so the circuit closes and the failure count resets.</li>
 <li>A failed trial opens the circuit again for a fresh 30 s: the trial fails at t+60s, so the call at t+89s is still rejected, and only at t+90s is the next trial allowed.</li>
+<li>This hand-rolled breaker counts failures in a row. Polly v8 instead trips when the <code>FailureRatio</code> inside the <code>SamplingDuration</code> is reached, once <code>MinimumThroughput</code> calls have been seen — not after N consecutive failures.</li>
 <li>Time is controlled with <code>FakeTimeProvider</code> (package <code>Microsoft.Extensions.TimeProvider.Testing</code>) — no sleeping, no flaky tests. In production use the resilience library (Polly v8 / Microsoft.Extensions.Http.Resilience) instead of hand-rolling this.</li>
 </ul>`,
         hi: `<ul>
@@ -1827,6 +1826,7 @@ t+90s trial ok: trial succeeded, circuit Closed`,
 <li>Open: calls बीमार service को छुए बिना <b>तुरंत</b> reject होती हैं (fail fast)। t+10s पर 30 s का break पूरा नहीं हुआ, इसलिए call reject हुई, चाहे service ठीक हो चुकी हो।</li>
 <li>Break के बाद (t+30s) अगली call एक <b>trial</b> (half-open) है। वह सफल रही, इसलिए circuit close हुआ और failure count reset हो गया।</li>
 <li>Trial fail हो तो circuit नए 30 s के लिए फिर open हो जाता है: t+60s पर trial fail हुआ, इसलिए t+89s की call अब भी reject है, और t+90s पर ही अगला trial मिलता है।</li>
+<li>यह खुद लिखा breaker लगातार failures गिनता है। Polly v8 इसकी जगह तब trip होता है जब <code>SamplingDuration</code> के अंदर <code>FailureRatio</code> पहुँच जाए, और <code>MinimumThroughput</code> calls देखी जा चुकी हों — लगातार N failures पर नहीं।</li>
 <li>Time को <code>FakeTimeProvider</code> (package <code>Microsoft.Extensions.TimeProvider.Testing</code>) से control किया है — न sleep, न flaky tests। Production में यह खुद लिखने की जगह resilience library (Polly v8 / Microsoft.Extensions.Http.Resilience) use करो।</li>
 </ul>`,
         hg: `<ul>
@@ -1834,6 +1834,7 @@ t+90s trial ok: trial succeeded, circuit Closed`,
 <li>Open: calls beemar service ko chhue bina <b>turant</b> reject hoti hain (fail fast). t+10s par 30 s ka break poora nahi hua, isliye call reject hui, chahe service theek ho chuki ho.</li>
 <li>Break ke baad (t+30s) agli call ek <b>trial</b> (half-open) hai. Woh safal rahi, isliye circuit close hua aur failure count reset ho gaya.</li>
 <li>Trial fail ho to circuit naye 30 s ke liye phir open ho jaata hai: t+60s par trial fail hua, isliye t+89s ki call ab bhi reject hai, aur t+90s par hi agla trial milta hai.</li>
+<li>Yeh khud likha breaker lagaataar failures ginta hai. Polly v8 iski jagah tab trip hota hai jab <code>SamplingDuration</code> ke andar <code>FailureRatio</code> pahunch jaaye, aur <code>MinimumThroughput</code> calls dekhi ja chuki hon — lagaataar N failures par nahi.</li>
 <li>Time ko <code>FakeTimeProvider</code> (package <code>Microsoft.Extensions.TimeProvider.Testing</code>) se control kiya hai — na sleep, na flaky tests. Production mein yeh khud likhne ki jagah resilience library (Polly v8 / Microsoft.Extensions.Http.Resilience) use karo.</li>
 </ul>`
       }
@@ -1908,44 +1909,44 @@ current after all stop: null`,
   revision: {
     en: [
       "A distributed monolith (shared database, deploy-together services, long sync chains) has microservice costs without independence.",
-      "An API gateway is the single entry point for routing, auth and rate limits; keep business logic out of it.",
-      "YARP is Microsoft's reverse-proxy library for .NET; a BFF is one gateway per client type.",
+      "An API gateway (YARP in .NET) is the single entry point for routing, auth and rate limits; keep business logic out.",
+      "A circuit breaker stops calling a failing service for a while, then lets one trial call through.",
       "Sync calls couple services in time; async messaging decouples them but brings eventual consistency.",
       "A queue gives each message to one consumer; a topic gives a copy to every subscription.",
       "Brokers usually deliver at-least-once, so consumers must be idempotent (inbox with a unique message id).",
       "Outbox: write the event in the same transaction as the data and let a relay publish it later.",
       "Saga: local transactions plus compensating actions in reverse order, instead of a distributed transaction.",
-      "Retry with backoff and jitter on idempotent calls only; a circuit breaker stops calling a failing service.",
-      "The W3C traceparent carries the trace id across HTTP; for messages you pass it in the headers yourself.",
+      "Retry with backoff and jitter, and only on idempotent calls.",
+      "Many messaging SDKs propagate the traceparent; with a custom outbox relay you store and restore it yourself.",
       "Database per service; cross-service reads use API composition or a read model built from events.",
       "Observability, ownership and a contract policy come before the first split."
     ],
     meaning: {
       hi: [
         "Distributed monolith (shared database, साथ में deploy होने वाली services, लंबी sync chains) में microservices का खर्च है पर आज़ादी नहीं।",
-        "API gateway routing, auth और rate limits का एक entry point है; business logic उसके बाहर रखो।",
-        "YARP .NET के लिए Microsoft की reverse-proxy library है; BFF हर client type का एक gateway है।",
+        "API gateway (.NET में YARP) routing, auth और rate limits का एक entry point है; business logic बाहर रखो।",
+        "Circuit breaker fail होती service को कुछ देर call करना रोकता है, फिर एक trial call जाने देता है।",
         "Sync calls services को समय में बाँधती हैं; async messaging उन्हें अलग करता है पर eventual consistency लाता है।",
         "Queue हर message एक consumer को देती है; topic हर subscription को कॉपी देता है।",
         "Brokers आम तौर पर at-least-once deliver करते हैं, इसलिए consumers idempotent होने चाहिए (unique message id वाली inbox)।",
         "Outbox: event को data की उसी transaction में लिखो और relay को बाद में publish करने दो।",
         "Saga: distributed transaction की जगह local transactions और उल्टे order में compensating actions।",
-        "Backoff और jitter के साथ retry सिर्फ़ idempotent calls पर; circuit breaker fail होती service को call करना रोक देता है।",
-        "W3C traceparent HTTP में trace id आगे ले जाता है; messages में उसे headers में ख़ुद पास करना पड़ता है।",
+        "Backoff और jitter के साथ retry, और सिर्फ़ idempotent calls पर।",
+        "कई messaging SDKs traceparent आगे ले जाते हैं; custom outbox relay में उसे ख़ुद store और restore करना पड़ता है।",
         "हर service का अपना database; services के पार reads के लिए API composition या events से बना read model।",
         "Observability, ownership और contract policy पहले split से पहले आती हैं।"
       ],
       hg: [
         "Distributed monolith (shared database, saath mein deploy hone wali services, lambi sync chains) mein microservices ka kharcha hai par aazaadi nahi.",
-        "API gateway routing, auth aur rate limits ka ek entry point hai; business logic uske bahar rakho.",
-        "YARP .NET ke liye Microsoft ki reverse-proxy library hai; BFF har client type ka ek gateway hai.",
+        "API gateway (.NET mein YARP) routing, auth aur rate limits ka ek entry point hai; business logic bahar rakho.",
+        "Circuit breaker fail hoti service ko kuch der call karna rokta hai, phir ek trial call jaane deta hai.",
         "Sync calls services ko samay mein baandhti hain; async messaging unhe alag karta hai par eventual consistency laata hai.",
         "Queue har message ek consumer ko deti hai; topic har subscription ko copy deta hai.",
         "Brokers aam taur par at-least-once deliver karte hain, isliye consumers idempotent hone chahiye (unique message id wali inbox).",
         "Outbox: event ko data ki usi transaction mein likho aur relay ko baad mein publish karne do.",
         "Saga: distributed transaction ki jagah local transactions aur ulte order mein compensating actions.",
-        "Backoff aur jitter ke saath retry sirf idempotent calls par; circuit breaker fail hoti service ko call karna rok deta hai.",
-        "W3C traceparent HTTP mein trace id aage le jaata hai; messages mein use headers mein khud pass karna padta hai.",
+        "Backoff aur jitter ke saath retry, aur sirf idempotent calls par.",
+        "Kai messaging SDKs traceparent aage le jaate hain; custom outbox relay mein use khud store aur restore karna padta hai.",
         "Har service ka apna database; services ke paar reads ke liye API composition ya events se bana read model.",
         "Observability, ownership aur contract policy pehle split se pehle aati hain."
       ]
@@ -1953,16 +1954,19 @@ current after all stop: null`,
   },
   whatsNew: {
     en: `<ul>
+<li><b>Aspire 13</b> (Nov 2025): ".NET Aspire" was renamed to just "Aspire".</li>
 <li><b>Polly v8</b> (library, 2023): <code>ResiliencePipeline</code> and strategy options replace the v7 policy classes. <code>Microsoft.Extensions.Http.Resilience</code> (.NET 8+) builds on it for HttpClient.</li>
 <li><b>TimeProvider</b> (.NET 8) with <code>FakeTimeProvider</code> (package <code>Microsoft.Extensions.TimeProvider.Testing</code>) makes time-based logic such as a circuit breaker testable without sleeping.</li>
 <li><b>W3C trace context</b> is the default <code>Activity</code> id format since .NET 5; OpenTelemetry for .NET builds on <code>ActivitySource</code> and <code>Activity</code>.</li>
 </ul>`,
     hi: `<ul>
+<li><b>Aspire 13</b> (Nov 2025): ".NET Aspire" का नाम बदलकर सिर्फ़ "Aspire" हो गया।</li>
 <li><b>Polly v8</b> (library, 2023): <code>ResiliencePipeline</code> और strategy options ने v7 की policy classes की जगह ली। <code>Microsoft.Extensions.Http.Resilience</code> (.NET 8+) HttpClient के लिए इसी पर बना है।</li>
 <li><b>TimeProvider</b> (.NET 8) और <code>FakeTimeProvider</code> (package <code>Microsoft.Extensions.TimeProvider.Testing</code>) से circuit breaker जैसे time वाले logic को sleep किए बिना test कर सकते हैं।</li>
 <li><b>W3C trace context</b> .NET 5 से <code>Activity</code> का default id format है; OpenTelemetry for .NET <code>ActivitySource</code> और <code>Activity</code> पर बना है।</li>
 </ul>`,
     hg: `<ul>
+<li><b>Aspire 13</b> (Nov 2025): ".NET Aspire" ka naam badalkar sirf "Aspire" ho gaya.</li>
 <li><b>Polly v8</b> (library, 2023): <code>ResiliencePipeline</code> aur strategy options ne v7 ki policy classes ki jagah li. <code>Microsoft.Extensions.Http.Resilience</code> (.NET 8+) HttpClient ke liye isi par bana hai.</li>
 <li><b>TimeProvider</b> (.NET 8) aur <code>FakeTimeProvider</code> (package <code>Microsoft.Extensions.TimeProvider.Testing</code>) se circuit breaker jaise time wale logic ko sleep kiye bina test kar sakte hain.</li>
 <li><b>W3C trace context</b> .NET 5 se <code>Activity</code> ka default id format hai; OpenTelemetry for .NET <code>ActivitySource</code> aur <code>Activity</code> par bana hai.</li>
