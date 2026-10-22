@@ -9,7 +9,7 @@ window.TL_DAY = {
   summary: {
     en: `<p>PostgreSQL is your weakest database skill (3/10), but a Tech Lead is rarely asked for Postgres trivia. The questions are "<b>how is it different from SQL Server, and when would you pick something else?</b>" Today you map what you already know from Day 18 onto Postgres.</p>
 <ul>
-<li><b>MVCC:</b> an UPDATE writes a <b>new row version in the table itself</b>; old versions are dead until <b>VACUUM</b> (autovacuum) cleans them. SQL Server keeps row versions (when RCSI or SNAPSHOT is on) in the tempdb version store.</li>
+<li><b>MVCC:</b> an UPDATE writes a <b>new row version in the table itself</b>; old versions are dead until <b>VACUUM</b> (autovacuum) cleans them. SQL Server keeps row versions (when RCSI or SNAPSHOT is on) in the tempdb version store by default (with Accelerated Database Recovery, 2019+, a persistent version store in the user database).</li>
 <li><b>Isolation:</b> READ COMMITTED is the default and plain reads do not block writers. Repeatable Read in Postgres is a snapshot and does not allow phantoms.</li>
 <li><b>Everyday differences:</b> identity columns and sequences, unquoted names folded to lower case, case-sensitive text comparison (<code>ILIKE</code>, citext), <code>INSERT ... ON CONFLICT</code> (MERGE arrived in Postgres 15), <code>RETURNING</code> (SQL Server: <code>OUTPUT</code>), <code>LIMIT/OFFSET</code>.</li>
 <li><b>JSONB and indexes:</b> binary JSON with <code>-&gt;</code>, <code>-&gt;&gt;</code>, <code>@&gt;</code>; B-tree (default), GIN, GiST, BRIN, partial and expression indexes, <code>INCLUDE</code> (Postgres 11).</li>
@@ -19,7 +19,7 @@ window.TL_DAY = {
 <p>Plan (about 1 hour 15 minutes): Short mode, then Q&amp;A aloud, then the sections (the Postgres snippets are labelled and are not run here, there is no local Postgres), then the six puzzles, which all run on .NET or SQL Server.</p>`,
     hi: `<p>PostgreSQL तुम्हारी सबसे कमज़ोर database skill है (3/10), लेकिन Tech Lead से Postgres की trivia कम ही पूछी जाती है। सवाल होता है "<b>यह SQL Server से अलग कैसे है, और कब कुछ और चुनोगे?</b>" आज तुम Day 18 में जो जानते हो उसे Postgres पर map करोगे।</p>
 <ul>
-<li><b>MVCC:</b> UPDATE <b>table के अंदर ही नया row version</b> लिखता है; पुराने versions dead रहते हैं जब तक <b>VACUUM</b> (autovacuum) उन्हें साफ़ न करे। SQL Server में RCSI या SNAPSHOT on हो तो row versions tempdb के version store में रहते हैं।</li>
+<li><b>MVCC:</b> UPDATE <b>table के अंदर ही नया row version</b> लिखता है; पुराने versions dead रहते हैं जब तक <b>VACUUM</b> (autovacuum) उन्हें साफ़ न करे। SQL Server में RCSI या SNAPSHOT on हो तो row versions by default tempdb के version store में रहते हैं (Accelerated Database Recovery, 2019+, में user database का persistent version store)।</li>
 <li><b>Isolation:</b> READ COMMITTED default है और सादी reads writers को block नहीं करतीं। Postgres का Repeatable Read एक snapshot है और उसमें phantoms नहीं आते।</li>
 <li><b>रोज़ के फ़र्क:</b> identity columns और sequences, बिना quote वाले नाम lower case में बदल जाते हैं, text comparison case-sensitive है (<code>ILIKE</code>, citext), <code>INSERT ... ON CONFLICT</code> (MERGE Postgres 15 में आया), <code>RETURNING</code> (SQL Server में <code>OUTPUT</code>), <code>LIMIT/OFFSET</code>।</li>
 <li><b>JSONB और indexes:</b> binary JSON, operators <code>-&gt;</code>, <code>-&gt;&gt;</code>, <code>@&gt;</code>; B-tree (default), GIN, GiST, BRIN, partial और expression indexes, <code>INCLUDE</code> (Postgres 11)।</li>
@@ -29,7 +29,7 @@ window.TL_DAY = {
 <p>Plan (लगभग 1 घंटा 15 मिनट): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर sections (Postgres वाले snippets पर label है और यहाँ चलते नहीं, क्योंकि local Postgres नहीं है), फिर छह puzzles जो सब .NET या SQL Server पर चलते हैं।</p>`,
     hg: `<p>PostgreSQL tumhari sabse kamzor database skill hai (3/10), lekin Tech Lead se Postgres ki trivia kam hi poochi jaati hai. Sawaal hota hai "<b>yeh SQL Server se alag kaise hai, aur kab kuch aur chunoge?</b>" Aaj tum Day 18 mein jo jaante ho use Postgres par map karoge.</p>
 <ul>
-<li><b>MVCC:</b> UPDATE <b>table ke andar hi naya row version</b> likhta hai; purane versions dead rehte hain jab tak <b>VACUUM</b> (autovacuum) unhe saaf na kare. SQL Server mein RCSI ya SNAPSHOT on ho to row versions tempdb ke version store mein rehte hain.</li>
+<li><b>MVCC:</b> UPDATE <b>table ke andar hi naya row version</b> likhta hai; purane versions dead rehte hain jab tak <b>VACUUM</b> (autovacuum) unhe saaf na kare. SQL Server mein RCSI ya SNAPSHOT on ho to row versions by default tempdb ke version store mein rehte hain (Accelerated Database Recovery, 2019+, mein user database ka persistent version store).</li>
 <li><b>Isolation:</b> READ COMMITTED default hai aur saadi reads writers ko block nahi karti. Postgres ka Repeatable Read ek snapshot hai aur usme phantoms nahi aate.</li>
 <li><b>Roz ke farq:</b> identity columns aur sequences, bina quote wale naam lower case mein badal jaate hain, text comparison case-sensitive hai (<code>ILIKE</code>, citext), <code>INSERT ... ON CONFLICT</code> (MERGE Postgres 15 mein aaya), <code>RETURNING</code> (SQL Server mein <code>OUTPUT</code>), <code>LIMIT/OFFSET</code>.</li>
 <li><b>JSONB aur indexes:</b> binary JSON, operators <code>-&gt;</code>, <code>-&gt;&gt;</code>, <code>@&gt;</code>; B-tree (default), GIN, GiST, BRIN, partial aur expression indexes, <code>INCLUDE</code> (Postgres 11).</li>
@@ -52,26 +52,26 @@ window.TL_DAY = {
 <ul>
 <li><b>Row versions live in the table:</b> an <code>UPDATE</code> inserts a new version (a "tuple") and marks the old one as ended (<code>xmax</code>). Each reader uses a <b>snapshot</b> and sees the versions that were committed when it began. Dead versions stay until <b>VACUUM</b> removes them; <b>autovacuum</b> runs in the background by default.</li>
 <li><b>Why it matters:</b> heavy updates create <b>bloat</b> (dead space); a long-running or "idle in transaction" session holds back cleanup; and index-only scans depend on the <b>visibility map</b>, which VACUUM maintains.</li>
-<li><b>SQL Server contrast (Day 18):</b> with RCSI or SNAPSHOT the old versions go to the <b>version store in tempdb</b>, so the table itself stays tidy. Without them, READ COMMITTED uses locks and readers can block writers.</li>
-<li><b>Isolation in Postgres:</b> READ COMMITTED is the default, each statement sees data committed before it began, and plain SELECTs do not block writers (and writers do not block them). Repeatable Read is a transaction-wide snapshot and, in Postgres, does not allow phantoms; Serializable adds conflict detection and can fail with a serialization error you must retry.</li>
+<li><b>SQL Server contrast (Day 18):</b> with RCSI or SNAPSHOT the old versions go to the <b>version store</b> (tempdb by default; with Accelerated Database Recovery, 2019+, a persistent version store in the user database), so the table itself stays tidy. Without them, READ COMMITTED uses locks and readers can block writers.</li>
+<li><b>Isolation in Postgres:</b> READ COMMITTED is the default, each statement sees data committed before it began, and plain SELECTs do not block writers (and writers do not block them). Repeatable Read is a transaction-wide snapshot and, in Postgres, does not allow phantoms; Serializable (SSI, serializable snapshot isolation) adds conflict detection and can fail with a serialization error you must retry. The closest SQL Server match for Postgres Repeatable Read is SNAPSHOT isolation.</li>
 <li><b>Layout contrast:</b> Postgres tables are heaps; there is no clustered index (the <code>CLUSTER</code> command reorders once, it is not maintained).</li>
 </ul>
 <p><b>When to use / when not:</b> know this to explain bloat, "table is huge but has few rows", and slow queries caused by one forgotten open transaction. Do not tune autovacuum blindly: first find the long transaction or the table with the highest update rate.</p>`,
         hi: `<p><b>Picture — stamp लगे notes वाली सरकारी file:</b> कोई line मिटाता नहीं। Correction एक नया note है जिस पर तारीख़ का stamp है, और पुराना note तब तक रहता है जब तक record room पुराने pages साफ़ न करे। यही Postgres MVCC है; record room का clerk <b>VACUUM</b> है।</p>
 <ul>
 <li><b>Row versions table में ही रहते हैं:</b> <code>UPDATE</code> नया version (एक "tuple") insert करता है और पुराने को ended mark करता है (<code>xmax</code>)। हर reader एक <b>snapshot</b> use करता है और वही versions देखता है जो उसके शुरू होने पर committed थे। Dead versions तब तक रहते हैं जब तक <b>VACUUM</b> उन्हें हटा न दे; <b>autovacuum</b> default से background में चलता है।</li>
-<li><b>क्यों ज़रूरी है:</b> heavy updates से <b>bloat</b> (dead space) बनता है; लंबा चलता या "idle in transaction" session cleanup रोक देता है; और index-only scans <b>visibility map</b> पर निर्भर हैं, जिसे VACUUM maintain करता है।</li>
-<li><b>SQL Server से फ़र्क (Day 18):</b> RCSI या SNAPSHOT में पुराने versions <b>tempdb के version store</b> में जाते हैं, इसलिए table खुद साफ़ रहती है। इनके बिना READ COMMITTED locks use करता है और readers writers को block कर सकते हैं।</li>
-<li><b>Postgres में isolation:</b> READ COMMITTED default है, हर statement वही data देखता है जो उसके शुरू होने से पहले committed था, और सादे SELECT writers को block नहीं करते (और writers उन्हें नहीं)। Repeatable Read पूरे transaction का snapshot है और Postgres में phantoms नहीं आने देता; Serializable में conflict detection जुड़ता है और serialization error आ सकता है जिसे retry करना पड़ता है।</li>
+<li><b>क्यों ज़रूरी है:</b> heavy updates से <b>bloat</b> (dead space) बनता है; लंबा चलता या "idle in transaction" session cleanup रोक देता है; और index-only scans <b>visibility map</b> पर depend करते हैं, जिसे VACUUM maintain करता है।</li>
+<li><b>SQL Server से फ़र्क (Day 18):</b> RCSI या SNAPSHOT में पुराने versions <b>version store</b> में जाते हैं (default में tempdb; Accelerated Database Recovery, 2019+, में user database का persistent version store), इसलिए table खुद साफ़ रहती है। इनके बिना READ COMMITTED locks use करता है और readers writers को block कर सकते हैं।</li>
+<li><b>Postgres में isolation:</b> READ COMMITTED default है, हर statement वही data देखता है जो उसके शुरू होने से पहले committed था, और सादे SELECT writers को block नहीं करते (और writers उन्हें नहीं)। Repeatable Read पूरे transaction का snapshot है और Postgres में phantoms नहीं आने देता; Serializable (SSI, serializable snapshot isolation) में conflict detection जुड़ता है और serialization error आ सकता है जिसे retry करना पड़ता है। Postgres Repeatable Read का सबसे करीबी SQL Server मेल SNAPSHOT isolation है।</li>
 <li><b>Layout का फ़र्क:</b> Postgres tables heap हैं; clustered index नहीं है (<code>CLUSTER</code> command एक बार reorder करता है, maintain नहीं होता)।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> bloat, "table बहुत बड़ी है पर rows कम हैं", और एक भूले हुए open transaction से आई slow queries समझाने के लिए यह जानो। Autovacuum को आँख बंद करके tune मत करो: पहले long transaction या सबसे ज़्यादा update वाली table ढूँढो।</p>`,
         hg: `<p><b>Picture — stamp lage notes wali sarkari file:</b> koi line mitata nahi. Correction ek naya note hai jis par taareekh ka stamp hai, aur purana note tab tak rehta hai jab tak record room purane pages saaf na kare. Yahi Postgres MVCC hai; record room ka clerk <b>VACUUM</b> hai.</p>
 <ul>
 <li><b>Row versions table mein hi rehte hain:</b> <code>UPDATE</code> naya version (ek "tuple") insert karta hai aur purane ko ended mark karta hai (<code>xmax</code>). Har reader ek <b>snapshot</b> use karta hai aur wahi versions dekhta hai jo uske shuru hone par committed the. Dead versions tab tak rehte hain jab tak <b>VACUUM</b> unhe hata na de; <b>autovacuum</b> default se background mein chalta hai.</li>
-<li><b>Kyon zaroori hai:</b> heavy updates se <b>bloat</b> (dead space) banta hai; lamba chalta ya "idle in transaction" session cleanup rok deta hai; aur index-only scans <b>visibility map</b> par nirbhar hain, jise VACUUM maintain karta hai.</li>
-<li><b>SQL Server se farq (Day 18):</b> RCSI ya SNAPSHOT mein purane versions <b>tempdb ke version store</b> mein jaate hain, isliye table khud saaf rehti hai. Inke bina READ COMMITTED locks use karta hai aur readers writers ko block kar sakte hain.</li>
-<li><b>Postgres mein isolation:</b> READ COMMITTED default hai, har statement wahi data dekhta hai jo uske shuru hone se pehle committed tha, aur saade SELECT writers ko block nahi karte (aur writers unhe nahi). Repeatable Read poore transaction ka snapshot hai aur Postgres mein phantoms nahi aane deta; Serializable mein conflict detection judta hai aur serialization error aa sakta hai jise retry karna padta hai.</li>
+<li><b>Kyon zaroori hai:</b> heavy updates se <b>bloat</b> (dead space) banta hai; lamba chalta ya "idle in transaction" session cleanup rok deta hai; aur index-only scans <b>visibility map</b> par depend karte hain, jise VACUUM maintain karta hai.</li>
+<li><b>SQL Server se farq (Day 18):</b> RCSI ya SNAPSHOT mein purane versions <b>version store</b> mein jaate hain (default mein tempdb; Accelerated Database Recovery, 2019+, mein user database ka persistent version store), isliye table khud saaf rehti hai. Inke bina READ COMMITTED locks use karta hai aur readers writers ko block kar sakte hain.</li>
+<li><b>Postgres mein isolation:</b> READ COMMITTED default hai, har statement wahi data dekhta hai jo uske shuru hone se pehle committed tha, aur saade SELECT writers ko block nahi karte (aur writers unhe nahi). Repeatable Read poore transaction ka snapshot hai aur Postgres mein phantoms nahi aane deta; Serializable (SSI, serializable snapshot isolation) mein conflict detection judta hai aur serialization error aa sakta hai jise retry karna padta hai. Postgres Repeatable Read ka sabse kareebi SQL Server mel SNAPSHOT isolation hai.</li>
 <li><b>Layout ka farq:</b> Postgres tables heap hain; clustered index nahi hai (<code>CLUSTER</code> command ek baar reorder karta hai, maintain nahi hota).</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> bloat, "table bahut badi hai par rows kam hain", aur ek bhoole hue open transaction se aayi slow queries samjhane ke liye yeh jaano. Autovacuum ko aankh band karke tune mat karo: pehle long transaction ya sabse zyada update wali table dhoondho.</p>`
@@ -264,7 +264,7 @@ SELECT COUNT(*) AS ci_match FROM dbo.Product WHERE Name = N'PEN';`
         en: `<p><b>Analogy — a school bag with a main compartment and a pencil pouch:</b> fixed columns are the main compartment (always the same items, easy to find). A JSONB column is the pouch for "extra stuff that differs per student". It is handy, but you still need a good way to find things inside it.</p>
 <ul>
 <li><b>json vs jsonb:</b> <code>json</code> stores the exact text; <code>jsonb</code> stores a parsed binary form (key order not kept, duplicate keys collapsed) and can be indexed. Use <code>jsonb</code> unless you must keep the original text.</li>
-<li><b>Operators:</b> <code>-&gt;</code> gives jsonb, <code>-&gt;&gt;</code> gives text, <code>@&gt;</code> means "contains" (puzzle 4 mirrors it in C#). <b>GIN</b> indexes serve <code>@&gt;</code>; <code>jsonb_path_ops</code> is smaller and handles containment only.</li>
+<li><b>Operators:</b> <code>-&gt;</code> gives jsonb, <code>-&gt;&gt;</code> gives text, <code>@&gt;</code> means "contains" (puzzle 4 mirrors it in C#). <b>GIN</b> indexes serve <code>@&gt;</code>; <code>jsonb_path_ops</code> is smaller and supports <code>@&gt;</code>, <code>@?</code> and <code>@@</code>, but not the key-exists operators.</li>
 <li><b>Other index tools:</b> an <b>expression index</b> on <code>lower(email)</code> (queries must use the same expression), a <b>partial index</b> (<code>WHERE status = 1</code>) that is small and cheap, <code>INCLUDE</code> for covering (Postgres 11), and <b>BRIN</b> for huge append-only tables whose values follow insert order (time series).</li>
 <li><b>Postgres-specific catch:</b> an index-only scan still checks the <b>visibility map</b>, so a table that autovacuum has not visited can fall back to reading the table. GIN indexes do not support index-only scans.</li>
 </ul>
@@ -272,7 +272,7 @@ SELECT COUNT(*) AS ci_match FROM dbo.Product WHERE Name = N'PEN';`
         hi: `<p><b>Analogy — school bag जिसमें main compartment और pencil pouch है:</b> fixed columns main compartment हैं (हमेशा वही चीज़ें, ढूँढना आसान)। JSONB column वह pouch है जिसमें "हर student के हिसाब से बदलता extra सामान" रहता है। यह काम की है, पर अंदर की चीज़ ढूँढने का अच्छा तरीका फिर भी चाहिए।</p>
 <ul>
 <li><b>json बनाम jsonb:</b> <code>json</code> exact text रखता है; <code>jsonb</code> parsed binary form रखता है (key order नहीं रहता, duplicate keys एक हो जाती हैं) और उस पर index बन सकता है। जब तक original text रखना ज़रूरी न हो, <code>jsonb</code> use करो।</li>
-<li><b>Operators:</b> <code>-&gt;</code> jsonb देता है, <code>-&gt;&gt;</code> text देता है, <code>@&gt;</code> का मतलब "contains" (puzzle 4 इसे C# में दोहराता है)। <b>GIN</b> indexes <code>@&gt;</code> को serve करते हैं; <code>jsonb_path_ops</code> छोटा है और सिर्फ़ containment संभालता है।</li>
+<li><b>Operators:</b> <code>-&gt;</code> jsonb देता है, <code>-&gt;&gt;</code> text देता है, <code>@&gt;</code> का मतलब "contains" (puzzle 4 इसे C# में दोहराता है)। <b>GIN</b> indexes <code>@&gt;</code> को serve करते हैं; <code>jsonb_path_ops</code> छोटा है और <code>@&gt;</code>, <code>@?</code>, <code>@@</code> support करता है, पर key-exists operators नहीं।</li>
 <li><b>बाक़ी index tools:</b> <code>lower(email)</code> पर <b>expression index</b> (queries में वही expression लिखना पड़ता है), <b>partial index</b> (<code>WHERE status = 1</code>) जो छोटा और सस्ता है, covering के लिए <code>INCLUDE</code> (Postgres 11), और <b>BRIN</b> उन बहुत बड़ी append-only tables के लिए जिनके values insert order में चलते हैं (time series)।</li>
 <li><b>Postgres की ख़ास बात:</b> index-only scan फिर भी <b>visibility map</b> देखता है, इसलिए जिस table पर autovacuum नहीं पहुँचा वह table पढ़ने पर लौट सकता है। GIN indexes index-only scans support नहीं करते।</li>
 </ul>
@@ -280,7 +280,7 @@ SELECT COUNT(*) AS ci_match FROM dbo.Product WHERE Name = N'PEN';`
         hg: `<p><b>Analogy — school bag jisme main compartment aur pencil pouch hai:</b> fixed columns main compartment hain (hamesha wahi cheezein, dhoondhna aasaan). JSONB column woh pouch hai jisme "har student ke hisaab se badalta extra saamaan" rehta hai. Yeh kaam ki hai, par andar ki cheez dhoondhne ka achha tareeka phir bhi chahiye.</p>
 <ul>
 <li><b>json vs jsonb:</b> <code>json</code> exact text rakhta hai; <code>jsonb</code> parsed binary form rakhta hai (key order nahi rehta, duplicate keys ek ho jaati hain) aur us par index ban sakta hai. Jab tak original text rakhna zaroori na ho, <code>jsonb</code> use karo.</li>
-<li><b>Operators:</b> <code>-&gt;</code> jsonb deta hai, <code>-&gt;&gt;</code> text deta hai, <code>@&gt;</code> ka matlab "contains" (puzzle 4 ise C# mein dohraata hai). <b>GIN</b> indexes <code>@&gt;</code> ko serve karte hain; <code>jsonb_path_ops</code> chhota hai aur sirf containment sambhalta hai.</li>
+<li><b>Operators:</b> <code>-&gt;</code> jsonb deta hai, <code>-&gt;&gt;</code> text deta hai, <code>@&gt;</code> ka matlab "contains" (puzzle 4 ise C# mein dohraata hai). <b>GIN</b> indexes <code>@&gt;</code> ko serve karte hain; <code>jsonb_path_ops</code> chhota hai aur <code>@&gt;</code>, <code>@?</code>, <code>@@</code> support karta hai, par key-exists operators nahi.</li>
 <li><b>Baaki index tools:</b> <code>lower(email)</code> par <b>expression index</b> (queries mein wahi expression likhna padta hai), <b>partial index</b> (<code>WHERE status = 1</code>) jo chhota aur sasta hai, covering ke liye <code>INCLUDE</code> (Postgres 11), aur <b>BRIN</b> un bahut badi append-only tables ke liye jinke values insert order mein chalte hain (time series).</li>
 <li><b>Postgres ki khaas baat:</b> index-only scan phir bhi <b>visibility map</b> dekhta hai, isliye jis table par autovacuum nahi pahuncha woh table padhne par laut sakta hai. GIN indexes index-only scans support nahi karte.</li>
 </ul>
@@ -307,7 +307,7 @@ SELECT customer_id, attrs ->> 'city' AS city
 FROM customer
 WHERE attrs @> '{"tags": ["vip"]}';
 
-CREATE INDEX ix_customer_attrs ON customer USING gin (attrs jsonb_path_ops);   -- serves @> only, smaller
+CREATE INDEX ix_customer_attrs ON customer USING gin (attrs jsonb_path_ops);   -- smaller; supports @>, @? and @@, not the ? key-exists operators
 CREATE UNIQUE INDEX ux_customer_email ON customer (lower(email));               -- expression: query by lower(email)
 CREATE INDEX ix_customer_active ON customer (created_at) WHERE status = 1;      -- partial: only active rows
 CREATE INDEX ix_customer_status ON customer (status) INCLUDE (email);           -- covering (Postgres 11+)
@@ -334,29 +334,29 @@ CREATE INDEX ix_event_created_brin ON event USING brin (created_at);`
 <ul>
 <li><b>Setup:</b> package <code>Npgsql.EntityFrameworkCore.PostgreSQL</code>, then <code>UseNpgsql(connectionString)</code> instead of <code>UseSqlServer</code>. Keep the connection string in configuration or a secret store, not in the code.</li>
 <li><b>Names:</b> EF's default PascalCase table and column names are created quoted, so raw SQL needs <code>"Customers"</code>. The community package <code>EFCore.NamingConventions</code> adds <code>UseSnakeCaseNamingConvention()</code> to get <code>customers</code> and <code>created_utc</code>.</li>
-<li><b>JSON:</b> <code>ToJson()</code> on an owned type (EF Core 7+) maps it to a <code>jsonb</code> column in the Npgsql provider; check the provider docs for your version before relying on query translation.</li>
-<li><b>Time:</b> <code>timestamptz</code> accepts only UTC <code>DateTime</code> values in Npgsql 6 and later; write <code>DateTime.UtcNow</code> or use <code>DateTimeOffset</code>.</li>
+<li><b>JSON:</b> JSON mapping needs Npgsql provider 8.0 or later: <code>ToJson()</code> on an owned type stores it as <code>jsonb</code> (the snippet), and on EF Core 10 complex types with <code>ComplexProperty(...).ToJson()</code> are the recommended shape; the old <code>[Column(TypeName="jsonb")]</code> POCO mapping is deprecated. Check the Npgsql JSON docs for your version.</li>
+<li><b>Time:</b> <code>timestamptz</code> accepts only UTC <code>DateTime</code> values in Npgsql 6 and later; write <code>DateTime.UtcNow</code>, or a <code>DateTimeOffset</code> with offset 0 (<code>.ToUniversalTime()</code>). <code>Npgsql.EnableLegacyTimestampBehavior</code> exists only as a migration crutch.</li>
 <li><b>Pooling:</b> Npgsql pools connections by default (default maximum 100 per connection string); EF Core's <code>DbContext</code> pooling is a separate layer on top.</li>
 </ul>
-<p><b>When to use:</b> EF Core for CRUD and migrations; raw SQL (Dapper or <code>FromSql</code>) for the Postgres-only features such as <code>ON CONFLICT</code> or JSONB operators you cannot express in LINQ. <b>When not:</b> do not assume SQL Server behaviour (case-insensitive compare, <code>DateTime.Now</code>) carries over, and do not run a DbContext pool and many app instances against a small <code>max_connections</code> without a pooler.</p>`,
+<p><b>When to use:</b> EF Core for CRUD and migrations; raw SQL (<code>ExecuteSqlAsync</code> or Dapper) for the Postgres-only features such as <code>ON CONFLICT</code> or JSONB operators you cannot express in LINQ. <b>When not:</b> do not assume SQL Server behaviour (case-insensitive compare, <code>DateTime.Now</code>) carries over, and do not multiply Npgsql <code>Max Pool Size</code> by many app instances against a small <code>max_connections</code> without a pooler.</p>`,
         hi: `<p><b>Analogy — travel adapter:</b> तुम्हारा laptop (EF Core, Day 5 और 6) वही रहता है; adapter (Npgsql provider) उसे Postgres के socket में fit कराता है। जो तुम जानते हो वह ज़्यादातर चलता है; plug की shape (names, time zones, JSON) बदलती है।</p>
 <ul>
 <li><b>Setup:</b> package <code>Npgsql.EntityFrameworkCore.PostgreSQL</code>, फिर <code>UseSqlServer</code> की जगह <code>UseNpgsql(connectionString)</code>। Connection string configuration या secret store में रखो, code में नहीं।</li>
 <li><b>Names:</b> EF के default PascalCase table और column names quoted बनते हैं, इसलिए raw SQL में <code>"Customers"</code> लिखना पड़ता है। Community package <code>EFCore.NamingConventions</code> <code>UseSnakeCaseNamingConvention()</code> देता है ताकि <code>customers</code> और <code>created_utc</code> मिलें।</li>
-<li><b>JSON:</b> owned type पर <code>ToJson()</code> (EF Core 7+) Npgsql provider में <code>jsonb</code> column पर map होता है; query translation पर भरोसा करने से पहले अपने version का provider doc देखो।</li>
-<li><b>Time:</b> Npgsql 6 और उसके बाद <code>timestamptz</code> सिर्फ़ UTC <code>DateTime</code> values लेता है; <code>DateTime.UtcNow</code> लिखो या <code>DateTimeOffset</code> use करो।</li>
+<li><b>JSON:</b> JSON mapping के लिए Npgsql provider 8.0 या उसके बाद चाहिए: owned type पर <code>ToJson()</code> उसे <code>jsonb</code> में रखता है (snippet), और EF Core 10 में <code>ComplexProperty(...).ToJson()</code> वाले complex types recommended हैं; पुराना <code>[Column(TypeName="jsonb")]</code> POCO mapping deprecated है। अपने version का Npgsql JSON doc देखो।</li>
+<li><b>Time:</b> Npgsql 6 और उसके बाद <code>timestamptz</code> सिर्फ़ UTC <code>DateTime</code> values लेता है; <code>DateTime.UtcNow</code> लिखो, या offset 0 वाला <code>DateTimeOffset</code> (<code>.ToUniversalTime()</code>)। <code>Npgsql.EnableLegacyTimestampBehavior</code> सिर्फ़ migration में कुछ समय के सहारे के लिए है।</li>
 <li><b>Pooling:</b> Npgsql default से connections pool करता है (हर connection string पर default maximum 100); EF Core का <code>DbContext</code> pooling उसके ऊपर अलग layer है।</li>
 </ul>
-<p><b>कब use करें:</b> CRUD और migrations के लिए EF Core; Postgres-only features (जैसे <code>ON CONFLICT</code> या JSONB operators जो LINQ में नहीं लिखे जा सकते) के लिए raw SQL (Dapper या <code>FromSql</code>)। <b>कब नहीं:</b> यह मत मानो कि SQL Server का behaviour (case-insensitive compare, <code>DateTime.Now</code>) साथ चलेगा, और छोटे <code>max_connections</code> पर बिना pooler के DbContext pool और बहुत सारे app instances मत चलाओ।</p>`,
+<p><b>कब use करें:</b> CRUD और migrations के लिए EF Core; Postgres-only features (जैसे <code>ON CONFLICT</code> या JSONB operators जो LINQ में नहीं लिखे जा सकते) के लिए raw SQL (<code>ExecuteSqlAsync</code> या Dapper)। <b>कब नहीं:</b> यह मत मानो कि SQL Server का behaviour (case-insensitive compare, <code>DateTime.Now</code>) साथ चलेगा, और छोटे <code>max_connections</code> पर बिना pooler के Npgsql <code>Max Pool Size</code> को बहुत सारे app instances से गुणा मत होने दो।</p>`,
         hg: `<p><b>Analogy — travel adapter:</b> tumhara laptop (EF Core, Day 5 aur 6) wahi rehta hai; adapter (Npgsql provider) use Postgres ke socket mein fit karata hai. Jo tum jaante ho woh zyadatar chalta hai; plug ki shape (names, time zones, JSON) badalti hai.</p>
 <ul>
 <li><b>Setup:</b> package <code>Npgsql.EntityFrameworkCore.PostgreSQL</code>, phir <code>UseSqlServer</code> ki jagah <code>UseNpgsql(connectionString)</code>. Connection string configuration ya secret store mein rakho, code mein nahi.</li>
 <li><b>Names:</b> EF ke default PascalCase table aur column names quoted bante hain, isliye raw SQL mein <code>"Customers"</code> likhna padta hai. Community package <code>EFCore.NamingConventions</code> <code>UseSnakeCaseNamingConvention()</code> deta hai taaki <code>customers</code> aur <code>created_utc</code> milein.</li>
-<li><b>JSON:</b> owned type par <code>ToJson()</code> (EF Core 7+) Npgsql provider mein <code>jsonb</code> column par map hota hai; query translation par bharosa karne se pehle apne version ka provider doc dekho.</li>
-<li><b>Time:</b> Npgsql 6 aur uske baad <code>timestamptz</code> sirf UTC <code>DateTime</code> values leta hai; <code>DateTime.UtcNow</code> likho ya <code>DateTimeOffset</code> use karo.</li>
+<li><b>JSON:</b> JSON mapping ke liye Npgsql provider 8.0 ya uske baad chahiye: owned type par <code>ToJson()</code> use <code>jsonb</code> mein rakhta hai (snippet), aur EF Core 10 mein <code>ComplexProperty(...).ToJson()</code> wale complex types recommended hain; purana <code>[Column(TypeName="jsonb")]</code> POCO mapping deprecated hai. Apne version ka Npgsql JSON doc dekho.</li>
+<li><b>Time:</b> Npgsql 6 aur uske baad <code>timestamptz</code> sirf UTC <code>DateTime</code> values leta hai; <code>DateTime.UtcNow</code> likho, ya offset 0 wala <code>DateTimeOffset</code> (<code>.ToUniversalTime()</code>). <code>Npgsql.EnableLegacyTimestampBehavior</code> sirf migration mein kuch samay ke sahare ke liye hai.</li>
 <li><b>Pooling:</b> Npgsql default se connections pool karta hai (har connection string par default maximum 100); EF Core ka <code>DbContext</code> pooling uske upar alag layer hai.</li>
 </ul>
-<p><b>Kab use karein:</b> CRUD aur migrations ke liye EF Core; Postgres-only features (jaise <code>ON CONFLICT</code> ya JSONB operators jo LINQ mein nahi likhe ja sakte) ke liye raw SQL (Dapper ya <code>FromSql</code>). <b>Kab nahi:</b> yeh mat maano ki SQL Server ka behaviour (case-insensitive compare, <code>DateTime.Now</code>) saath chalega, aur chhote <code>max_connections</code> par bina pooler ke DbContext pool aur bahut saare app instances mat chalao.</p>`
+<p><b>Kab use karein:</b> CRUD aur migrations ke liye EF Core; Postgres-only features (jaise <code>ON CONFLICT</code> ya JSONB operators jo LINQ mein nahi likhe ja sakte) ke liye raw SQL (<code>ExecuteSqlAsync</code> ya Dapper). <b>Kab nahi:</b> yeh mat maano ki SQL Server ka behaviour (case-insensitive compare, <code>DateTime.Now</code>) saath chalega, aur chhote <code>max_connections</code> par bina pooler ke Npgsql <code>Max Pool Size</code> ko bahut saare app instances se guna mat hone do.</p>`
       },
       code: [{
         caption: {
@@ -385,7 +385,7 @@ public class ShopContext(DbContextOptions<ShopContext> options) : DbContext(opti
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.Entity<Customer>(e =>
         {
-            e.HasIndex(c => c.Email).IsUnique();
+            e.HasIndex(c => c.Email).IsUnique();   // case-sensitive in Postgres: also add a unique index on lower(email) in a migration (raw SQL)
             e.OwnsOne(c => c.Profile, p => p.ToJson());   // stored as a jsonb column
         });
 
@@ -431,7 +431,7 @@ public class CustomerProfile
 <li>Every item has an <code>id</code> (unique within its logical partition) and a <b>partition key</b> value. Queries that include the key go to one partition; queries without it fan out across partitions and cost more <b>RU</b>.</li>
 <li>A good key has <b>many distinct values</b>, spreads writes evenly and appears in your most common queries. A single huge tenant can ruin <code>tenantId</code> as a key (puzzle 6), so a <b>synthetic key</b> such as <code>tenantId-bucket</code> spreads that tenant over several partitions.</li>
 <li>The trade-off: reads for one tenant now touch several partitions. Choose the bucket count from your write rate, and keep the key in the document so the SDK can use it.</li>
-<li>Consistency is a separate choice (Session is the commonly used level): the five levels trade latency and availability for freshness. Check current limits and pricing in the Azure docs, they change.</li>
+<li>Consistency is a separate choice (Session is the account default and the most widely used level): the five levels trade latency and availability for freshness. Check current limits and pricing in the Azure docs, they change.</li>
 </ul>
 <p><b>When to use:</b> Cosmos DB for key-based access at large or global scale with predictable access patterns. <b>When not:</b> for ad-hoc reporting, many joins, or a small single-region app; a relational database is simpler and cheaper to reason about.</p>`,
         hi: `<p><b>Analogy — कई counters वाला bank:</b> customers को एक rule (partition key) से counter पर भेजा जाता है। अगर rule "branch के नाम से" है और एक branch की भारी भीड़ है, तो एक counter जाम है और बाक़ी खाली बैठे हैं। Cosmos DB में यही दिक्कत होती है, जिसे <b>hot partition</b> कहते हैं।</p>
@@ -439,7 +439,7 @@ public class CustomerProfile
 <li>हर item का एक <code>id</code> होता है (अपने logical partition में unique) और एक <b>partition key</b> value। जिन queries में key होती है वे एक partition पर जाती हैं; बिना key वाली queries सब partitions में फैलती हैं और ज़्यादा <b>RU</b> खर्च करती हैं।</li>
 <li>अच्छी key में <b>बहुत सारी अलग values</b> होती हैं, writes बराबर फैलाती है और तुम्हारी सबसे common queries में आती है। एक बहुत बड़ा tenant <code>tenantId</code> को key के रूप में बिगाड़ सकता है (puzzle 6), इसलिए <code>tenantId-bucket</code> जैसी <b>synthetic key</b> उस tenant को कई partitions में फैला देती है।</li>
 <li>Trade-off: अब एक tenant की reads कई partitions को छूती हैं। Bucket count अपने write rate से चुनो, और key को document में रखो ताकि SDK उसे use कर सके।</li>
-<li>Consistency अलग चुनाव है (Session आमतौर पर use होने वाला level है): पाँच levels freshness के बदले latency और availability का सौदा करते हैं। Limits और pricing Azure docs में देखो, वे बदलती रहती हैं।</li>
+<li>Consistency अलग चुनाव है (Session account default है और सबसे ज़्यादा use होने वाला level है): पाँच levels freshness के बदले latency और availability का सौदा करते हैं। Limits और pricing Azure docs में देखो, वे बदलती रहती हैं।</li>
 </ul>
 <p><b>कब use करें:</b> बड़े या global scale पर key-based access के लिए Cosmos DB, जहाँ access patterns पहले से पता हों। <b>कब नहीं:</b> ad-hoc reporting, बहुत सारे joins, या छोटी single-region app के लिए; relational database सरल और सस्ता है।</p>`,
         hg: `<p><b>Analogy — kai counters wala bank:</b> customers ko ek rule (partition key) se counter par bheja jaata hai. Agar rule "branch ke naam se" hai aur ek branch ki bhaari bheed hai, to ek counter jaam hai aur baaki khaali baithe hain. Cosmos DB mein yahi dikkat hoti hai, jise <b>hot partition</b> kehte hain.</p>
@@ -447,7 +447,7 @@ public class CustomerProfile
 <li>Har item ka ek <code>id</code> hota hai (apne logical partition mein unique) aur ek <b>partition key</b> value. Jin queries mein key hoti hai woh ek partition par jaati hain; bina key wali queries sab partitions mein phailti hain aur zyada <b>RU</b> kharch karti hain.</li>
 <li>Achhi key mein <b>bahut saari alag values</b> hoti hain, writes barabar phailati hai aur tumhari sabse common queries mein aati hai. Ek bahut bada tenant <code>tenantId</code> ko key ke roop mein bigaad sakta hai (puzzle 6), isliye <code>tenantId-bucket</code> jaisi <b>synthetic key</b> us tenant ko kai partitions mein phaila deti hai.</li>
 <li>Trade-off: ab ek tenant ki reads kai partitions ko chhooti hain. Bucket count apne write rate se chuno, aur key ko document mein rakho taaki SDK use use kar sake.</li>
-<li>Consistency alag chunav hai (Session aamtaur par use hone wala level hai): paanch levels freshness ke badle latency aur availability ka sauda karte hain. Limits aur pricing Azure docs mein dekho, woh badalti rehti hain.</li>
+<li>Consistency alag chunav hai (Session account default hai aur sabse zyada use hone wala level hai): paanch levels freshness ke badle latency aur availability ka sauda karte hain. Limits aur pricing Azure docs mein dekho, woh badalti rehti hain.</li>
 </ul>
 <p><b>Kab use karein:</b> bade ya global scale par key-based access ke liye Cosmos DB, jahan access patterns pehle se pata hon. <b>Kab nahi:</b> ad-hoc reporting, bahut saare joins, ya chhoti single-region app ke liye; relational database saral aur sasta hai.</p>`
       },
@@ -485,7 +485,7 @@ public record OrderDoc(
       id: "mvcc-pg-vs-sqlserver",
       depth: "short",
       q: "How does PostgreSQL's MVCC differ from SQL Server's row versioning?",
-      answer: "Postgres keeps old row versions in the table itself and VACUUM cleans them later. SQL Server, with RCSI or SNAPSHOT, keeps them in the tempdb version store.",
+      answer: "Postgres keeps old row versions in the table itself and VACUUM cleans them later. SQL Server, with RCSI or SNAPSHOT, keeps them in the version store (tempdb by default).",
       meaning: {
         hi: "Postgres पुराने row versions table में ही रखता है और बाद में VACUUM साफ़ करता है। SQL Server में RCSI या SNAPSHOT के साथ वे tempdb के version store में रहते हैं।",
         hg: "Postgres purane row versions table mein hi rakhta hai aur baad mein VACUUM saaf karta hai. SQL Server mein RCSI ya SNAPSHOT ke saath woh tempdb ke version store mein rehte hain."
@@ -546,7 +546,7 @@ public record OrderDoc(
       },
       explain: {
         en: `<ul>
-<li>Repeatable Read in Postgres is a snapshot for the whole transaction and does not allow phantom reads; it can fail with a serialization error, so the caller must retry. Serializable adds conflict detection with the same retry rule.</li>
+<li>Repeatable Read in Postgres is a snapshot for the whole transaction and does not allow phantom reads; it can fail with a serialization error, so the caller must retry. Serializable (SSI) adds conflict detection with the same retry rule.</li>
 <li>SQL Server's default READ COMMITTED uses locks, so readers can block writers unless RCSI is on (Day 18). That is the practical difference users feel.</li>
 <li>Follow-up: "How do you lock a row on purpose?" <code>SELECT ... FOR UPDATE</code>, with <code>SKIP LOCKED</code> for queue-like work.</li>
 </ul>`,
@@ -620,26 +620,26 @@ public record OrderDoc(
       id: "json-vs-jsonb",
       depth: "short",
       q: "json vs jsonb in PostgreSQL: which do you use, and how do you index it?",
-      answer: "Use jsonb: it is parsed binary, queryable and indexable, while json keeps the exact text. A GIN index serves containment (@>) and key-exists lookups.",
+      answer: "Use jsonb: it is parsed binary, queryable and indexable, while json keeps the exact text. A GIN index serves containment (@&gt;) and key-exists lookups.",
       meaning: {
-        hi: "jsonb use करो: वह parsed binary है, query और index हो सकता है, जबकि json exact text रखता है। GIN index containment (@>) और key-exists lookups को serve करता है।",
-        hg: "jsonb use karo: woh parsed binary hai, query aur index ho sakta hai, jabki json exact text rakhta hai. GIN index containment (@>) aur key-exists lookups ko serve karta hai."
+        hi: "jsonb use करो: वह parsed binary है, query और index हो सकता है, जबकि json exact text रखता है। GIN index containment (@&gt;) और key-exists lookups को serve करता है।",
+        hg: "jsonb use karo: woh parsed binary hai, query aur index ho sakta hai, jabki json exact text rakhta hai. GIN index containment (@&gt;) aur key-exists lookups ko serve karta hai."
       },
       explain: {
         en: `<ul>
 <li>jsonb does not keep key order or duplicate keys; use <code>json</code> only if the original text matters (audit copy of a payload).</li>
-<li>Operators: <code>-&gt;</code> (jsonb), <code>-&gt;&gt;</code> (text), <code>@&gt;</code> (contains). The default GIN opclass also supports key-exists operators; <code>jsonb_path_ops</code> is smaller but handles containment only.</li>
-<li>For one hot field, an expression B-tree index on <code>(attrs -&gt;&gt; 'city')</code> can beat GIN. Postgres 17 added <code>JSON_TABLE()</code> to turn JSON into rows. Follow-up: "SQL Server?" JSON lives in text columns with <code>JSON_VALUE</code> and <code>OPENJSON</code>; indexing usually goes through a computed column.</li>
+<li>Operators: <code>-&gt;</code> (jsonb), <code>-&gt;&gt;</code> (text), <code>@&gt;</code> (contains). The default GIN opclass also supports the key-exists operators; <code>jsonb_path_ops</code> is smaller but does not.</li>
+<li>For one hot field, an expression B-tree index on <code>(attrs -&gt;&gt; 'city')</code> can beat GIN. Postgres 17 added <code>JSON_TABLE()</code> to turn JSON into rows. Follow-up: "SQL Server?" JSON lives in text columns with <code>JSON_VALUE</code> and <code>OPENJSON</code> (before SQL Server 2025; 2025 and Azure SQL add a native <code>json</code> type); indexing usually goes through a computed column.</li>
 </ul>`,
         hi: `<ul>
 <li>jsonb key order या duplicate keys नहीं रखता; <code>json</code> तभी use करो जब original text मायने रखे (payload की audit copy)।</li>
-<li>Operators: <code>-&gt;</code> (jsonb), <code>-&gt;&gt;</code> (text), <code>@&gt;</code> (contains)। Default GIN opclass key-exists operators भी support करता है; <code>jsonb_path_ops</code> छोटा है पर सिर्फ़ containment संभालता है।</li>
-<li>एक hot field के लिए <code>(attrs -&gt;&gt; 'city')</code> पर expression B-tree index GIN से बेहतर हो सकता है। Postgres 17 में JSON को rows बनाने वाला <code>JSON_TABLE()</code> आया। Follow-up: "SQL Server?" JSON text columns में रहता है, <code>JSON_VALUE</code> और <code>OPENJSON</code> के साथ; indexing आमतौर पर computed column से होती है।</li>
+<li>Operators: <code>-&gt;</code> (jsonb), <code>-&gt;&gt;</code> (text), <code>@&gt;</code> (contains)। Default GIN opclass key-exists operators भी support करता है; <code>jsonb_path_ops</code> छोटा है पर वे support नहीं करता।</li>
+<li>एक hot field के लिए <code>(attrs -&gt;&gt; 'city')</code> पर expression B-tree index GIN से बेहतर हो सकता है। Postgres 17 में JSON को rows बनाने वाला <code>JSON_TABLE()</code> आया। Follow-up: "SQL Server?" JSON text columns में रहता है, <code>JSON_VALUE</code> और <code>OPENJSON</code> के साथ (SQL Server 2025 से पहले; 2025 और Azure SQL में native <code>json</code> type आया); indexing आमतौर पर computed column से होती है।</li>
 </ul>`,
         hg: `<ul>
 <li>jsonb key order ya duplicate keys nahi rakhta; <code>json</code> tabhi use karo jab original text maayne rakhe (payload ki audit copy).</li>
-<li>Operators: <code>-&gt;</code> (jsonb), <code>-&gt;&gt;</code> (text), <code>@&gt;</code> (contains). Default GIN opclass key-exists operators bhi support karta hai; <code>jsonb_path_ops</code> chhota hai par sirf containment sambhalta hai.</li>
-<li>Ek hot field ke liye <code>(attrs -&gt;&gt; 'city')</code> par expression B-tree index GIN se behtar ho sakta hai. Postgres 17 mein JSON ko rows banane wala <code>JSON_TABLE()</code> aaya. Follow-up: "SQL Server?" JSON text columns mein rehta hai, <code>JSON_VALUE</code> aur <code>OPENJSON</code> ke saath; indexing aamtaur par computed column se hoti hai.</li>
+<li>Operators: <code>-&gt;</code> (jsonb), <code>-&gt;&gt;</code> (text), <code>@&gt;</code> (contains). Default GIN opclass key-exists operators bhi support karta hai; <code>jsonb_path_ops</code> chhota hai par woh support nahi karta.</li>
+<li>Ek hot field ke liye <code>(attrs -&gt;&gt; 'city')</code> par expression B-tree index GIN se behtar ho sakta hai. Postgres 17 mein JSON ko rows banane wala <code>JSON_TABLE()</code> aaya. Follow-up: "SQL Server?" JSON text columns mein rehta hai, <code>JSON_VALUE</code> aur <code>OPENJSON</code> ke saath (SQL Server 2025 se pehle; 2025 aur Azure SQL mein native <code>json</code> type aaya); indexing aamtaur par computed column se hoti hai.</li>
 </ul>`
       }
     },
@@ -654,17 +654,17 @@ public record OrderDoc(
       },
       explain: {
         en: `<ul>
-<li>Not index types but index shapes: <b>partial</b> (<code>WHERE</code>), <b>expression</b> (<code>lower(email)</code>), <b>covering</b> (<code>INCLUDE</code>, Postgres 11, B-tree, GiST and SP-GiST).</li>
+<li>Not index types but index shapes: <b>partial</b> (<code>WHERE</code>), <b>expression</b> (<code>lower(email)</code>), <b>covering</b> (<code>INCLUDE</code>, Postgres 11 for B-tree; GiST since 12, SP-GiST since 14).</li>
 <li>There is no clustered index; physical order is the heap. BRIN works only when column values correlate with physical order, such as an insert-time column.</li>
 <li>Follow-up: "How do you add an index on a live table?" <code>CREATE INDEX CONCURRENTLY</code> avoids blocking writes (it takes longer and cannot run inside a transaction block). Compare Day 18: SQL Server's clustered key choice does not exist here.</li>
 </ul>`,
         hi: `<ul>
-<li>ये index types नहीं, index की shapes हैं: <b>partial</b> (<code>WHERE</code>), <b>expression</b> (<code>lower(email)</code>), <b>covering</b> (<code>INCLUDE</code>, Postgres 11, B-tree, GiST और SP-GiST)।</li>
+<li>ये index types नहीं, index की shapes हैं: <b>partial</b> (<code>WHERE</code>), <b>expression</b> (<code>lower(email)</code>), <b>covering</b> (<code>INCLUDE</code>, B-tree के लिए Postgres 11; GiST में 12 से, SP-GiST में 14 से)।</li>
 <li>Clustered index नहीं है; physical order heap का है। BRIN तभी काम करता है जब column values physical order से मेल खाएँ, जैसे insert-time वाला column।</li>
 <li>Follow-up: "Live table पर index कैसे जोड़ोगे?" <code>CREATE INDEX CONCURRENTLY</code> writes को block नहीं करता (ज़्यादा समय लेता है और transaction block के अंदर नहीं चलता)। Day 18 से तुलना: SQL Server का clustered key वाला चुनाव यहाँ नहीं है।</li>
 </ul>`,
         hg: `<ul>
-<li>Yeh index types nahi, index ki shapes hain: <b>partial</b> (<code>WHERE</code>), <b>expression</b> (<code>lower(email)</code>), <b>covering</b> (<code>INCLUDE</code>, Postgres 11, B-tree, GiST aur SP-GiST).</li>
+<li>Yeh index types nahi, index ki shapes hain: <b>partial</b> (<code>WHERE</code>), <b>expression</b> (<code>lower(email)</code>), <b>covering</b> (<code>INCLUDE</code>, B-tree ke liye Postgres 11; GiST mein 12 se, SP-GiST mein 14 se).</li>
 <li>Clustered index nahi hai; physical order heap ka hai. BRIN tabhi kaam karta hai jab column values physical order se mel khayein, jaise insert-time wala column.</li>
 <li>Follow-up: "Live table par index kaise jodoge?" <code>CREATE INDEX CONCURRENTLY</code> writes ko block nahi karta (zyada samay leta hai aur transaction block ke andar nahi chalta). Day 18 se tulna: SQL Server ka clustered key wala chunav yahan nahi hai.</li>
 </ul>`
@@ -730,8 +730,8 @@ public record OrderDoc(
       q: "What does RETURNING do, and how do LIMIT/OFFSET compare with TOP and OFFSET-FETCH?",
       answer: "RETURNING gives back the affected rows from INSERT, UPDATE or DELETE, like SQL Server's OUTPUT. LIMIT/OFFSET pages like TOP and OFFSET-FETCH, but a big OFFSET still reads and discards rows.",
       meaning: {
-        hi: "RETURNING, INSERT, UPDATE या DELETE से प्रभावित rows वापस देता है, SQL Server के OUTPUT की तरह। LIMIT/OFFSET, TOP और OFFSET-FETCH की तरह paging करता है, पर बड़ा OFFSET फिर भी rows पढ़कर फेंकता है।",
-        hg: "RETURNING, INSERT, UPDATE ya DELETE se prabhavit rows wapas deta hai, SQL Server ke OUTPUT ki tarah. LIMIT/OFFSET, TOP aur OFFSET-FETCH ki tarah paging karta hai, par bada OFFSET phir bhi rows padhkar phenkta hai."
+        hi: "RETURNING, INSERT, UPDATE या DELETE से affected rows वापस देता है, SQL Server के OUTPUT की तरह। LIMIT/OFFSET, TOP और OFFSET-FETCH की तरह paging करता है, पर बड़ा OFFSET फिर भी rows पढ़कर फेंकता है।",
+        hg: "RETURNING, INSERT, UPDATE ya DELETE se affected rows wapas deta hai, SQL Server ke OUTPUT ki tarah. LIMIT/OFFSET, TOP aur OFFSET-FETCH ki tarah paging karta hai, par bada OFFSET phir bhi rows padhkar phenkta hai."
       },
       explain: {
         en: `<ul>
@@ -823,12 +823,12 @@ public record OrderDoc(
         hi: `<ul>
 <li>ज़ोर से बोलने वाला हिसाब: 50 pods x Npgsql का default maximum 100 = ऐसे server पर 5,000 तक connections, जिसका <code>max_connections</code> default से लगभग 100 है। Per-pod maximum घटाओ या PgBouncer लगाओ।</li>
 <li>PgBouncer modes: session, transaction, statement। <b>Transaction</b> mode में sharing सबसे अच्छी है पर session state टूटता है (<code>SET</code>, session advisory locks, <code>LISTEN</code>); PgBouncer के साथ settings के लिए Npgsql docs देखो।</li>
-<li>वही अनुशासन जो SQL Server में (Day 6): छोटी उम्र का <code>DbContext</code>, देर से खोलो, जल्दी बंद करो। Follow-up: "Exhaustion के symptoms?" Pool से connection मिलने का इंतज़ार करते timeouts, या "too many clients" errors।</li>
+<li>वही discipline जो SQL Server में (Day 6): छोटी उम्र का <code>DbContext</code>, देर से खोलो, जल्दी बंद करो। Follow-up: "Exhaustion के symptoms?" Pool से connection मिलने का इंतज़ार करते timeouts, या "too many clients" errors।</li>
 </ul>`,
         hg: `<ul>
 <li>Zor se bolne wala hisaab: 50 pods x Npgsql ka default maximum 100 = aise server par 5,000 tak connections, jiska <code>max_connections</code> default se lagbhag 100 hai. Per-pod maximum ghatao ya PgBouncer lagao.</li>
 <li>PgBouncer modes: session, transaction, statement. <b>Transaction</b> mode mein sharing sabse achhi hai par session state tootta hai (<code>SET</code>, session advisory locks, <code>LISTEN</code>); PgBouncer ke saath settings ke liye Npgsql docs dekho.</li>
-<li>Wahi anushasan jo SQL Server mein (Day 6): chhoti umr ka <code>DbContext</code>, der se kholo, jaldi band karo. Follow-up: "Exhaustion ke symptoms?" Pool se connection milne ka intezaar karte timeouts, ya "too many clients" errors.</li>
+<li>Wahi discipline jo SQL Server mein (Day 6): chhoti umr ka <code>DbContext</code>, der se kholo, jaldi band karo. Follow-up: "Exhaustion ke symptoms?" Pool se connection milne ka intezaar karte timeouts, ya "too many clients" errors.</li>
 </ul>`
       }
     },
@@ -843,17 +843,17 @@ public record OrderDoc(
       },
       explain: {
         en: `<ul>
-<li>Throughput (RU) is spread across physical partitions, so one hot key cannot use the whole account's capacity. Cross-partition queries fan out and cost more RU.</li>
+<li>Throughput (RU) is spread across physical partitions, so one hot key cannot use the container's whole provisioned throughput. Cross-partition queries fan out and cost more RU.</li>
 <li>Fixes: a higher-cardinality key (<code>userId</code> instead of <code>country</code>), or a synthetic key like <code>tenantId-bucket</code> (puzzle 6). Time-only keys are risky: all current writes hit today's partition.</li>
 <li>Follow-up: "Can you change the key later?" Treat it as hard to change; plan a data migration. Check the current docs for limits and the newer hierarchical partition keys.</li>
 </ul>`,
         hi: `<ul>
-<li>Throughput (RU) physical partitions में बँटा होता है, इसलिए एक hot key पूरे account की capacity use नहीं कर सकती। Cross-partition queries फैलती हैं और ज़्यादा RU लेती हैं।</li>
+<li>Throughput (RU) physical partitions में बँटा होता है, इसलिए एक hot key container का पूरा provisioned throughput use नहीं कर सकती। Cross-partition queries फैलती हैं और ज़्यादा RU लेती हैं।</li>
 <li>Fixes: ज़्यादा cardinality वाली key (<code>country</code> की जगह <code>userId</code>), या <code>tenantId-bucket</code> जैसी synthetic key (puzzle 6)। सिर्फ़ time वाली keys जोखिम भरी हैं: सारी मौजूदा writes आज के partition पर आती हैं।</li>
 <li>Follow-up: "Key बाद में बदल सकते हो?" इसे बदलना मुश्किल मानो; data migration की planning करो। Limits और नई hierarchical partition keys के लिए current docs देखो।</li>
 </ul>`,
         hg: `<ul>
-<li>Throughput (RU) physical partitions mein bantta hai, isliye ek hot key poore account ki capacity use nahi kar sakti. Cross-partition queries phailti hain aur zyada RU leti hain.</li>
+<li>Throughput (RU) physical partitions mein bantta hai, isliye ek hot key poore container ka provisioned throughput use nahi kar sakti. Cross-partition queries phailti hain aur zyada RU leti hain.</li>
 <li>Fixes: zyada cardinality wali key (<code>country</code> ki jagah <code>userId</code>), ya <code>tenantId-bucket</code> jaisi synthetic key (puzzle 6). Sirf time wali keys jokhim bhari hain: saari maujooda writes aaj ke partition par aati hain.</li>
 <li>Follow-up: "Key baad mein badal sakte ho?" Ise badalna mushkil maano; data migration ki planning karo. Limits aur nayi hierarchical partition keys ke liye current docs dekho.</li>
 </ul>`
@@ -863,26 +863,26 @@ public record OrderDoc(
       id: "cosmos-consistency",
       depth: "detailed",
       q: "What are the Cosmos DB consistency levels, and how do you choose one?",
-      answer: "Five levels, strongest to weakest: Strong, Bounded staleness, Session, Consistent prefix, Eventual. Session is commonly used: a client reads its own writes with low latency.",
+      answer: "Five levels, strongest to weakest: Strong, Bounded staleness, Session, Consistent prefix, Eventual. Session is the default and most widely used: a client reads its own writes with low latency.",
       meaning: {
-        hi: "पाँच levels, सबसे strong से सबसे weak: Strong, Bounded staleness, Session, Consistent prefix, Eventual। Session आम तौर पर use होता है: client अपनी writes कम latency में पढ़ लेता है।",
-        hg: "Paanch levels, sabse strong se sabse weak: Strong, Bounded staleness, Session, Consistent prefix, Eventual. Session aam taur par use hota hai: client apni writes kam latency mein padh leta hai."
+        hi: "पाँच levels, सबसे strong से सबसे weak: Strong, Bounded staleness, Session, Consistent prefix, Eventual। Session default और सबसे ज़्यादा use होने वाला है: client अपनी writes कम latency में पढ़ लेता है।",
+        hg: "Paanch levels, sabse strong se sabse weak: Strong, Bounded staleness, Session, Consistent prefix, Eventual. Session default aur sabse zyada use hone wala hai: client apni writes kam latency mein padh leta hai."
       },
       explain: {
         en: `<ul>
 <li>Stronger levels give fresher reads but cost latency and availability across regions; weaker ones are cheaper and faster. Strong and Bounded staleness reads cost about twice the RU of the weaker levels, per the Cosmos DB docs.</li>
 <li>Choose by user-visible harm: money or inventory may need Strong or Bounded; a "likes" counter can be Eventual; user-facing profile edits suit Session.</li>
-<li>Link to Day 17: this is the CAP/PACELC trade-off in a product. Follow-up: "Can you override per request?" Yes, a request can override the account default; check the docs for the allowed direction.</li>
+<li>Link to Day 17: this is the CAP/PACELC trade-off in a product. Follow-up: "Can you override per request?" Yes, but only to relax it (weaker than the account default) and only for reads; to strengthen, change the account default. A preview <code>ReadConsistencyStrategy</code> option exists in newer .NET SDKs, check the docs.</li>
 </ul>`,
         hi: `<ul>
 <li>Strong levels ज़्यादा fresh reads देते हैं पर regions के बीच latency और availability की कीमत पर; weak levels सस्ते और तेज़ हैं। Cosmos DB docs के अनुसार Strong और Bounded staleness reads का RU cost weak levels से लगभग दोगुना है।</li>
 <li>User को दिखने वाले नुक़सान से चुनो: पैसे या inventory को Strong या Bounded चाहिए; "likes" counter Eventual हो सकता है; user की profile edits के लिए Session ठीक है।</li>
-<li>Day 17 से link: यह product में CAP/PACELC trade-off है। Follow-up: "Per request override कर सकते हो?" हाँ, request account default को override कर सकती है; किस direction में, यह docs में देखो।</li>
+<li>Day 17 से link: यह product में CAP/PACELC trade-off है। Follow-up: "Per request override कर सकते हो?" हाँ, पर सिर्फ़ उसे हल्का करने के लिए (account default से weaker) और सिर्फ़ reads के लिए; मज़बूत करना हो तो account default बदलो। नए .NET SDKs में preview <code>ReadConsistencyStrategy</code> option है, docs देखो।</li>
 </ul>`,
         hg: `<ul>
 <li>Strong levels zyada fresh reads dete hain par regions ke beech latency aur availability ki keemat par; weak levels sasta aur tez hain. Cosmos DB docs ke anusaar Strong aur Bounded staleness reads ka RU cost weak levels se lagbhag double hai.</li>
 <li>User ko dikhne wale nuksaan se chuno: paise ya inventory ko Strong ya Bounded chahiye; "likes" counter Eventual ho sakta hai; user ki profile edits ke liye Session theek hai.</li>
-<li>Day 17 se link: yeh product mein CAP/PACELC trade-off hai. Follow-up: "Per request override kar sakte ho?" Haan, request account default ko override kar sakti hai; kis direction mein, yeh docs mein dekho.</li>
+<li>Day 17 se link: yeh product mein CAP/PACELC trade-off hai. Follow-up: "Per request override kar sakte ho?" Haan, par sirf use halka karne ke liye (account default se weaker) aur sirf reads ke liye; mazboot karna ho to account default badlo. Naye .NET SDKs mein preview <code>ReadConsistencyStrategy</code> option hai, docs dekho.</li>
 </ul>`
       }
     },
@@ -1158,11 +1158,11 @@ Report("tenantId-bucket", (tenant, orderNo) => $"{tenant}-{orderNo % 8}");`,
       "A long-open or idle-in-transaction session holds back VACUUM and causes bloat.",
       "READ COMMITTED is the Postgres default; plain reads and writes do not block each other.",
       "Unquoted names fold to lower case; text comparison is case-sensitive by default.",
-      "ON CONFLICT needs a unique index, and one statement cannot update the same key twice.",
+      "ON CONFLICT DO UPDATE cannot touch the same key twice in one statement.",
       "MERGE arrived in Postgres 15; its RETURNING clause came in 17.",
-      "jsonb is indexable binary JSON: GIN serves @>, and ->> returns text.",
-      "Index shapes: partial, expression and INCLUDE (Postgres 11); BRIN suits huge append-ordered tables.",
-      "Npgsql: UseNpgsql, UTC-only timestamptz, and snake_case to avoid quoted names.",
+      "jsonb is indexable binary JSON, and a GIN index serves the @&gt; containment operator.",
+      "A partial index covers only the rows that match its WHERE condition.",
+      "Npgsql writes timestamptz only from UTC values (Npgsql 6 and later).",
       "Each Postgres connection is a process: size the pools or put PgBouncer in front.",
       "Cosmos DB: pick a high-cardinality partition key; a skewed key makes a hot partition.",
       "Add a second data store only for a measured need, and say what you give up."
@@ -1173,11 +1173,11 @@ Report("tenantId-bucket", (tenant, orderNo) => $"{tenant}-{orderNo % 8}");`,
         "लंबा open या idle-in-transaction session VACUUM को रोकता है और bloat कराता है।",
         "Postgres का default READ COMMITTED है; सादी reads और writes एक-दूसरे को block नहीं करतीं।",
         "बिना quote वाले नाम lower case हो जाते हैं; text comparison default से case-sensitive है।",
-        "ON CONFLICT को unique index चाहिए, और एक statement एक ही key को दो बार update नहीं कर सकता।",
+        "ON CONFLICT DO UPDATE एक statement में एक ही key को दो बार नहीं छू सकता।",
         "MERGE Postgres 15 में आया; उसकी RETURNING clause 17 में आई।",
-        "jsonb index होने लायक binary JSON है: GIN, @> को serve करता है, और ->> text देता है।",
-        "Index की shapes: partial, expression और INCLUDE (Postgres 11); BRIN बहुत बड़ी append-ordered tables के लिए।",
-        "Npgsql: UseNpgsql, सिर्फ़ UTC वाला timestamptz, और quoted names से बचने के लिए snake_case।",
+        "jsonb index होने लायक binary JSON है, और GIN index @&gt; containment operator को serve करता है।",
+        "Partial index सिर्फ़ उन्हीं rows को cover करता है जो उसकी WHERE condition से match करती हैं।",
+        "Npgsql में timestamptz के लिए सिर्फ़ UTC values चलती हैं (Npgsql 6 और बाद)।",
         "हर Postgres connection एक process है: pools का size सोचो या PgBouncer आगे लगाओ।",
         "Cosmos DB: ज़्यादा cardinality वाली partition key चुनो; skewed key से hot partition बनता है।",
         "दूसरा data store सिर्फ़ measured ज़रूरत पर जोड़ो, और बताओ कि क्या छोड़ रहे हो।"
@@ -1187,11 +1187,11 @@ Report("tenantId-bucket", (tenant, orderNo) => $"{tenant}-{orderNo % 8}");`,
         "Lamba open ya idle-in-transaction session VACUUM ko rokta hai aur bloat karata hai.",
         "Postgres ka default READ COMMITTED hai; saadi reads aur writes ek-doosre ko block nahi karti.",
         "Bina quote wale naam lower case ho jaate hain; text comparison default se case-sensitive hai.",
-        "ON CONFLICT ko unique index chahiye, aur ek statement ek hi key ko do baar update nahi kar sakta.",
+        "ON CONFLICT DO UPDATE ek statement mein ek hi key ko do baar nahi chhu sakta.",
         "MERGE Postgres 15 mein aaya; uski RETURNING clause 17 mein aayi.",
-        "jsonb index hone layak binary JSON hai: GIN, @> ko serve karta hai, aur ->> text deta hai.",
-        "Index ki shapes: partial, expression aur INCLUDE (Postgres 11); BRIN bahut badi append-ordered tables ke liye.",
-        "Npgsql: UseNpgsql, sirf UTC wala timestamptz, aur quoted names se bachne ke liye snake_case.",
+        "jsonb index hone layak binary JSON hai, aur GIN index @&gt; containment operator ko serve karta hai.",
+        "Partial index sirf unhi rows ko cover karta hai jo uski WHERE condition se match karti hain.",
+        "Npgsql mein timestamptz ke liye sirf UTC values chalti hain (Npgsql 6 aur baad).",
         "Har Postgres connection ek process hai: pools ka size socho ya PgBouncer aage lagao.",
         "Cosmos DB: zyada cardinality wali partition key chuno; skewed key se hot partition banta hai.",
         "Doosra data store sirf measured zaroorat par jodo, aur batao ki kya chhod rahe ho."
