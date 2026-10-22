@@ -51,9 +51,9 @@ window.TL_DAY = {
         hg: "Indexes — clustered, non-clustered, covering, filtered"
       },
       body: {
-        en: `<p><b>Picture — a phone directory and a textbook:</b> the directory itself is sorted by name: that is a <b>clustered index</b>, the data <i>is</i> the index, so there can be only one order. The index at the back of a textbook is a <b>non-clustered index</b>: a separate sorted list that says "topic X is on page 212". If you then flip to page 212 to read more, that is a <b>key lookup</b>. If the back-of-book entry already told you everything you needed, it was <b>covering</b>.</p>
+        en: `<p><b>Picture — a phone directory and a textbook:</b> the directory itself is sorted by name: that is a <b>clustered index</b>, the data <i>is</i> the index, so there can be only one order (a logical order: pages are linked in key order, and the physical layout on disk is not guaranteed to match). The index at the back of a textbook is a <b>non-clustered index</b>: a separate sorted list that says "topic X is on page 212". If you then flip to page 212 to read more, that is a <b>key lookup</b>. If the back-of-book entry already told you everything you needed, it was <b>covering</b>.</p>
 <ul>
-<li><b>Clustered:</b> one per table; the leaf level holds the full rows. A table without one is a <b>heap</b> (unordered, rows found through a row id). Choose a key that is <b>narrow, unique, stable and ever-increasing</b> (an <code>int IDENTITY</code> is the usual choice), because every non-clustered index carries the clustered key.</li>
+<li><b>Clustered:</b> one per table; the leaf level holds the full rows. A table without one is a <b>heap</b> (unordered, rows found through a row id; a row that grows leaves a <b>forwarding pointer</b>, see <code>forwarded_record_count</code>). Choose a key that is <b>narrow, unique, stable and ever-increasing</b> (an <code>int IDENTITY</code> is the usual choice), because every non-clustered index carries the clustered key.</li>
 <li><b>Non-clustered:</b> a separate B-tree with the index key columns plus a pointer to the row (the clustered key, or the row id on a heap). Many per table, but each one is <b>paid for on every INSERT/UPDATE/DELETE</b> and in storage.</li>
 <li><b>Key lookup:</b> the index found the rows but the query needs more columns, so SQL Server jumps into the clustered index once per row. Cheap for 10 rows, painful for 100,000; the optimizer then prefers a scan.</li>
 <li><b>Covering index:</b> put the filter and join columns in the <b>key</b> (equality columns first, then the range or sort column) and the other selected columns in <code>INCLUDE</code>. Included columns live only at the leaf and are not sorted.</li>
@@ -63,9 +63,9 @@ window.TL_DAY = {
 </ul>
 <p>Day 6 showed EF projections that let SQL use a covering index; today is the SQL side. Day 17 used indexes and read replicas as the first scaling steps.</p>
 <p><b>When to use:</b> index the columns of frequent <code>WHERE</code>, <code>JOIN</code> and <code>ORDER BY</code>, and foreign keys; use <code>INCLUDE</code> for a hot query's extra columns. <b>When not:</b> do not index every column "just in case", do not include wide columns such as <code>nvarchar(max)</code>, and drop indexes the usage DMVs show as unused after a safe observation period.</p>`,
-        hi: `<p><b>Picture — phone directory और textbook:</b> directory खुद name से sorted है: यह <b>clustered index</b> है, data ही index है, इसलिए order एक ही हो सकता है। Textbook के पीछे का index <b>non-clustered index</b> है: एक अलग sorted list जो कहती है "topic X page 212 पर है"। फिर page 212 खोलकर और पढ़ना <b>key lookup</b> है। अगर पीछे की entry ने ही सब बता दिया जो चाहिए था, तो वो <b>covering</b> थी।</p>
+        hi: `<p><b>Picture — phone directory और textbook:</b> directory खुद name से sorted है: यह <b>clustered index</b> है, data ही index है, इसलिए order एक ही हो सकता है (यह logical order है: pages key order में linked हैं, disk पर physical layout वैसा होने की guarantee नहीं)। Textbook के पीछे का index <b>non-clustered index</b> है: एक अलग sorted list जो कहती है "topic X page 212 पर है"। फिर page 212 खोलकर और पढ़ना <b>key lookup</b> है। अगर पीछे की entry ने ही सब बता दिया जो चाहिए था, तो वो <b>covering</b> थी।</p>
 <ul>
-<li><b>Clustered:</b> हर table में एक; leaf level पर पूरी rows होती हैं। जिस table में नहीं है वह <b>heap</b> है (बिना order, rows row id से मिलती हैं)। ऐसी key चुनो जो <b>narrow, unique, stable और बढ़ती जाने वाली</b> हो (<code>int IDENTITY</code> आम choice है), क्योंकि हर non-clustered index clustered key साथ रखता है।</li>
+<li><b>Clustered:</b> हर table में एक; leaf level पर पूरी rows होती हैं। जिस table में नहीं है वह <b>heap</b> है (बिना order, rows row id से मिलती हैं; row बढ़े तो पुरानी जगह <b>forwarding pointer</b> रह जाता है, <code>forwarded_record_count</code> देखो)। ऐसी key चुनो जो <b>narrow, unique, stable और बढ़ती जाने वाली</b> हो (<code>int IDENTITY</code> आम choice है), क्योंकि हर non-clustered index clustered key साथ रखता है।</li>
 <li><b>Non-clustered:</b> अलग B-tree, जिसमें index key columns और row का pointer होता है (clustered key, या heap पर row id)। एक table पर कई हो सकते हैं, पर हर एक की <b>कीमत हर INSERT/UPDATE/DELETE पर</b> और storage में देनी पड़ती है।</li>
 <li><b>Key lookup:</b> index ने rows ढूँढ लीं पर query को और columns चाहिए, तो SQL Server हर row के लिए clustered index में जाता है। 10 rows के लिए सस्ता, 100,000 के लिए दर्दनाक; तब optimizer scan पसंद करता है।</li>
 <li><b>Covering index:</b> filter और join columns <b>key</b> में रखो (पहले equality columns, फिर range या sort column) और बाकी selected columns <code>INCLUDE</code> में। Included columns सिर्फ़ leaf पर रहते हैं और sorted नहीं होते।</li>
@@ -75,9 +75,9 @@ window.TL_DAY = {
 </ul>
 <p>Day 6 में EF projections दिखे थे जो SQL को covering index use करने देते हैं; आज SQL वाला हिस्सा है। Day 17 में indexes और read replicas पहले scaling steps थे।</p>
 <p><b>कब use करें:</b> frequent <code>WHERE</code>, <code>JOIN</code> और <code>ORDER BY</code> के columns और foreign keys पर index; hot query के extra columns के लिए <code>INCLUDE</code>। <b>कब नहीं:</b> हर column पर "क्या पता" वाला index नहीं, <code>nvarchar(max)</code> जैसे wide columns include नहीं, और जो indexes usage DMVs में unused दिखें उन्हें safe observation period के बाद drop करो।</p>`,
-        hg: `<p><b>Picture — phone directory aur textbook:</b> directory khud name se sorted hai: yeh <b>clustered index</b> hai, data hi index hai, isliye order ek hi ho sakta hai. Textbook ke peeche ka index <b>non-clustered index</b> hai: ek alag sorted list jo kehti hai "topic X page 212 par hai". Phir page 212 kholkar aur padhna <b>key lookup</b> hai. Agar peeche ki entry ne hi sab bata diya jo chahiye tha, to woh <b>covering</b> thi.</p>
+        hg: `<p><b>Picture — phone directory aur textbook:</b> directory khud name se sorted hai: yeh <b>clustered index</b> hai, data hi index hai, isliye order ek hi ho sakta hai (yeh logical order hai: pages key order mein linked hain, disk par physical layout waisa hone ki guarantee nahi). Textbook ke peeche ka index <b>non-clustered index</b> hai: ek alag sorted list jo kehti hai "topic X page 212 par hai". Phir page 212 kholkar aur padhna <b>key lookup</b> hai. Agar peeche ki entry ne hi sab bata diya jo chahiye tha, to woh <b>covering</b> thi.</p>
 <ul>
-<li><b>Clustered:</b> har table mein ek; leaf level par poori rows hoti hain. Jis table mein nahi hai woh <b>heap</b> hai (bina order, rows row id se milti hain). Aisi key chuno jo <b>narrow, unique, stable aur badhti jaane wali</b> ho (<code>int IDENTITY</code> aam choice hai), kyunki har non-clustered index clustered key saath rakhta hai.</li>
+<li><b>Clustered:</b> har table mein ek; leaf level par poori rows hoti hain. Jis table mein nahi hai woh <b>heap</b> hai (bina order, rows row id se milti hain; row badhe to purani jagah <b>forwarding pointer</b> reh jaata hai, <code>forwarded_record_count</code> dekho). Aisi key chuno jo <b>narrow, unique, stable aur badhti jaane wali</b> ho (<code>int IDENTITY</code> aam choice hai), kyunki har non-clustered index clustered key saath rakhta hai.</li>
 <li><b>Non-clustered:</b> alag B-tree, jisme index key columns aur row ka pointer hota hai (clustered key, ya heap par row id). Ek table par kai ho sakte hain, par har ek ki <b>keemat har INSERT/UPDATE/DELETE par</b> aur storage mein deni padti hai.</li>
 <li><b>Key lookup:</b> index ne rows dhoondh li par query ko aur columns chahiye, to SQL Server har row ke liye clustered index mein jaata hai. 10 rows ke liye sasta, 100,000 ke liye dardnaak; tab optimizer scan pasand karta hai.</li>
 <li><b>Covering index:</b> filter aur join columns <b>key</b> mein rakho (pehle equality columns, phir range ya sort column) aur baaki selected columns <code>INCLUDE</code> mein. Included columns sirf leaf par rehte hain aur sorted nahi hote.</li>
@@ -101,7 +101,7 @@ window.TL_DAY = {
         en: `<p><b>Picture — finding a name in a sorted guest list:</b> "everyone whose name starts with Ra" is easy: jump to R and read. "Everyone whose name, <i>spelled backwards</i>, starts with 'an'" forces you to read the whole list. A <b>SARGable</b> predicate (Search ARGument able) lets SQL Server <b>seek</b> into the sorted index; a non-SARGable one forces a <b>scan</b>.</p>
 <ul>
 <li><b>Keep the column bare:</b> <code>YEAR(CreatedOn) = 2025</code> or <code>CONVERT(date, CreatedOn) = @d</code> hide the column behind a function. Rewrite as a half-open range: <code>CreatedOn &gt;= '2025-01-01' AND CreatedOn &lt; '2026-01-01'</code>. Same for <code>ISNULL(col, 0) = 0</code> (use <code>col = 0 OR col IS NULL</code>) and for arithmetic on the column side (<code>Price * 2 &gt; 100</code> becomes <code>Price &gt; 50</code>).</li>
-<li><b>Match the data type:</b> data type precedence says <code>nvarchar</code> beats <code>varchar</code>, so a <code>varchar</code> column compared to an <code>nvarchar</code> parameter gets <code>CONVERT_IMPLICIT</code> on the <b>column</b> side, and the seek can turn into a scan (especially with SQL collations). In EF this is the Unicode mapping trap from Day 6. The plan shows a warning triangle; read it.</li>
+<li><b>Match the data type:</b> data type precedence says <code>nvarchar</code> beats <code>varchar</code>, so a <code>varchar</code> column compared to an <code>nvarchar</code> parameter gets <code>CONVERT_IMPLICIT</code> on the <b>column</b> side, and the seek can turn into a scan (especially with SQL collations). In EF this is the Unicode mapping trap from Day 6. The reverse (an <code>nvarchar</code> column with a <code>varchar</code> parameter) converts the parameter instead, so the seek is usually fine. The plan shows a warning triangle; read it.</li>
 <li><b>LIKE:</b> <code>LIKE 'INV-00%'</code> can seek; <code>LIKE '%00'</code> cannot (a leading wildcard needs full-text search or a different design).</li>
 <li><b>Read a plan:</b> right to left, top to bottom. Look at <b>Index Seek vs Index/Table Scan</b>, <b>Key Lookup</b> (and its row count), thick arrows, <b>warnings</b> (implicit conversion, spills to tempdb) and the biggest cost percentage. Use <b>actual</b> plans for real numbers.</li>
 <li><b>Estimated vs actual rows:</b> the optimizer chooses a plan from <b>statistics</b> (a histogram per index or column). A big gap between estimated and actual rows is the clue: outdated or sampled statistics, skewed data, or a parameter sniffed from an unusual value. The cardinality estimator model changes with the compatibility level.</li>
@@ -112,7 +112,7 @@ window.TL_DAY = {
         hi: `<p><b>Picture — sorted guest list में नाम ढूँढना:</b> "जिनका नाम Ra से शुरू होता है" आसान है: R पर कूदो और पढ़ो। "जिनका नाम <i>उल्टा लिखने पर</i> 'an' से शुरू होता है" में पूरी list पढ़नी पड़ती है। <b>SARGable</b> predicate (Search ARGument able) SQL Server को sorted index में <b>seek</b> करने देता है; non-SARGable predicate <b>scan</b> करवाता है।</p>
 <ul>
 <li><b>Column को bare रखो:</b> <code>YEAR(CreatedOn) = 2025</code> या <code>CONVERT(date, CreatedOn) = @d</code> column को function के पीछे छुपा देते हैं। Half-open range में लिखो: <code>CreatedOn &gt;= '2025-01-01' AND CreatedOn &lt; '2026-01-01'</code>। <code>ISNULL(col, 0) = 0</code> के लिए भी यही (<code>col = 0 OR col IS NULL</code> लिखो), और column की तरफ़ arithmetic के लिए भी (<code>Price * 2 &gt; 100</code> की जगह <code>Price &gt; 50</code>)।</li>
-<li><b>Data type match करो:</b> data type precedence में <code>nvarchar</code>, <code>varchar</code> से ऊपर है, इसलिए <code>varchar</code> column को <code>nvarchar</code> parameter से compare करो तो <b>column</b> की तरफ़ <code>CONVERT_IMPLICIT</code> लगता है और seek, scan बन सकता है (खासकर SQL collations में)। EF में यह Day 6 वाला Unicode mapping trap है। Plan में warning triangle दिखता है; उसे पढ़ो।</li>
+<li><b>Data type match करो:</b> data type precedence में <code>nvarchar</code>, <code>varchar</code> से ऊपर है, इसलिए <code>varchar</code> column को <code>nvarchar</code> parameter से compare करो तो <b>column</b> की तरफ़ <code>CONVERT_IMPLICIT</code> लगता है और seek, scan बन सकता है (खासकर SQL collations में)। EF में यह Day 6 वाला Unicode mapping trap है। उल्टा case (<code>nvarchar</code> column और <code>varchar</code> parameter) parameter को convert करता है, इसलिए seek आम तौर पर ठीक रहता है। Plan में warning triangle दिखता है; उसे पढ़ो।</li>
 <li><b>LIKE:</b> <code>LIKE 'INV-00%'</code> seek कर सकता है; <code>LIKE '%00'</code> नहीं कर सकता (leading wildcard के लिए full-text search या दूसरा design चाहिए)।</li>
 <li><b>Plan कैसे पढ़ें:</b> दाएँ से बाएँ, ऊपर से नीचे। देखो <b>Index Seek बनाम Index/Table Scan</b>, <b>Key Lookup</b> (और उसकी row count), मोटे arrows, <b>warnings</b> (implicit conversion, tempdb में spill) और सबसे बड़ा cost percentage। असली numbers के लिए <b>actual</b> plan use करो।</li>
 <li><b>Estimated बनाम actual rows:</b> optimizer plan <b>statistics</b> (हर index या column का histogram) से चुनता है। Estimated और actual rows में बड़ा फ़र्क़ क्लू है: पुरानी या sampled statistics, skewed data, या किसी अजीब value से sniff हुआ parameter। Cardinality estimator का model compatibility level के साथ बदलता है।</li>
@@ -123,7 +123,7 @@ window.TL_DAY = {
         hg: `<p><b>Picture — sorted guest list mein naam dhoondhna:</b> "jinka naam Ra se shuru hota hai" aasaan hai: R par kudo aur padho. "Jinka naam <i>ulta likhne par</i> 'an' se shuru hota hai" mein poori list padhni padti hai. <b>SARGable</b> predicate (Search ARGument able) SQL Server ko sorted index mein <b>seek</b> karne deta hai; non-SARGable predicate <b>scan</b> karwata hai.</p>
 <ul>
 <li><b>Column ko bare rakho:</b> <code>YEAR(CreatedOn) = 2025</code> ya <code>CONVERT(date, CreatedOn) = @d</code> column ko function ke peeche chhupa dete hain. Half-open range mein likho: <code>CreatedOn &gt;= '2025-01-01' AND CreatedOn &lt; '2026-01-01'</code>. <code>ISNULL(col, 0) = 0</code> ke liye bhi yahi (<code>col = 0 OR col IS NULL</code> likho), aur column ki taraf arithmetic ke liye bhi (<code>Price * 2 &gt; 100</code> ki jagah <code>Price &gt; 50</code>).</li>
-<li><b>Data type match karo:</b> data type precedence mein <code>nvarchar</code>, <code>varchar</code> se upar hai, isliye <code>varchar</code> column ko <code>nvarchar</code> parameter se compare karo to <b>column</b> ki taraf <code>CONVERT_IMPLICIT</code> lagta hai aur seek, scan ban sakta hai (khaaskar SQL collations mein). EF mein yeh Day 6 wala Unicode mapping trap hai. Plan mein warning triangle dikhta hai; use padho.</li>
+<li><b>Data type match karo:</b> data type precedence mein <code>nvarchar</code>, <code>varchar</code> se upar hai, isliye <code>varchar</code> column ko <code>nvarchar</code> parameter se compare karo to <b>column</b> ki taraf <code>CONVERT_IMPLICIT</code> lagta hai aur seek, scan ban sakta hai (khaaskar SQL collations mein). EF mein yeh Day 6 wala Unicode mapping trap hai. Ulta case (<code>nvarchar</code> column aur <code>varchar</code> parameter) parameter ko convert karta hai, isliye seek aam taur par theek rehta hai. Plan mein warning triangle dikhta hai; use padho.</li>
 <li><b>LIKE:</b> <code>LIKE 'INV-00%'</code> seek kar sakta hai; <code>LIKE '%00'</code> nahi kar sakta (leading wildcard ke liye full-text search ya doosra design chahiye).</li>
 <li><b>Plan kaise padhein:</b> daayein se baayein, upar se neeche. Dekho <b>Index Seek vs Index/Table Scan</b>, <b>Key Lookup</b> (aur uski row count), mote arrows, <b>warnings</b> (implicit conversion, tempdb mein spill) aur sabse bada cost percentage. Asli numbers ke liye <b>actual</b> plan use karo.</li>
 <li><b>Estimated vs actual rows:</b> optimizer plan <b>statistics</b> (har index ya column ka histogram) se chunta hai. Estimated aur actual rows mein bada farq clue hai: purani ya sampled statistics, skewed data, ya kisi ajeeb value se sniff hua parameter. Cardinality estimator ka model compatibility level ke saath badalta hai.</li>
@@ -156,8 +156,8 @@ window.TL_DAY = {
 <ul>
 <li><b>Joins:</b> <code>INNER</code> सिर्फ़ matches रखता है; <code>LEFT</code> सारी left rows रखता है (right में NULLs); <code>CROSS JOIN</code> हर combination है। <b>Trap:</b> LEFT JOIN की right table पर <code>WHERE</code> filter NULL rows हटा देता है और चुपचाप उसे inner join बना देता है; वह condition <code>ON</code> clause में रखो (Puzzle 3)।</li>
 <li><b>APPLY:</b> <code>CROSS APPLY</code> हर <b>left row</b> के लिए subquery या table function चलाता है (inner-join जैसा); <code>OUTER APPLY</code> उन left rows को रखता है जिनका result नहीं है। Classic use है "हर group में top N"।</li>
-<li><b>Anti-join:</b> <code>NOT EXISTS</code> use करो। <code>NOT IN (subquery)</code> में subquery एक भी NULL दे दे तो <b>कोई row नहीं आती</b>, क्योंकि <code>x &lt;&gt; NULL</code> unknown है, true नहीं (Puzzle 1)। <code>LEFT JOIN ... WHERE right.key IS NULL</code> सही विकल्प है।</li>
-<li><b>CTE:</b> readability के लिए नाम वाली query। SQL Server में यह <b>materialise नहीं होती</b>: text जहाँ use हो वहाँ expand होता है, इसलिए दो बार reference करने पर दो बार चल सकती है। <b>Recursive CTE</b> (anchor <code>UNION ALL</code> recursive part) org chart जैसे trees चलती है; <code>MAXRECURSION</code> default 100 है, <code>0</code> limit हटा देता है (cycles से सावधान)।</li>
+<li><b>Anti-join:</b> <code>NOT EXISTS</code> use करो। <code>NOT IN (subquery)</code> में subquery एक भी NULL दे दे तो <b>कोई row नहीं आती</b>, क्योंकि <code>x &lt;&gt; NULL</code> unknown है, true नहीं (Puzzle 1)। <code>LEFT JOIN ... WHERE right.key IS NULL</code> सही option है।</li>
+<li><b>CTE:</b> readability के लिए नाम वाली query। SQL Server में यह <b>materialise नहीं होती</b>: text जहाँ use हो वहाँ expand होता है, इसलिए दो बार reference करने पर दो बार चल सकती है। <b>Recursive CTE</b> (anchor <code>UNION ALL</code> recursive part) org chart जैसे trees पर चलती है; <code>MAXRECURSION</code> default 100 है, <code>0</code> limit हटा देता है (cycles से सावधान)।</li>
 <li><b>Window functions:</b> <code>ROW_NUMBER()</code> (unique), <code>RANK()</code> (ties को एक number, फिर gap), <code>DENSE_RANK()</code> (ties को एक number, gap नहीं) (Puzzle 2); <code>LAG/LEAD</code> पिछली या अगली row पढ़ते हैं; <code>SUM() OVER (ORDER BY ...)</code> running total देता है।</li>
 <li><b>Frame trap:</b> <code>ORDER BY</code> हो और frame न लिखा हो तो default <code>RANGE UNBOUNDED PRECEDING</code> है: <b>same</b> order value वाली rows peers होती हैं और उन्हें same total मिलता है। सच्चे row-by-row running total के लिए <code>ROWS UNBOUNDED PRECEDING</code> लिखो (और यह आम तौर पर तेज़ भी है; Puzzle 4)।</li>
 </ul>
@@ -166,8 +166,8 @@ window.TL_DAY = {
 <ul>
 <li><b>Joins:</b> <code>INNER</code> sirf matches rakhta hai; <code>LEFT</code> saari left rows rakhta hai (right mein NULLs); <code>CROSS JOIN</code> har combination hai. <b>Trap:</b> LEFT JOIN ki right table par <code>WHERE</code> filter NULL rows hata deta hai aur chupchaap use inner join bana deta hai; woh condition <code>ON</code> clause mein rakho (Puzzle 3).</li>
 <li><b>APPLY:</b> <code>CROSS APPLY</code> har <b>left row</b> ke liye subquery ya table function chalata hai (inner-join jaisa); <code>OUTER APPLY</code> un left rows ko rakhta hai jinka result nahi hai. Classic use hai "har group mein top N".</li>
-<li><b>Anti-join:</b> <code>NOT EXISTS</code> use karo. <code>NOT IN (subquery)</code> mein subquery ek bhi NULL de de to <b>koi row nahi aati</b>, kyunki <code>x &lt;&gt; NULL</code> unknown hai, true nahi (Puzzle 1). <code>LEFT JOIN ... WHERE right.key IS NULL</code> sahi vikalp hai.</li>
-<li><b>CTE:</b> readability ke liye naam wali query. SQL Server mein yeh <b>materialise nahi hoti</b>: text jahan use ho wahan expand hota hai, isliye do baar reference karne par do baar chal sakti hai. <b>Recursive CTE</b> (anchor <code>UNION ALL</code> recursive part) org chart jaise trees chalti hai; <code>MAXRECURSION</code> default 100 hai, <code>0</code> limit hata deta hai (cycles se saavdhaan).</li>
+<li><b>Anti-join:</b> <code>NOT EXISTS</code> use karo. <code>NOT IN (subquery)</code> mein subquery ek bhi NULL de de to <b>koi row nahi aati</b>, kyunki <code>x &lt;&gt; NULL</code> unknown hai, true nahi (Puzzle 1). <code>LEFT JOIN ... WHERE right.key IS NULL</code> sahi option hai.</li>
+<li><b>CTE:</b> readability ke liye naam wali query. SQL Server mein yeh <b>materialise nahi hoti</b>: text jahan use ho wahan expand hota hai, isliye do baar reference karne par do baar chal sakti hai. <b>Recursive CTE</b> (anchor <code>UNION ALL</code> recursive part) org chart jaise trees par chalti hai; <code>MAXRECURSION</code> default 100 hai, <code>0</code> limit hata deta hai (cycles se saavdhaan).</li>
 <li><b>Window functions:</b> <code>ROW_NUMBER()</code> (unique), <code>RANK()</code> (ties ko ek number, phir gap), <code>DENSE_RANK()</code> (ties ko ek number, gap nahi) (Puzzle 2); <code>LAG/LEAD</code> pichli ya agli row padhte hain; <code>SUM() OVER (ORDER BY ...)</code> running total deta hai.</li>
 <li><b>Frame trap:</b> <code>ORDER BY</code> ho aur frame na likha ho to default <code>RANGE UNBOUNDED PRECEDING</code> hai: <b>same</b> order value wali rows peers hoti hain aur unhe same total milta hai. Sachche row-by-row running total ke liye <code>ROWS UNBOUNDED PRECEDING</code> likho (aur yeh aam taur par tez bhi hai; Puzzle 4).</li>
 </ul>
@@ -186,7 +186,8 @@ window.TL_DAY = {
         en: `<p><b>Picture — one railway ticket window with two queues:</b> if the clerk keeps your form on the desk while you fetch a document, the people behind you <b>block</b>. A <b>deadlock</b> is two clerks each holding a form the other needs: someone must give way, and SQL Server picks one transaction as the <b>victim</b> (error 1205).</p>
 <ul>
 <li><b>READ COMMITTED (default in SQL Server):</b> you never read uncommitted data, but readers take short shared locks, so <b>readers and writers can block each other</b>, and a row can change between two reads in the same transaction.</li>
-<li><b>RCSI</b> (<code>READ_COMMITTED_SNAPSHOT ON</code>): the same level, but readers see the <b>last committed version of each row at statement start</b> from the version store instead of taking shared locks. Readers stop blocking writers. No code change; costs tempdb space and version-store management. Azure SQL Database turns it on by default (check current docs).</li>
+<li><b>What each level prevents:</b> READ UNCOMMITTED prevents nothing (<b>dirty reads</b> are possible); READ COMMITTED stops dirty reads; REPEATABLE READ also stops <b>non-repeatable reads</b> (a row you read again in the same transaction has changed); SERIALIZABLE also stops <b>phantoms</b> (new rows appearing in a repeated range query) using key-range locks.</li>
+<li><b>RCSI</b> (<code>READ_COMMITTED_SNAPSHOT ON</code>): the same level, but readers see the <b>last committed version of each row at statement start</b> from the version store instead of taking shared locks. Readers do not block writers and writers do not block readers (writers still block writers). No code change; costs tempdb space and version-store management. Azure SQL Database has RCSI (and ALLOW_SNAPSHOT_ISOLATION) on by default.</li>
 <li><b>SNAPSHOT</b> (<code>ALLOW_SNAPSHOT_ISOLATION ON</code>, then <code>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</code>): a <b>transaction-level</b> consistent view. If another transaction changed a row you try to update, you get an <b>update conflict (error 3960)</b> and retry. Use it for multi-statement consistent reads.</li>
 <li><b>REPEATABLE READ / SERIALIZABLE:</b> hold more locks for longer (SERIALIZABLE also locks key ranges). Correct for some money rules, but more blocking and deadlocks. Avoid <code>NOLOCK</code> as a speed trick: it allows dirty, duplicated or missing rows.</li>
 <li><b>Blocking vs deadlock:</b> blocking is a queue (the waiter waits, then proceeds); a deadlock is a cycle (nobody can proceed). Blocking is found with <code>sys.dm_exec_requests</code> (<code>blocking_session_id</code>) and the blocked process report; deadlocks are recorded in the always-on <b>system_health</b> Extended Events session as an <code>xml_deadlock_report</code> (trace flag 1222 is the old way).</li>
@@ -197,7 +198,8 @@ window.TL_DAY = {
         hi: `<p><b>Picture — railway ticket window पर दो queues:</b> अगर clerk आपका form desk पर रखे रहे जब आप document लेने गए हैं, तो पीछे वाले <b>block</b> होते हैं। <b>Deadlock</b> है दो clerks जिनमें हर एक के पास वह form है जो दूसरे को चाहिए: किसी को पीछे हटना पड़ेगा, और SQL Server एक transaction को <b>victim</b> चुन लेता है (error 1205)।</p>
 <ul>
 <li><b>READ COMMITTED (SQL Server में default):</b> तुम कभी uncommitted data नहीं पढ़ते, पर readers छोटे shared locks लेते हैं, इसलिए <b>readers और writers एक-दूसरे को block कर सकते हैं</b>, और एक ही transaction में दो reads के बीच row बदल सकती है।</li>
-<li><b>RCSI</b> (<code>READ_COMMITTED_SNAPSHOT ON</code>): वही level, पर readers shared locks की जगह version store से <b>statement शुरू होने पर हर row का last committed version</b> देखते हैं। Readers writers को block करना बंद कर देते हैं। Code बदलना नहीं पड़ता; tempdb space और version-store management की कीमत है। Azure SQL Database में यह default ON है (current docs देख लो)।</li>
+<li><b>हर level क्या रोकता है:</b> READ UNCOMMITTED कुछ नहीं रोकता (<b>dirty reads</b> हो सकती हैं); READ COMMITTED dirty reads रोकता है; REPEATABLE READ <b>non-repeatable reads</b> भी रोकता है (एक ही transaction में दोबारा पढ़ी row बदल चुकी हो); SERIALIZABLE <b>phantoms</b> (बार-बार की range query में नई rows आ जाना) भी रोकता है, key-range locks से।</li>
+<li><b>RCSI</b> (<code>READ_COMMITTED_SNAPSHOT ON</code>): वही level, पर readers shared locks की जगह version store से <b>statement शुरू होने पर हर row का last committed version</b> देखते हैं। Readers writers को block नहीं करते और writers readers को block नहीं करते (writers writers को अब भी block करते हैं)। Code बदलना नहीं पड़ता; tempdb space और version-store management की कीमत है। Azure SQL Database में RCSI (और ALLOW_SNAPSHOT_ISOLATION) default ON है।</li>
 <li><b>SNAPSHOT</b> (<code>ALLOW_SNAPSHOT_ISOLATION ON</code>, फिर <code>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</code>): <b>transaction-level</b> consistent view। अगर किसी और transaction ने वह row बदली जिसे तुम update करने जा रहे हो, तो <b>update conflict (error 3960)</b> आता है और retry करना पड़ता है। Multi-statement consistent reads के लिए use करो।</li>
 <li><b>REPEATABLE READ / SERIALIZABLE:</b> ज़्यादा locks ज़्यादा देर रखते हैं (SERIALIZABLE key ranges भी lock करता है)। कुछ पैसे वाले rules के लिए सही, पर blocking और deadlocks ज़्यादा। <code>NOLOCK</code> को speed trick की तरह use मत करो: इससे dirty, duplicate या missing rows मिल सकती हैं।</li>
 <li><b>Blocking बनाम deadlock:</b> blocking एक queue है (इंतज़ार करने वाला रुकता है, फिर आगे बढ़ता है); deadlock एक cycle है (कोई आगे नहीं बढ़ सकता)। Blocking <code>sys.dm_exec_requests</code> (<code>blocking_session_id</code>) और blocked process report से मिलता है; deadlocks हमेशा चलने वाले <b>system_health</b> Extended Events session में <code>xml_deadlock_report</code> के रूप में record होते हैं (trace flag 1222 पुराना तरीका है)।</li>
@@ -208,7 +210,8 @@ window.TL_DAY = {
         hg: `<p><b>Picture — railway ticket window par do queues:</b> agar clerk aapka form desk par rakhe rahe jab aap document lene gaye hain, to peeche wale <b>block</b> hote hain. <b>Deadlock</b> hai do clerks jinme har ek ke paas woh form hai jo doosre ko chahiye: kisi ko peeche hatna padega, aur SQL Server ek transaction ko <b>victim</b> chun leta hai (error 1205).</p>
 <ul>
 <li><b>READ COMMITTED (SQL Server mein default):</b> tum kabhi uncommitted data nahi padhte, par readers chhote shared locks lete hain, isliye <b>readers aur writers ek-doosre ko block kar sakte hain</b>, aur ek hi transaction mein do reads ke beech row badal sakti hai.</li>
-<li><b>RCSI</b> (<code>READ_COMMITTED_SNAPSHOT ON</code>): wahi level, par readers shared locks ki jagah version store se <b>statement shuru hone par har row ka last committed version</b> dekhte hain. Readers writers ko block karna band kar dete hain. Code badalna nahi padta; tempdb space aur version-store management ki keemat hai. Azure SQL Database mein yeh default ON hai (current docs dekh lo).</li>
+<li><b>Har level kya rokta hai:</b> READ UNCOMMITTED kuch nahi rokta (<b>dirty reads</b> ho sakti hain); READ COMMITTED dirty reads rokta hai; REPEATABLE READ <b>non-repeatable reads</b> bhi rokta hai (ek hi transaction mein dobara padhi row badal chuki ho); SERIALIZABLE <b>phantoms</b> (baar-baar ki range query mein nayi rows aa jaana) bhi rokta hai, key-range locks se.</li>
+<li><b>RCSI</b> (<code>READ_COMMITTED_SNAPSHOT ON</code>): wahi level, par readers shared locks ki jagah version store se <b>statement shuru hone par har row ka last committed version</b> dekhte hain. Readers writers ko block nahi karte aur writers readers ko block nahi karte (writers writers ko ab bhi block karte hain). Code badalna nahi padta; tempdb space aur version-store management ki keemat hai. Azure SQL Database mein RCSI (aur ALLOW_SNAPSHOT_ISOLATION) default ON hai.</li>
 <li><b>SNAPSHOT</b> (<code>ALLOW_SNAPSHOT_ISOLATION ON</code>, phir <code>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</code>): <b>transaction-level</b> consistent view. Agar kisi aur transaction ne woh row badli jise tum update karne ja rahe ho, to <b>update conflict (error 3960)</b> aata hai aur retry karna padta hai. Multi-statement consistent reads ke liye use karo.</li>
 <li><b>REPEATABLE READ / SERIALIZABLE:</b> zyaada locks zyaada der rakhte hain (SERIALIZABLE key ranges bhi lock karta hai). Kuch paise wale rules ke liye sahi, par blocking aur deadlocks zyaada. <code>NOLOCK</code> ko speed trick ki tarah use mat karo: isse dirty, duplicate ya missing rows mil sakti hain.</li>
 <li><b>Blocking vs deadlock:</b> blocking ek queue hai (intezaar karne wala rukta hai, phir aage badhta hai); deadlock ek cycle hai (koi aage nahi badh sakta). Blocking <code>sys.dm_exec_requests</code> (<code>blocking_session_id</code>) aur blocked process report se milta hai; deadlocks hamesha chalne wale <b>system_health</b> Extended Events session mein <code>xml_deadlock_report</code> ke roop mein record hote hain (trace flag 1222 purana tareeka hai).</li>
@@ -456,7 +459,7 @@ OPTION (MAXRECURSION 100);`
           hg: "SQL Server 2022 aur baad: null-safe comparison aur GREATEST (yahan chalaya nahi, LocalDB 2019 hai)"
         },
         check: "none",
-        src: `-- SQL Server 2022+ (compatibility level 160): NULL-safe equality, no OR ... IS NULL dance
+        src: `-- SQL Server 2022+: NULL-safe equality, no OR ... IS NULL dance
 SELECT o.OrderId
 FROM dbo.Orders AS o
 JOIN dbo.Shipments AS s ON o.PromisedDate IS NOT DISTINCT FROM s.PromisedDate;
@@ -624,8 +627,8 @@ SELECT 'closed_rows', COUNT(*) FROM #r;`
       body: {
         en: `<p><b>Analogy — a recipe card vs a cook:</b> an <b>inline table function</b> is a recipe card the chef reads and merges into the dish (the optimizer expands it into the outer query). A multi-statement function or an old scalar UDF is a separate cook you call for every plate: opaque to the optimizer and slow at scale.</p>
 <ul>
-<li><b>Inline TVF</b> (<code>RETURNS TABLE AS RETURN SELECT ...</code>): behaves like a parameterised view; it gets real statistics and can be combined with other joins and filters. Prefer it to a multi-statement TVF (<code>@t TABLE ... INSERT ...</code>), which is a black box: fixed estimates (1 row before SQL Server 2014, 100 rows from 2014; interleaved execution fixes this from SQL Server 2017 at compatibility level 140).</li>
-<li><b>Scalar UDF:</b> before SQL Server 2019 it ran <b>once per row</b>, prevented parallelism and hid its cost from the plan. <b>Scalar UDF inlining</b> (SQL Server 2019, compatibility level 150) rewrites many simple ones into the query. <code>sys.sql_modules.is_inlineable</code> tells you; the snippet prints 1 for <code>WithGst</code>. Anything with loops, certain functions or table variables may not inline.</li>
+<li><b>Inline TVF</b> (<code>RETURNS TABLE AS RETURN SELECT ...</code>): behaves like a parameterised view; it gets real statistics and can be combined with other joins and filters. Prefer it to a multi-statement TVF (<code>@t TABLE ... INSERT ...</code>), which is a black box: fixed estimates (1 row under the old cardinality estimator, 100 rows under the new one at compat 120+, SQL Server 2014; interleaved execution fixes this from SQL Server 2017 at compatibility level 140).</li>
+<li><b>Scalar UDF:</b> before SQL Server 2019 it ran <b>once per row</b>, prevented parallelism and hid its cost from the plan. <b>Scalar UDF inlining</b> (SQL Server 2019, compatibility level 150) rewrites many simple ones into the query. <code>sys.sql_modules.is_inlineable</code> shows eligibility (1 = eligible, not a guarantee: compatibility level, database-scoped configuration or the calling query can still block inlining); the snippet prints 1 for <code>WithGst</code>. Anything with loops, certain functions or table variables may not inline.</li>
 <li><b>Stored procedure vs function:</b> a procedure can do DML, transactions and return several result sets; a function must be side-effect free and can sit inside a query. Procedures are the unit of deployment, permissions and plan reuse; EF Core (Day 6) is often enough, but procedures fit set-based batch work and strict permission models.</li>
 <li><b>Temp table</b> (<code>#t</code>): lives in tempdb, has <b>statistics</b> and can have indexes, is visible to child procedures, and takes part in rollback. <b>Table variable</b> (<code>@t</code>): no column statistics, and it is <b>not rolled back</b> by <code>ROLLBACK</code> of the surrounding transaction (the last query shows 2 table-variable rows and 3 temp-table rows). Before SQL Server 2019 the optimizer assumed 1 row for it; <b>deferred compilation</b> (2019, compat 150) uses the real count at first execution, still without value statistics.</li>
 <li>Rule of thumb: small and few rows or a TVP: table variable; more than a few hundred rows, joins, or need statistics: temp table.</li>
@@ -633,18 +636,18 @@ SELECT 'closed_rows', COUNT(*) FROM #r;`
 <p><b>When to use:</b> inline TVFs for reusable filters/joins, temp tables to break up a big query into measured steps, procedures for batch jobs and permission boundaries. <b>When not:</b> avoid multi-statement TVFs and scalar UDFs on large sets (check <code>is_inlineable</code>), and do not use a CTE where you really want a materialised temp table.</p>`,
         hi: `<p><b>Analogy — recipe card बनाम cook:</b> <b>inline table function</b> एक recipe card है जिसे chef पढ़कर dish में मिला लेता है (optimizer उसे outer query में expand कर देता है)। Multi-statement function या पुराना scalar UDF एक अलग cook है जिसे हर plate के लिए बुलाना पड़ता है: optimizer को opaque और scale पर slow।</p>
 <ul>
-<li><b>Inline TVF</b> (<code>RETURNS TABLE AS RETURN SELECT ...</code>): parameterised view जैसा चलता है; उसे असली statistics मिलती हैं और वह दूसरे joins और filters के साथ मिल सकता है। Multi-statement TVF (<code>@t TABLE ... INSERT ...</code>) से बेहतर, जो black box है: fixed estimates (SQL Server 2014 से पहले 1 row, 2014 से 100 rows; interleaved execution इसे SQL Server 2017 में compatibility level 140 पर ठीक करता है)।</li>
-<li><b>Scalar UDF:</b> SQL Server 2019 से पहले यह <b>हर row के लिए एक बार</b> चलता था, parallelism रोकता था और अपना cost plan से छुपाता था। <b>Scalar UDF inlining</b> (SQL Server 2019, compatibility level 150) कई simple UDFs को query में rewrite कर देता है। <code>sys.sql_modules.is_inlineable</code> बताता है; snippet <code>WithGst</code> के लिए 1 print करता है। Loops, कुछ functions या table variables वाला UDF inline न भी हो।</li>
-<li><b>Stored procedure बनाम function:</b> procedure DML, transactions और कई result sets कर सकता है; function side-effect free होना चाहिए और query के अंदर बैठ सकता है। Procedures deployment, permissions और plan reuse की इकाई हैं; EF Core (Day 6) अक्सर काफ़ी है, पर procedures set-based batch काम और सख़्त permission models में फ़िट होते हैं।</li>
+<li><b>Inline TVF</b> (<code>RETURNS TABLE AS RETURN SELECT ...</code>): parameterised view जैसा चलता है; उसे असली statistics मिलती हैं और वह दूसरे joins और filters के साथ मिल सकता है। Multi-statement TVF (<code>@t TABLE ... INSERT ...</code>) से बेहतर, जो black box है: fixed estimates (पुराने cardinality estimator में 1 row, नए में (compat 120+, SQL Server 2014) 100 rows; interleaved execution इसे SQL Server 2017 में compatibility level 140 पर ठीक करता है)।</li>
+<li><b>Scalar UDF:</b> SQL Server 2019 से पहले यह <b>हर row के लिए एक बार</b> चलता था, parallelism रोकता था और अपना cost plan से छुपाता था। <b>Scalar UDF inlining</b> (SQL Server 2019, compatibility level 150) कई simple UDFs को query में rewrite कर देता है। <code>sys.sql_modules.is_inlineable</code> eligibility दिखाता है (1 = eligible, guarantee नहीं: compatibility level, database-scoped configuration या calling query अब भी inlining रोक सकते हैं); snippet <code>WithGst</code> के लिए 1 print करता है। Loops, कुछ functions या table variables वाला UDF inline न भी हो।</li>
+<li><b>Stored procedure बनाम function:</b> procedure DML, transactions और कई result sets कर सकता है; function side-effect free होना चाहिए और query के अंदर बैठ सकता है। Procedures deployment, permissions और plan reuse की unit हैं; EF Core (Day 6) अक्सर काफ़ी है, पर procedures set-based batch काम और सख़्त permission models में फ़िट होते हैं।</li>
 <li><b>Temp table</b> (<code>#t</code>): tempdb में रहती है, उस पर <b>statistics</b> होती हैं और indexes बन सकते हैं, child procedures को दिखती है, और rollback में हिस्सा लेती है। <b>Table variable</b> (<code>@t</code>): column statistics नहीं, और आसपास की transaction के <code>ROLLBACK</code> से यह <b>rollback नहीं होता</b> (आख़िरी query में table-variable की 2 rows और temp-table की 3 rows दिखती हैं)। SQL Server 2019 से पहले optimizer इसे 1 row मानता था; <b>deferred compilation</b> (2019, compat 150) पहली execution पर असली count use करता है, पर value statistics फिर भी नहीं।</li>
 <li>Rule of thumb: छोटा और कम rows या TVP: table variable; कुछ सौ rows से ज़्यादा, joins, या statistics चाहिए: temp table।</li>
 </ul>
 <p><b>कब use करें:</b> reusable filters/joins के लिए inline TVFs, बड़ी query को measured steps में तोड़ने के लिए temp tables, batch jobs और permission boundaries के लिए procedures। <b>कब नहीं:</b> बड़े sets पर multi-statement TVFs और scalar UDFs से बचो (<code>is_inlineable</code> देखो), और जहाँ materialised temp table चाहिए वहाँ CTE मत लगाओ।</p>`,
         hg: `<p><b>Analogy — recipe card vs cook:</b> <b>inline table function</b> ek recipe card hai jise chef padhkar dish mein mila leta hai (optimizer use outer query mein expand kar deta hai). Multi-statement function ya purana scalar UDF ek alag cook hai jise har plate ke liye bulana padta hai: optimizer ko opaque aur scale par slow.</p>
 <ul>
-<li><b>Inline TVF</b> (<code>RETURNS TABLE AS RETURN SELECT ...</code>): parameterised view jaisa chalta hai; use asli statistics milti hain aur woh doosre joins aur filters ke saath mil sakta hai. Multi-statement TVF (<code>@t TABLE ... INSERT ...</code>) se behtar, jo black box hai: fixed estimates (SQL Server 2014 se pehle 1 row, 2014 se 100 rows; interleaved execution ise SQL Server 2017 mein compatibility level 140 par theek karta hai).</li>
-<li><b>Scalar UDF:</b> SQL Server 2019 se pehle yeh <b>har row ke liye ek baar</b> chalta tha, parallelism rokta tha aur apna cost plan se chhupata tha. <b>Scalar UDF inlining</b> (SQL Server 2019, compatibility level 150) kai simple UDFs ko query mein rewrite kar deta hai. <code>sys.sql_modules.is_inlineable</code> batata hai; snippet <code>WithGst</code> ke liye 1 print karta hai. Loops, kuch functions ya table variables wala UDF inline na bhi ho.</li>
-<li><b>Stored procedure vs function:</b> procedure DML, transactions aur kai result sets kar sakta hai; function side-effect free hona chahiye aur query ke andar baith sakta hai. Procedures deployment, permissions aur plan reuse ki ikaai hain; EF Core (Day 6) aksar kaafi hai, par procedures set-based batch kaam aur sakht permission models mein fit hote hain.</li>
+<li><b>Inline TVF</b> (<code>RETURNS TABLE AS RETURN SELECT ...</code>): parameterised view jaisa chalta hai; use asli statistics milti hain aur woh doosre joins aur filters ke saath mil sakta hai. Multi-statement TVF (<code>@t TABLE ... INSERT ...</code>) se behtar, jo black box hai: fixed estimates (purane cardinality estimator mein 1 row, naye mein (compat 120+, SQL Server 2014) 100 rows; interleaved execution ise SQL Server 2017 mein compatibility level 140 par theek karta hai).</li>
+<li><b>Scalar UDF:</b> SQL Server 2019 se pehle yeh <b>har row ke liye ek baar</b> chalta tha, parallelism rokta tha aur apna cost plan se chhupata tha. <b>Scalar UDF inlining</b> (SQL Server 2019, compatibility level 150) kai simple UDFs ko query mein rewrite kar deta hai. <code>sys.sql_modules.is_inlineable</code> eligibility dikhata hai (1 = eligible, guarantee nahi: compatibility level, database-scoped configuration ya calling query ab bhi inlining rok sakte hain); snippet <code>WithGst</code> ke liye 1 print karta hai. Loops, kuch functions ya table variables wala UDF inline na bhi ho.</li>
+<li><b>Stored procedure vs function:</b> procedure DML, transactions aur kai result sets kar sakta hai; function side-effect free hona chahiye aur query ke andar baith sakta hai. Procedures deployment, permissions aur plan reuse ki unit hain; EF Core (Day 6) aksar kaafi hai, par procedures set-based batch kaam aur sakht permission models mein fit hote hain.</li>
 <li><b>Temp table</b> (<code>#t</code>): tempdb mein rehti hai, us par <b>statistics</b> hoti hain aur indexes ban sakte hain, child procedures ko dikhti hai, aur rollback mein hissa leti hai. <b>Table variable</b> (<code>@t</code>): column statistics nahi, aur aaspaas ki transaction ke <code>ROLLBACK</code> se yeh <b>rollback nahi hota</b> (aakhri query mein table-variable ki 2 rows aur temp-table ki 3 rows dikhti hain). SQL Server 2019 se pehle optimizer ise 1 row maanta tha; <b>deferred compilation</b> (2019, compat 150) pehli execution par asli count use karta hai, par value statistics phir bhi nahi.</li>
 <li>Rule of thumb: chhota aur kam rows ya TVP: table variable; kuch sau rows se zyaada, joins, ya statistics chahiye: temp table.</li>
 </ul>
@@ -705,7 +708,7 @@ SELECT (SELECT COUNT(*) FROM @tv) AS table_var_rows, (SELECT COUNT(*) FROM #big)
 <li>Error <b>1205</b> (deadlock victim) is retried up to three times; any other error, such as the check constraint 547 on an overdraft, is re-thrown with <code>THROW</code>. The last two selects prove the failed transfer changed nothing.</li>
 <li>The second snippet turns on <b>RCSI</b> and <b>SNAPSHOT</b>. Switching RCSI needs exclusive access to the database for a moment (<code>WITH ROLLBACK IMMEDIATE</code> disconnects others), so plan it for a quiet window. Test the tempdb version-store load first.</li>
 <li>The third snippet reads deadlock graphs from <code>system_health</code> (ring buffer here; the event files hold more history). It is not run here because LocalDB has no deadlocks to show.</li>
-<li>In application code the retry belongs in the caller or in a resilience policy (Day 13); with EF Core the execution strategy (Day 6) covers transient connection errors, not deadlock logic you must design.</li>
+<li>In application code, EF Core's <code>EnableRetryOnFailure</code> already treats 1205 and 3960 as transient errors and replays the whole unit when you wrap it in <code>CreateExecutionStrategy().Execute(...)</code> (Day 6). Retries hide the symptom; a consistent access order removes the cause, so use both.</li>
 </ul>
 <p><b>When to use:</b> ordered access plus a bounded retry for hot, contended rows; RCSI for read-heavy systems with reader/writer blocking; SNAPSHOT for consistent reports. <b>When not:</b> do not retry non-idempotent work blindly outside the transaction (an email or payment call); do not switch RCSI on production without checking code that relies on blocking reads (some "queue table" patterns do).</p>`,
         hi: `<p><b>Analogy — संकरी गली पार करते दो लोग:</b> दोनों हमेशा बाईं तरफ़ चलें तो निकल जाते हैं। एक बाएँ और दूसरा दाएँ, एक-दूसरे की जगह की तरफ़ जाएँ तो अटक जाते हैं। एक तय नियम (हमेशा कम account id पहले lock करो) अटकना रोकता है।</p>
@@ -715,7 +718,7 @@ SELECT (SELECT COUNT(*) FROM @tv) AS table_var_rows, (SELECT COUNT(*) FROM #big)
 <li>Error <b>1205</b> (deadlock victim) तीन बार तक retry होता है; कोई और error, जैसे overdraft पर check constraint 547, <code>THROW</code> से फिर फेंका जाता है। आख़िरी दो selects साबित करते हैं कि failed transfer ने कुछ नहीं बदला।</li>
 <li>दूसरा snippet <b>RCSI</b> और <b>SNAPSHOT</b> ON करता है। RCSI बदलने के लिए database पर पल भर exclusive access चाहिए (<code>WITH ROLLBACK IMMEDIATE</code> बाक़ी connections काट देता है), इसलिए शांत window में करो। पहले tempdb version-store का load test करो।</li>
 <li>तीसरा snippet <code>system_health</code> से deadlock graphs पढ़ता है (यहाँ ring buffer; event files में ज़्यादा history होती है)। यह यहाँ चलाया नहीं गया क्योंकि LocalDB में दिखाने लायक़ deadlocks नहीं हैं।</li>
-<li>Application code में retry caller में या resilience policy में (Day 13) लगता है; EF Core में execution strategy (Day 6) transient connection errors संभालती है, deadlock logic नहीं जो तुम्हें design करना है।</li>
+<li>Application code में EF Core का <code>EnableRetryOnFailure</code> 1205 और 3960 को पहले से transient errors मानता है, और पूरी unit को तब replay करता है जब वह <code>CreateExecutionStrategy().Execute(...)</code> में wrapped हो (Day 6)। Retries symptom छुपाते हैं; consistent access order वजह हटाता है, इसलिए दोनों use करो।</li>
 </ul>
 <p><b>कब use करें:</b> hot, contended rows के लिए ordered access और bounded retry; reader/writer blocking वाले read-heavy systems के लिए RCSI; consistent reports के लिए SNAPSHOT। <b>कब नहीं:</b> transaction के बाहर non-idempotent काम (email या payment call) को आँख मूँदकर retry मत करो; production में RCSI ON करने से पहले उस code को देखो जो blocking reads पर टिका है (कुछ "queue table" patterns ऐसे हैं)।</p>`,
         hg: `<p><b>Analogy — sankri gali paar karte do log:</b> dono hamesha baayein chalein to nikal jaate hain. Ek baayein aur doosra daayein, ek-doosre ki jagah ki taraf jaayein to atak jaate hain. Ek tay niyam (hamesha kam account id pehle lock karo) atakna rokta hai.</p>
@@ -725,7 +728,7 @@ SELECT (SELECT COUNT(*) FROM @tv) AS table_var_rows, (SELECT COUNT(*) FROM #big)
 <li>Error <b>1205</b> (deadlock victim) teen baar tak retry hota hai; koi aur error, jaise overdraft par check constraint 547, <code>THROW</code> se phir phenka jaata hai. Aakhri do selects saabit karte hain ki failed transfer ne kuch nahi badla.</li>
 <li>Doosra snippet <b>RCSI</b> aur <b>SNAPSHOT</b> ON karta hai. RCSI badalne ke liye database par pal bhar exclusive access chahiye (<code>WITH ROLLBACK IMMEDIATE</code> baaki connections kaat deta hai), isliye shaant window mein karo. Pehle tempdb version-store ka load test karo.</li>
 <li>Teesra snippet <code>system_health</code> se deadlock graphs padhta hai (yahan ring buffer; event files mein zyaada history hoti hai). Yeh yahan chalaya nahi gaya kyunki LocalDB mein dikhane laayak deadlocks nahi hain.</li>
-<li>Application code mein retry caller mein ya resilience policy mein (Day 13) lagta hai; EF Core mein execution strategy (Day 6) transient connection errors sambhalti hai, deadlock logic nahi jo tumhe design karna hai.</li>
+<li>Application code mein EF Core ka <code>EnableRetryOnFailure</code> 1205 aur 3960 ko pehle se transient errors maanta hai, aur poori unit ko tab replay karta hai jab woh <code>CreateExecutionStrategy().Execute(...)</code> mein wrapped ho (Day 6). Retries symptom chhupate hain; consistent access order wajah hatata hai, isliye dono use karo.</li>
 </ul>
 <p><b>Kab use karein:</b> hot, contended rows ke liye ordered access aur bounded retry; reader/writer blocking wale read-heavy systems ke liye RCSI; consistent reports ke liye SNAPSHOT. <b>Kab nahi:</b> transaction ke bahar non-idempotent kaam (email ya payment call) ko aankh moondkar retry mat karo; production mein RCSI ON karne se pehle us code ko dekho jo blocking reads par tika hai (kuch "queue table" patterns aise hain).</p>`
       },
@@ -821,7 +824,7 @@ CROSS APPLY t.target_xml.nodes('RingBufferTarget/event[@name="xml_deadlock_repor
         en: `<p><b>Analogy — a doctor, not a pharmacist:</b> you do not hand out medicine before the diagnosis. Symptoms, tests, then treatment, then a follow-up check.</p>
 <ul>
 <li><b>1. Confirm and scope:</b> which endpoint or job, since when, always or sometimes, one tenant or all? A sudden change with no deploy points to a plan change, statistics, or a data-volume tipping point.</li>
-<li><b>2. Find the statement:</b> Application Insights dependency data, Query Store (top resource consumers, regressed queries), or the DMV query below. Current waits: <code>sys.dm_exec_requests</code> and <code>wait_type</code>.</li>
+<li><b>2. Find the statement:</b> Application Insights dependency data, Query Store (top resource consumers, regressed queries), the DMV query below; with EF, <code>ToQueryString()</code> (Day 5) gives the SQL to paste into SSMS. Current waits: <code>sys.dm_exec_requests</code> and <code>wait_type</code>.</li>
 <li><b>3. Is it waiting or working?</b> Blocked (locks), I/O, CPU, or memory grants. Do not tune a query that is only waiting on a blocker.</li>
 <li><b>4. Read the actual plan:</b> scan vs seek, key lookups, estimated vs actual rows, warnings, spills; <code>SET STATISTICS IO, TIME ON</code> for logical reads.</li>
 <li><b>5. Fix the cheapest cause first:</b> SARGability and types, statistics, a covering index, query rewrite (<code>EXISTS</code>, no row-by-row), then sniffing options. Hints and forced plans are the last tools, and they need an owner and a review date.</li>
@@ -832,7 +835,7 @@ CROSS APPLY t.target_xml.nodes('RingBufferTarget/event[@name="xml_deadlock_repor
         hi: `<p><b>Analogy — doctor, pharmacist नहीं:</b> diagnosis से पहले दवा नहीं बाँटते। Symptoms, tests, फिर इलाज, फिर follow-up check।</p>
 <ul>
 <li><b>1. Confirm और scope:</b> कौन सा endpoint या job, कब से, हमेशा या कभी-कभी, एक tenant या सब? Deploy के बिना अचानक बदलाव plan change, statistics, या data-volume के tipping point की तरफ़ इशारा करता है।</li>
-<li><b>2. Statement ढूँढो:</b> Application Insights dependency data, Query Store (top resource consumers, regressed queries), या नीचे वाली DMV query। अभी की waits: <code>sys.dm_exec_requests</code> और <code>wait_type</code>।</li>
+<li><b>2. Statement ढूँढो:</b> Application Insights dependency data, Query Store (top resource consumers, regressed queries), नीचे वाली DMV query; EF में <code>ToQueryString()</code> (Day 5) SQL देता है जिसे SSMS में paste कर सकते हो। अभी की waits: <code>sys.dm_exec_requests</code> और <code>wait_type</code>।</li>
 <li><b>3. यह इंतज़ार कर रही है या काम?</b> Blocked (locks), I/O, CPU, या memory grants। जो query सिर्फ़ किसी blocker का इंतज़ार कर रही है उसे tune मत करो।</li>
 <li><b>4. Actual plan पढ़ो:</b> scan बनाम seek, key lookups, estimated बनाम actual rows, warnings, spills; logical reads के लिए <code>SET STATISTICS IO, TIME ON</code>।</li>
 <li><b>5. सबसे सस्ती वजह पहले ठीक करो:</b> SARGability और types, statistics, covering index, query rewrite (<code>EXISTS</code>, row-by-row नहीं), फिर sniffing options। Hints और forced plans आख़िरी औज़ार हैं, और उनका एक owner और review date होनी चाहिए।</li>
@@ -843,7 +846,7 @@ CROSS APPLY t.target_xml.nodes('RingBufferTarget/event[@name="xml_deadlock_repor
         hg: `<p><b>Analogy — doctor, pharmacist nahi:</b> diagnosis se pehle dawa nahi baantte. Symptoms, tests, phir ilaaj, phir follow-up check.</p>
 <ul>
 <li><b>1. Confirm aur scope:</b> kaun sa endpoint ya job, kab se, hamesha ya kabhi-kabhi, ek tenant ya sab? Deploy ke bina achanak badlaav plan change, statistics, ya data-volume ke tipping point ki taraf ishaara karta hai.</li>
-<li><b>2. Statement dhoondho:</b> Application Insights dependency data, Query Store (top resource consumers, regressed queries), ya neeche wali DMV query. Abhi ki waits: <code>sys.dm_exec_requests</code> aur <code>wait_type</code>.</li>
+<li><b>2. Statement dhoondho:</b> Application Insights dependency data, Query Store (top resource consumers, regressed queries), neeche wali DMV query; EF mein <code>ToQueryString()</code> (Day 5) SQL deta hai jise SSMS mein paste kar sakte ho. Abhi ki waits: <code>sys.dm_exec_requests</code> aur <code>wait_type</code>.</li>
 <li><b>3. Yeh intezaar kar rahi hai ya kaam?</b> Blocked (locks), I/O, CPU, ya memory grants. Jo query sirf kisi blocker ka intezaar kar rahi hai use tune mat karo.</li>
 <li><b>4. Actual plan padho:</b> scan vs seek, key lookups, estimated vs actual rows, warnings, spills; logical reads ke liye <code>SET STATISTICS IO, TIME ON</code>.</li>
 <li><b>5. Sabse sasti wajah pehle theek karo:</b> SARGability aur types, statistics, covering index, query rewrite (<code>EXISTS</code>, row-by-row nahi), phir sniffing options. Hints aur forced plans aakhri auzaar hain, aur unka ek owner aur review date honi chahiye.</li>
@@ -879,7 +882,7 @@ ORDER BY qs.total_worker_time DESC;`
       id: "clustered-vs-nonclustered",
       depth: "short",
       q: "Clustered vs non-clustered index — what is the difference, and how do you choose the clustered key?",
-      answer: "Clustered stores the table's rows in key order, so there is one per table. Non-clustered is a separate sorted structure pointing back to rows; choose a narrow, unique, ever-increasing clustered key.",
+      answer: "Clustered stores the table's rows in logical key order, so there is one per table. Non-clustered is a separate sorted structure pointing back to rows; choose a narrow, unique, ever-increasing clustered key.",
       meaning: {
         hi: "Clustered: table की rows key order में रखी होती हैं, इसलिए हर table में एक। Non-clustered: अलग sorted structure जो rows की तरफ़ इशारा करता है; कई हो सकते हैं। Clustered key narrow, unique और बढ़ती जाने वाली चुनो।",
         hg: "Clustered: table ki rows key order mein rakhi hoti hain, isliye har table mein ek. Non-clustered: alag sorted structure jo rows ki taraf ishaara karta hai; kai ho sakte hain. Clustered key narrow, unique aur badhti jaane wali chuno."
@@ -888,19 +891,19 @@ ORDER BY qs.total_worker_time DESC;`
         en: `<ul>
 <li>Every non-clustered index stores the clustered key as its row pointer, so a wide clustered key makes <b>all</b> indexes bigger.</li>
 <li>Ever-increasing keys (<code>IDENTITY</code>, sequential GUID) append at the end of the B-tree; random GUIDs cause page splits and fragmentation.</li>
-<li>A table with no clustered index is a <b>heap</b>; it is sometimes fine for staging or bulk-load tables, but lookups then use a row id.</li>
+<li>A table with no clustered index is a <b>heap</b>; it is sometimes fine for staging or bulk-load tables, but lookups then use a row id, and rows that grow leave forwarding pointers (check <code>forwarded_record_count</code> in <code>sys.dm_db_index_physical_stats</code>).</li>
 <li>Follow-up: "Can the primary key be non-clustered?" Yes, it is a common choice when the natural access path is another column. "Does a clustered index guarantee row order in a query result?" No, only <code>ORDER BY</code> does.</li>
 </ul>`,
         hi: `<ul>
 <li>हर non-clustered index अपने row pointer के रूप में clustered key रखता है, इसलिए wide clustered key <b>सभी</b> indexes बड़े कर देती है।</li>
 <li>बढ़ती जाने वाली keys (<code>IDENTITY</code>, sequential GUID) B-tree के आख़िर में जुड़ती हैं; random GUIDs से page splits और fragmentation होता है।</li>
-<li>बिना clustered index वाली table <b>heap</b> है; staging या bulk-load tables के लिए कभी-कभी ठीक है, पर lookups तब row id से होते हैं।</li>
+<li>बिना clustered index वाली table <b>heap</b> है; staging या bulk-load tables के लिए कभी-कभी ठीक है, पर lookups तब row id से होते हैं, और जो rows बढ़ती हैं वे forwarding pointers छोड़ती हैं (<code>sys.dm_db_index_physical_stats</code> में <code>forwarded_record_count</code> देखो)।</li>
 <li>Follow-up: "क्या primary key non-clustered हो सकती है?" हाँ, जब असली access path कोई दूसरा column हो तो यह आम choice है। "क्या clustered index query result में row order की guarantee देता है?" नहीं, सिर्फ़ <code>ORDER BY</code> देता है।</li>
 </ul>`,
         hg: `<ul>
 <li>Har non-clustered index apne row pointer ke roop mein clustered key rakhta hai, isliye wide clustered key <b>sabhi</b> indexes bade kar deti hai.</li>
 <li>Badhti jaane wali keys (<code>IDENTITY</code>, sequential GUID) B-tree ke aakhir mein judti hain; random GUIDs se page splits aur fragmentation hota hai.</li>
-<li>Bina clustered index wali table <b>heap</b> hai; staging ya bulk-load tables ke liye kabhi-kabhi theek hai, par lookups tab row id se hote hain.</li>
+<li>Bina clustered index wali table <b>heap</b> hai; staging ya bulk-load tables ke liye kabhi-kabhi theek hai, par lookups tab row id se hote hain, aur jo rows badhti hain woh forwarding pointers chhodti hain (<code>sys.dm_db_index_physical_stats</code> mein <code>forwarded_record_count</code> dekho).</li>
 <li>Follow-up: "Kya primary key non-clustered ho sakti hai?" Haan, jab asli access path koi doosra column ho to yeh aam choice hai. "Kya clustered index query result mein row order ki guarantee deta hai?" Nahi, sirf <code>ORDER BY</code> deta hai.</li>
 </ul>`
       }
@@ -947,19 +950,19 @@ ORDER BY qs.total_worker_time DESC;`
       explain: {
         en: `<ul>
 <li>Typical breakers: a function on the column (<code>YEAR</code>, <code>CONVERT</code>, <code>ISNULL</code>, <code>LEFT</code>), arithmetic on the column, a leading-wildcard <code>LIKE</code>, and an <b>implicit conversion</b> from mismatched types.</li>
-<li>Implicit conversion: data type precedence converts the lower-precedence side. A <code>varchar</code> column vs an <code>nvarchar</code> parameter converts the column. EF Core and Dapper can send <code>nvarchar</code> by default (Day 6).</li>
+<li>Implicit conversion: data type precedence converts the lower-precedence side. A <code>varchar</code> column vs an <code>nvarchar</code> parameter converts the column; the reverse converts the parameter and usually still seeks. EF Core and Dapper can send <code>nvarchar</code> by default (Day 6).</li>
 <li>Rewrite: <code>CreatedOn &gt;= @from AND CreatedOn &lt; @toExclusive</code>.</li>
 <li>Follow-up: "What if you cannot change the query?" A computed column plus an index on it, or fix the parameter type.</li>
 </ul>`,
         hi: `<ul>
 <li>आम तोड़ने वाले: column पर function (<code>YEAR</code>, <code>CONVERT</code>, <code>ISNULL</code>, <code>LEFT</code>), column पर arithmetic, leading-wildcard <code>LIKE</code>, और mismatched types से <b>implicit conversion</b>।</li>
-<li>Implicit conversion: data type precedence में नीचे वाली side convert होती है। <code>varchar</code> column बनाम <code>nvarchar</code> parameter में column convert होता है। EF Core और Dapper default में <code>nvarchar</code> भेज सकते हैं (Day 6)।</li>
+<li>Implicit conversion: data type precedence में नीचे वाली side convert होती है। <code>varchar</code> column बनाम <code>nvarchar</code> parameter में column convert होता है; उल्टे case में parameter convert होता है और seek आम तौर पर चलता है। EF Core और Dapper default में <code>nvarchar</code> भेज सकते हैं (Day 6)।</li>
 <li>Rewrite: <code>CreatedOn &gt;= @from AND CreatedOn &lt; @toExclusive</code>।</li>
 <li>Follow-up: "अगर query बदल नहीं सकते?" Computed column और उस पर index, या parameter type ठीक करो।</li>
 </ul>`,
         hg: `<ul>
 <li>Aam todne wale: column par function (<code>YEAR</code>, <code>CONVERT</code>, <code>ISNULL</code>, <code>LEFT</code>), column par arithmetic, leading-wildcard <code>LIKE</code>, aur mismatched types se <b>implicit conversion</b>.</li>
-<li>Implicit conversion: data type precedence mein neeche wali side convert hoti hai. <code>varchar</code> column vs <code>nvarchar</code> parameter mein column convert hota hai. EF Core aur Dapper default mein <code>nvarchar</code> bhej sakte hain (Day 6).</li>
+<li>Implicit conversion: data type precedence mein neeche wali side convert hoti hai. <code>varchar</code> column vs <code>nvarchar</code> parameter mein column convert hota hai; ulte case mein parameter convert hota hai aur seek aam taur par chalta hai. EF Core aur Dapper default mein <code>nvarchar</code> bhej sakte hain (Day 6).</li>
 <li>Rewrite: <code>CreatedOn &gt;= @from AND CreatedOn &lt; @toExclusive</code>.</li>
 <li>Follow-up: "Agar query badal nahi sakte?" Computed column aur us par index, ya parameter type theek karo.</li>
 </ul>`
@@ -1065,25 +1068,28 @@ ORDER BY qs.total_worker_time DESC;`
       id: "isolation-levels-rcsi",
       depth: "short",
       q: "What is the default isolation level in SQL Server, and when would you use RCSI or SNAPSHOT?",
-      answer: "READ COMMITTED with locking. RCSI makes readers use row versions, so they stop blocking writers with no code change; SNAPSHOT gives a transaction-level consistent view but can raise update conflicts.",
+      answer: "READ COMMITTED with locking. RCSI uses row versions, so readers and writers stop blocking each other with no code change; SNAPSHOT gives a transaction-level consistent view but can raise update conflicts.",
       meaning: {
-        hi: "locking के साथ READ COMMITTED। RCSI में readers row versions use करते हैं, इसलिए code बदले बिना writers को block नहीं करते; SNAPSHOT transaction-level consistent view देता है पर update conflicts आ सकते हैं।",
-        hg: "Locking ke saath READ COMMITTED. RCSI mein readers row versions use karte hain, isliye code badle bina writers ko block nahi karte; SNAPSHOT transaction-level consistent view deta hai par update conflicts aa sakte hain."
+        hi: "locking के साथ READ COMMITTED। RCSI row versions use करता है, इसलिए code बदले बिना readers और writers एक-दूसरे को block नहीं करते; SNAPSHOT transaction-level consistent view देता है पर update conflicts आ सकते हैं।",
+        hg: "Locking ke saath READ COMMITTED. RCSI row versions use karta hai, isliye code badle bina readers aur writers ek-doosre ko block nahi karte; SNAPSHOT transaction-level consistent view deta hai par update conflicts aa sakte hain."
       },
       explain: {
         en: `<ul>
+<li>REPEATABLE READ vs SERIALIZABLE: REPEATABLE READ keeps locks on the rows already read, so they cannot change, but new rows can still appear in the range (phantoms). SERIALIZABLE adds key-range locks, so no phantoms, at the price of more blocking and deadlocks.</li>
 <li>RCSI: statement-level consistency, version store (tempdb by default), switch with <code>ALTER DATABASE ... SET READ_COMMITTED_SNAPSHOT ON</code>.</li>
 <li>SNAPSHOT: needs <code>ALLOW_SNAPSHOT_ISOLATION ON</code> and an explicit <code>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</code>; error 3960 on update conflict, so the caller must retry.</li>
 <li>Both cost version-store space and make long-running transactions more expensive; monitor tempdb.</li>
 <li>Follow-up: "What about NOLOCK?" It is READ UNCOMMITTED: dirty, duplicate or missing rows; do not use it for correctness-sensitive data. "Where is this in EF?" Day 6: the isolation level you pass to <code>BeginTransaction</code>; rowversion for optimistic concurrency.</li>
 </ul>`,
         hi: `<ul>
+<li>REPEATABLE READ बनाम SERIALIZABLE: REPEATABLE READ पढ़ी हुई rows पर locks रखता है, इसलिए वे बदल नहीं सकतीं, पर range में नई rows अब भी आ सकती हैं (phantoms)। SERIALIZABLE key-range locks जोड़ता है, इसलिए phantoms नहीं, पर कीमत है ज़्यादा blocking और deadlocks।</li>
 <li>RCSI: statement-level consistency, version store (default में tempdb), <code>ALTER DATABASE ... SET READ_COMMITTED_SNAPSHOT ON</code> से चालू।</li>
 <li>SNAPSHOT: <code>ALLOW_SNAPSHOT_ISOLATION ON</code> और explicit <code>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</code> चाहिए; update conflict पर error 3960, इसलिए caller को retry करना होगा।</li>
 <li>दोनों में version-store space लगता है और लंबी transactions महँगी हो जाती हैं; tempdb monitor करो।</li>
 <li>Follow-up: "NOLOCK का क्या?" यह READ UNCOMMITTED है: dirty, duplicate या missing rows; correctness वाले data के लिए use मत करो। "EF में यह कहाँ?" Day 6: <code>BeginTransaction</code> में जो isolation level pass करते हो; optimistic concurrency के लिए rowversion।</li>
 </ul>`,
         hg: `<ul>
+<li>REPEATABLE READ vs SERIALIZABLE: REPEATABLE READ padhi hui rows par locks rakhta hai, isliye woh badal nahi sakti, par range mein nayi rows ab bhi aa sakti hain (phantoms). SERIALIZABLE key-range locks jodta hai, isliye phantoms nahi, par keemat hai zyaada blocking aur deadlocks.</li>
 <li>RCSI: statement-level consistency, version store (default mein tempdb), <code>ALTER DATABASE ... SET READ_COMMITTED_SNAPSHOT ON</code> se chalu.</li>
 <li>SNAPSHOT: <code>ALLOW_SNAPSHOT_ISOLATION ON</code> aur explicit <code>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</code> chahiye; update conflict par error 3960, isliye caller ko retry karna hoga.</li>
 <li>Dono mein version-store space lagta hai aur lambi transactions mehngi ho jaati hain; tempdb monitor karo.</li>
@@ -1198,20 +1204,20 @@ ORDER BY qs.total_worker_time DESC;`
       },
       explain: {
         en: `<ul>
-<li><b>SQL Server 2019 (compat 150):</b> scalar UDF inlining. Not every function qualifies; check <code>is_inlineable</code> in <code>sys.sql_modules</code>.</li>
-<li>Multi-statement TVF: before 2014 the optimizer guessed 1 row, from 2014 it guessed 100; interleaved execution (SQL Server 2017, compat 140) uses the real row count for the rest of the plan.</li>
+<li><b>SQL Server 2019 (compat 150):</b> scalar UDF inlining. Not every function qualifies; <code>is_inlineable</code> in <code>sys.sql_modules</code> shows eligibility, not a guarantee.</li>
+<li>Multi-statement TVF: the old cardinality estimator guessed 1 row, the new one (compat 120+, SQL Server 2014) guesses 100; interleaved execution (SQL Server 2017, compat 140) uses the real row count for the rest of the plan.</li>
 <li>Inline TVF: expanded like a view; best choice for reusable logic.</li>
 <li>Follow-up: "Procedure or function?" A function cannot change data and is usable inside queries; a procedure can run DML and transactions. "Where does EF fit?" Day 6: it can map a table-valued function or call a stored procedure.</li>
 </ul>`,
         hi: `<ul>
-<li><b>SQL Server 2019 (compat 150):</b> scalar UDF inlining। हर function qualify नहीं करता; <code>sys.sql_modules</code> में <code>is_inlineable</code> देखो।</li>
-<li>Multi-statement TVF: 2014 से पहले optimizer 1 row का अंदाज़ा लगाता था, 2014 से 100 का; interleaved execution (SQL Server 2017, compat 140) plan के बाक़ी हिस्से के लिए असली row count use करता है।</li>
+<li><b>SQL Server 2019 (compat 150):</b> scalar UDF inlining। हर function qualify नहीं करता; <code>sys.sql_modules</code> में <code>is_inlineable</code> eligibility दिखाता है, guarantee नहीं।</li>
+<li>Multi-statement TVF: पुराना cardinality estimator 1 row का अंदाज़ा लगाता था, नया (compat 120+, SQL Server 2014) 100 का; interleaved execution (SQL Server 2017, compat 140) plan के बाक़ी हिस्से के लिए असली row count use करता है।</li>
 <li>Inline TVF: view की तरह expand होता है; reusable logic के लिए सबसे अच्छा choice।</li>
 <li>Follow-up: "Procedure या function?" Function data बदल नहीं सकता और queries के अंदर use हो सकता है; procedure DML और transactions चला सकता है। "EF कहाँ आता है?" Day 6: यह table-valued function map कर सकता है या stored procedure बुला सकता है।</li>
 </ul>`,
         hg: `<ul>
-<li><b>SQL Server 2019 (compat 150):</b> scalar UDF inlining. Har function qualify nahi karta; <code>sys.sql_modules</code> mein <code>is_inlineable</code> dekho.</li>
-<li>Multi-statement TVF: 2014 se pehle optimizer 1 row ka andaza lagata tha, 2014 se 100 ka; interleaved execution (SQL Server 2017, compat 140) plan ke baaki hisse ke liye asli row count use karta hai.</li>
+<li><b>SQL Server 2019 (compat 150):</b> scalar UDF inlining. Har function qualify nahi karta; <code>sys.sql_modules</code> mein <code>is_inlineable</code> eligibility dikhata hai, guarantee nahi.</li>
+<li>Multi-statement TVF: purana cardinality estimator 1 row ka andaza lagata tha, naya (compat 120+, SQL Server 2014) 100 ka; interleaved execution (SQL Server 2017, compat 140) plan ke baaki hisse ke liye asli row count use karta hai.</li>
 <li>Inline TVF: view ki tarah expand hota hai; reusable logic ke liye sabse achha choice.</li>
 <li>Follow-up: "Procedure ya function?" Function data badal nahi sakta aur queries ke andar use ho sakta hai; procedure DML aur transactions chala sakta hai. "EF kahan aata hai?" Day 6: yeh table-valued function map kar sakta hai ya stored procedure bula sakta hai.</li>
 </ul>`
@@ -1329,19 +1335,19 @@ ORDER BY qs.total_worker_time DESC;`
         en: `<ul>
 <li>A plain join cannot reference the left row inside the right-hand subquery; <code>APPLY</code> can, including <code>TOP (n) ... ORDER BY</code>.</li>
 <li>Performance relies on an index that matches the inner filter and order (for example <code>(CustomerId, OrderDate DESC)</code>); otherwise each left row scans.</li>
-<li>Alternative for top-N per group: <code>ROW_NUMBER()</code> in a subquery; usually better when most groups are large and you need all groups, while APPLY wins for few left rows with big groups and a good index.</li>
+<li>Alternative for top-N per group: <code>ROW_NUMBER()</code> in a subquery does one scan and wins with many groups of few rows each; APPLY with <code>TOP</code> and a supporting index wins with few groups of many rows each.</li>
 <li>Follow-up: "Anti-join?" <code>NOT EXISTS</code>.</li>
 </ul>`,
         hi: `<ul>
 <li>सादा join right-hand subquery के अंदर left row को reference नहीं कर सकता; <code>APPLY</code> कर सकता है, <code>TOP (n) ... ORDER BY</code> समेत।</li>
 <li>Performance ऐसे index पर टिकी है जो inner filter और order से match करे (जैसे <code>(CustomerId, OrderDate DESC)</code>); वरना हर left row scan करती है।</li>
-<li>हर group के top-N का विकल्प: subquery में <code>ROW_NUMBER()</code>; जब ज़्यादातर groups बड़े हों और सब groups चाहिए तब आम तौर पर बेहतर, जबकि कम left rows, बड़े groups और अच्छे index में APPLY जीतता है।</li>
+<li>हर group के top-N का option: subquery में <code>ROW_NUMBER()</code> एक scan करता है और कई groups (हर एक में कम rows) में जीतता है; <code>TOP</code> के साथ APPLY और supporting index कम groups (हर एक में बहुत rows) में जीतता है।</li>
 <li>Follow-up: "Anti-join?" <code>NOT EXISTS</code>।</li>
 </ul>`,
         hg: `<ul>
 <li>Saada join right-hand subquery ke andar left row ko reference nahi kar sakta; <code>APPLY</code> kar sakta hai, <code>TOP (n) ... ORDER BY</code> samet.</li>
 <li>Performance aise index par tiki hai jo inner filter aur order se match kare (jaise <code>(CustomerId, OrderDate DESC)</code>); warna har left row scan karti hai.</li>
-<li>Har group ke top-N ka vikalp: subquery mein <code>ROW_NUMBER()</code>; jab zyaadatar groups bade hon aur sab groups chahiye tab aam taur par behtar, jabki kam left rows, bade groups aur achhe index mein APPLY jeetta hai.</li>
+<li>Har group ke top-N ka option: subquery mein <code>ROW_NUMBER()</code> ek scan karta hai aur kai groups (har ek mein kam rows) mein jeetta hai; <code>TOP</code> ke saath APPLY aur supporting index kam groups (har ek mein bahut rows) mein jeetta hai.</li>
 <li>Follow-up: "Anti-join?" <code>NOT EXISTS</code>.</li>
 </ul>`
       }
@@ -1416,14 +1422,14 @@ INSERT dbo.Pay (Id, Day, Amount) VALUES (1, 1, 10), (2, 2, 20), (3, 2, 30), (4, 
 
 SELECT Id, Day, Amount,
        SUM(Amount) OVER (ORDER BY Day) AS dflt,
-       SUM(Amount) OVER (ORDER BY Day ROWS UNBOUNDED PRECEDING) AS by_rows
+       SUM(Amount) OVER (ORDER BY Day, Id ROWS UNBOUNDED PRECEDING) AS by_rows
 FROM dbo.Pay
 ORDER BY Id;`,
       answer: "1 1 10 10 10\n2 2 20 60 30\n3 2 30 60 60\n4 3 40 100 100",
       explain: {
-        en: `<p>The default frame with <code>ORDER BY</code> is <code>RANGE UNBOUNDED PRECEDING</code>: Ids 2 and 3 share Day 2, so they are peers and both see 10+20+30 = <b>60</b>. With <code>ROWS</code>, rows are counted one by one; here the tie order between Ids 2 and 3 is not defined by <code>ORDER BY Day</code>, so a real query should add a unique tie-breaker (<code>Day, Id</code>) to make the by_rows column repeatable.</p>`,
-        hi: `<p><code>ORDER BY</code> के साथ default frame <code>RANGE UNBOUNDED PRECEDING</code> है: Id 2 और 3 का Day 2 same है, इसलिए वे peers हैं और दोनों को 10+20+30 = <b>60</b> दिखता है। <code>ROWS</code> में rows एक-एक करके गिनी जाती हैं; यहाँ Id 2 और 3 के बीच tie order <code>ORDER BY Day</code> से तय नहीं है, इसलिए असली query में unique tie-breaker (<code>Day, Id</code>) जोड़ो ताकि by_rows column repeatable हो।</p>`,
-        hg: `<p><code>ORDER BY</code> ke saath default frame <code>RANGE UNBOUNDED PRECEDING</code> hai: Id 2 aur 3 ka Day 2 same hai, isliye woh peers hain aur dono ko 10+20+30 = <b>60</b> dikhta hai. <code>ROWS</code> mein rows ek-ek karke ginti jaati hain; yahan Id 2 aur 3 ke beech tie order <code>ORDER BY Day</code> se tay nahi hai, isliye asli query mein unique tie-breaker (<code>Day, Id</code>) jodo taaki by_rows column repeatable ho.</p>`
+        en: `<p>The default frame with <code>ORDER BY</code> is <code>RANGE UNBOUNDED PRECEDING</code>: Ids 2 and 3 share Day 2, so they are peers and both see 10+20+30 = <b>60</b>. With <code>ROWS</code>, rows are counted one by one, and the unique tie-breaker <code>Id</code> in the <code>ORDER BY</code> fixes the order: 10, 30, 60, 100.</p>`,
+        hi: `<p><code>ORDER BY</code> के साथ default frame <code>RANGE UNBOUNDED PRECEDING</code> है: Id 2 और 3 का Day 2 same है, इसलिए वे peers हैं और दोनों को 10+20+30 = <b>60</b> दिखता है। <code>ROWS</code> में rows एक-एक करके गिनी जाती हैं, और <code>ORDER BY</code> में unique tie-breaker <code>Id</code> order तय कर देता है: 10, 30, 60, 100।</p>`,
+        hg: `<p><code>ORDER BY</code> ke saath default frame <code>RANGE UNBOUNDED PRECEDING</code> hai: Id 2 aur 3 ka Day 2 same hai, isliye woh peers hain aur dono ko 10+20+30 = <b>60</b> dikhta hai. <code>ROWS</code> mein rows ek-ek karke ginti jaati hain, aur <code>ORDER BY</code> mein unique tie-breaker <code>Id</code> order tay kar deta hai: 10, 30, 60, 100.</p>`
       }
     },
     {
@@ -1452,9 +1458,9 @@ SELECT COUNT(*) AS c_star, COUNT(Score) AS c_col, AVG(Score) AS avg_score, SUM(S
 FROM dbo.Marks;`,
       answer: "3 2 15 10",
       explain: {
-        en: `<p><code>COUNT(*)</code> counts rows (3); <code>COUNT(Score)</code> skips NULLs (2). <code>AVG</code> ignores NULLs too: 30 / 2 = 15. Dividing the sum by <code>COUNT(*)</code> gives 30 / 3 = 10. Both integer divisions here are exact, but remember integer division truncates.</p>`,
-        hi: `<p><code>COUNT(*)</code> rows गिनता है (3); <code>COUNT(Score)</code> NULLs छोड़ देता है (2)। <code>AVG</code> भी NULLs ignore करता है: 30 / 2 = 15। Sum को <code>COUNT(*)</code> से भाग दो तो 30 / 3 = 10। यहाँ दोनों integer divisions exact हैं, पर याद रखो integer division truncate करता है।</p>`,
-        hg: `<p><code>COUNT(*)</code> rows ginta hai (3); <code>COUNT(Score)</code> NULLs chhod deta hai (2). <code>AVG</code> bhi NULLs ignore karta hai: 30 / 2 = 15. Sum ko <code>COUNT(*)</code> se bhaag do to 30 / 3 = 10. Yahan dono integer divisions exact hain, par yaad rakho integer division truncate karta hai.</p>`
+        en: `<p><code>COUNT(*)</code> counts rows (3); <code>COUNT(Score)</code> skips NULLs (2). <code>AVG</code> ignores NULLs too: 30 / 2 = 15. Dividing the sum by <code>COUNT(*)</code> gives 30 / 3 = 10. Both integer divisions here are exact, but remember integer division truncates. SSMS may also show the message "Warning: Null value is eliminated by an aggregate or other SET operation." for the aggregates over a NULL.</p>`,
+        hi: `<p><code>COUNT(*)</code> rows गिनता है (3); <code>COUNT(Score)</code> NULLs छोड़ देता है (2)। <code>AVG</code> भी NULLs ignore करता है: 30 / 2 = 15। Sum को <code>COUNT(*)</code> से भाग दो तो 30 / 3 = 10। यहाँ दोनों integer divisions exact हैं, पर याद रखो integer division truncate करता है। Aggregates में NULL होने पर SSMS यह message भी दिखा सकता है: "Warning: Null value is eliminated by an aggregate or other SET operation."</p>`,
+        hg: `<p><code>COUNT(*)</code> rows ginta hai (3); <code>COUNT(Score)</code> NULLs chhod deta hai (2). <code>AVG</code> bhi NULLs ignore karta hai: 30 / 2 = 15. Sum ko <code>COUNT(*)</code> se bhaag do to 30 / 3 = 10. Yahan dono integer divisions exact hain, par yaad rakho integer division truncate karta hai. Aggregates mein NULL hone par SSMS yeh message bhi dikha sakta hai: "Warning: Null value is eliminated by an aggregate or other SET operation."</p>`
       }
     },
     {
@@ -1474,47 +1480,47 @@ FROM dbo.Marks;`,
   ],
   revision: {
     en: [
-      "Clustered index = the table's rows in key order, one per table; choose a narrow, unique, ever-increasing key.",
+      "Clustered index = the table's rows in logical key order, one per table.",
       "Every non-clustered index carries the clustered key, so a wide clustered key bloats all of them.",
       "A key lookup runs once per row found; INCLUDE columns can make an index covering.",
       "Keep the column bare in WHERE: no function on it, and match the data type (varchar vs nvarchar).",
       "Compare estimated with actual rows in the actual plan; a big gap points to statistics, skew or sniffing.",
-      "Parameter sniffing is a trade-off: fix statistics and indexes first, then RECOMPILE, OPTIMIZE FOR or Query Store forcing.",
+      "Parameter sniffing: the first call's value shapes the cached plan; a trade-off, not a bug.",
       "NOT IN returns nothing if the subquery has one NULL; prefer NOT EXISTS.",
       "A WHERE filter on the right table of a LEFT JOIN turns it into an inner join.",
       "With ORDER BY and no frame, SUM defaults to RANGE, so ties share a total; write ROWS for row-by-row.",
       "Scalar UDF inlining and table-variable deferred compilation arrived in SQL Server 2019 (compat 150).",
-      "RCSI makes readers use row versions instead of shared locks; SNAPSHOT is transaction-level and can raise error 3960.",
-      "Avoid deadlocks with the same access order and short transactions; diagnose from system_health and retry error 1205."
+      "RCSI: readers and writers stop blocking each other through row versions, with no code change.",
+      "Deadlock cure: the same access order everywhere, plus short transactions."
     ],
     meaning: {
       hi: [
-        "Clustered index = table की rows key order में, हर table में एक; narrow, unique, बढ़ती जाने वाली key चुनो।",
+        "Clustered index = table की rows logical key order में, हर table में एक।",
         "हर non-clustered index clustered key साथ रखता है, इसलिए wide clustered key सबको फुला देती है।",
         "Key lookup हर मिली row पर एक बार चलता है; INCLUDE columns से index covering बन सकता है।",
         "WHERE में column को bare रखो: उस पर function नहीं, और data type match करो (varchar बनाम nvarchar)।",
         "Actual plan में estimated और actual rows compare करो; बड़ा gap statistics, skew या sniffing की तरफ़ इशारा है।",
-        "Parameter sniffing एक trade-off है: पहले statistics और indexes ठीक करो, फिर RECOMPILE, OPTIMIZE FOR या Query Store forcing।",
+        "Parameter sniffing: पहली call की value cached plan बनाती है; trade-off है, bug नहीं।",
         "Subquery में एक NULL हो तो NOT IN कुछ नहीं देता; NOT EXISTS पसंद करो।",
         "LEFT JOIN की right table पर WHERE filter उसे inner join बना देता है।",
         "ORDER BY हो और frame न हो तो SUM का default RANGE है, इसलिए ties का total same; row-by-row के लिए ROWS लिखो।",
         "Scalar UDF inlining और table-variable deferred compilation SQL Server 2019 (compat 150) में आए।",
-        "RCSI में readers shared locks की जगह row versions use करते हैं; SNAPSHOT transaction-level है और error 3960 दे सकता है।",
-        "Deadlocks से बचो same access order और short transactions से; system_health से diagnose करो और error 1205 retry करो।"
+        "RCSI: row versions से readers और writers एक-दूसरे को block नहीं करते, code बदले बिना।",
+        "Deadlock का इलाज: हर जगह same access order, साथ में short transactions।"
       ],
       hg: [
-        "Clustered index = table ki rows key order mein, har table mein ek; narrow, unique, badhti jaane wali key chuno.",
+        "Clustered index = table ki rows logical key order mein, har table mein ek.",
         "Har non-clustered index clustered key saath rakhta hai, isliye wide clustered key sabko phula deti hai.",
         "Key lookup har mili row par ek baar chalta hai; INCLUDE columns se index covering ban sakta hai.",
         "WHERE mein column ko bare rakho: us par function nahi, aur data type match karo (varchar vs nvarchar).",
         "Actual plan mein estimated aur actual rows compare karo; bada gap statistics, skew ya sniffing ki taraf ishaara hai.",
-        "Parameter sniffing ek trade-off hai: pehle statistics aur indexes theek karo, phir RECOMPILE, OPTIMIZE FOR ya Query Store forcing.",
+        "Parameter sniffing: pehli call ki value cached plan banati hai; trade-off hai, bug nahi.",
         "Subquery mein ek NULL ho to NOT IN kuch nahi deta; NOT EXISTS pasand karo.",
         "LEFT JOIN ki right table par WHERE filter use inner join bana deta hai.",
         "ORDER BY ho aur frame na ho to SUM ka default RANGE hai, isliye ties ka total same; row-by-row ke liye ROWS likho.",
         "Scalar UDF inlining aur table-variable deferred compilation SQL Server 2019 (compat 150) mein aaye.",
-        "RCSI mein readers shared locks ki jagah row versions use karte hain; SNAPSHOT transaction-level hai aur error 3960 de sakta hai.",
-        "Deadlocks se bacho same access order aur short transactions se; system_health se diagnose karo aur error 1205 retry karo."
+        "RCSI: row versions se readers aur writers ek-doosre ko block nahi karte, code badle bina.",
+        "Deadlock ka ilaaj: har jagah same access order, saath mein short transactions."
       ]
     }
   },
