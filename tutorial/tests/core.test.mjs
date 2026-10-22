@@ -83,14 +83,16 @@ test('estimateMinutes_prose_plus_code_lines_short_and_detailed_delta', () => {
     ],
     puzzles: [1, 2, 3, 4, 5].map(() => ({ src: lines(6), explain: { en: words(100) } })),
     revision: { en: [words(200), words(100)] },
-    whatsNew: { en: words(300) }
+    whatsNew: { en: words(600) }
   };
-  // short: prose 300 + 1200 + 1200 + 300 = 3000 words / 150 = 20 min, + 30 code lines / 6 = 5 -> 25
-  assert.equal(estimateMinutes(day, 'short'), 25);
-  // detailed delta only (no summary/short items/revision):
-  // prose 3000 + 1000 + 500 (puzzle explain) + 300 (whatsNew) = 4800 / 150 = 32;
-  // code (60 + 12 + 30 puzzle lines) / 6 = 17; puzzles 5 x 3 = 15 -> 64 -> 65
-  assert.equal(estimateMinutes(day, 'detailed'), 65);
+  // short: prose 300 + 1200 + 1200 + 300 (summary, short section, short Q&A, revision)
+  //        + 600 (whatsNew, rendered at both depths) = 3600 words / 150 = 24 min,
+  //        + 30 code lines / 6 = 5 -> 29 -> 30
+  assert.equal(estimateMinutes(day, 'short'), 30);
+  // detailed delta only (no summary/short items/revision/whatsNew):
+  // prose 3000 + 1000 + 500 (puzzle explain) = 4500 / 150 = 30;
+  // code (60 + 12 + 30 puzzle lines) / 6 = 17; puzzles 5 x 3 = 15 -> 62 -> 60
+  assert.equal(estimateMinutes(day, 'detailed'), 60);
 });
 
 test('estimateMinutes_code_lines_count_not_words_and_blank_lines_ignored', () => {

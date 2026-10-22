@@ -14,7 +14,7 @@
     en: {
       plan: '30-day plan', today: 'Today ▶', progress: '{done}/{total} days done',
       howTitle: 'How to use',
-      howText: 'Read <b>Short</b> first (~15–20 min) and answer its questions aloud. In <b>Detailed</b>, skip what you already read, then pick the questions you got wrong plus ~5 puzzles. Treat the rest as reference to revisit. Each day page shows a time estimate for the chosen depth.',
+      howText: 'Read <b>Short</b> first (~15–25 min) and answer its questions aloud. In <b>Detailed</b>, skip what you already read, then pick the questions you got wrong plus ~5 puzzles. Treat the rest as reference to revisit. Each day page shows a time estimate for the chosen depth.',
       week: 'Week', soon: 'Coming soon', day: 'Day',
       prev: '◀ Prev', next: 'Next ▶', home: '🏠 Home', short: 'Short', detailed: 'Detailed',
       estimate: '⏱ ≈ {time} for this depth',
@@ -36,7 +36,7 @@
     hi: {
       plan: '30 दिन का प्लान', today: 'आज का दिन ▶', progress: '{total} में से {done} दिन पूरे',
       howTitle: 'कैसे पढ़ें',
-      howText: 'पहले <b>Short</b> पढ़ो (~15–20 min) और उसके सवालों के जवाब बोलकर दो। <b>Detailed</b> में जो पहले पढ़ चुके हो उसे छोड़ दो, फिर जिन सवालों में ग़लती हुई वो और ~5 पहेलियाँ चुनो। बाक़ी को reference मानो और बाद में दोबारा देखो। हर दिन के page पर चुनी हुई depth का time estimate दिखता है।',
+      howText: 'पहले <b>Short</b> पढ़ो (~15–25 min) और उसके सवालों के जवाब बोलकर दो। <b>Detailed</b> में जो पहले पढ़ चुके हो उसे छोड़ दो, फिर जिन सवालों में ग़लती हुई वो और ~5 पहेलियाँ चुनो। बाक़ी को reference मानो और बाद में दोबारा देखो। हर दिन के page पर चुनी हुई depth का time estimate दिखता है।',
       week: 'हफ़्ता', soon: 'जल्द आ रहा है', day: 'दिन',
       prev: '◀ पिछला', next: 'अगला ▶', home: '🏠 होम', short: 'Short', detailed: 'Detailed',
       estimate: '⏱ इस depth के लिए ≈ {time}',
@@ -58,7 +58,7 @@
     hg: {
       plan: '30 din ka plan', today: 'Aaj ka din ▶', progress: '{total} mein se {done} din poore',
       howTitle: 'Kaise padhein',
-      howText: 'Pehle <b>Short</b> padho (~15–20 min) aur uske questions ke answers bolkar do. <b>Detailed</b> mein jo pehle padh chuke ho use chhod do, phir jin questions mein galti hui woh aur ~5 puzzles chuno. Baaki ko reference maano aur baad mein dobara dekho. Har din ke page par chuni hui depth ka time estimate dikhta hai.',
+      howText: 'Pehle <b>Short</b> padho (~15–25 min) aur uske questions ke answers bolkar do. <b>Detailed</b> mein jo pehle padh chuke ho use chhod do, phir jin questions mein galti hui woh aur ~5 puzzles chuno. Baaki ko reference maano aur baad mein dobara dekho. Har din ke page par chuni hui depth ka time estimate dikhta hai.',
       week: 'Week', soon: 'Jaldi aa raha hai', day: 'Day',
       prev: '◀ Pichla', next: 'Agla ▶', home: '🏠 Home', short: 'Short', detailed: 'Detailed',
       estimate: '⏱ Is depth ke liye ≈ {time}',

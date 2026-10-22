@@ -859,10 +859,10 @@ public static class StartupCheck
       id: "captive-dependency-detect",
       depth: "short",
       q: "What is a captive dependency and how do you detect it?",
-      answer: "A longer-lived service holding a shorter-lived one, like a singleton keeping a scoped DbContext. ValidateScopes detects it at resolve time; it is on by default only in Development.",
+      answer: "A longer-lived service holding a shorter-lived one, like a singleton keeping a scoped DbContext. ValidateScopes catches singleton→scoped at resolve time (on by default only in Development); singleton→transient is not reported.",
       meaning: {
-        hi: "लंबी उम्र वाली service का छोटी उम्र वाली को पकड़े रखना, जैसे singleton में scoped DbContext। ValidateScopes इसे resolve के वक़्त पकड़ता है; यह default में सिर्फ़ Development में चालू होता है।",
-        hg: "Lambi umar wali service ka chhoti umar wali ko pakde rakhna, jaise singleton mein scoped DbContext. ValidateScopes ise resolve ke waqt pakadta hai; yeh default mein sirf Development mein chaalu hota hai."
+        hi: "लंबी उम्र वाली service का छोटी उम्र वाली को पकड़े रखना, जैसे singleton में scoped DbContext। ValidateScopes singleton→scoped को resolve के वक़्त पकड़ता है (default में सिर्फ़ Development में चालू); singleton→transient रिपोर्ट नहीं होता।",
+        hg: "Lambi umar wali service ka chhoti umar wali ko pakde rakhna, jaise singleton mein scoped DbContext. ValidateScopes singleton→scoped ko resolve ke waqt pakadta hai (default mein sirf Development mein chaalu); singleton→transient report nahi hota."
       },
       explain: {
         en: `<ul>
@@ -1254,21 +1254,21 @@ public static class StartupCheck
       explain: {
         en: `<ul>
 <li>Error text with validation on: <i>"Cannot resolve scoped service ... from root provider."</i> (printed in the puzzle).</li>
-<li>Disposal: scoped and transient <code>IDisposable</code>/<code>IAsyncDisposable</code> services created by a scope are disposed with that scope. Transients from the root pile up until provider disposal (Day 8).</li>
+<li>Disposal: scoped and transient <code>IDisposable</code>/<code>IAsyncDisposable</code> services created by a scope are disposed with that scope. Transients from the root pile up until provider disposal.</li>
 <li>Instances you register yourself (<code>AddSingleton(instance)</code>) are <b>not</b> disposed by the container; factory-created ones are.</li>
 <li>Do not dispose an injected dependency yourself (Day 7 shows this for <code>DbContext</code>); its owner (the container) does.</li>
 <li>Follow-up: "Why prefer CreateAsyncScope?" — a scope holding async-only disposables needs async disposal.</li>
 </ul>`,
         hi: `<ul>
 <li>validation चालू होने पर error text: <i>"Cannot resolve scoped service ... from root provider."</i> (puzzle में छपता है)।</li>
-<li>Disposal: scope से बनी scoped और transient <code>IDisposable</code>/<code>IAsyncDisposable</code> services उसी scope के साथ dispose होती हैं। root की transients provider dispose होने तक जमा रहती हैं (Day 8)।</li>
+<li>Disposal: scope से बनी scoped और transient <code>IDisposable</code>/<code>IAsyncDisposable</code> services उसी scope के साथ dispose होती हैं। root की transients provider dispose होने तक जमा रहती हैं।</li>
 <li>जो instances आप खुद register करते हो (<code>AddSingleton(instance)</code>) उन्हें container dispose <b>नहीं</b> करता; factory से बने instances करता है।</li>
 <li>injected dependency को खुद dispose मत करो (Day 7 में <code>DbContext</code> के लिए दिखाया है); उसका मालिक (container) करता है।</li>
 <li>Follow-up: "CreateAsyncScope क्यों बेहतर?" — async-only disposables वाले scope को async disposal चाहिए।</li>
 </ul>`,
         hg: `<ul>
 <li>Validation chaalu hone par error text: <i>"Cannot resolve scoped service ... from root provider."</i> (puzzle mein chhapta hai).</li>
-<li>Disposal: scope se bani scoped aur transient <code>IDisposable</code>/<code>IAsyncDisposable</code> services usi scope ke saath dispose hoti hain. Root ki transients provider dispose hone tak jama rehti hain (Day 8).</li>
+<li>Disposal: scope se bani scoped aur transient <code>IDisposable</code>/<code>IAsyncDisposable</code> services usi scope ke saath dispose hoti hain. Root ki transients provider dispose hone tak jama rehti hain.</li>
 <li>Jo instances aap khud register karte ho (<code>AddSingleton(instance)</code>) unhe container dispose <b>nahi</b> karta; factory se bane instances karta hai.</li>
 <li>Injected dependency ko khud dispose mat karo (Day 7 mein <code>DbContext</code> ke liye dikhaya hai); uska maalik (container) karta hai.</li>
 <li>Follow-up: "CreateAsyncScope kyon behtar?" — async-only disposables wale scope ko async disposal chahiye.</li>

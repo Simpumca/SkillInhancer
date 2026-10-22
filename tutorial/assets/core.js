@@ -91,9 +91,9 @@
 
   // Rough study time for one day at a depth, in minutes (rounded to nearest 5, min 5).
   // Prose (visible English text, tags stripped, code excluded) at 150 wpm; code at 6 lines/min.
-  // short    = summary + short sections/Q&A + revision.
+  // short    = summary + whatsNew (app.js renders it at both depths) + short sections/Q&A + revision.
   // detailed = the DELTA after Short: only detailed sections/Q&A + puzzles (3 min each, plus
-  //            their code and explanation) + whatsNew.
+  //            their code and explanation).
   function estimateMinutes(day, depth) {
     var words = 0;
     var codeLines = 0;
@@ -108,9 +108,9 @@
     }
     if (!detailed) {
       add(pick(day.summary, 'en'));
+      add(pick(day.whatsNew, 'en'));
       ((day.revision && day.revision.en) || []).forEach(add);
     } else {
-      add(pick(day.whatsNew, 'en'));
       (day.puzzles || []).forEach(function (p) {
         add(pick(p.explain, 'en')); codeLines += countCodeLines(p.src); extra += 3;
       });

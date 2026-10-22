@@ -1316,10 +1316,10 @@ public static class Zoo
       id: "solid-legacy-refactor",
       depth: "detailed",
       q: "You inherit a legacy 2000-line service with new everywhere. How do you move it toward SOLID safely?",
-      answer: "I add characterization tests first, then create seams at I/O boundaries (database, email, clock) by extracting interfaces, and refactor in small steps, one responsibility at a time, keeping tests green.",
+      answer: "I add characterization tests first, then create seams at I/O boundaries by extracting interfaces (database, email; TimeProvider for the clock), and refactor in small steps, one responsibility at a time, keeping tests green.",
       meaning: {
-        hi: "पहले characterization tests जोड़ता हूँ, फिर boundaries पर seams बनाता हूँ — database, email और clock जैसे I/O के लिए interface निकालता हूँ — और छोटे steps में, एक बार में एक responsibility, हर बार tests green रखकर refactor करता हूँ।",
-        hg: "Pehle characterization tests jodta hoon, phir boundaries par seams banata hoon — database, email aur clock jaise I/O ke liye interface nikalta hoon — aur chhote steps mein, ek baar mein ek responsibility, har baar tests green rakhkar refactor karta hoon."
+        hi: "पहले characterization tests जोड़ता हूँ, फिर boundaries पर seams बनाता हूँ — database और email के लिए interface निकालता हूँ, clock के लिए TimeProvider — और छोटे steps में, एक बार में एक responsibility, हर बार tests green रखकर refactor करता हूँ।",
+        hg: "Pehle characterization tests jodta hoon, phir boundaries par seams banata hoon — database aur email ke liye interface nikalta hoon, clock ke liye TimeProvider — aur chhote steps mein, ek baar mein ek responsibility, har baar tests green rakhkar refactor karta hoon."
       },
       explain: {
         en: `<ul>

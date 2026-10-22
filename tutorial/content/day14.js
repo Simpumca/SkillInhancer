@@ -233,7 +233,7 @@ window.TL_DAY = {
 <li><code>UseAuthentication</code> sets <code>HttpContext.User</code> and calls next; authorization produces 401 or 403.</li>
 <li>Configuration: the last source wins (appsettings, environment file, user secrets in Development, environment variables, command line). The environment defaults to Production.</li>
 <li>Log with <code>ILogger&lt;T&gt;</code> message templates. A convention middleware is created once, so take scoped services as <code>InvokeAsync</code> parameters.</li>
-<li>Filter order: authorization, resource, action, result. Exception filters cover controller creation, model binding, action filters and actions, not resource or result filters. Middleware sees every request; filters run only inside MVC.</li>
+<li>Filter order: authorization, resource, action, result. Exception filters cover controller creation, model binding, action filters and actions, not resource or result filters. Middleware sees every request; MVC filters run only inside MVC (Minimal APIs have endpoint filters).</li>
 </ul>`,
         hi: `<p><b>तस्वीर — railway station के gates:</b> हर यात्री gates से क्रम में गुज़रता है, और कोई भी gate आपको वापस भेज सकता है (<b>middleware</b>)।</p>
 <p><b>ज़रूर बोलना:</b></p>

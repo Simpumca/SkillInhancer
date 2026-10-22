@@ -1547,53 +1547,6 @@ distinct=1`,
       }
     },
     {
-      id: "di-lifetime-identity",
-      packages: ["Microsoft.Extensions.DependencyInjection"],
-      src: `using Microsoft.Extensions.DependencyInjection;
-
-var services = new ServiceCollection();
-services.AddSingleton<AppCache>();
-services.AddScoped<Basket>();
-services.AddTransient<Job>();
-
-using var root = services.BuildServiceProvider();
-using var scope1 = root.CreateScope();
-using var scope2 = root.CreateScope();
-
-Console.WriteLine($"singleton same: {ReferenceEquals(scope1.ServiceProvider.GetRequiredService<AppCache>(), scope2.ServiceProvider.GetRequiredService<AppCache>())}");
-Console.WriteLine($"scoped same in one scope: {ReferenceEquals(scope1.ServiceProvider.GetRequiredService<Basket>(), scope1.ServiceProvider.GetRequiredService<Basket>())}");
-Console.WriteLine($"scoped same across scopes: {ReferenceEquals(scope1.ServiceProvider.GetRequiredService<Basket>(), scope2.ServiceProvider.GetRequiredService<Basket>())}");
-Console.WriteLine($"transient same: {ReferenceEquals(scope1.ServiceProvider.GetRequiredService<Job>(), scope1.ServiceProvider.GetRequiredService<Job>())}");
-
-class AppCache { }
-class Basket { }
-class Job { }`,
-      answer: `singleton same: True
-scoped same in one scope: True
-scoped same across scopes: False
-transient same: False`,
-      explain: {
-        en: `<ul>
-<li><b>Singleton</b>: one instance for the whole container, even across scopes — True.</li>
-<li><b>Scoped</b>: one instance per scope (per HTTP request in ASP.NET Core) — True inside one scope, False across two scopes.</li>
-<li><b>Transient</b>: a new instance on every resolve — False.</li>
-<li>Link to today: <code>AddSingleton</code> is the DI version of the Singleton pattern; Day 11 covers lifetimes and the captive-dependency trap.</li>
-</ul>`,
-        hi: `<ul>
-<li><b>Singleton</b>: पूरे container के लिए एक instance, scopes के पार भी — True।</li>
-<li><b>Scoped</b>: हर scope (ASP.NET Core में हर HTTP request) के लिए एक instance — एक scope में True, दो scopes में False।</li>
-<li><b>Transient</b>: हर resolve पर नया instance — False।</li>
-<li>आज से जुड़ाव: <code>AddSingleton</code> Singleton pattern का DI version है; lifetimes और captive-dependency जाल Day 11 में हैं।</li>
-</ul>`,
-        hg: `<ul>
-<li><b>Singleton</b>: poore container ke liye ek instance, scopes ke paar bhi — True.</li>
-<li><b>Scoped</b>: har scope (ASP.NET Core mein har HTTP request) ke liye ek instance — ek scope mein True, do scopes mein False.</li>
-<li><b>Transient</b>: har resolve par naya instance — False.</li>
-<li>Aaj se judaav: <code>AddSingleton</code> Singleton pattern ka DI version hai; lifetimes aur captive-dependency jaal Day 11 mein hain.</li>
-</ul>`
-      }
-    },
-    {
       id: "builder-reuse-shared-list",
       src: `var builder = new PizzaBuilder();
 var first = builder.AddTopping("onion").Build();
