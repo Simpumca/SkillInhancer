@@ -13,7 +13,7 @@ window.TL_DAY = {
 <li><b>CQRS</b>: use different models for writing (commands) and reading (queries). It does <b>not</b> require two databases. It pays off when reads and writes differ a lot; it is overkill for plain CRUD.</li>
 <li><b>MediatR</b> is one way to dispatch commands and queries in-process, not a requirement. A small hand-rolled dispatcher works too. MediatR moved to a commercial edition in 2025 (with a free Community tier), so check its current licence terms.</li>
 <li><b>Options pattern</b>: bind a configuration section to a class. <code>IOptions&lt;T&gt;</code> is read once; <code>IOptionsSnapshot&lt;T&gt;</code> is re-read per request; <code>IOptionsMonitor&lt;T&gt;</code> sees changes live. Validate with <code>ValidateOnStart</code> so bad config fails at startup.</li>
-<li><b>DI lifetimes</b>: Transient, Scoped, Singleton (basics in Day 8). A <b>captive dependency</b> is a long-lived service holding a short-lived one. <code>ValidateScopes</code> catches it; <code>ValidateOnBuild</code> catches registrations that cannot be constructed.</li>
+<li><b>DI lifetimes</b>: Transient, Scoped, Singleton (basics in Day 8). A <b>captive dependency</b> is a long-lived service holding a short-lived one. <code>ValidateScopes</code> catches singleton → scoped (not singleton → transient); <code>ValidateOnBuild</code> catches registrations that cannot be constructed.</li>
 <li><b>Background services</b> are singletons: create a scope with <code>IServiceScopeFactory</code> for each unit of work.</li>
 <li><b>TL angle</b>: say the trade-off, not the buzzword. "We added it because of X pain" beats "it is best practice".</li>
 </ul>`,
@@ -23,7 +23,7 @@ window.TL_DAY = {
 <li><b>CQRS</b>: लिखने (commands) और पढ़ने (queries) के लिए अलग models। इसके लिए दो databases <b>ज़रूरी नहीं</b>। जब reads और writes बहुत अलग हों तब फ़ायदा; सीधे CRUD के लिए overkill।</li>
 <li><b>MediatR</b> commands/queries को in-process dispatch करने का एक तरीका है, ज़रूरत नहीं। छोटा hand-rolled dispatcher भी चलता है। MediatR 2025 में commercial edition बना (free Community tier के साथ), इसलिए इसकी मौजूदा licence terms देख लो।</li>
 <li><b>Options pattern</b>: configuration section को class में bind करना। <code>IOptions&lt;T&gt;</code> एक बार पढ़ता है; <code>IOptionsSnapshot&lt;T&gt;</code> हर request पर दोबारा; <code>IOptionsMonitor&lt;T&gt;</code> बदलाव live देखता है। <code>ValidateOnStart</code> से गलत config startup पर ही fail हो जाता है।</li>
-<li><b>DI lifetimes</b>: Transient, Scoped, Singleton (basics Day 8 में)। <b>Captive dependency</b> = लंबी उम्र वाली service छोटी उम्र वाली को पकड़े रखे। <code>ValidateScopes</code> इसे पकड़ता है; <code>ValidateOnBuild</code> उन registrations को पकड़ता है जो बन ही नहीं सकतीं।</li>
+<li><b>DI lifetimes</b>: Transient, Scoped, Singleton (basics Day 8 में)। <b>Captive dependency</b> = लंबी उम्र वाली service छोटी उम्र वाली को पकड़े रखे। <code>ValidateScopes</code> singleton → scoped पकड़ता है (singleton → transient नहीं); <code>ValidateOnBuild</code> उन registrations को पकड़ता है जो बन ही नहीं सकतीं।</li>
 <li><b>Background services</b> singleton होती हैं: हर काम के लिए <code>IServiceScopeFactory</code> से scope बनाओ।</li>
 <li><b>TL angle</b>: buzzword नहीं, trade-off बताओ। "X दर्द की वजह से जोड़ा" बेहतर है "यह best practice है" से।</li>
 </ul>`,
@@ -33,7 +33,7 @@ window.TL_DAY = {
 <li><b>CQRS</b>: likhne (commands) aur padhne (queries) ke liye alag models. Iske liye do databases <b>zaroori nahi</b>. Jab reads aur writes bahut alag ho tab fayda; seedhe CRUD ke liye overkill.</li>
 <li><b>MediatR</b> commands/queries ko in-process dispatch karne ka ek tareeka hai, zaroorat nahi. Chhota hand-rolled dispatcher bhi chalta hai. MediatR 2025 mein commercial edition bana (free Community tier ke saath), isliye uski maujooda licence terms dekh lo.</li>
 <li><b>Options pattern</b>: configuration section ko class mein bind karna. <code>IOptions&lt;T&gt;</code> ek baar padhta hai; <code>IOptionsSnapshot&lt;T&gt;</code> har request par dobara; <code>IOptionsMonitor&lt;T&gt;</code> badlav live dekhta hai. <code>ValidateOnStart</code> se galat config startup par hi fail ho jaata hai.</li>
-<li><b>DI lifetimes</b>: Transient, Scoped, Singleton (basics Day 8 mein). <b>Captive dependency</b> = lambi umar wali service chhoti umar wali ko pakde rakhe. <code>ValidateScopes</code> ise pakadta hai; <code>ValidateOnBuild</code> un registrations ko pakadta hai jo ban hi nahi sakti.</li>
+<li><b>DI lifetimes</b>: Transient, Scoped, Singleton (basics Day 8 mein). <b>Captive dependency</b> = lambi umar wali service chhoti umar wali ko pakde rakhe. <code>ValidateScopes</code> singleton → scoped pakadta hai (singleton → transient nahi); <code>ValidateOnBuild</code> un registrations ko pakadta hai jo ban hi nahi sakti.</li>
 <li><b>Background services</b> singleton hoti hain: har kaam ke liye <code>IServiceScopeFactory</code> se scope banao.</li>
 <li><b>TL angle</b>: buzzword nahi, trade-off batao. "X dard ki wajah se joda" behtar hai "yeh best practice hai" se.</li>
 </ul>`
@@ -140,9 +140,9 @@ window.TL_DAY = {
 <li><code>IOptionsSnapshot&lt;T&gt;</code>: <b>scoped</b>, recomputed once per scope (request), so a reload shows up on the <i>next</i> request. Cannot be injected into singletons.</li>
 <li><code>IOptionsMonitor&lt;T&gt;</code>: <b>singleton</b> with <code>CurrentValue</code> always up to date and <code>OnChange</code> callbacks. Use it in singletons and background services that must react to changes.</li>
 <li><b>Named options</b>: several configurations of one class (<code>Configure&lt;T&gt;("primary", ...)</code>, read with <code>IOptionsMonitor&lt;T&gt;.Get("primary")</code>). Example: two SMTP servers.</li>
-<li><b>Validation</b>: <code>ValidateDataAnnotations()</code> (attributes), <code>Validate(predicate, message)</code>, or an <code>IValidateOptions&lt;T&gt;</code> class. Add <code>ValidateOnStart()</code> so a bad config stops the app at startup, not on the first request. (.NET 8 also has a source generator, <code>[OptionsValidator]</code>, that writes the validator for you without reflection.)</li>
+<li><b>Validation</b>: <code>ValidateDataAnnotations()</code> (attributes), <code>Validate(predicate, message)</code>, or an <code>IValidateOptions&lt;T&gt;</code> class. Add <code>ValidateOnStart()</code> so a bad config stops the app at startup, not on the first request. (Since .NET 8 a source generator, <code>[OptionsValidator]</code>, can also write the validator for you without reflection.)</li>
 <li><b>Reload needs a source that can reload</b>: JSON files with <code>reloadOnChange</code> do; environment variables do not change while the process runs.</li>
-<li><b>When to use</b>: any group of related settings. <b>When not</b>: one value read once at startup (read it from <code>IConfiguration</code>), and never inject the whole <code>IConfiguration</code> across the app.</li>
+<li><b>When to use</b>: any group of related settings. <b>When not</b>: one value read once at startup (read it from <code>IConfiguration</code>), and avoid injecting the whole <code>IConfiguration</code> across the app.</li>
 </ul>`,
         hi: `<p><b>Analogy — housing society का notice board:</b> <code>IOptions</code> join करते वक़्त मिली छपी rule book है (एक बार पढ़ी, कभी नहीं बदलती)। <code>IOptionsSnapshot</code> हर बार building में घुसने पर मिली notice board की नई copy है (per request)। <code>IOptionsMonitor</code> WhatsApp group है जो notice बदलते ही ping करता है।</p>
 <ul>
@@ -151,9 +151,9 @@ window.TL_DAY = {
 <li><code>IOptionsSnapshot&lt;T&gt;</code>: <b>scoped</b>, हर scope (request) में एक बार दोबारा बनता है, इसलिए reload <i>अगली</i> request में दिखता है। Singletons में inject नहीं हो सकता।</li>
 <li><code>IOptionsMonitor&lt;T&gt;</code>: <b>singleton</b>, <code>CurrentValue</code> हमेशा ताज़ा और <code>OnChange</code> callbacks। उन singletons और background services में use करो जिन्हें बदलाव पर react करना है।</li>
 <li><b>Named options</b>: एक class की कई configurations (<code>Configure&lt;T&gt;("primary", ...)</code>, पढ़ना <code>IOptionsMonitor&lt;T&gt;.Get("primary")</code> से)। उदाहरण: दो SMTP servers।</li>
-<li><b>Validation</b>: <code>ValidateDataAnnotations()</code> (attributes), <code>Validate(predicate, message)</code>, या <code>IValidateOptions&lt;T&gt;</code> class। <code>ValidateOnStart()</code> जोड़ो ताकि गलत config पर app startup पर ही रुके, पहली request पर नहीं। (.NET 8 में एक source generator, <code>[OptionsValidator]</code>, भी है जो बिना reflection के validator लिख देता है।)</li>
+<li><b>Validation</b>: <code>ValidateDataAnnotations()</code> (attributes), <code>Validate(predicate, message)</code>, या <code>IValidateOptions&lt;T&gt;</code> class। <code>ValidateOnStart()</code> जोड़ो ताकि गलत config पर app startup पर ही रुके, पहली request पर नहीं। (.NET 8 से एक source generator, <code>[OptionsValidator]</code>, भी बिना reflection के validator लिख सकता है।)</li>
 <li><b>Reload के लिए ऐसा source चाहिए जो reload कर सके</b>: <code>reloadOnChange</code> वाली JSON files करती हैं; environment variables process चलते वक़्त नहीं बदलते।</li>
-<li><b>कब use करें</b>: जुड़ी हुई settings का कोई भी group। <b>कब नहीं</b>: startup पर एक बार पढ़ी जाने वाली एक value (<code>IConfiguration</code> से पढ़ लो), और पूरा <code>IConfiguration</code> पूरे app में inject मत करो।</li>
+<li><b>कब use करें</b>: जुड़ी हुई settings का कोई भी group। <b>कब नहीं</b>: startup पर एक बार पढ़ी जाने वाली एक value (<code>IConfiguration</code> से पढ़ लो), और पूरा <code>IConfiguration</code> पूरे app में inject करने से बचो।</li>
 </ul>`,
         hg: `<p><b>Analogy — housing society ka notice board:</b> <code>IOptions</code> join karte waqt mili chhapi rule book hai (ek baar padhi, kabhi nahi badalti). <code>IOptionsSnapshot</code> har baar building mein ghusne par mili notice board ki nayi copy hai (per request). <code>IOptionsMonitor</code> WhatsApp group hai jo notice badalte hi ping karta hai.</p>
 <ul>
@@ -162,9 +162,9 @@ window.TL_DAY = {
 <li><code>IOptionsSnapshot&lt;T&gt;</code>: <b>scoped</b>, har scope (request) mein ek baar dobara banta hai, isliye reload <i>agli</i> request mein dikhta hai. Singletons mein inject nahi ho sakta.</li>
 <li><code>IOptionsMonitor&lt;T&gt;</code>: <b>singleton</b>, <code>CurrentValue</code> hamesha taaza aur <code>OnChange</code> callbacks. Un singletons aur background services mein use karo jinhe badlav par react karna hai.</li>
 <li><b>Named options</b>: ek class ki kai configurations (<code>Configure&lt;T&gt;("primary", ...)</code>, padhna <code>IOptionsMonitor&lt;T&gt;.Get("primary")</code> se). Udaharan: do SMTP servers.</li>
-<li><b>Validation</b>: <code>ValidateDataAnnotations()</code> (attributes), <code>Validate(predicate, message)</code>, ya <code>IValidateOptions&lt;T&gt;</code> class. <code>ValidateOnStart()</code> jodo taaki galat config par app startup par hi ruke, pehli request par nahi. (.NET 8 mein ek source generator, <code>[OptionsValidator]</code>, bhi hai jo bina reflection ke validator likh deta hai.)</li>
+<li><b>Validation</b>: <code>ValidateDataAnnotations()</code> (attributes), <code>Validate(predicate, message)</code>, ya <code>IValidateOptions&lt;T&gt;</code> class. <code>ValidateOnStart()</code> jodo taaki galat config par app startup par hi ruke, pehli request par nahi. (.NET 8 se ek source generator, <code>[OptionsValidator]</code>, bhi bina reflection ke validator likh sakta hai.)</li>
 <li><b>Reload ke liye aisa source chahiye jo reload kar sake</b>: <code>reloadOnChange</code> wali JSON files karti hain; environment variables process chalte waqt nahi badalte.</li>
-<li><b>Kab use karein</b>: judi hui settings ka koi bhi group. <b>Kab nahi</b>: startup par ek baar padhi jaane wali ek value (<code>IConfiguration</code> se padh lo), aur poora <code>IConfiguration</code> poore app mein inject mat karo.</li>
+<li><b>Kab use karein</b>: judi hui settings ka koi bhi group. <b>Kab nahi</b>: startup par ek baar padhi jaane wali ek value (<code>IConfiguration</code> se padh lo), aur poora <code>IConfiguration</code> poore app mein inject karne se bacho.</li>
 </ul>`
       }
     },
@@ -185,10 +185,9 @@ window.TL_DAY = {
 <li><code>ValidateOnBuild</code>: at <b>build time</b> checks that every registered service can be constructed (missing dependency = error at startup instead of first use). On its own it does <b>not</b> report a captive dependency; with <code>ValidateScopes</code> also on, it reports captive dependencies at build too.</li>
 <li><b>Defaults</b>: the generic host and <code>WebApplication.CreateBuilder</code> turn both on in the <b>Development</b> environment only. A provider you create yourself with <code>BuildServiceProvider()</code> has both off.</li>
 <li><b>Background services</b> (<code>BackgroundService</code>, hosted services) are singletons: inject <code>IServiceScopeFactory</code> and call <code>CreateAsyncScope()</code> per unit of work (Day 7 shows it with <code>DbContext</code>).</li>
-<li><b>Disposal</b>: the container disposes what it created, when its scope or provider is disposed. A transient <code>IDisposable</code> resolved from the root provider lives until the provider is disposed (Day 8), so resolve such services from a scope.</li>
 <li><b>When to use scoped</b>: per-request state, <code>DbContext</code>. <b>When not</b>: a "scoped" service that must be shared with a singleton, which signals a design problem; fix with a factory or a scope, not by changing everything to singleton.</li>
 </ul>`,
-        hi: `<p><b>Analogy — किराये का flat बनाम hotel room बनाम building का generator:</b> <b>Transient</b> डिस्पोज़ेबल कप है (हर बार नया)। <b>Scoped</b> सेवा आपका hotel room है (पूरे stay में वही room, अगले guest को नया)। <b>Singleton</b> building का generator है: सबके लिए एक, हमेशा चालू। <b>Captive dependency</b> यानी generator ने किसी guest के कमरे की चाबी हमेशा के लिए पकड़ ली।</p>
+        hi: `<p><b>Analogy — किराये का flat बनाम hotel room बनाम building का generator:</b> <b>Transient</b> disposable कप है (हर बार नया)। <b>Scoped</b> service आपका hotel room है (पूरे stay में वही room, अगले guest को नया)। <b>Singleton</b> building का generator है: सबके लिए एक, हमेशा चालू। <b>Captive dependency</b> यानी generator ने किसी guest के कमरे की चाबी हमेशा के लिए पकड़ ली।</p>
 <ul>
 <li><b>Basics</b> (Day 8 में lifetime Q&amp;A और Day 9 में keyed services): Transient = हर resolve पर नया, Scoped = हर scope (एक web request) में एक, Singleton = पूरे app में एक।</li>
 <li><b>Rule</b>: <b>बराबर या ज़्यादा</b> उम्र वाली service पर depend करो। Singleton → Scoped/Transient captive dependency है: छोटी उम्र वाला object singleton जितना जीता है (पुराना data, thread-safety bugs, कभी न मरने वाला <code>DbContext</code>)।</li>
@@ -196,7 +195,6 @@ window.TL_DAY = {
 <li><code>ValidateOnBuild</code>: <b>build के वक़्त</b> जाँचता है कि हर registered service बन सकती है (dependency गायब = पहले इस्तेमाल की जगह startup पर error)। अकेला यह captive dependency report <b>नहीं</b> करता; <code>ValidateScopes</code> भी चालू हो तो build पर captive dependency भी पकड़ता है।</li>
 <li><b>Defaults</b>: generic host और <code>WebApplication.CreateBuilder</code> दोनों को सिर्फ़ <b>Development</b> environment में चालू करते हैं। खुद <code>BuildServiceProvider()</code> से बनाए provider में दोनों बंद होते हैं।</li>
 <li><b>Background services</b> (<code>BackgroundService</code>, hosted services) singleton हैं: <code>IServiceScopeFactory</code> inject करो और हर काम के लिए <code>CreateAsyncScope()</code> बुलाओ (Day 7 में <code>DbContext</code> के साथ दिखाया है)।</li>
-<li><b>Disposal</b>: container वही dispose करता है जो उसने बनाया, जब उसका scope या provider dispose हो। Root provider से resolve हुई transient <code>IDisposable</code> provider dispose होने तक ज़िंदा रहती है (Day 8), इसलिए ऐसी services scope से resolve करो।</li>
 <li><b>Scoped कब use करें</b>: per-request state, <code>DbContext</code>। <b>कब नहीं</b>: ऐसी "scoped" service जिसे singleton के साथ share करना है — यह design problem का संकेत है; factory या scope से सुलझाओ, सब कुछ singleton करके नहीं।</li>
 </ul>`,
         hg: `<p><b>Analogy — kiraye ka flat vs hotel room vs building ka generator:</b> <b>Transient</b> disposable cup hai (har baar naya). <b>Scoped</b> service aapka hotel room hai (poore stay mein wahi room, agle guest ko naya). <b>Singleton</b> building ka generator hai: sabke liye ek, hamesha chaalu. <b>Captive dependency</b> yaani generator ne kisi guest ke kamre ki chaabi hamesha ke liye pakad li.</p>
@@ -207,7 +205,6 @@ window.TL_DAY = {
 <li><code>ValidateOnBuild</code>: <b>build ke waqt</b> jaanchta hai ki har registered service ban sakti hai (dependency gayab = pehle istemaal ki jagah startup par error). Akela yeh captive dependency report <b>nahi</b> karta; <code>ValidateScopes</code> bhi chaalu ho to build par captive dependency bhi pakadta hai.</li>
 <li><b>Defaults</b>: generic host aur <code>WebApplication.CreateBuilder</code> dono ko sirf <b>Development</b> environment mein chaalu karte hain. Khud <code>BuildServiceProvider()</code> se banaye provider mein dono band hote hain.</li>
 <li><b>Background services</b> (<code>BackgroundService</code>, hosted services) singleton hain: <code>IServiceScopeFactory</code> inject karo aur har kaam ke liye <code>CreateAsyncScope()</code> bulao (Day 7 mein <code>DbContext</code> ke saath dikhaya hai).</li>
-<li><b>Disposal</b>: container wahi dispose karta hai jo usne banaya, jab uska scope ya provider dispose ho. Root provider se resolve hui transient <code>IDisposable</code> provider dispose hone tak zinda rehti hai (Day 8), isliye aisi services scope se resolve karo.</li>
 <li><b>Scoped kab use karein</b>: per-request state, <code>DbContext</code>. <b>Kab nahi</b>: aisi "scoped" service jise singleton ke saath share karna hai — yeh design problem ka sanket hai; factory ya scope se suljhao, sab kuch singleton karke nahi.</li>
 </ul>`
       }
@@ -228,7 +225,7 @@ window.TL_DAY = {
 <li><b>Returning <code>IQueryable&lt;T&gt;</code></b> keeps flexibility (callers add <code>Where</code>, paging; the SQL is composed once; see puzzle) but leaks EF behaviour: deferred execution, provider limits, and a query that runs after the context is disposed fails. Returning <code>List&lt;T&gt;</code> hides that but loads all rows before in-memory filtering (puzzle). Pick one per boundary, deliberately.</li>
 <li><b>Specification</b>: an object holding an <code>Expression&lt;Func&lt;T,bool&gt;&gt;</code> (plus optional includes/order). Keep it an <i>expression</i> (Day 4) so EF translates it to SQL.</li>
 <li><b>Unit of Work interface</b> (<code>IUnitOfWork.SaveChanges()</code> that just calls <code>DbContext.SaveChanges</code>) adds little over <code>DbContext</code>. It helps only when repositories must share a commit and you really cannot expose <code>DbContext</code>. Repositories must receive the <b>same scoped</b> context for that to work.</li>
-<li><b>Testing</b>: mocking <code>DbSet</code> is fragile and rarely matches real SQL translation. Test EF code against SQLite in-memory or a real container; mock the repository interface in service tests.</li>
+<li><b>Testing</b>: mocking <code>DbSet</code> is fragile and rarely matches real SQL translation. Test query code against the real engine (for example SQL Server in a container via Testcontainers; SQLite differs, see Day 7); mock the repository interface in service tests.</li>
 <li><b>When to use</b>: a clear data boundary, query rules shared by many callers, services that must be tested without a database. <b>When not</b>: one-to-one wrappers over <code>DbSet</code> (<code>GetAll</code>, <code>Add</code>, <code>Remove</code>) that add a file per entity and nothing else.</li>
 </ul>`,
         hi: `<p><b>Analogy — dhaba में order:</b> आप खुद kitchen में जाकर सामान उठा सकते हो (सीधे <code>DbContext</code>), या menu जानने वाले waiter को order दे सकते हो (specific methods वाली repository)। kitchen बड़ी और rules ज़्यादा हों तो waiter काम आता है; छोटे dhaba में extra waiter बस आपकी बात दोहराता है।</p>
@@ -238,7 +235,7 @@ window.TL_DAY = {
 <li><b><code>IQueryable&lt;T&gt;</code> लौटाने</b> से flexibility रहती है (callers <code>Where</code>, paging जोड़ते हैं; SQL एक बार बनती है; puzzle देखो) पर EF का व्यवहार leak होता है: deferred execution, provider की सीमाएँ, और context dispose होने के बाद चली query fail होती है। <code>List&lt;T&gt;</code> लौटाने से यह छुपता है पर in-memory filter से पहले सारी rows load होती हैं (puzzle)। हर boundary पर सोच-समझकर एक चुनो।</li>
 <li><b>Specification</b>: <code>Expression&lt;Func&lt;T,bool&gt;&gt;</code> रखने वाला object (साथ में optional includes/order)। इसे <i>expression</i> ही रखो (Day 4) ताकि EF इसे SQL में बदल सके।</li>
 <li><b>Unit of Work interface</b> (<code>IUnitOfWork.SaveChanges()</code> जो बस <code>DbContext.SaveChanges</code> बुलाए) <code>DbContext</code> के ऊपर बहुत कम जोड़ता है। यह तभी काम का है जब repositories को एक commit share करना हो और <code>DbContext</code> सामने न रख सकें। इसके लिए repositories को <b>वही scoped</b> context मिलना चाहिए।</li>
-<li><b>Testing</b>: <code>DbSet</code> को mock करना नाज़ुक है और असली SQL translation से कम ही मेल खाता है। EF code को SQLite in-memory या असली container पर test करो; service tests में repository interface mock करो ।</li>
+<li><b>Testing</b>: <code>DbSet</code> को mock करना नाज़ुक है और असली SQL translation से कम ही मेल खाता है। Query code को असली engine पर test करो (जैसे Testcontainers से container में SQL Server; SQLite अलग है, Day 7 देखो); service tests में repository interface mock करो।</li>
 <li><b>कब use करें</b>: साफ़ data boundary, कई callers के साझा query rules, बिना database test होने वाली services। <b>कब नहीं</b>: <code>DbSet</code> के एक-एक wrapper (<code>GetAll</code>, <code>Add</code>, <code>Remove</code>) जो हर entity पर एक file जोड़ें और कुछ नहीं।</li>
 </ul>`,
         hg: `<p><b>Analogy — dhaba mein order:</b> aap khud kitchen mein jaakar saamaan utha sakte ho (seedha <code>DbContext</code>), ya menu jaanne wale waiter ko order de sakte ho (specific methods wali repository). Kitchen badi aur rules zyada ho to waiter kaam aata hai; chhote dhaba mein extra waiter bas aapki baat dohrata hai.</p>
@@ -248,7 +245,7 @@ window.TL_DAY = {
 <li><b><code>IQueryable&lt;T&gt;</code> lautane</b> se flexibility rehti hai (callers <code>Where</code>, paging jodte hain; SQL ek baar banti hai; puzzle dekho) par EF ka vyavhaar leak hota hai: deferred execution, provider ki seemayein, aur context dispose hone ke baad chali query fail hoti hai. <code>List&lt;T&gt;</code> lautane se yeh chhupta hai par in-memory filter se pehle saari rows load hoti hain (puzzle). Har boundary par soch-samajhkar ek chuno.</li>
 <li><b>Specification</b>: <code>Expression&lt;Func&lt;T,bool&gt;&gt;</code> rakhne wala object (saath mein optional includes/order). Ise <i>expression</i> hi rakho (Day 4) taaki EF ise SQL mein badal sake.</li>
 <li><b>Unit of Work interface</b> (<code>IUnitOfWork.SaveChanges()</code> jo bas <code>DbContext.SaveChanges</code> bulaye) <code>DbContext</code> ke upar bahut kam jodta hai. Yeh tabhi kaam ka hai jab repositories ko ek commit share karna ho aur <code>DbContext</code> saamne na rakh sakein. Iske liye repositories ko <b>wahi scoped</b> context milna chahiye.</li>
-<li><b>Testing</b>: <code>DbSet</code> ko mock karna nazuk hai aur asli SQL translation se kam hi mel khata hai. EF code ko SQLite in-memory ya asli container par test karo; service tests mein repository interface mock karo.</li>
+<li><b>Testing</b>: <code>DbSet</code> ko mock karna nazuk hai aur asli SQL translation se kam hi mel khata hai. Query code ko asli engine par test karo (jaise Testcontainers se container mein SQL Server; SQLite alag hai, Day 7 dekho); service tests mein repository interface mock karo.</li>
 <li><b>Kab use karein</b>: saaf data boundary, kai callers ke saajhe query rules, bina database test hone wali services. <b>Kab nahi</b>: <code>DbSet</code> ke ek-ek wrapper (<code>GetAll</code>, <code>Add</code>, <code>Remove</code>) jo har entity par ek file jodein aur kuch nahi.</li>
 </ul>`
       },
@@ -329,7 +326,6 @@ public static class Specs
 <li><b>The core idea needs no library</b>: <code>ICommandHandler&lt;TCommand,TResult&gt;</code> and <code>IQueryHandler&lt;TQuery,TResult&gt;</code> registered in DI, and a dispatcher that resolves the handler (the snippet below runs). Controllers can also inject the handler directly and skip the dispatcher.</li>
 <li><b>Cross-cutting concerns</b> (logging, validation, transaction, retries): wrap handlers with a <b>decorator</b> (Day 10). MediatR calls these <b>pipeline behaviours</b> (<code>IPipelineBehavior&lt;TRequest,TResponse&gt;</code>), applied to all requests from one registration.</li>
 <li><b>MediatR shape</b>: <code>record PlaceOrder(...) : IRequest&lt;int&gt;</code>, <code>IRequestHandler&lt;PlaceOrder,int&gt;</code>, <code>services.AddMediatR(...)</code>, <code>await mediator.Send(new PlaceOrder(...))</code>. Notifications (<code>INotification</code>) publish one event to many handlers.</li>
-<li><b>Licensing</b>: MediatR and AutoMapper moved to a commercial licence model in 2025 (Lucky Penny Software, free Community edition under revenue limits, licence key registration). Read the current terms before using it at work; the hand-rolled version above has no such concern.</li>
 <li><b>Traps</b>: handlers calling other handlers (hidden call graph); queries that change state; one giant "god" pipeline behaviour; using <code>Send</code> indirection for a 3-endpoint app; "CQRS" used to justify two databases nobody needs. Debugging cost: stack traces go through the dispatcher.</li>
 <li><b>When to use</b>: many use-cases with their own validation and rules, a team that benefits from one-class-per-use-case, reads that need a different model (reporting screens). <b>When not</b>: simple CRUD, tiny services, or when you add the library only for "clean architecture" looks.</li>
 </ul>`,
@@ -339,8 +335,7 @@ public static class Specs
 <li><b>मूल idea को library नहीं चाहिए</b>: DI में registered <code>ICommandHandler&lt;TCommand,TResult&gt;</code> और <code>IQueryHandler&lt;TQuery,TResult&gt;</code>, और handler ढूँढने वाला dispatcher (नीचे का snippet चलता है)। Controllers handler सीधे inject भी कर सकते हैं, dispatcher के बिना।</li>
 <li><b>Cross-cutting concerns</b> (logging, validation, transaction, retries): handlers को <b>decorator</b> से wrap करो (Day 10)। MediatR इन्हें <b>pipeline behaviours</b> कहता है (<code>IPipelineBehavior&lt;TRequest,TResponse&gt;</code>), एक registration से सब requests पर लगते हैं।</li>
 <li><b>MediatR का रूप</b>: <code>record PlaceOrder(...) : IRequest&lt;int&gt;</code>, <code>IRequestHandler&lt;PlaceOrder,int&gt;</code>, <code>services.AddMediatR(...)</code>, <code>await mediator.Send(new PlaceOrder(...))</code>। Notifications (<code>INotification</code>) एक event कई handlers को भेजते हैं।</li>
-<li><b>Licensing</b>: MediatR और AutoMapper 2025 में commercial licence model पर गए (Lucky Penny Software, revenue सीमा से नीचे free Community edition, licence key registration)। काम में इस्तेमाल से पहले मौजूदा terms पढ़ो; ऊपर वाले hand-rolled version में यह चिंता नहीं।</li>
-<li><b>Traps</b>: handlers का दूसरे handlers को बुलाना (छुपा call graph); state बदलने वाली queries; एक विशाल "god" pipeline behaviour; 3 endpoints के app में <code>Send</code> indirection; "CQRS" के नाम पर दो databases जिनकी किसी को ज़रूरत नहीं। Debugging की कीमत: stack traces dispatcher से गुज़रते हैं।</li>
+<li><b>Traps</b>: handlers का दूसरे handlers को बुलाना (छुपा call graph); state बदलने वाली queries; एक बहुत बड़ा "god" pipeline behaviour; 3 endpoints के app में <code>Send</code> indirection; "CQRS" के नाम पर दो databases जिनकी किसी को ज़रूरत नहीं। Debugging की कीमत: stack traces dispatcher से गुज़रते हैं।</li>
 <li><b>कब use करें</b>: कई use-cases जिनकी अपनी validation और rules हों, team को one-class-per-use-case से फ़ायदा हो, reads को अलग model चाहिए (reporting screens)। <b>कब नहीं</b>: सीधा CRUD, छोटी services, या library बस "clean architecture" दिखने के लिए जोड़ी जा रही हो।</li>
 </ul>`,
         hg: `<p><b>Analogy — token system wala bank counter:</b> aap "deposit" (command) ya "balance enquiry" (query) ka token lete ho. Token aapko sahi counter tak pahunchata hai. Har deposit se pehle clerk aapki ID jaanchta hai (pipeline behaviour), har counter wo jaanch dobara nahi likhta.</p>
@@ -349,8 +344,7 @@ public static class Specs
 <li><b>Mool idea ko library nahi chahiye</b>: DI mein registered <code>ICommandHandler&lt;TCommand,TResult&gt;</code> aur <code>IQueryHandler&lt;TQuery,TResult&gt;</code>, aur handler dhundhne wala dispatcher (neeche ka snippet chalta hai). Controllers handler seedha inject bhi kar sakte hain, dispatcher ke bina.</li>
 <li><b>Cross-cutting concerns</b> (logging, validation, transaction, retries): handlers ko <b>decorator</b> se wrap karo (Day 10). MediatR inhe <b>pipeline behaviours</b> kehta hai (<code>IPipelineBehavior&lt;TRequest,TResponse&gt;</code>), ek registration se sab requests par lagte hain.</li>
 <li><b>MediatR ka roop</b>: <code>record PlaceOrder(...) : IRequest&lt;int&gt;</code>, <code>IRequestHandler&lt;PlaceOrder,int&gt;</code>, <code>services.AddMediatR(...)</code>, <code>await mediator.Send(new PlaceOrder(...))</code>. Notifications (<code>INotification</code>) ek event kai handlers ko bhejte hain.</li>
-<li><b>Licensing</b>: MediatR aur AutoMapper 2025 mein commercial licence model par gaye (Lucky Penny Software, revenue seema se neeche free Community edition, licence key registration). Kaam mein istemaal se pehle maujooda terms padho; upar wale hand-rolled version mein yeh chinta nahi.</li>
-<li><b>Traps</b>: handlers ka doosre handlers ko bulana (chhupa call graph); state badalne wali queries; ek vishaal "god" pipeline behaviour; 3 endpoints ke app mein <code>Send</code> indirection; "CQRS" ke naam par do databases jinki kisi ko zaroorat nahi. Debugging ki keemat: stack traces dispatcher se guzarte hain.</li>
+<li><b>Traps</b>: handlers ka doosre handlers ko bulana (chhupa call graph); state badalne wali queries; ek bahut bada "god" pipeline behaviour; 3 endpoints ke app mein <code>Send</code> indirection; "CQRS" ke naam par do databases jinki kisi ko zaroorat nahi. Debugging ki keemat: stack traces dispatcher se guzarte hain.</li>
 <li><b>Kab use karein</b>: kai use-cases jinki apni validation aur rules hon, team ko one-class-per-use-case se fayda ho, reads ko alag model chahiye (reporting screens). <b>Kab nahi</b>: seedha CRUD, chhoti services, ya library bas "clean architecture" dikhne ke liye jodi ja rahi ho.</li>
 </ul>`
       },
@@ -431,12 +425,12 @@ public class Dispatcher(IServiceProvider provider)
         },
         {
           caption: {
-            en: "The same idea with MediatR (shape only, not compiled here: it needs the MediatR package; check its current licence terms and API version before adopting).",
-            hi: "वही idea MediatR के साथ (सिर्फ़ shape, यहाँ compile नहीं: इसे MediatR package चाहिए; अपनाने से पहले मौजूदा licence terms और API version देखो)।",
-            hg: "Wahi idea MediatR ke saath (sirf shape, yahan compile nahi: ise MediatR package chahiye; apnane se pehle maujooda licence terms aur API version dekho)."
+            en: "The same idea with MediatR (shape only, not compiled here: it needs the MediatR package; check the current API version before adopting).",
+            hi: "वही idea MediatR के साथ (सिर्फ़ shape, यहाँ compile नहीं: इसे MediatR package चाहिए; अपनाने से पहले मौजूदा API version देखो)।",
+            hg: "Wahi idea MediatR ke saath (sirf shape, yahan compile nahi: ise MediatR package chahiye; apnane se pehle maujooda API version dekho)."
           },
           check: "none",
-          src: `// dotnet add package MediatR   (commercial edition since 2025: check licence terms)
+          src: `// dotnet add package MediatR
 public record PlaceOrder(string Item, int Quantity) : IRequest<int>;
 
 public class PlaceOrderHandler(OrderStore store) : IRequestHandler<PlaceOrder, int>
@@ -481,7 +475,7 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
 <ul>
 <li><b>Define</b> a plain class with defaults and attributes (<code>[Required]</code>, <code>[Range]</code>). <b>Register</b> with <code>AddOptions&lt;T&gt;().Bind(section)</code> (or <code>Configure&lt;T&gt;(section)</code>), then chain validation.</li>
 <li><b>Without ValidateOnStart</b>, validation runs the first time someone reads <code>.Value</code> / <code>CurrentValue</code>, so a typo in production config can surface hours after deployment. <code>ValidateOnStart</code> runs it as the host starts (needs the generic host).</li>
-<li><b>Three ways to validate</b>: data annotations (<code>ValidateDataAnnotations()</code>, package <code>Microsoft.Extensions.Options.DataAnnotations</code>); an inline <code>Validate(predicate, message)</code>; a class implementing <code>IValidateOptions&lt;T&gt;</code> (can use injected services). The .NET 8 <code>[OptionsValidator]</code> source generator produces an <code>IValidateOptions&lt;T&gt;</code> from the attributes without reflection (good for trimming/AOT).</li>
+<li><b>Three ways to validate</b>: data annotations (<code>ValidateDataAnnotations()</code>, package <code>Microsoft.Extensions.Options.DataAnnotations</code>); an inline <code>Validate(predicate, message)</code>; a class implementing <code>IValidateOptions&lt;T&gt;</code> (can use injected services). The <code>[OptionsValidator]</code> source generator (since .NET 8) produces an <code>IValidateOptions&lt;T&gt;</code> from the attributes without reflection (good for trimming/AOT).</li>
 <li><b>Failure</b>: <code>OptionsValidationException</code> with a <code>Failures</code> list; all failures are reported together.</li>
 <li><b>Reload</b>: with <code>IOptionsMonitor&lt;T&gt;</code>, subscribe via <code>OnChange</code>; validation runs again on each reload, and an invalid reload surfaces as an <code>OptionsValidationException</code>. Decide in advance how the app should behave if a live reload brings bad values.</li>
 <li><b>Secrets</b>: bind them from user secrets, environment variables or a vault, not from committed JSON. Options classes are not a security boundary.</li>
@@ -491,7 +485,7 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
 <ul>
 <li><b>Define</b> करो defaults और attributes (<code>[Required]</code>, <code>[Range]</code>) वाली सादी class। <b>Register</b> करो <code>AddOptions&lt;T&gt;().Bind(section)</code> (या <code>Configure&lt;T&gt;(section)</code>) से, फिर validation जोड़ो।</li>
 <li><b>ValidateOnStart के बिना</b> validation तब चलता है जब कोई पहली बार <code>.Value</code> / <code>CurrentValue</code> पढ़े, इसलिए production config की typo deploy के घंटों बाद दिख सकती है। <code>ValidateOnStart</code> host शुरू होते वक़्त चलाता है (generic host चाहिए)।</li>
-<li><b>Validate के तीन तरीके</b>: data annotations (<code>ValidateDataAnnotations()</code>, package <code>Microsoft.Extensions.Options.DataAnnotations</code>); inline <code>Validate(predicate, message)</code>; <code>IValidateOptions&lt;T&gt;</code> implement करने वाली class (injected services use कर सकती है)। .NET 8 का <code>[OptionsValidator]</code> source generator attributes से बिना reflection के <code>IValidateOptions&lt;T&gt;</code> बना देता है (trimming/AOT के लिए अच्छा)।</li>
+<li><b>Validate के तीन तरीके</b>: data annotations (<code>ValidateDataAnnotations()</code>, package <code>Microsoft.Extensions.Options.DataAnnotations</code>); inline <code>Validate(predicate, message)</code>; <code>IValidateOptions&lt;T&gt;</code> implement करने वाली class (injected services use कर सकती है)। <code>[OptionsValidator]</code> source generator (.NET 8 से) attributes से बिना reflection के <code>IValidateOptions&lt;T&gt;</code> बना देता है (trimming/AOT के लिए अच्छा)।</li>
 <li><b>Failure</b>: <code>Failures</code> list वाली <code>OptionsValidationException</code>; सारी failures साथ में report होती हैं।</li>
 <li><b>Reload</b>: <code>IOptionsMonitor&lt;T&gt;</code> में <code>OnChange</code> से subscribe करो; हर reload पर validation दोबारा चलता है, और invalid reload <code>OptionsValidationException</code> बनकर सामने आता है। पहले से तय रखो कि live reload में गलत values आएँ तो app क्या करे।</li>
 <li><b>Secrets</b>: उन्हें user secrets, environment variables या vault से bind करो, commit हुई JSON से नहीं। Options classes कोई security boundary नहीं हैं।</li>
@@ -501,7 +495,7 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
 <ul>
 <li><b>Define</b> karo defaults aur attributes (<code>[Required]</code>, <code>[Range]</code>) wali saadi class. <b>Register</b> karo <code>AddOptions&lt;T&gt;().Bind(section)</code> (ya <code>Configure&lt;T&gt;(section)</code>) se, phir validation jodo.</li>
 <li><b>ValidateOnStart ke bina</b> validation tab chalta hai jab koi pehli baar <code>.Value</code> / <code>CurrentValue</code> padhe, isliye production config ki typo deploy ke ghanton baad dikh sakti hai. <code>ValidateOnStart</code> host shuru hote waqt chalata hai (generic host chahiye).</li>
-<li><b>Validate ke teen tareeke</b>: data annotations (<code>ValidateDataAnnotations()</code>, package <code>Microsoft.Extensions.Options.DataAnnotations</code>); inline <code>Validate(predicate, message)</code>; <code>IValidateOptions&lt;T&gt;</code> implement karne wali class (injected services use kar sakti hai). .NET 8 ka <code>[OptionsValidator]</code> source generator attributes se bina reflection ke <code>IValidateOptions&lt;T&gt;</code> bana deta hai (trimming/AOT ke liye achha).</li>
+<li><b>Validate ke teen tareeke</b>: data annotations (<code>ValidateDataAnnotations()</code>, package <code>Microsoft.Extensions.Options.DataAnnotations</code>); inline <code>Validate(predicate, message)</code>; <code>IValidateOptions&lt;T&gt;</code> implement karne wali class (injected services use kar sakti hai). <code>[OptionsValidator]</code> source generator (.NET 8 se) attributes se bina reflection ke <code>IValidateOptions&lt;T&gt;</code> bana deta hai (trimming/AOT ke liye achha).</li>
 <li><b>Failure</b>: <code>Failures</code> list wali <code>OptionsValidationException</code>; saari failures saath mein report hoti hain.</li>
 <li><b>Reload</b>: <code>IOptionsMonitor&lt;T&gt;</code> mein <code>OnChange</code> se subscribe karo; har reload par validation dobara chalta hai, aur invalid reload <code>OptionsValidationException</code> banke saamne aata hai. Pehle se tay rakho ki live reload mein galat values aayein to app kya kare.</li>
 <li><b>Secrets</b>: unhe user secrets, environment variables ya vault se bind karo, commit hui JSON se nahi. Options classes koi security boundary nahi hain.</li>
@@ -562,9 +556,9 @@ public class MailOptions
         },
         {
           caption: {
-            en: "The .NET 8 source generator writes the validator from attributes; a hand-written IValidateOptions class adds rules that attributes cannot express.",
-            hi: ".NET 8 source generator attributes से validator लिख देता है; हाथ से लिखी IValidateOptions class वे rules जोड़ती है जो attributes नहीं कह सकते।",
-            hg: ".NET 8 source generator attributes se validator likh deta hai; haath se likhi IValidateOptions class woh rules jodti hai jo attributes nahi keh sakte."
+            en: "Since .NET 8 a source generator writes the validator from attributes; a hand-written IValidateOptions class adds rules that attributes cannot express.",
+            hi: ".NET 8 से source generator attributes से validator लिख देता है; हाथ से लिखी IValidateOptions class वे rules जोड़ती है जो attributes नहीं कह सकते।",
+            hg: ".NET 8 se source generator attributes se validator likh deta hai; haath se likhi IValidateOptions class woh rules jodti hai jo attributes nahi keh sakte."
           },
           check: "compile",
           packages: ["Microsoft.Extensions.Hosting", "Microsoft.Extensions.Options.DataAnnotations"],
@@ -680,6 +674,16 @@ public class InvoiceWorker(IServiceScopeFactory scopeFactory) : BackgroundServic
     }
 }
 
+public static class Registration
+{
+    public static IServiceCollection AddInvoicing(this IServiceCollection services)
+    {
+        services.AddScoped<IInvoiceJob, InvoiceJob>();   // new instance per scope
+        services.AddHostedService<InvoiceWorker>();      // the worker itself is a singleton
+        return services;
+    }
+}
+
 public static class StartupCheck
 {
     // Use in a CI/integration test with your real registrations.
@@ -699,7 +703,7 @@ public static class StartupCheck
       id: "repo-uow-needed-with-ef",
       depth: "short",
       q: "Do you need the Repository and Unit of Work patterns on top of EF Core?",
-      answer: "Not by default. DbSet already acts as a repository and DbContext as a unit of work. Add a repository only for a clear reason, like testability or shared query rules, and keep it specific.",
+      answer: "Not by default: DbSet already acts as a repository and DbContext as a unit of work. Add a repository only for a clear reason, like testability or shared query rules.",
       meaning: {
         hi: "डिफ़ॉल्ट रूप से नहीं। DbSet पहले से repository और DbContext unit of work की तरह काम करता है। repository तभी जोड़ो जब साफ़ वजह हो, जैसे testability या साझा query rules, और उसे specific रखो।",
         hg: "Default roop se nahi. DbSet pehle se repository aur DbContext unit of work ki tarah kaam karta hai. Repository tabhi jodo jab saaf wajah ho, jaise testability ya saajhe query rules, aur use specific rakho."
@@ -709,21 +713,21 @@ public static class StartupCheck
 <li><code>SaveChanges</code> already commits all tracked changes in one transaction, which is what a unit of work does (Day 5, Day 7).</li>
 <li>Reasons to add a repository: services tested without a database, a boundary between domain and EF, query rules reused in many places.</li>
 <li>Reasons not to: it forwards calls, hides EF features, adds a file per entity.</li>
-<li>Follow-up: "How do you test then?" — use SQLite in-memory or a real database container for EF code; fake the repository (or the service) in unit tests of the layer above.</li>
+<li>Follow-up: "How do you test then?" — test query code against the real engine (for example SQL Server in a container; SQLite in-memory is faster but behaves differently, Day 7); fake the repository (or the service) in unit tests of the layer above.</li>
 <li>TL angle: decide once per codebase, write it in the team's conventions, and review for "wrapper without a reason".</li>
 </ul>`,
         hi: `<ul>
 <li><code>SaveChanges</code> पहले से सारे tracked बदलाव एक transaction में commit करता है, यही unit of work का काम है (Day 5, Day 7)।</li>
 <li>Repository जोड़ने के कारण: बिना database के services की testing, domain और EF के बीच boundary, कई जगह दोहराए जाने वाले query rules।</li>
 <li>न जोड़ने के कारण: वह calls आगे भेजती है, EF features छुपाती है, हर entity पर एक file बढ़ाती है।</li>
-<li>Follow-up: "तो test कैसे करोगे?" — EF code के लिए SQLite in-memory या असली database container; ऊपर की layer के unit tests में repository (या service) fake करो।</li>
+<li>Follow-up: "तो test कैसे करोगे?" — query code को असली engine पर test करो (जैसे container में SQL Server; SQLite in-memory तेज़ है पर अलग behave करता है, Day 7); ऊपर की layer के unit tests में repository (या service) fake करो।</li>
 <li>TL angle: एक बार codebase के लिए तय करो, team conventions में लिखो, और "बिना वजह का wrapper" review में पकड़ो।</li>
 </ul>`,
         hg: `<ul>
 <li><code>SaveChanges</code> pehle se saare tracked badlav ek transaction mein commit karta hai, yahi unit of work ka kaam hai (Day 5, Day 7).</li>
 <li>Repository jodne ke kaaran: bina database ke services ki testing, domain aur EF ke beech boundary, kai jagah dohraye jane wale query rules.</li>
 <li>Na jodne ke kaaran: woh calls aage bhejti hai, EF features chhupati hai, har entity par ek file badhati hai.</li>
-<li>Follow-up: "To test kaise karoge?" — EF code ke liye SQLite in-memory ya asli database container; upar ki layer ke unit tests mein repository (ya service) fake karo.</li>
+<li>Follow-up: "To test kaise karoge?" — query code ko asli engine par test karo (jaise container mein SQL Server; SQLite in-memory tez hai par alag behave karta hai, Day 7); upar ki layer ke unit tests mein repository (ya service) fake karo.</li>
 <li>TL angle: ek baar codebase ke liye tay karo, team conventions mein likho, aur "bina wajah ka wrapper" review mein pakdo.</li>
 </ul>`
       }
@@ -775,13 +779,13 @@ public static class StartupCheck
 <li>Follow-up: "What is the cost?" — more classes, indirection, and with a separate read store, eventual consistency that the UI must handle.</li>
 </ul>`,
         hi: `<ul>
-<li>अच्छे संकेत: write rules समृद्ध हैं, read screens को joins और aggregates चाहिए, read load write से बहुत ज़्यादा है, एक area पर कई teams काम करती हैं।</li>
+<li>अच्छे संकेत: write rules बहुत जटिल हैं, read screens को joins और aggregates चाहिए, read load write से बहुत ज़्यादा है, एक area पर कई teams काम करती हैं।</li>
 <li>बुरे संकेत: एक table, एक form, एक list; "query" बस <code>Find</code> है।</li>
 <li>छोटे से शुरू करो: level 1 या 2, दर्द दिखे तो बाद में बाँटो। इसे पूरे app की जगह feature-by-feature अपना सकते हो।</li>
 <li>Follow-up: "कीमत क्या है?" — ज़्यादा classes, indirection, और अलग read store हो तो eventual consistency जिसे UI को संभालना पड़ेगा।</li>
 </ul>`,
         hg: `<ul>
-<li>Achhe sanket: write rules samriddh hain, read screens ko joins aur aggregates chahiye, read load write se bahut zyada hai, ek area par kai teams kaam karti hain.</li>
+<li>Achhe sanket: write rules bahut jatil hain, read screens ko joins aur aggregates chahiye, read load write se bahut zyada hai, ek area par kai teams kaam karti hain.</li>
 <li>Bure sanket: ek table, ek form, ek list; "query" bas <code>Find</code> hai.</li>
 <li>Chhote se shuru karo: level 1 ya 2, dard dikhe to baad mein baanto. Ise poore app ki jagah feature-by-feature apna sakte ho.</li>
 <li>Follow-up: "Keemat kya hai?" — zyada classes, indirection, aur alag read store ho to eventual consistency jise UI ko sambhalna padega.</li>
@@ -792,7 +796,7 @@ public static class StartupCheck
       id: "mediatr-needed-licence",
       depth: "short",
       q: "Do you need MediatR to do CQRS? Any licensing concern?",
-      answer: "No. Handlers injected through DI, or a tiny dispatcher, give the same structure. MediatR moved to a commercial licence in 2025 with a free Community tier, so check current terms.",
+      answer: "No: handlers injected through DI, or a tiny dispatcher, give the same structure. MediatR moved to a commercial licence in 2025 with a free Community tier, so check current terms.",
       meaning: {
         hi: "नहीं। DI से inject हुए handlers या छोटा dispatcher वही structure देते हैं। MediatR 2025 में commercial licence पर गया, free Community tier के साथ, इसलिए मौजूदा terms देख लो।",
         hg: "Nahi. DI se inject hue handlers ya chhota dispatcher wahi structure dete hain. MediatR 2025 mein commercial licence par gaya, free Community tier ke saath, isliye maujooda terms dekh lo."
@@ -806,13 +810,13 @@ public static class StartupCheck
 </ul>`,
         hi: `<ul>
 <li>MediatR एक <code>Send</code> entry point, assembly scan से handler discovery, notifications और pipeline behaviours देता है। AutoMapper का licence भी इसी तरह, उसी company (Lucky Penny Software) ने बदला।</li>
-<li>Licence तथ्य: Community edition revenue सीमा से नीचे और non-production में free है, और licence key का registration चाहिए। सीमाएँ और कीमतें बदल सकती हैं, इसलिए TL मौजूदा terms पढ़ता है और company product में जोड़ने से पहले legal/procurement से पूछता है।</li>
+<li>Licence की बातें: Community edition revenue सीमा से नीचे और non-production में free है, और licence key का registration चाहिए। सीमाएँ और कीमतें बदल सकती हैं, इसलिए TL मौजूदा terms पढ़ता है और company product में जोड़ने से पहले legal/procurement से पूछता है।</li>
 <li>विकल्प: hand-rolled dispatcher (लगभग 30 lines, ऊपर का code देखो), handlers का सीधा injection, या अपने licence वाली दूसरी mediator library।</li>
 <li>TL angle: dependency एक फ़ैसला है जिसकी कीमत है (licence, upgrades, reflection-based dispatch में debugging)। उसे justify करो, मान मत लो।</li>
 </ul>`,
         hg: `<ul>
 <li>MediatR ek <code>Send</code> entry point, assembly scan se handler discovery, notifications aur pipeline behaviours deta hai. AutoMapper ka licence bhi isi tarah, usi company (Lucky Penny Software) ne badla.</li>
-<li>Licence tathya: Community edition revenue seema se neeche aur non-production mein free hai, aur licence key ka registration chahiye. Seemayein aur keematein badal sakti hain, isliye TL maujooda terms padhta hai aur company product mein jodne se pehle legal/procurement se poochta hai.</li>
+<li>Licence ki baatein: Community edition revenue seema se neeche aur non-production mein free hai, aur licence key ka registration chahiye. Seemayein aur keematein badal sakti hain, isliye TL maujooda terms padhta hai aur company product mein jodne se pehle legal/procurement se poochta hai.</li>
 <li>Vikalp: hand-rolled dispatcher (lagbhag 30 lines, upar ka code dekho), handlers ka seedha injection, ya apne licence wali doosri mediator library.</li>
 <li>TL angle: dependency ek faisla hai jiski keemat hai (licence, upgrades, reflection-based dispatch mein debugging). Use justify karo, maan mat lo.</li>
 </ul>`
@@ -822,7 +826,7 @@ public static class StartupCheck
       id: "options-three-interfaces",
       depth: "short",
       q: "What is the difference between IOptions, IOptionsSnapshot and IOptionsMonitor?",
-      answer: "IOptions is a singleton read once. IOptionsSnapshot is scoped and re-read per request. IOptionsMonitor is a singleton that always has the current value and raises OnChange.",
+      answer: "IOptions is a singleton read once; IOptionsSnapshot is scoped and re-read per request. IOptionsMonitor is a singleton with the current value and OnChange.",
       meaning: {
         hi: "IOptions singleton है जो एक बार पढ़ता है। IOptionsSnapshot scoped है और हर request पर दोबारा पढ़ता है। IOptionsMonitor singleton है जिसके पास हमेशा मौजूदा value है और जो OnChange उठाता है।",
         hg: "IOptions singleton hai jo ek baar padhta hai. IOptionsSnapshot scoped hai aur har request par dobara padhta hai. IOptionsMonitor singleton hai jiske paas hamesha maujooda value hai aur jo OnChange uthata hai."
@@ -869,14 +873,14 @@ public static class StartupCheck
 <li>Follow-up: "Is Singleton → Transient also captive?" — yes: the transient instance is created once and kept for the singleton's life, and <code>ValidateScopes</code> does not report it (it only checks scoped services).</li>
 </ul>`,
         hi: `<ul>
-<li>असर: पुराना state, thread-safety bugs (समानांतर requests में एक <code>DbContext</code>), memory बढ़ना। Lifetime basics Day 8 में हैं।</li>
+<li>असर: पुराना state, thread-safety bugs (एक साथ चल रही requests में एक <code>DbContext</code>), memory बढ़ना। Lifetime basics Day 8 में हैं।</li>
 <li>Detection: <code>ValidateScopes = true</code> singleton resolve होते ही <i>"Cannot consume scoped service ... from singleton ..."</i> फेंकता है। <code>ValidateOnBuild</code> भी चालू हो तो वही error build पर, किसी request से पहले, दिखता है।</li>
 <li>Production में default बंद है, इसलिए CI में ऐसा check जोड़ो जो provider दोनों options के साथ बनाए।</li>
 <li>Fix: consumer को scoped बनाओ, या <code>IServiceScopeFactory</code> / factory inject करके छोटे scopes बनाओ।</li>
 <li>Follow-up: "क्या Singleton → Transient भी captive है?" — हाँ: transient instance एक बार बनकर singleton की पूरी उम्र रहता है, और <code>ValidateScopes</code> उसे report नहीं करता (वह सिर्फ़ scoped services जाँचता है)।</li>
 </ul>`,
         hg: `<ul>
-<li>Asar: purana state, thread-safety bugs (samanantar requests mein ek <code>DbContext</code>), memory badhna. Lifetime basics Day 8 mein hain.</li>
+<li>Asar: purana state, thread-safety bugs (ek saath chal rahi requests mein ek <code>DbContext</code>), memory badhna. Lifetime basics Day 8 mein hain.</li>
 <li>Detection: <code>ValidateScopes = true</code> singleton resolve hote hi <i>"Cannot consume scoped service ... from singleton ..."</i> phenkta hai. <code>ValidateOnBuild</code> bhi chaalu ho to wahi error build par, kisi request se pehle, dikhta hai.</li>
 <li>Production mein default band hai, isliye CI mein aisa check jodo jo provider dono options ke saath banaye.</li>
 <li>Fix: consumer ko scoped banao, ya <code>IServiceScopeFactory</code> / factory inject karke chhote scopes banao.</li>
@@ -897,19 +901,19 @@ public static class StartupCheck
         en: `<ul>
 <li>Without <code>ValidateOnStart</code>, validation runs on first read of the value, which can be minutes or hours after deployment.</li>
 <li>All failures are collected, so one startup shows every wrong setting (see the runnable example above).</li>
-<li>Validators can be attributes, a lambda, an <code>IValidateOptions&lt;T&gt;</code> class (can inject services), or the .NET 8 <code>[OptionsValidator]</code> source generator.</li>
+<li>Validators can be attributes, a lambda, an <code>IValidateOptions&lt;T&gt;</code> class (can inject services), or the <code>[OptionsValidator]</code> source generator (since .NET 8).</li>
 <li>Follow-up: "Does it help in a Kubernetes rollout?" — yes: the new pod fails its start, the old pods keep serving, and the bad config never takes traffic.</li>
 </ul>`,
         hi: `<ul>
 <li><code>ValidateOnStart</code> के बिना validation value के पहले पढ़ने पर चलता है, जो deploy के मिनटों या घंटों बाद हो सकता है।</li>
 <li>सारी failures इकट्ठा होती हैं, इसलिए एक startup में हर गलत setting दिख जाती है (ऊपर का runnable example देखो)।</li>
-<li>Validators attributes, lambda, <code>IValidateOptions&lt;T&gt;</code> class (services inject कर सकती है) या .NET 8 का <code>[OptionsValidator]</code> source generator हो सकते हैं।</li>
+<li>Validators attributes, lambda, <code>IValidateOptions&lt;T&gt;</code> class (services inject कर सकती है) या <code>[OptionsValidator]</code> source generator (.NET 8 से) हो सकते हैं।</li>
 <li>Follow-up: "क्या Kubernetes rollout में मदद करता है?" — हाँ: नया pod start पर fail होता है, पुराने pods serve करते रहते हैं, और गलत config कभी traffic नहीं लेता।</li>
 </ul>`,
         hg: `<ul>
 <li><code>ValidateOnStart</code> ke bina validation value ke pehle padhne par chalta hai, jo deploy ke minuton ya ghanton baad ho sakta hai.</li>
 <li>Saari failures ikattha hoti hain, isliye ek startup mein har galat setting dikh jaati hai (upar ka runnable example dekho).</li>
-<li>Validators attributes, lambda, <code>IValidateOptions&lt;T&gt;</code> class (services inject kar sakti hai) ya .NET 8 ka <code>[OptionsValidator]</code> source generator ho sakte hain.</li>
+<li>Validators attributes, lambda, <code>IValidateOptions&lt;T&gt;</code> class (services inject kar sakti hai) ya <code>[OptionsValidator]</code> source generator (.NET 8 se) ho sakte hain.</li>
 <li>Follow-up: "Kya Kubernetes rollout mein madad karta hai?" — haan: naya pod start par fail hota hai, purane pods serve karte rehte hain, aur galat config kabhi traffic nahi leta.</li>
 </ul>`
       }
@@ -929,6 +933,7 @@ public static class StartupCheck
 <li><code>await using var scope = factory.CreateAsyncScope();</code> per loop iteration or per message; the scope disposes the context.</li>
 <li>Alternative for EF: inject <code>IDbContextFactory&lt;T&gt;</code> and create a short-lived context (Day 5).</li>
 <li>Pass <code>stoppingToken</code> down so shutdown is graceful.</li>
+<li>Safe fire-and-forget from a request: queue the work and let a <code>BackgroundService</code> consume the queue (Day 3).</li>
 <li>Follow-up: "Why not one scope for the whole loop?" — the scope would be one long unit of work, with a growing change tracker and stale data.</li>
 </ul>`,
         hi: `<ul>
@@ -936,6 +941,7 @@ public static class StartupCheck
 <li>हर loop चक्कर या हर message पर <code>await using var scope = factory.CreateAsyncScope();</code>; scope context को dispose करता है।</li>
 <li>EF के लिए विकल्प: <code>IDbContextFactory&lt;T&gt;</code> inject करके छोटी उम्र का context बनाओ (Day 5)।</li>
 <li><code>stoppingToken</code> नीचे तक पास करो ताकि shutdown graceful रहे।</li>
+<li>Request से सुरक्षित fire-and-forget: काम को queue में डालो और <code>BackgroundService</code> से queue खाली करवाओ (Day 3)।</li>
 <li>Follow-up: "पूरे loop के लिए एक scope क्यों नहीं?" — scope एक लंबा unit of work बन जाएगा, change tracker बढ़ेगा और data पुराना होगा।</li>
 </ul>`,
         hg: `<ul>
@@ -943,6 +949,7 @@ public static class StartupCheck
 <li>Har loop chakkar ya har message par <code>await using var scope = factory.CreateAsyncScope();</code>; scope context ko dispose karta hai.</li>
 <li>EF ke liye vikalp: <code>IDbContextFactory&lt;T&gt;</code> inject karke chhoti umar ka context banao (Day 5).</li>
 <li><code>stoppingToken</code> neeche tak pass karo taaki shutdown graceful rahe.</li>
+<li>Request se surakshit fire-and-forget: kaam ko queue mein daalo aur <code>BackgroundService</code> se queue khali karvao (Day 3).</li>
 <li>Follow-up: "Poore loop ke liye ek scope kyon nahi?" — scope ek lamba unit of work ban jayega, change tracker badhega aur data purana hoga.</li>
 </ul>`
       }
@@ -951,7 +958,7 @@ public static class StartupCheck
       id: "generic-repository-trade-off",
       depth: "detailed",
       q: "What are the trade-offs of a generic repository (IRepository&lt;T&gt;) over EF Core?",
-      answer: "Gains: easier unit tests and one place for data access. Costs: it hides Include, projections and bulk updates, leaks IQueryable, and forwards calls. Specific, query-focused repositories usually serve teams better.",
+      answer: "Gains: easier unit tests and one data-access place; costs: it hides Include, projections and bulk updates, leaks IQueryable and forwards calls. Specific, query-focused repositories usually serve teams better.",
       meaning: {
         hi: "फ़ायदे: आसान unit tests और data access की एक जगह। कीमत: यह Include, projections और bulk updates छुपाती है, IQueryable leak करती है और calls आगे भेजती है। Specific, query-focused repositories आमतौर पर बेहतर रहती हैं।",
         hg: "Fayde: aasan unit tests aur data access ki ek jagah. Keemat: yeh Include, projections aur bulk updates chhupati hai, IQueryable leak karti hai aur calls aage bhejti hai. Specific, query-focused repositories aamtaur par behtar rehti hain."
@@ -984,7 +991,7 @@ public static class StartupCheck
       id: "iqueryable-from-repository",
       depth: "detailed",
       q: "Should a repository return IQueryable&lt;T&gt;?",
-      answer: "It is a trade-off. IQueryable lets callers compose paging and filters in one SQL query, but leaks EF behaviour and deferred execution. Returning a list or DTO gives a stable boundary but loads more.",
+      answer: "It is a trade-off: IQueryable lets callers compose paging and filters into one SQL query but leaks EF behaviour and deferred execution. A list or DTO gives a stable boundary but loads more.",
       meaning: {
         hi: "यह trade-off है। IQueryable callers को paging और filters एक SQL query में जोड़ने देता है, पर EF का व्यवहार और deferred execution leak करता है। list या DTO लौटाना स्थिर boundary देता है पर ज़्यादा load करता है।",
         hg: "Yeh trade-off hai. IQueryable callers ko paging aur filters ek SQL query mein jodne deta hai, par EF ka vyavhaar aur deferred execution leak karta hai. List ya DTO lautana sthir boundary deta hai par zyada load karta hai."
@@ -994,19 +1001,19 @@ public static class StartupCheck
 <li>With <code>IQueryable</code>, <code>repo.Query().Where(...).Count()</code> becomes one SQL statement; nothing runs until enumeration (Day 4, puzzle below).</li>
 <li>Leaks: a caller can call a C# method EF cannot translate (runtime error), forget to <code>await</code> inside a scope, or enumerate the query after the context is disposed.</li>
 <li>Middle path: return <code>IQueryable</code> only inside the data layer (query objects, specifications) and return DTOs/lists from the public interface; expose paging parameters explicitly.</li>
-<li>Follow-up: "How do you test a method returning IQueryable?" — an in-memory list <code>AsQueryable()</code> hides provider differences; prefer SQLite in-memory for translation behaviour.</li>
+<li>Follow-up: "How do you test a method returning IQueryable?" — an in-memory list <code>AsQueryable()</code> hides provider differences; prefer the real engine (a container) for translation behaviour; SQLite in-memory is faster but differs (Day 7).</li>
 </ul>`,
         hi: `<ul>
 <li><code>IQueryable</code> के साथ <code>repo.Query().Where(...).Count()</code> एक SQL statement बनता है; enumeration तक कुछ नहीं चलता (Day 4, नीचे का puzzle)।</li>
 <li>Leaks: caller ऐसा C# method बुला सकता है जिसे EF translate नहीं कर सकता (runtime error), scope में <code>await</code> भूल सकता है, या context dispose होने के बाद query enumerate कर सकता है।</li>
 <li>बीच का रास्ता: <code>IQueryable</code> सिर्फ़ data layer के अंदर (query objects, specifications) और public interface से DTOs/lists लौटाओ; paging parameters साफ़ दिखाओ।</li>
-<li>Follow-up: "IQueryable लौटाने वाले method को test कैसे करोगे?" — in-memory list का <code>AsQueryable()</code> provider फ़र्क़ छुपाता है; translation व्यवहार के लिए SQLite in-memory बेहतर।</li>
+<li>Follow-up: "IQueryable लौटाने वाले method को test कैसे करोगे?" — in-memory list का <code>AsQueryable()</code> provider फ़र्क़ छुपाता है; translation व्यवहार के लिए असली engine (container) बेहतर; SQLite in-memory तेज़ है पर अलग है (Day 7)।</li>
 </ul>`,
         hg: `<ul>
 <li><code>IQueryable</code> ke saath <code>repo.Query().Where(...).Count()</code> ek SQL statement banta hai; enumeration tak kuch nahi chalta (Day 4, neeche ka puzzle).</li>
 <li>Leaks: caller aisa C# method bula sakta hai jise EF translate nahi kar sakta (runtime error), scope mein <code>await</code> bhool sakta hai, ya context dispose hone ke baad query enumerate kar sakta hai.</li>
 <li>Beech ka raasta: <code>IQueryable</code> sirf data layer ke andar (query objects, specifications) aur public interface se DTOs/lists lautao; paging parameters saaf dikhao.</li>
-<li>Follow-up: "IQueryable lautane wale method ko test kaise karoge?" — in-memory list ka <code>AsQueryable()</code> provider farq chhupata hai; translation vyavhaar ke liye SQLite in-memory behtar.</li>
+<li>Follow-up: "IQueryable lautane wale method ko test kaise karoge?" — in-memory list ka <code>AsQueryable()</code> provider farq chhupata hai; translation vyavhaar ke liye asli engine (container) behtar; SQLite in-memory tez hai par alag hai (Day 7).</li>
 </ul>`
       }
     },
@@ -1023,21 +1030,21 @@ public static class StartupCheck
         en: `<ul>
 <li>DbContext is registered scoped (Day 5), so within one request every repository gets the same instance (see puzzle).</li>
 <li>Repositories should <b>not</b> call <code>SaveChanges</code> themselves; the use-case (service/handler) does, once, at the end.</li>
-<li>For several <code>SaveChanges</code> calls or two contexts that must succeed together, use an explicit transaction (<code>Database.BeginTransactionAsync</code>; EF Core Part 2, Day 6).</li>
+<li>For several <code>SaveChanges</code> calls on one context, use an explicit transaction (<code>Database.BeginTransactionAsync</code>; Day 6). A transaction begun on one context does not cover a second context: share one <code>DbConnection</code> and call <code>Database.UseTransactionAsync</code> on the second, or use <code>TransactionScope</code> (Day 6).</li>
 <li>A separate <code>IUnitOfWork</code> abstraction adds little here; it mainly lets a service commit without referencing <code>DbContext</code>.</li>
 <li>Follow-up: "What if a repository is a singleton?" — it would capture one context forever: a captive dependency.</li>
 </ul>`,
         hi: `<ul>
 <li>DbContext scoped register होता है (Day 5), इसलिए एक request में हर repository को वही instance मिलता है (puzzle देखो)।</li>
 <li>Repositories खुद <code>SaveChanges</code> <b>न</b> बुलाएँ; use-case (service/handler) आख़िर में एक बार बुलाए।</li>
-<li>कई <code>SaveChanges</code> calls या दो contexts जिन्हें साथ सफल होना हो, उनके लिए explicit transaction (<code>Database.BeginTransactionAsync</code>; EF Core Part 2, Day 6)।</li>
+<li>कई <code>SaveChanges</code> calls एक context पर हों तो explicit transaction (<code>Database.BeginTransactionAsync</code>; Day 6)। एक context में शुरू हुआ transaction दूसरे context को cover नहीं करता: एक <code>DbConnection</code> share करो और दूसरे पर <code>Database.UseTransactionAsync</code> बुलाओ, या <code>TransactionScope</code> (Day 6) use करो।</li>
 <li>अलग <code>IUnitOfWork</code> abstraction यहाँ कम जोड़ता है; यह मुख्य रूप से service को <code>DbContext</code> का नाम लिए बिना commit करने देता है।</li>
 <li>Follow-up: "अगर repository singleton हो?" — वह एक context हमेशा के लिए पकड़ लेगी: captive dependency।</li>
 </ul>`,
         hg: `<ul>
 <li>DbContext scoped register hota hai (Day 5), isliye ek request mein har repository ko wahi instance milta hai (puzzle dekho).</li>
 <li>Repositories khud <code>SaveChanges</code> <b>na</b> bulayein; use-case (service/handler) aakhir mein ek baar bulaye.</li>
-<li>Kai <code>SaveChanges</code> calls ya do contexts jinhe saath safal hona ho, unke liye explicit transaction (<code>Database.BeginTransactionAsync</code>; EF Core Part 2, Day 6).</li>
+<li>Kai <code>SaveChanges</code> calls ek context par hon to explicit transaction (<code>Database.BeginTransactionAsync</code>; Day 6). Ek context mein shuru hua transaction doosre context ko cover nahi karta: ek <code>DbConnection</code> share karo aur doosre par <code>Database.UseTransactionAsync</code> bulao, ya <code>TransactionScope</code> (Day 6) use karo.</li>
 <li>Alag <code>IUnitOfWork</code> abstraction yahan kam jodta hai; yeh mukhya roop se service ko <code>DbContext</code> ka naam liye bina commit karne deta hai.</li>
 <li>Follow-up: "Agar repository singleton ho?" — woh ek context hamesha ke liye pakad legi: captive dependency.</li>
 </ul>`
@@ -1058,21 +1065,21 @@ public static class StartupCheck
 <li>Keep the rule as <code>Expression&lt;Func&lt;T,bool&gt;&gt;</code> so EF translates it to SQL; a <code>Func</code> would filter in memory (Day 4).</li>
 <li>Specifications can be combined (and/or) and can carry includes, sorting and paging.</li>
 <li>Libraries exist for this; a 10-line version is usually enough. Treat any library as an optional dependency.</li>
-<li>Follow-up: "Spec vs extension method on IQueryable?" — an extension method like <code>Where(IsLowStock)</code> is often simpler and does the same job.</li>
+<li>Follow-up: "Spec vs extension method on IQueryable?" — a real <code>IQueryable</code> extension such as <code>public static IQueryable&lt;Product&gt; LowStock(this IQueryable&lt;Product&gt; q, int t) =&gt; q.Where(p =&gt; p.Stock &lt; t);</code> is often simpler and still translates to SQL. Passing a method group to <code>Where</code> would bind to <code>Enumerable.Where</code> and filter in memory.</li>
 </ul>`,
         hi: `<ul>
 <li>उदाहरण: <code>Specs.LowStock(10)</code> में <code>p =&gt; p.Stock &lt; 10</code> लिपटा है। callers कहते हैं <code>repo.FindAsync(Specs.LowStock(10))</code>।</li>
 <li>Rule को <code>Expression&lt;Func&lt;T,bool&gt;&gt;</code> रखो ताकि EF इसे SQL बनाए; <code>Func</code> memory में filter करेगा (Day 4)।</li>
 <li>Specifications को जोड़ा जा सकता है (and/or) और उनमें includes, sorting, paging हो सकते हैं।</li>
 <li>इसके लिए libraries हैं; 10 lines का version आमतौर पर काफ़ी है। किसी भी library को optional dependency मानो।</li>
-<li>Follow-up: "Spec vs IQueryable पर extension method?" — <code>Where(IsLowStock)</code> जैसा extension method अक्सर आसान है और वही काम करता है।</li>
+<li>Follow-up: "Spec vs IQueryable पर extension method?" — असली <code>IQueryable</code> extension, जैसे <code>public static IQueryable&lt;Product&gt; LowStock(this IQueryable&lt;Product&gt; q, int t) =&gt; q.Where(p =&gt; p.Stock &lt; t);</code>, अक्सर आसान है और फिर भी SQL में translate होता है। <code>Where</code> को method group देने पर वह <code>Enumerable.Where</code> से जुड़ जाएगा और memory में filter करेगा।</li>
 </ul>`,
         hg: `<ul>
 <li>Udaharan: <code>Specs.LowStock(10)</code> mein <code>p =&gt; p.Stock &lt; 10</code> lipta hai. Callers kehte hain <code>repo.FindAsync(Specs.LowStock(10))</code>.</li>
 <li>Rule ko <code>Expression&lt;Func&lt;T,bool&gt;&gt;</code> rakho taaki EF ise SQL banaye; <code>Func</code> memory mein filter karega (Day 4).</li>
 <li>Specifications ko joda ja sakta hai (and/or) aur unmein includes, sorting, paging ho sakte hain.</li>
 <li>Iske liye libraries hain; 10 lines ka version aamtaur par kaafi hai. Kisi bhi library ko optional dependency maano.</li>
-<li>Follow-up: "Spec vs IQueryable par extension method?" — <code>Where(IsLowStock)</code> jaisa extension method aksar aasan hai aur wahi kaam karta hai.</li>
+<li>Follow-up: "Spec vs IQueryable par extension method?" — asli <code>IQueryable</code> extension, jaise <code>public static IQueryable&lt;Product&gt; LowStock(this IQueryable&lt;Product&gt; q, int t) =&gt; q.Where(p =&gt; p.Stock &lt; t);</code>, aksar aasan hai aur phir bhi SQL mein translate hota hai. <code>Where</code> ko method group dene par woh <code>Enumerable.Where</code> se jud jayega aur memory mein filter karega.</li>
 </ul>`
       }
     },
@@ -1146,7 +1153,7 @@ public static class StartupCheck
       id: "named-options",
       depth: "detailed",
       q: "What are named options and when would you use them?",
-      answer: "Named options give several configurations of the same options class, each with a name. Read them with IOptionsMonitor.Get(name). Use them for things like two SMTP servers or several API clients.",
+      answer: "Named options give several configurations of one options class, each with a name, read with IOptionsMonitor.Get(name). Use them for things like two SMTP servers or several API clients.",
       meaning: {
         hi: "Named options एक ही options class की कई configurations देते हैं, हर एक का नाम होता है। IOptionsMonitor.Get(name) से पढ़ो। दो SMTP servers या कई API clients जैसी चीज़ों के लिए।",
         hg: "Named options ek hi options class ki kai configurations dete hain, har ek ka naam hota hai. IOptionsMonitor.Get(name) se padho. Do SMTP servers ya kai API clients jaisi cheezon ke liye."
@@ -1239,7 +1246,7 @@ public static class StartupCheck
       id: "scoped-from-root-and-disposal",
       depth: "detailed",
       q: "What happens if you resolve a scoped service from the root provider, and who disposes services?",
-      answer: "Without validation it works but lives until the root provider is disposed, like a singleton. With ValidateScopes it throws. The container disposes only instances it created, when their scope or provider is disposed.",
+      answer: "Without validation it works but lives until the root provider is disposed; with ValidateScopes it throws. The container disposes only instances it created, when their scope or provider is disposed.",
       meaning: {
         hi: "validation के बिना यह चलता है पर root provider dispose होने तक singleton जैसा जीता है। ValidateScopes के साथ exception आती है। container सिर्फ़ वही instances dispose करता है जो उसने बनाए, जब उनका scope या provider dispose हो।",
         hg: "Validation ke bina yeh chalta hai par root provider dispose hone tak singleton jaisa jeeta hai. ValidateScopes ke saath exception aati hai. Container sirf wahi instances dispose karta hai jo usne banaye, jab unka scope ya provider dispose ho."
@@ -1301,37 +1308,50 @@ public static class StartupCheck
   ],
   puzzles: [
     {
-      id: "lifetime-identity",
+      id: "transient-captured-by-singleton",
       packages: ["Microsoft.Extensions.DependencyInjection"],
       src: `using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
-services.AddTransient<TransientSvc>();
-services.AddScoped<ScopedSvc>();
-services.AddSingleton<SingletonSvc>();
+services.AddTransient<Ticket>();
+services.AddSingleton<Printer>();
 
-using var root = services.BuildServiceProvider();
-using var a = root.CreateScope();
-using var b = root.CreateScope();
-var pa = a.ServiceProvider;
-var pb = b.ServiceProvider;
+using var provider = services.BuildServiceProvider(new ServiceProviderOptions
+{
+    ValidateScopes = true,
+    ValidateOnBuild = true
+});
+Console.WriteLine("validation passed");
 
-Console.WriteLine("transient, same scope: " + ReferenceEquals(pa.GetRequiredService<TransientSvc>(), pa.GetRequiredService<TransientSvc>()));
-Console.WriteLine("scoped, same scope: " + ReferenceEquals(pa.GetRequiredService<ScopedSvc>(), pa.GetRequiredService<ScopedSvc>()));
-Console.WriteLine("scoped, two scopes: " + ReferenceEquals(pa.GetRequiredService<ScopedSvc>(), pb.GetRequiredService<ScopedSvc>()));
-Console.WriteLine("singleton, two scopes: " + ReferenceEquals(pa.GetRequiredService<SingletonSvc>(), pb.GetRequiredService<SingletonSvc>()));
+using var a = provider.CreateScope();
+using var b = provider.CreateScope();
+var printerA = a.ServiceProvider.GetRequiredService<Printer>();
+var printerB = b.ServiceProvider.GetRequiredService<Printer>();
 
-class TransientSvc { }
-class ScopedSvc { }
-class SingletonSvc { }`,
-      answer: `transient, same scope: False
-scoped, same scope: True
-scoped, two scopes: False
-singleton, two scopes: True`,
+Console.WriteLine("same printer: " + ReferenceEquals(printerA, printerB));
+Console.WriteLine("ticket held by printer: " + printerA.Ticket.Number);
+Console.WriteLine("fresh ticket number: " + a.ServiceProvider.GetRequiredService<Ticket>().Number);
+Console.WriteLine("same ticket in both: " + ReferenceEquals(printerA.Ticket, printerB.Ticket));
+
+class Ticket
+{
+    private static int _next;
+    public int Number { get; } = ++_next;
+}
+
+class Printer(Ticket ticket)
+{
+    public Ticket Ticket { get; } = ticket;
+}`,
+      answer: `validation passed
+same printer: True
+ticket held by printer: 1
+fresh ticket number: 2
+same ticket in both: True`,
       explain: {
-        en: `<p>Transient: a new instance on every resolve, even inside one scope. Scoped: one instance per scope, so the same scope gives the same object and another scope gives a different one. Singleton: one instance for the whole provider. (Lifetime Q&amp;A: Day 8.)</p>`,
-        hi: `<p>Transient: हर resolve पर नया instance, एक scope के अंदर भी। Scoped: हर scope में एक instance, इसलिए वही scope वही object देता है और दूसरा scope अलग। Singleton: पूरे provider के लिए एक instance। (Lifetime Q&amp;A: Day 8।)</p>`,
-        hg: `<p>Transient: har resolve par naya instance, ek scope ke andar bhi. Scoped: har scope mein ek instance, isliye wahi scope wahi object deta hai aur doosra scope alag. Singleton: poore provider ke liye ek instance. (Lifetime Q&amp;A: Day 8.)</p>`
+        en: `<p>Both validations pass: <code>ValidateScopes</code> only checks <b>scoped</b> services, so a transient injected into a singleton is not reported. The <code>Printer</code> singleton is built once, receives <code>Ticket</code> number 1 and keeps it for the app's life; a fresh resolve gives a new ticket (2). "Transient" only means "new per resolve", and the singleton resolved it once. If the transient holds state or is <code>IDisposable</code>, this is a quiet bug: resolve it per use (factory or scope) instead.</p>`,
+        hi: `<p>दोनों validations पास हो जाते हैं: <code>ValidateScopes</code> सिर्फ़ <b>scoped</b> services जाँचता है, इसलिए singleton में inject हुआ transient report नहीं होता। <code>Printer</code> singleton एक बार बनता है, उसे <code>Ticket</code> नंबर 1 मिलता है और वह app की पूरी उम्र उसे रखता है; नया resolve नया ticket (2) देता है। "Transient" का मतलब बस "हर resolve पर नया" है, और singleton ने उसे एक ही बार resolve किया। transient में state हो या वह <code>IDisposable</code> हो तो यह चुपचाप का bug है: उसे हर इस्तेमाल पर (factory या scope से) resolve करो।</p>`,
+        hg: `<p>Dono validations pass ho jaate hain: <code>ValidateScopes</code> sirf <b>scoped</b> services jaanchta hai, isliye singleton mein inject hua transient report nahi hota. <code>Printer</code> singleton ek baar banta hai, use <code>Ticket</code> number 1 milta hai aur woh app ki poori umar use rakhta hai; naya resolve naya ticket (2) deta hai. "Transient" ka matlab bas "har resolve par naya" hai, aur singleton ne use ek hi baar resolve kiya. Transient mein state ho ya woh <code>IDisposable</code> ho to yeh chupchaap ka bug hai: use har istemaal par (factory ya scope se) resolve karo.</p>`
       }
     },
     {
@@ -1360,9 +1380,9 @@ class Report(RequestCounter counter) { public RequestCounter Counter { get; } = 
       answer: `a new request sees: 0
 the singleton still holds: 42`,
       explain: {
-        en: `<p>The singleton <code>Report</code> was resolved from the root provider, so its <code>RequestCounter</code> came from the root and stays captive for the app's life. A new scope creates its own <code>RequestCounter</code> (value 0). Nothing warns you because the manually built provider has validation off; with <code>ValidateScopes</code> this registration is rejected.</p>`,
-        hi: `<p>singleton <code>Report</code> root provider से resolve हुआ, इसलिए उसका <code>RequestCounter</code> root से आया और app की पूरी उम्र captive रहता है। नया scope अपना <code>RequestCounter</code> बनाता है (value 0)। कोई चेतावनी नहीं आती क्योंकि हाथ से बने provider में validation बंद है; <code>ValidateScopes</code> के साथ यह registration reject हो जाती है।</p>`,
-        hg: `<p>singleton <code>Report</code> root provider se resolve hua, isliye uska <code>RequestCounter</code> root se aaya aur app ki poori umar captive rehta hai. Naya scope apna <code>RequestCounter</code> banata hai (value 0). Koi chetavni nahi aati kyunki haath se bane provider mein validation band hai; <code>ValidateScopes</code> ke saath yeh registration reject ho jaati hai.</p>`
+        en: `<p>The singleton <code>Report</code> was resolved from the root provider, so its <code>RequestCounter</code> came from the root and stays captive for the app's life. A new scope creates its own <code>RequestCounter</code> (value 0). Nothing warns you because the manually built provider has validation off. With <code>ValidateScopes</code> on, resolving this singleton throws; the build itself is rejected only when <code>ValidateOnBuild</code> is also on.</p>`,
+        hi: `<p>singleton <code>Report</code> root provider से resolve हुआ, इसलिए उसका <code>RequestCounter</code> root से आया और app की पूरी उम्र captive रहता है। नया scope अपना <code>RequestCounter</code> बनाता है (value 0)। कोई चेतावनी नहीं आती क्योंकि हाथ से बने provider में validation बंद है। <code>ValidateScopes</code> चालू हो तो इस singleton को resolve करने पर exception आती है; build तभी reject होता है जब <code>ValidateOnBuild</code> भी चालू हो।</p>`,
+        hg: `<p>singleton <code>Report</code> root provider se resolve hua, isliye uska <code>RequestCounter</code> root se aaya aur app ki poori umar captive rehta hai. Naya scope apna <code>RequestCounter</code> banata hai (value 0). Koi chetavni nahi aati kyunki haath se bane provider mein validation band hai. <code>ValidateScopes</code> chaalu ho to is singleton ko resolve karne par exception aati hai; build tabhi reject hota hai jab <code>ValidateOnBuild</code> bhi chaalu ho.</p>`
       }
     },
     {
@@ -1583,7 +1603,7 @@ in database after save: 1 products, 1 orders`,
       "A hand-rolled dispatcher plus decorators gives pipeline behaviours without any library.",
       "IOptions is read once, IOptionsSnapshot is per scope, IOptionsMonitor is live with OnChange.",
       "ValidateOnStart makes bad configuration fail at startup, not on the first request.",
-      "A captive dependency is a long-lived service holding a short-lived one; ValidateScopes catches it at resolve time.",
+      "A captive dependency is a long-lived service holding a short-lived one; ValidateScopes catches singleton to scoped, not singleton to transient.",
       "A BackgroundService is a singleton, so create a scope with IServiceScopeFactory.CreateAsyncScope for each unit of work."
     ],
     meaning: {
@@ -1598,7 +1618,7 @@ in database after save: 1 products, 1 orders`,
         "hand-rolled dispatcher और decorators बिना किसी library के pipeline behaviours देते हैं।",
         "IOptions एक बार पढ़ता है, IOptionsSnapshot per scope, IOptionsMonitor live और OnChange के साथ।",
         "ValidateOnStart गलत configuration को startup पर fail कराता है, पहली request पर नहीं।",
-        "Captive dependency यानी लंबी उम्र वाली service छोटी उम्र वाली को पकड़े; ValidateScopes इसे resolve के वक़्त पकड़ता है।",
+        "Captive dependency यानी लंबी उम्र वाली service छोटी उम्र वाली को पकड़े; ValidateScopes singleton से scoped पकड़ता है, singleton से transient नहीं।",
         "BackgroundService singleton है, इसलिए हर काम के लिए IServiceScopeFactory.CreateAsyncScope से scope बनाओ।"
       ],
       hg: [
@@ -1612,7 +1632,7 @@ in database after save: 1 products, 1 orders`,
         "Hand-rolled dispatcher aur decorators bina kisi library ke pipeline behaviours dete hain.",
         "IOptions ek baar padhta hai, IOptionsSnapshot per scope, IOptionsMonitor live aur OnChange ke saath.",
         "ValidateOnStart galat configuration ko startup par fail karata hai, pehli request par nahi.",
-        "Captive dependency yaani lambi umar wali service chhoti umar wali ko pakde; ValidateScopes ise resolve ke waqt pakadta hai.",
+        "Captive dependency yaani lambi umar wali service chhoti umar wali ko pakde; ValidateScopes singleton se scoped pakadta hai, singleton se transient nahi.",
         "BackgroundService singleton hai, isliye har kaam ke liye IServiceScopeFactory.CreateAsyncScope se scope banao."
       ]
     }
