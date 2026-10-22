@@ -118,7 +118,7 @@ window.TL_DAY = {
 <li><b>Storage</b> = records x हर record के bytes x retention x copies (replication में आम तौर पर 2-3 copies रहती हैं)। Units: 1 KB = हज़ार bytes, 1 MB = million, 1 GB = billion, 1 TB = trillion।</li>
 <li><b>Bandwidth</b> = QPS x payload size। <b>Read:write ratio</b> बताता है कि reads optimise करने हैं (caches, replicas) या writes (queues, partitioning)।</li>
 <li><b>Cache size:</b> एक आम rule of thumb है कि लगभग 20% data 80% traffic देता है, इसलिए एक दिन की reads के hot 20% को cache करना अक्सर काफ़ी होता है।</li>
-<li><b>Latency के orders of magnitude:</b> memory nanoseconds से microseconds, एक data centre के अंदर network hop लगभग आधा millisecond, disk या database read milliseconds, महाद्वीपों के बीच round trip 100+ ms। इन्हें सिर्फ़ तुलना के लिए use करो, quote करने के लिए नहीं।</li>
+<li><b>Latency के orders of magnitude:</b> memory nanoseconds से microseconds, एक data centre के अंदर network hop लगभग आधा millisecond, disk या database read milliseconds, continents के बीच round trip 100+ ms। इन्हें सिर्फ़ तुलना के लिए use करो, quote करने के लिए नहीं।</li>
 </ul>
 <p><b>बोलने का तरीक़ा:</b> "मान लो 10 million users, रोज़ 20% active, हर एक के 5 messages: 10M x 0.2 x 5 = रोज़ 10 million, average लगभग 115 प्रति second, peak पर मान लो 350।" Round करो, assumptions ज़ोर से बोलो, और पूछो "क्या यह आपकी expectation से मेल खाता है?"। C# में हिसाब code section में देखो।</p>`,
         hg: `<p><b>Picture — Diwali se pehle kirana wale bhaiya:</b> woh har mithai ka dabba nahi ginte; sochte hain "pichhle saal roz lagbhag 200 customers the, is saal thode zyada, har koi 2 dabbe leta hai, to stock lagbhag 500". Rough, tez, <b>faisle ke liye kaafi</b>. Interview mein estimate design tay karta hai (ek database ya kai? cache ya nahi?), yeh exact digits ka exam nahi hai.</p>
@@ -128,7 +128,7 @@ window.TL_DAY = {
 <li><b>Storage</b> = records x har record ke bytes x retention x copies (replication mein aam taur par 2-3 copies rehti hain). Units: 1 KB = hazaar bytes, 1 MB = million, 1 GB = billion, 1 TB = trillion.</li>
 <li><b>Bandwidth</b> = QPS x payload size. <b>Read:write ratio</b> batata hai ki reads optimise karne hain (caches, replicas) ya writes (queues, partitioning).</li>
 <li><b>Cache size:</b> ek aam rule of thumb hai ki lagbhag 20% data 80% traffic deta hai, isliye ek din ki reads ke hot 20% ko cache karna aksar kaafi hota hai.</li>
-<li><b>Latency ke orders of magnitude:</b> memory nanoseconds se microseconds, ek data centre ke andar network hop lagbhag aadha millisecond, disk ya database read milliseconds, mahadwipon ke beech round trip 100+ ms. Inhe sirf tulna ke liye use karo, quote karne ke liye nahi.</li>
+<li><b>Latency ke orders of magnitude:</b> memory nanoseconds se microseconds, ek data centre ke andar network hop lagbhag aadha millisecond, disk ya database read milliseconds, continents ke beech round trip 100+ ms. Inhe sirf tulna ke liye use karo, quote karne ke liye nahi.</li>
 </ul>
 <p><b>Bolne ka tareeka:</b> "Maan lo 10 million users, roz 20% active, har ek ke 5 messages: 10M x 0.2 x 5 = roz 10 million, average lagbhag 115 per second, peak par maan lo 350." Round karo, assumptions zor se bolo, aur poochho "kya yeh aapki expectation se mel khaata hai?". C# mein hisaab code section mein dekho.</p>`
       }
@@ -155,7 +155,7 @@ window.TL_DAY = {
 <p>In an interview, add a block only when a number or a requirement asks for it, and say what it costs.</p>`,
         hi: `<p><b>Picture — railway station:</b> बहुत सारी ticket खिड़कियाँ (servers) एक queue manager (load balancer) के पीछे; एक notice board (cache) ताकि लोग एक ही सवाल पूछने के लिए लाइन न लगाएँ; मुख्य record room (database) जिसमें सिर्फ़ staff जाता है; token system वाला parcel office (queue) ताकि भारी सामान खिड़की न रोके। हर design इन्हीं blocks का अलग order है।</p>
 <ul>
-<li><b>Load balancer:</b> requests को एक जैसे servers में बाँटता है और बीमार servers हटा देता है (health checks)। यह तब सबसे अच्छा चलता है जब servers <b>stateless</b> हों: server की memory में user data नहीं; session या state shared store में या token (JWT, Day 13) में रहे।</li>
+<li><b>Load balancer:</b> requests को एक जैसे servers में बाँटता है और unhealthy servers हटा देता है (health checks)। यह तब सबसे अच्छा चलता है जब servers <b>stateless</b> हों: server की memory में user data नहीं; session या state shared store में या token (JWT, Day 13) में रहे।</li>
 <li><b>Vertical बनाम horizontal scaling:</b> vertical = बड़ी machine (सरल, पर एक सीमा और एक failure point); horizontal = ज़्यादा machines (stateless services चाहिए, resilience मिलती है)। Simple vertical से शुरू करो, numbers माँगें तब horizontal जाओ।</li>
 <li><b>Caching layers:</b> browser, CDN (static files और cacheable responses, user के पास), app-level cache, Redis (shared cache), फिर database। <b>Cache-aside</b> + TTL + write पर delete; मुश्किल हिस्से <b>invalidation</b> और <b>stampede</b> हैं (Day 13)।</li>
 <li><b>Database scaling, क्रम से:</b> पहले indexes और query fixes (SQL days 18-19), फिर <b>read replicas</b> (reads scale होती हैं, पर replicas पीछे रहती हैं, इसलिए write के तुरंत बाद की read stale हो सकती है), फिर चुनी हुई key से <b>partitioning / sharding</b> (writes scale होती हैं; cross-shard queries और joins मुश्किल)। <b>Consistent hashing</b> node जोड़ने पर rebalancing छोटा रखती है।</li>
@@ -166,7 +166,7 @@ window.TL_DAY = {
 <p>Interview में block तभी जोड़ो जब कोई number या requirement माँगे, और बताओ कि उसकी कीमत क्या है।</p>`,
         hg: `<p><b>Picture — railway station:</b> bahut saari ticket khidkiyan (servers) ek queue manager (load balancer) ke peeche; ek notice board (cache) taaki log ek hi sawaal poochne ke liye line na lagayein; mukhya record room (database) jisme sirf staff jaata hai; token system wala parcel office (queue) taaki bhaari saaman khidki na roke. Har design inhi blocks ka alag order hai.</p>
 <ul>
-<li><b>Load balancer:</b> requests ko ek jaise servers mein baantta hai aur beemar servers hata deta hai (health checks). Yeh tab sabse achha chalta hai jab servers <b>stateless</b> hon: server ki memory mein user data nahi; session ya state shared store mein ya token (JWT, Day 13) mein rahe.</li>
+<li><b>Load balancer:</b> requests ko ek jaise servers mein baantta hai aur unhealthy servers hata deta hai (health checks). Yeh tab sabse achha chalta hai jab servers <b>stateless</b> hon: server ki memory mein user data nahi; session ya state shared store mein ya token (JWT, Day 13) mein rahe.</li>
 <li><b>Vertical vs horizontal scaling:</b> vertical = badi machine (saral, par ek seema aur ek failure point); horizontal = zyada machines (stateless services chahiye, resilience milti hai). Simple vertical se shuru karo, numbers maangein tab horizontal jao.</li>
 <li><b>Caching layers:</b> browser, CDN (static files aur cacheable responses, user ke paas), app-level cache, Redis (shared cache), phir database. <b>Cache-aside</b> + TTL + write par delete; mushkil hisse <b>invalidation</b> aur <b>stampede</b> hain (Day 13).</li>
 <li><b>Database scaling, kram se:</b> pehle indexes aur query fixes (SQL days 18-19), phir <b>read replicas</b> (reads scale hoti hain, par replicas peeche rehti hain, isliye write ke turant baad ki read stale ho sakti hai), phir chuni hui key se <b>partitioning / sharding</b> (writes scale hoti hain; cross-shard queries aur joins mushkil). <b>Consistent hashing</b> node jodne par rebalancing chhota rakhti hai.</li>
@@ -188,7 +188,7 @@ window.TL_DAY = {
       body: {
         en: `<p><b>Picture — a hotel key tag:</b> a long address is written once on a registry page; the guest gets a short tag number. Anyone showing the tag is sent to the right room. The short code is the tag; the redirect is the lookup.</p>
 <p><b>1. Requirements.</b> Functional: create a short URL for a long one (optional custom alias, optional expiry), redirect when opened. Non-functional: redirect must be fast and highly available; creates are far fewer than reads; links should not be guessable if they are private.</p>
-<p><b>2. Estimates</b> (assumed 100M new URLs a month, 100:1 reads): about 38 writes/s, about 3,900 reads/s, peak about 7,700; 5 years is about 6 billion records, about 3 TB at 500 bytes (the puzzle shows this). Reads dominate and the data is small, so <b>cache the hot links</b>.</p>
+<p><b>2. Estimates</b> (assumed 100M new URLs a month, 100:1 reads): about 38 writes/s, about 3,900 reads/s, peak about 7,700; 5 years is about 6 billion records, about 3 TB at 500 bytes, about 9 TB with 3 copies (the capacity puzzle shows the arithmetic). Reads dominate and the data is small, so <b>cache the hot links</b>.</p>
 <p><b>3. API.</b> <code>POST /api/urls</code> with <code>{longUrl, alias?, expiresAt?}</code> returns <code>201</code> with the short URL (accept an idempotency key so a retry does not make two links). <code>GET /{code}</code> returns a redirect, or <code>404</code> (<code>410</code> if expired).</p>
 <p><b>4. Data.</b> One table keyed by <code>Code</code>: <code>Code, LongUrl, CreatedAt, ExpiresAt, OwnerId</code>. Access is purely "get by key", so SQL works for a long time; a key-value store is the natural next step at very large scale.</p>
 <p><b>5. High-level design.</b></p>
@@ -201,11 +201,11 @@ Browser --> Load balancer --> Redirect/API servers (stateless)
                                 |
   click event --> Queue --> analytics worker (off the hot path)
 </pre>
-<p><b>6. Deep dives.</b> <b>Code generation:</b> take a counter id and base62-encode it (7 characters hold about 3.5 trillion); servers lease id blocks so there is no database call per create. Alternatives: hash of the URL truncated (collisions to handle) or random code with a unique-key check. <b>301 vs 302:</b> 301 is permanent, so browsers cache it and later clicks never reach you (cheap, but you lose analytics and cannot change the target); 302 is temporary, every click comes to you (analytics and edits work, more load). Default to 302 when you need click counts. <b>Cache:</b> cache-aside in Redis with TTL; hot links stay warm.</p>
+<p><b>6. Deep dives.</b> <b>Code generation:</b> take a counter id and base62-encode it (7 characters hold about 3.5 trillion); servers lease id blocks so there is no database call per create. Alternatives: hash of the URL truncated (collisions to handle) or random code with a unique-key check. <b>301 vs 302:</b> browsers cache a 301, so later clicks may skip you; a 302 reaches you every time. Use 302 when you need click counts (the 301/302 question has the details). <b>Cache:</b> cache-aside in Redis with TTL; hot links stay warm.</p>
 <p><b>7. Trade-offs and failures.</b> Sequential ids are guessable (shuffle or use random codes for private links). If Redis is down, the database must carry the reads, so keep replicas and a rate limit. Abuse and malware links need a check on create. Custom aliases need a uniqueness check and reserved words.</p>`,
         hi: `<p><b>Picture — hotel की key tag:</b> लंबा पता registry के पन्ने पर एक बार लिखा जाता है; guest को छोटा tag number मिलता है। Tag दिखाने वाले को सही कमरे तक भेज दिया जाता है। Short code tag है; redirect lookup है।</p>
 <p><b>1. Requirements.</b> Functional: लंबे URL का short URL बनाओ (optional custom alias, optional expiry), खोलने पर redirect करो। Non-functional: redirect तेज़ और highly available हो; creates, reads से बहुत कम हैं; private links guess न हो सकें।</p>
-<p><b>2. Estimates</b> (मान लिया महीने में 100M नए URLs, 100:1 reads): लगभग 38 writes/s, लगभग 3,900 reads/s, peak लगभग 7,700; 5 साल में लगभग 6 billion records, 500 bytes पर लगभग 3 TB (puzzle में यह दिखता है)। Reads हावी हैं और data छोटा है, इसलिए <b>hot links को cache करो</b>।</p>
+<p><b>2. Estimates</b> (मान लिया महीने में 100M नए URLs, 100:1 reads): लगभग 38 writes/s, लगभग 3,900 reads/s, peak लगभग 7,700; 5 साल में लगभग 6 billion records, 500 bytes पर लगभग 3 TB, 3 copies के साथ लगभग 9 TB (capacity puzzle में हिसाब दिखता है)। Reads हावी हैं और data छोटा है, इसलिए <b>hot links को cache करो</b>।</p>
 <p><b>3. API.</b> <code>POST /api/urls</code> में <code>{longUrl, alias?, expiresAt?}</code>, जवाब <code>201</code> और short URL (idempotency key लो ताकि retry से दो links न बनें)। <code>GET /{code}</code> redirect देता है, या <code>404</code> (expire हो तो <code>410</code>)।</p>
 <p><b>4. Data.</b> <code>Code</code> key वाली एक table: <code>Code, LongUrl, CreatedAt, ExpiresAt, OwnerId</code>। Access सिर्फ़ "key से get" है, इसलिए SQL लंबे समय तक चलता है; बहुत बड़े scale पर key-value store अगला natural क़दम है।</p>
 <p><b>5. High-level design.</b></p>
@@ -218,11 +218,11 @@ Browser --> Load balancer --> Redirect/API servers (stateless)
                                 |
   click event --> Queue --> analytics worker (off the hot path)
 </pre>
-<p><b>6. Deep dives.</b> <b>Code generation:</b> counter id लो और base62 में encode करो (7 characters में लगभग 3.5 trillion आते हैं); servers ids के blocks lease करते हैं ताकि हर create पर database call न हो। विकल्प: URL का hash काटकर (collisions संभालने पड़ेंगे) या random code + unique-key check। <b>301 बनाम 302:</b> 301 permanent है, इसलिए browsers उसे cache करते हैं और बाद के clicks तुम तक पहुँचते ही नहीं (सस्ता, पर analytics गई और target बदल नहीं सकते); 302 temporary है, हर click तुम्हारे पास आता है (analytics और edits चलते हैं, load ज़्यादा)। Click counts चाहिए तो 302 रखो। <b>Cache:</b> Redis में cache-aside + TTL; hot links गरम रहते हैं।</p>
+<p><b>6. Deep dives.</b> <b>Code generation:</b> counter id लो और base62 में encode करो (7 characters में लगभग 3.5 trillion आते हैं); servers ids के blocks lease करते हैं ताकि हर create पर database call न हो। options: URL का hash काटकर (collisions संभालने पड़ेंगे) या random code + unique-key check। <b>301 बनाम 302:</b> 301 को browsers cache करते हैं, इसलिए बाद के clicks तुम्हें छोड़ सकते हैं; 302 हर बार तुम तक आता है। Click counts चाहिए तो 302 रखो (301/302 वाले सवाल में details हैं)। <b>Cache:</b> Redis में cache-aside + TTL; hot links गरम रहते हैं।</p>
 <p><b>7. Trade-offs और failures.</b> Sequential ids guess हो सकती हैं (private links के लिए shuffle या random codes)। Redis down हो तो reads database को उठानी पड़ेंगी, इसलिए replicas और rate limit रखो। Abuse और malware links के लिए create पर check चाहिए। Custom aliases के लिए uniqueness check और reserved words चाहिए।</p>`,
         hg: `<p><b>Picture — hotel ki key tag:</b> lamba pata registry ke panne par ek baar likha jaata hai; guest ko chhota tag number milta hai. Tag dikhane wale ko sahi kamre tak bhej diya jaata hai. Short code tag hai; redirect lookup hai.</p>
 <p><b>1. Requirements.</b> Functional: lambe URL ka short URL banao (optional custom alias, optional expiry), kholne par redirect karo. Non-functional: redirect tez aur highly available ho; creates, reads se bahut kam hain; private links guess na ho sakein.</p>
-<p><b>2. Estimates</b> (maan liya mahine mein 100M naye URLs, 100:1 reads): lagbhag 38 writes/s, lagbhag 3,900 reads/s, peak lagbhag 7,700; 5 saal mein lagbhag 6 billion records, 500 bytes par lagbhag 3 TB (puzzle mein yeh dikhta hai). Reads haavi hain aur data chhota hai, isliye <b>hot links ko cache karo</b>.</p>
+<p><b>2. Estimates</b> (maan liya mahine mein 100M naye URLs, 100:1 reads): lagbhag 38 writes/s, lagbhag 3,900 reads/s, peak lagbhag 7,700; 5 saal mein lagbhag 6 billion records, 500 bytes par lagbhag 3 TB, 3 copies ke saath lagbhag 9 TB (capacity puzzle mein hisaab dikhta hai). Reads haavi hain aur data chhota hai, isliye <b>hot links ko cache karo</b>.</p>
 <p><b>3. API.</b> <code>POST /api/urls</code> mein <code>{longUrl, alias?, expiresAt?}</code>, jawab <code>201</code> aur short URL (idempotency key lo taaki retry se do links na banein). <code>GET /{code}</code> redirect deta hai, ya <code>404</code> (expire ho to <code>410</code>).</p>
 <p><b>4. Data.</b> <code>Code</code> key wali ek table: <code>Code, LongUrl, CreatedAt, ExpiresAt, OwnerId</code>. Access sirf "key se get" hai, isliye SQL lambe samay tak chalta hai; bahut bade scale par key-value store agla natural kadam hai.</p>
 <p><b>5. High-level design.</b></p>
@@ -235,7 +235,7 @@ Browser --> Load balancer --> Redirect/API servers (stateless)
                                 |
   click event --> Queue --> analytics worker (off the hot path)
 </pre>
-<p><b>6. Deep dives.</b> <b>Code generation:</b> counter id lo aur base62 mein encode karo (7 characters mein lagbhag 3.5 trillion aate hain); servers ids ke blocks lease karte hain taaki har create par database call na ho. Vikalp: URL ka hash kaatkar (collisions sambhalne padenge) ya random code + unique-key check. <b>301 vs 302:</b> 301 permanent hai, isliye browsers use cache karte hain aur baad ke clicks tum tak pahunchte hi nahi (sasta, par analytics gayi aur target badal nahi sakte); 302 temporary hai, har click tumhare paas aata hai (analytics aur edits chalte hain, load zyada). Click counts chahiye to 302 rakho. <b>Cache:</b> Redis mein cache-aside + TTL; hot links garam rehte hain.</p>
+<p><b>6. Deep dives.</b> <b>Code generation:</b> counter id lo aur base62 mein encode karo (7 characters mein lagbhag 3.5 trillion aate hain); servers ids ke blocks lease karte hain taaki har create par database call na ho. Options: URL ka hash kaatkar (collisions sambhalne padenge) ya random code + unique-key check. <b>301 vs 302:</b> browsers 301 ko cache karte hain, isliye baad ke clicks tumhe chhod sakte hain; 302 har baar tum tak aata hai. Click counts chahiye to 302 rakho (301/302 wale sawaal mein details hain). <b>Cache:</b> Redis mein cache-aside + TTL; hot links garam rehte hain.</p>
 <p><b>7. Trade-offs aur failures.</b> Sequential ids guess ho sakti hain (private links ke liye shuffle ya random codes). Redis down ho to reads database ko uthani padengi, isliye replicas aur rate limit rakho. Abuse aur malware links ke liye create par check chahiye. Custom aliases ke liye uniqueness check aur reserved words chahiye.</p>`
       }
     },
@@ -250,7 +250,7 @@ Browser --> Load balancer --> Redirect/API servers (stateless)
       body: {
         en: `<p><b>Picture — a post office with a sorting room:</b> letters arrive at the counter (webhook), the clerk stamps and drops them in a tray quickly (queue), sorters work through the tray (workers), and outgoing letters go through the courier who only accepts so many parcels per hour (provider rate limit). A delivery receipt comes back later (status callback).</p>
 <p><b>1. Requirements.</b> Functional: receive customer messages from a messaging provider (webhook), run the bot logic, send replies and planned notifications (templates), track delivery status (sent, delivered, read, failed). Non-functional: do not lose a message, acknowledge the webhook fast, respect per-provider rate limits, no duplicate sends, absorb campaign spikes, keep order within one conversation where it matters, and honour opt-outs.</p>
-<p><b>2. Estimates</b> (assumed 5 million messages a day in and out): about 58 per second average, 150-350 at peak; small payloads (about 1 KB), so storage is about 5 GB a day. A <b>campaign</b> of 1 million sends can arrive in minutes, so the provider limit, not our servers, is the bottleneck.</p>
+<p><b>2. Estimates</b> (assumed 5 million messages a day in and out): about 58 per second on average, about 175 at peak (3x; a campaign can burst far higher and the queue absorbs it); small payloads (about 1 KB), so storage is about 5 GB a day. A <b>campaign</b> of 1 million sends can arrive in minutes, so the provider limit, not our servers, is the bottleneck.</p>
 <p><b>3. API.</b> Inbound: <code>POST /webhooks/messages</code> (verify the provider's signature, return <code>200</code> quickly). Outbound for other systems: <code>POST /api/notifications</code> with an <code>Idempotency-Key</code> header, returns <code>202 Accepted</code> and a notification id; <code>GET /api/notifications/{id}</code> shows status.</p>
 <p><b>4. Data.</b> <code>Messages</code> (id, conversation, direction, template, status, provider message id, attempts), <code>Conversations</code>, <code>OptOuts</code>, <code>Templates</code>. A unique index on the provider's message id removes duplicate webhooks.</p>
 <p><b>5. High-level design</b> (component names are generic; the Azure services come on Day 20):</p>
@@ -266,11 +266,11 @@ Status callback --> Ingress API --> Messages DB     [outbound queue per provider
                                                       Provider API
          failures after N tries --> dead-letter queue --> alert + manual replay
 </pre>
-<p><b>6. Deep dives.</b> <b>Webhook ingress:</b> do the minimum (verify, dedupe, enqueue, return 200); the provider retries on errors, so duplicates are normal. <b>Idempotency:</b> dedupe on the provider message id for inbound and on our own message id for outbound; record "sent" only after the provider accepted it. <b>Retries:</b> retry timeouts, 429 and 5xx with exponential backoff and jitter; do not retry validation errors (4xx); after N attempts go to the dead-letter queue. <b>Rate limits:</b> one token bucket per provider account (shared store when workers scale out), so a campaign waits in the queue instead of being rejected. <b>Status callbacks</b> may arrive late or out of order: only move a status forward (sent, delivered, read) and ignore older ones. <b>Templates:</b> business-initiated messages usually must use pre-approved templates (check the provider's current rules).</p>
+<p><b>6. Deep dives.</b> <b>Webhook ingress:</b> do the minimum (verify, dedupe, enqueue, return 200); the provider retries on errors, so duplicates are normal. <b>Idempotency:</b> dedupe on the provider message id for inbound and on our own message id for outbound; record "sent" only after the provider accepted it. <b>Retries:</b> retry timeouts, 429 and 5xx with exponential backoff and jitter; do not retry validation errors (other 4xx); after N attempts go to the dead-letter queue. <b>Rate limits:</b> one token bucket per provider account (shared store when workers scale out), so a campaign waits in the queue instead of being rejected. <b>Status callbacks</b> may arrive late or out of order: only move a status forward (sent, delivered, read) and ignore older ones. <b>Templates:</b> business-initiated messages usually must use pre-approved templates (check the provider's current rules).</p>
 <p><b>7. Trade-offs and failures.</b> At-least-once plus idempotency beats chasing exactly-once. Provider down: messages wait in the queue and the circuit breaker stops hammering it (Day 16). Poison message: dead-letter it. Monitor queue depth, age of the oldest message, failure rate by provider. Next: priority queues (OTP before marketing), multi-provider failover.</p>`,
         hi: `<p><b>Picture — sorting room वाला post office:</b> letters counter पर आते हैं (webhook), clerk जल्दी से stamp लगाकर tray में डाल देता है (queue), sorters tray से काम निकालते हैं (workers), और बाहर जाने वाले letters courier से जाते हैं जो घंटे में सिर्फ़ इतने parcels लेता है (provider rate limit)। Delivery receipt बाद में लौटती है (status callback)।</p>
 <p><b>1. Requirements.</b> Functional: messaging provider से customer messages लो (webhook), bot logic चलाओ, replies और planned notifications भेजो (templates), delivery status track करो (sent, delivered, read, failed)। Non-functional: कोई message न खोए, webhook को जल्दी ack करो, हर provider की rate limit मानो, duplicate send न हो, campaign के spikes सोख लो, जहाँ ज़रूरी हो एक conversation में order रखो, और opt-outs को respect करो।</p>
-<p><b>2. Estimates</b> (मान लिया रोज़ 5 million messages आना-जाना): average लगभग 58 प्रति second, peak पर 150-350; payload छोटे (लगभग 1 KB), इसलिए storage लगभग 5 GB रोज़। 1 million sends का <b>campaign</b> मिनटों में आ सकता है, इसलिए bottleneck हमारे servers नहीं, provider की limit है।</p>
+<p><b>2. Estimates</b> (मान लिया रोज़ 5 million messages आना-जाना): average लगभग 58 प्रति second, peak (3 गुना) पर लगभग 175 (campaign इससे कहीं ऊँचा burst दे सकता है और queue उसे सोख लेती है); payload छोटे (लगभग 1 KB), इसलिए storage लगभग 5 GB रोज़। 1 million sends का <b>campaign</b> मिनटों में आ सकता है, इसलिए bottleneck हमारे servers नहीं, provider की limit है।</p>
 <p><b>3. API.</b> Inbound: <code>POST /webhooks/messages</code> (provider की signature verify करो, जल्दी <code>200</code> लौटाओ)। दूसरे systems के लिए outbound: <code>POST /api/notifications</code> में <code>Idempotency-Key</code> header, जवाब <code>202 Accepted</code> और notification id; <code>GET /api/notifications/{id}</code> status दिखाता है।</p>
 <p><b>4. Data.</b> <code>Messages</code> (id, conversation, direction, template, status, provider message id, attempts), <code>Conversations</code>, <code>OptOuts</code>, <code>Templates</code>। Provider के message id पर unique index duplicate webhooks हटा देता है।</p>
 <p><b>5. High-level design</b> (components के नाम generic हैं; Azure services Day 20 में आएँगी):</p>
@@ -286,11 +286,11 @@ Status callback --> Ingress API --> Messages DB     [outbound queue per provider
                                                       Provider API
          failures after N tries --> dead-letter queue --> alert + manual replay
 </pre>
-<p><b>6. Deep dives.</b> <b>Webhook ingress:</b> कम से कम काम करो (verify, dedupe, enqueue, 200 लौटाओ); errors पर provider retry करता है, इसलिए duplicates आम हैं। <b>Idempotency:</b> inbound में provider message id पर और outbound में हमारे अपने message id पर dedupe करो; "sent" तभी लिखो जब provider ने accept कर लिया हो। <b>Retries:</b> timeouts, 429 और 5xx को exponential backoff + jitter से retry करो; validation errors (4xx) retry मत करो; N attempts के बाद dead-letter queue। <b>Rate limits:</b> हर provider account के लिए एक token bucket (workers बढ़ें तो shared store में), ताकि campaign reject होने की जगह queue में इंतज़ार करे। <b>Status callbacks</b> देर से या उल्टे order में आ सकते हैं: status सिर्फ़ आगे बढ़ाओ (sent, delivered, read) और पुराने ignore करो। <b>Templates:</b> business की तरफ़ से शुरू होने वाले messages को आम तौर पर pre-approved templates चाहिए (provider के मौजूदा rules check करो)।</p>
+<p><b>6. Deep dives.</b> <b>Webhook ingress:</b> कम से कम काम करो (verify, dedupe, enqueue, 200 लौटाओ); errors पर provider retry करता है, इसलिए duplicates आम हैं। <b>Idempotency:</b> inbound में provider message id पर और outbound में हमारे अपने message id पर dedupe करो; "sent" तभी लिखो जब provider ने accept कर लिया हो। <b>Retries:</b> timeouts, 429 और 5xx को exponential backoff + jitter से retry करो; validation errors (बाकी 4xx) retry मत करो; N attempts के बाद dead-letter queue। <b>Rate limits:</b> हर provider account के लिए एक token bucket (workers बढ़ें तो shared store में), ताकि campaign reject होने की जगह queue में इंतज़ार करे। <b>Status callbacks</b> देर से या उल्टे order में आ सकते हैं: status सिर्फ़ आगे बढ़ाओ (sent, delivered, read) और पुराने ignore करो। <b>Templates:</b> business की तरफ़ से शुरू होने वाले messages को आम तौर पर pre-approved templates चाहिए (provider के मौजूदा rules check करो)।</p>
 <p><b>7. Trade-offs और failures.</b> At-least-once + idempotency, exactly-once के पीछे भागने से बेहतर है। Provider down: messages queue में इंतज़ार करते हैं और circuit breaker उसे बार-बार मारने से रोकता है (Day 16)। Poison message: dead-letter में डालो। Queue depth, सबसे पुराने message की उम्र, provider के हिसाब से failure rate monitor करो। आगे: priority queues (OTP marketing से पहले), multi-provider failover।</p>`,
         hg: `<p><b>Picture — sorting room wala post office:</b> letters counter par aate hain (webhook), clerk jaldi se stamp lagakar tray mein daal deta hai (queue), sorters tray se kaam nikaalte hain (workers), aur bahar jaane wale letters courier se jaate hain jo ghante mein sirf itne parcels leta hai (provider rate limit). Delivery receipt baad mein lautti hai (status callback).</p>
 <p><b>1. Requirements.</b> Functional: messaging provider se customer messages lo (webhook), bot logic chalao, replies aur planned notifications bhejo (templates), delivery status track karo (sent, delivered, read, failed). Non-functional: koi message na khoye, webhook ko jaldi ack karo, har provider ki rate limit maano, duplicate send na ho, campaign ke spikes sokh lo, jahan zaroori ho ek conversation mein order rakho, aur opt-outs ko respect karo.</p>
-<p><b>2. Estimates</b> (maan liya roz 5 million messages aana-jaana): average lagbhag 58 per second, peak par 150-350; payload chhote (lagbhag 1 KB), isliye storage lagbhag 5 GB roz. 1 million sends ka <b>campaign</b> minuton mein aa sakta hai, isliye bottleneck hamare servers nahi, provider ki limit hai.</p>
+<p><b>2. Estimates</b> (maan liya roz 5 million messages aana-jaana): average lagbhag 58 per second, peak (3 guna) par lagbhag 175 (campaign isse kahin ooncha burst de sakta hai aur queue use sokh leti hai); payload chhote (lagbhag 1 KB), isliye storage lagbhag 5 GB roz. 1 million sends ka <b>campaign</b> minuton mein aa sakta hai, isliye bottleneck hamare servers nahi, provider ki limit hai.</p>
 <p><b>3. API.</b> Inbound: <code>POST /webhooks/messages</code> (provider ki signature verify karo, jaldi <code>200</code> lautao). Doosre systems ke liye outbound: <code>POST /api/notifications</code> mein <code>Idempotency-Key</code> header, jawab <code>202 Accepted</code> aur notification id; <code>GET /api/notifications/{id}</code> status dikhata hai.</p>
 <p><b>4. Data.</b> <code>Messages</code> (id, conversation, direction, template, status, provider message id, attempts), <code>Conversations</code>, <code>OptOuts</code>, <code>Templates</code>. Provider ke message id par unique index duplicate webhooks hata deta hai.</p>
 <p><b>5. High-level design</b> (components ke naam generic hain; Azure services Day 20 mein aayengi):</p>
@@ -306,7 +306,7 @@ Status callback --> Ingress API --> Messages DB     [outbound queue per provider
                                                       Provider API
          failures after N tries --> dead-letter queue --> alert + manual replay
 </pre>
-<p><b>6. Deep dives.</b> <b>Webhook ingress:</b> kam se kam kaam karo (verify, dedupe, enqueue, 200 lautao); errors par provider retry karta hai, isliye duplicates aam hain. <b>Idempotency:</b> inbound mein provider message id par aur outbound mein hamare apne message id par dedupe karo; "sent" tabhi likho jab provider ne accept kar liya ho. <b>Retries:</b> timeouts, 429 aur 5xx ko exponential backoff + jitter se retry karo; validation errors (4xx) retry mat karo; N attempts ke baad dead-letter queue. <b>Rate limits:</b> har provider account ke liye ek token bucket (workers badhein to shared store mein), taaki campaign reject hone ki jagah queue mein intezaar kare. <b>Status callbacks</b> der se ya ulte order mein aa sakte hain: status sirf aage badhao (sent, delivered, read) aur purane ignore karo. <b>Templates:</b> business ki taraf se shuru hone wale messages ko aam taur par pre-approved templates chahiye (provider ke maujooda rules check karo).</p>
+<p><b>6. Deep dives.</b> <b>Webhook ingress:</b> kam se kam kaam karo (verify, dedupe, enqueue, 200 lautao); errors par provider retry karta hai, isliye duplicates aam hain. <b>Idempotency:</b> inbound mein provider message id par aur outbound mein hamare apne message id par dedupe karo; "sent" tabhi likho jab provider ne accept kar liya ho. <b>Retries:</b> timeouts, 429 aur 5xx ko exponential backoff + jitter se retry karo; validation errors (baaki 4xx) retry mat karo; N attempts ke baad dead-letter queue. <b>Rate limits:</b> har provider account ke liye ek token bucket (workers badhein to shared store mein), taaki campaign reject hone ki jagah queue mein intezaar kare. <b>Status callbacks</b> der se ya ulte order mein aa sakte hain: status sirf aage badhao (sent, delivered, read) aur purane ignore karo. <b>Templates:</b> business ki taraf se shuru hone wale messages ko aam taur par pre-approved templates chahiye (provider ke maujooda rules check karo).</p>
 <p><b>7. Trade-offs aur failures.</b> At-least-once + idempotency, exactly-once ke peeche bhaagne se behtar hai. Provider down: messages queue mein intezaar karte hain aur circuit breaker use baar-baar maarne se rokta hai (Day 16). Poison message: dead-letter mein daalo. Queue depth, sabse purane message ki umr, provider ke hisaab se failure rate monitor karo. Aage: priority queues (OTP marketing se pehle), multi-provider failover.</p>`
       }
     },
@@ -315,8 +315,8 @@ Status callback --> Ingress API --> Messages DB     [outbound queue per provider
       depth: "short",
       title: {
         en: "Design 3 — Order management on Azure (brief)",
-        hi: "Design 3 — Azure पर Order management (संक्षेप में)",
-        hg: "Design 3 — Azure par Order management (sankshep mein)"
+        hi: "Design 3 — Azure पर Order management (short में)",
+        hg: "Design 3 — Azure par Order management (short mein)"
       },
       body: {
         en: `<p><b>Picture — a restaurant with a kitchen, a cashier and a delivery boy:</b> the order slip travels between them; each does one job, keeps its own register, and a missing step (payment failed) means the kitchen's work must be cancelled. This design mostly <b>reuses Day 15 and Day 16</b>; it shows you can combine them.</p>
@@ -327,17 +327,20 @@ Status callback --> Ingress API --> Messages DB     [outbound queue per provider
 <pre>
 Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
                                 |
-                  outbox relay --> Topic: OrderPlaced
-                     |               |                 |
-              Inventory svc     Payments svc      Notifications svc
-              (reserve stock)   (charge, refund)  (WhatsApp/email, see Design 2)
-                     \\_______ events back _______/
-                       Saga: place -> reserve -> pay -> confirm
-                       failure: compensate in reverse (refund, release stock)
+                  outbox relay --> OrderPlaced
+                                |
+          Inventory svc: reserve stock --> StockReserved
+                                |
+          Payments svc: charge --> PaymentSucceeded
+                                |
+          Orders svc: confirm --> Notifications svc (Design 2)
+
+  Saga (sequential): place -> reserve -> pay -> confirm
+  Failure: payment fails -> Inventory releases the stock -> Orders cancels
   Read side: events --> "my orders" read model (cache) --> GET /customers/{id}/orders
 </pre>
-<p><b>Deep dives.</b> <b>Consistency:</b> no distributed transaction; use a <b>saga</b> with compensations and an <b>outbox</b> for reliable events (Day 16). <b>Idempotency</b> on create and on every consumer. <b>Read model</b> for order lists (CQRS, Day 11). <b>Spikes:</b> accept the order, queue the heavy steps, tell the customer "processing". <b>Which Azure services</b> fit each block (managed queue/topic, managed SQL, managed Redis, API gateway) is Day 20; here say them generically.</p>
-<p><b>Trade-offs.</b> Saga means eventual consistency: "order received" before "confirmed" is a product decision. Orchestration is easier to follow, choreography has less central coupling. A modular monolith first (Day 15) is a valid answer for a small team. Failure modes: payment ok but stock gone (refund), duplicate click (idempotency key), stuck saga (timeout and alert).</p>`,
+<p><b>Deep dives.</b> <b>Consistency:</b> no distributed transaction; use a <b>saga</b> with compensations and an <b>outbox</b> for reliable events (Day 16). <b>Idempotency</b> on create and on every consumer. <b>Read model</b> for order lists (CQRS, Day 11). <b>Spikes:</b> accept the order, queue the heavy steps, tell the customer "processing". <b>On Azure</b> the blocks commonly map to Service Bus (queue/topic), Azure SQL, Azure Cache for Redis, API Management, and App Service or AKS; exact choices, tiers and limits are Day 20 (check current limits).</p>
+<p><b>Trade-offs.</b> Saga means eventual consistency: "order received" before "confirmed" is a product decision. Orchestration is easier to follow, choreography has less central coupling. A modular monolith first (Day 15) is a valid answer for a small team. Failure modes: payment fails after stock is reserved (release the stock), duplicate click (idempotency key), stuck saga (timeout and alert).</p>`,
         hi: `<p><b>Picture — kitchen, cashier और delivery boy वाला restaurant:</b> order slip उनके बीच घूमती है; हर कोई एक काम करता है, अपना register रखता है, और कोई step छूटे (payment fail) तो kitchen का काम cancel करना पड़ता है। यह design ज़्यादातर <b>Day 15 और Day 16 को reuse</b> करता है; यह दिखाता है कि तुम उन्हें जोड़ सकते हो।</p>
 <p><b>Requirements.</b> Order लगाओ, pay करो, stock reserve करो, ship करो, status दिखाओ, cancel करो। Non-functional: कभी double-charge नहीं, कोई order नहीं खोए, sale वाले दिन के spikes संभलें, customer को अपने orders जल्दी दिखें, audit trail।</p>
 <p><b>Estimates</b> (मान लिया रोज़ 1 million orders): average लगभग 12 प्रति second, flash sale में कुछ मिनटों के लिए इसका 50-100 गुना हो सकता है; status checks read-heavy हैं। इसलिए checkout को queue से बचाओ (load levelling) और "my orders" को cache या read model से दो।</p>
@@ -346,17 +349,20 @@ Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
 <pre>
 Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
                                 |
-                  outbox relay --> Topic: OrderPlaced
-                     |               |                 |
-              Inventory svc     Payments svc      Notifications svc
-              (reserve stock)   (charge, refund)  (WhatsApp/email, see Design 2)
-                     \\_______ events back _______/
-                       Saga: place -> reserve -> pay -> confirm
-                       failure: compensate in reverse (refund, release stock)
+                  outbox relay --> OrderPlaced
+                                |
+          Inventory svc: reserve stock --> StockReserved
+                                |
+          Payments svc: charge --> PaymentSucceeded
+                                |
+          Orders svc: confirm --> Notifications svc (Design 2)
+
+  Saga (sequential): place -> reserve -> pay -> confirm
+  Failure: payment fails -> Inventory releases the stock -> Orders cancels
   Read side: events --> "my orders" read model (cache) --> GET /customers/{id}/orders
 </pre>
-<p><b>Deep dives.</b> <b>Consistency:</b> distributed transaction नहीं; compensations के साथ <b>saga</b> और भरोसेमंद events के लिए <b>outbox</b> (Day 16)। Create पर और हर consumer में <b>idempotency</b>। Order lists के लिए <b>read model</b> (CQRS, Day 11)। <b>Spikes:</b> order accept करो, भारी steps queue में डालो, customer को "processing" बताओ। हर block में <b>कौन-सी Azure services</b> फ़िट होती हैं (managed queue/topic, managed SQL, managed Redis, API gateway) यह Day 20 है; यहाँ generic नाम से बोलो।</p>
-<p><b>Trade-offs.</b> Saga का मतलब eventual consistency: "order received" का "confirmed" से पहले दिखना एक product decision है। Orchestration समझने में आसान, choreography में central coupling कम। छोटी team के लिए पहले modular monolith (Day 15) भी सही जवाब है। Failure modes: payment हो गई पर stock ख़त्म (refund), double click (idempotency key), अटकी saga (timeout और alert)।</p>`,
+<p><b>Deep dives.</b> <b>Consistency:</b> distributed transaction नहीं; compensations के साथ <b>saga</b> और भरोसेमंद events के लिए <b>outbox</b> (Day 16)। Create पर और हर consumer में <b>idempotency</b>। Order lists के लिए <b>read model</b> (CQRS, Day 11)। <b>Spikes:</b> order accept करो, भारी steps queue में डालो, customer को "processing" बताओ। <b>Azure पर</b> blocks आम तौर पर Service Bus (queue/topic), Azure SQL, Azure Cache for Redis, API Management, और App Service या AKS से map होते हैं; सही choices, tiers और limits Day 20 में हैं (मौजूदा limits check करो)।</p>
+<p><b>Trade-offs.</b> Saga का मतलब eventual consistency: "order received" का "confirmed" से पहले दिखना एक product decision है। Orchestration समझने में आसान, choreography में central coupling कम। छोटी team के लिए पहले modular monolith (Day 15) भी सही जवाब है। Failure modes: stock reserve होने के बाद payment fail (stock वापस छोड़ो), double click (idempotency key), अटकी saga (timeout और alert)।</p>`,
         hg: `<p><b>Picture — kitchen, cashier aur delivery boy wala restaurant:</b> order slip unke beech ghoomti hai; har koi ek kaam karta hai, apna register rakhta hai, aur koi step chhoote (payment fail) to kitchen ka kaam cancel karna padta hai. Yeh design zyadatar <b>Day 15 aur Day 16 ko reuse</b> karta hai; yeh dikhata hai ki tum unhe jod sakte ho.</p>
 <p><b>Requirements.</b> Order lagao, pay karo, stock reserve karo, ship karo, status dikhao, cancel karo. Non-functional: kabhi double-charge nahi, koi order na khoye, sale wale din ke spikes sambhalein, customer ko apne orders jaldi dikhein, audit trail.</p>
 <p><b>Estimates</b> (maan liya roz 1 million orders): average lagbhag 12 per second, flash sale mein kuch minuton ke liye iska 50-100 guna ho sakta hai; status checks read-heavy hain. Isliye checkout ko queue se bachao (load levelling) aur "my orders" ko cache ya read model se do.</p>
@@ -365,17 +371,20 @@ Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
 <pre>
 Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
                                 |
-                  outbox relay --> Topic: OrderPlaced
-                     |               |                 |
-              Inventory svc     Payments svc      Notifications svc
-              (reserve stock)   (charge, refund)  (WhatsApp/email, see Design 2)
-                     \\_______ events back _______/
-                       Saga: place -> reserve -> pay -> confirm
-                       failure: compensate in reverse (refund, release stock)
+                  outbox relay --> OrderPlaced
+                                |
+          Inventory svc: reserve stock --> StockReserved
+                                |
+          Payments svc: charge --> PaymentSucceeded
+                                |
+          Orders svc: confirm --> Notifications svc (Design 2)
+
+  Saga (sequential): place -> reserve -> pay -> confirm
+  Failure: payment fails -> Inventory releases the stock -> Orders cancels
   Read side: events --> "my orders" read model (cache) --> GET /customers/{id}/orders
 </pre>
-<p><b>Deep dives.</b> <b>Consistency:</b> distributed transaction nahi; compensations ke saath <b>saga</b> aur bharosemand events ke liye <b>outbox</b> (Day 16). Create par aur har consumer mein <b>idempotency</b>. Order lists ke liye <b>read model</b> (CQRS, Day 11). <b>Spikes:</b> order accept karo, bhaari steps queue mein daalo, customer ko "processing" batao. Har block mein <b>kaun-si Azure services</b> fit hoti hain (managed queue/topic, managed SQL, managed Redis, API gateway) yeh Day 20 hai; yahan generic naam se bolo.</p>
-<p><b>Trade-offs.</b> Saga ka matlab eventual consistency: "order received" ka "confirmed" se pehle dikhna ek product decision hai. Orchestration samajhne mein aasan, choreography mein central coupling kam. Chhoti team ke liye pehle modular monolith (Day 15) bhi sahi jawab hai. Failure modes: payment ho gayi par stock khatam (refund), double click (idempotency key), atki saga (timeout aur alert).</p>`
+<p><b>Deep dives.</b> <b>Consistency:</b> distributed transaction nahi; compensations ke saath <b>saga</b> aur bharosemand events ke liye <b>outbox</b> (Day 16). Create par aur har consumer mein <b>idempotency</b>. Order lists ke liye <b>read model</b> (CQRS, Day 11). <b>Spikes:</b> order accept karo, bhaari steps queue mein daalo, customer ko "processing" batao. <b>Azure par</b> blocks aam taur par Service Bus (queue/topic), Azure SQL, Azure Cache for Redis, API Management, aur App Service ya AKS se map hote hain; sahi choices, tiers aur limits Day 20 mein hain (maujooda limits check karo).</p>
+<p><b>Trade-offs.</b> Saga ka matlab eventual consistency: "order received" ka "confirmed" se pehle dikhna ek product decision hai. Orchestration samajhne mein aasan, choreography mein central coupling kam. Chhoti team ke liye pehle modular monolith (Day 15) bhi sahi jawab hai. Failure modes: stock reserve hone ke baad payment fail (stock wapas chhodo), double click (idempotency key), atki saga (timeout aur alert).</p>`
       }
     },
     {
@@ -390,7 +399,7 @@ Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
         en: `<p><b>Picture — a shopkeeper's rate list:</b> the prices are written on a board, and the bill is calculated from the board. If the price changes, you change the board, not every bill. Treat estimate assumptions the same way: put them in one place and compute everything from them.</p>
 <ul>
 <li>Keep <b>assumptions</b> (users, active share, messages per user, peak factor, bytes per record, retention, copies) as named inputs. In the interview the same idea is a small table on the whiteboard.</li>
-<li>Multiply first, divide last, and use <code>long</code>: 10 million x 1,000 bytes x 365 x 3 is about 10<sup>13</sup>, which overflows <code>int</code> (and the puzzle showed what early rounding does).</li>
+<li>Multiply first, divide last, and use <code>long</code>: 10 million x 1,000 bytes x 365 x 3 is about 10<sup>13</sup>, which overflows <code>int</code> (and the rounding puzzle shows what early rounding does).</li>
 <li>Turn the numbers into a <b>decision</b>: a few hundred writes per second is comfortable for one relational database plus a queue, so no sharding yet; storage of about 11 TB over a year with 3 copies means plan retention or archiving.</li>
 <li>Say units and whether they are decimal (GB = billion bytes). Round at the end.</li>
 </ul>
@@ -398,7 +407,7 @@ Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
         hi: `<p><b>Picture — दुकानदार की rate list:</b> दाम board पर लिखे हैं और bill board से बनता है। दाम बदले तो board बदलते हैं, हर bill नहीं। Estimate के assumptions को भी ऐसे ही रखो: एक जगह लिखो और सब कुछ उन्हीं से निकालो।</p>
 <ul>
 <li><b>Assumptions</b> (users, active share, हर user के messages, peak factor, हर record के bytes, retention, copies) को नाम वाले inputs रखो। Interview में यही idea whiteboard पर एक छोटी table है।</li>
-<li>पहले गुणा, आख़िर में divide, और <code>long</code> use करो: 10 million x 1,000 bytes x 365 x 3 लगभग 10<sup>13</sup> है, जो <code>int</code> में overflow होता है (और puzzle ने दिखाया था कि जल्दी rounding क्या करती है)।</li>
+<li>पहले गुणा, आख़िर में divide, और <code>long</code> use करो: 10 million x 1,000 bytes x 365 x 3 लगभग 10<sup>13</sup> है, जो <code>int</code> में overflow होता है (और rounding वाला puzzle दिखाता है कि जल्दी rounding क्या करती है)।</li>
 <li>Numbers को <b>फ़ैसले</b> में बदलो: प्रति second कुछ सौ writes एक relational database + queue के लिए आराम से हैं, इसलिए अभी sharding नहीं; 3 copies के साथ साल भर में लगभग 11 TB का मतलब retention या archiving की planning।</li>
 <li>Units बोलो और बताओ कि decimal हैं (GB = billion bytes)। Round आख़िर में करो।</li>
 </ul>
@@ -406,7 +415,7 @@ Client --> API gateway --> Orders service --> Orders DB (+ outbox table)
         hg: `<p><b>Picture — dukandaar ki rate list:</b> daam board par likhe hain aur bill board se banta hai. Daam badle to board badalte hain, har bill nahi. Estimate ke assumptions ko bhi aise hi rakho: ek jagah likho aur sab kuch unhi se nikaalo.</p>
 <ul>
 <li><b>Assumptions</b> (users, active share, har user ke messages, peak factor, har record ke bytes, retention, copies) ko naam wale inputs rakho. Interview mein yahi idea whiteboard par ek chhoti table hai.</li>
-<li>Pehle guna, aakhir mein divide, aur <code>long</code> use karo: 10 million x 1,000 bytes x 365 x 3 lagbhag 10<sup>13</sup> hai, jo <code>int</code> mein overflow hota hai (aur puzzle ne dikhaya tha ki jaldi rounding kya karti hai).</li>
+<li>Pehle guna, aakhir mein divide, aur <code>long</code> use karo: 10 million x 1,000 bytes x 365 x 3 lagbhag 10<sup>13</sup> hai, jo <code>int</code> mein overflow hota hai (aur rounding wala puzzle dikhata hai ki jaldi rounding kya karti hai).</li>
 <li>Numbers ko <b>faisle</b> mein badlo: per second kuch sau writes ek relational database + queue ke liye aaram se hain, isliye abhi sharding nahi; 3 copies ke saath saal bhar mein lagbhag 11 TB ka matlab retention ya archiving ki planning.</li>
 <li>Units bolo aur batao ki decimal hain (GB = billion bytes). Round aakhir mein karo.</li>
 </ul>
@@ -605,11 +614,14 @@ class UrlStore
 
     public UrlEntry Create(string? idempotencyKey, string longUrl, DateTimeOffset? expiresAt)
     {
-        if (idempotencyKey is not null && _byIdempotencyKey.TryGetValue(idempotencyKey, out var existing)) return existing;
         var entry = new UrlEntry(Encode(Interlocked.Increment(ref _next)), longUrl, expiresAt);
         _byCode[entry.Code] = entry;
-        if (idempotencyKey is not null) _byIdempotencyKey[idempotencyKey] = entry;
-        return entry;
+        if (idempotencyKey is null) return entry;
+
+        // GetOrAdd is atomic per key: two concurrent retries cannot create two links.
+        var winner = _byIdempotencyKey.GetOrAdd(idempotencyKey, entry);
+        if (!ReferenceEquals(winner, entry)) _byCode.TryRemove(entry.Code, out _);   // lost the race: drop our spare code
+        return winner;
     }
 
     public UrlEntry? Find(string code) => _byCode.GetValueOrDefault(code);
@@ -667,9 +679,9 @@ class UrlStore
       code: [
         {
           caption: {
-            en: "Simulated sender worker: duplicate skip, token bucket wait, backoff retry, dead-letter (deterministic fake clock)",
-            hi: "Simulated sender worker: duplicate skip, token bucket का wait, backoff retry, dead-letter (deterministic fake clock)",
-            hg: "Simulated sender worker: duplicate skip, token bucket wait, backoff retry, dead-letter (deterministic fake clock)"
+            en: "Simulated sender worker: duplicate skip, token bucket wait, backoff retry, dead-letter (deterministic fake clock; each log time includes the backoff wait)",
+            hi: "Simulated sender worker: duplicate skip, token bucket का wait, backoff retry, dead-letter (deterministic fake clock; each log time includes the backoff wait)",
+            hg: "Simulated sender worker: duplicate skip, token bucket wait, backoff retry, dead-letter (deterministic fake clock; each log time includes the backoff wait)"
           },
           check: "run",
           src: `// Simulated pipeline: duplicate skip, per-provider token bucket, retry with backoff, dead-letter.
@@ -970,20 +982,20 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
       explain: {
         en: `<ul>
 <li>QPS = requests per day / 86,400; peak = average x 2 to 3. Storage = records x size x retention x copies. Bandwidth = QPS x payload.</li>
-<li>Worked: 100M new URLs a month is about 38 writes/s; at 100:1 about 3,900 reads/s; 5 years x 500 bytes is about 3 TB. Conclusion: read-heavy, small data, so cache and replicas, not sharding yet.</li>
+<li>Worked: 100M new URLs a month is about 38 writes/s; at 100:1 about 3,900 reads/s; 5 years x 500 bytes is about 3 TB (about 9 TB with 3 copies). Conclusion: read-heavy, small data, so cache and replicas, not sharding yet.</li>
 <li>State assumptions aloud and round; precision is not the goal, the decision is.</li>
 <li>Follow-up: "Your numbers are off by 10x, what changes?" Often the shape stays the same for a few-fold error; at 10x or more, revisit the bottleneck (the database or the provider limit).</li>
 </ul>`,
         hi: `<ul>
 <li>QPS = रोज़ की requests / 86,400; peak = average x 2 से 3। Storage = records x size x retention x copies। Bandwidth = QPS x payload।</li>
-<li>Worked: महीने के 100M नए URLs लगभग 38 writes/s; 100:1 पर लगभग 3,900 reads/s; 5 साल x 500 bytes लगभग 3 TB। नतीजा: read-heavy, छोटा data, इसलिए cache और replicas, अभी sharding नहीं।</li>
-<li>Assumptions ज़ोर से बोलो और round करो; precision लक्ष्य नहीं, फ़ैसला लक्ष्य है।</li>
+<li>Worked: महीने के 100M नए URLs लगभग 38 writes/s; 100:1 पर लगभग 3,900 reads/s; 5 साल x 500 bytes लगभग 3 TB (3 copies के साथ लगभग 9 TB)। नतीजा: read-heavy, छोटा data, इसलिए cache और replicas, अभी sharding नहीं।</li>
+<li>Assumptions ज़ोर से बोलो और round करो; precision goal नहीं, फ़ैसला goal है।</li>
 <li>Follow-up: "तुम्हारे numbers 10 गुना ग़लत निकले तो क्या बदलेगा?" कुछ गुना की ग़लती में अक्सर design का shape वही रहता है; 10 गुना या उससे ज़्यादा हो तो bottleneck दोबारा देखो (database या provider की limit)।</li>
 </ul>`,
         hg: `<ul>
 <li>QPS = roz ki requests / 86,400; peak = average x 2 se 3. Storage = records x size x retention x copies. Bandwidth = QPS x payload.</li>
-<li>Worked: mahine ke 100M naye URLs lagbhag 38 writes/s; 100:1 par lagbhag 3,900 reads/s; 5 saal x 500 bytes lagbhag 3 TB. Nateeja: read-heavy, chhota data, isliye cache aur replicas, abhi sharding nahi.</li>
-<li>Assumptions zor se bolo aur round karo; precision lakshya nahi, faisla lakshya hai.</li>
+<li>Worked: mahine ke 100M naye URLs lagbhag 38 writes/s; 100:1 par lagbhag 3,900 reads/s; 5 saal x 500 bytes lagbhag 3 TB (3 copies ke saath lagbhag 9 TB). Nateeja: read-heavy, chhota data, isliye cache aur replicas, abhi sharding nahi.</li>
+<li>Assumptions zor se bolo aur round karo; precision goal nahi, faisla goal hai.</li>
 <li>Follow-up: "Tumhare numbers 10 guna galat nikle to kya badlega?" Kuch guna ki galti mein aksar design ka shape wahi rehta hai; 10 guna ya usse zyada ho to bottleneck dobara dekho (database ya provider ki limit).</li>
 </ul>`
       }
@@ -1030,19 +1042,19 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
       explain: {
         en: `<ul>
 <li>Layers: browser, CDN (static and cacheable responses), app cache, Redis, database. Cache the read-heavy, rarely-changing data first.</li>
-<li>Cache-aside: read from cache, on a miss load and fill; on write update the database and <b>delete</b> the key. A TTL is the safety net (the puzzle showed stale reads without invalidation).</li>
+<li>Cache-aside: read from cache, on a miss load and fill; on write update the database and <b>delete</b> the key. A TTL is the safety net (the cache-aside puzzle shows stale reads without invalidation).</li>
 <li>Stampede: many requests miss together; fix with jitter on TTLs, a lock or request coalescing, or HybridCache (Day 13).</li>
 <li>Follow-up: "Cache-aside or write-through?" Cache-aside is simpler and tolerant of cache loss; write-through keeps the cache fresher but couples every write to the cache.</li>
 </ul>`,
         hi: `<ul>
 <li>Layers: browser, CDN (static और cacheable responses), app cache, Redis, database। पहले read-heavy और कम बदलने वाला data cache करो।</li>
-<li>Cache-aside: cache से पढ़ो, miss पर load करके भरो; write पर database update करो और key <b>delete</b> करो। TTL safety net है (puzzle ने invalidation के बिना stale reads दिखाई थीं)।</li>
+<li>Cache-aside: cache से पढ़ो, miss पर load करके भरो; write पर database update करो और key <b>delete</b> करो। TTL safety net है (cache-aside puzzle invalidation के बिना stale reads दिखाता है)।</li>
 <li>Stampede: बहुत सारी requests एक साथ miss होती हैं; हल: TTLs पर jitter, lock या request coalescing, या HybridCache (Day 13)।</li>
 <li>Follow-up: "Cache-aside या write-through?" Cache-aside सरल है और cache खोने को सह लेता है; write-through cache को ज़्यादा fresh रखता है पर हर write को cache से बाँध देता है।</li>
 </ul>`,
         hg: `<ul>
 <li>Layers: browser, CDN (static aur cacheable responses), app cache, Redis, database. Pehle read-heavy aur kam badalne wala data cache karo.</li>
-<li>Cache-aside: cache se padho, miss par load karke bharo; write par database update karo aur key <b>delete</b> karo. TTL safety net hai (puzzle ne invalidation ke bina stale reads dikhayi thi).</li>
+<li>Cache-aside: cache se padho, miss par load karke bharo; write par database update karo aur key <b>delete</b> karo. TTL safety net hai (cache-aside puzzle invalidation ke bina stale reads dikhata hai).</li>
 <li>Stampede: bahut saari requests ek saath miss hoti hain; hal: TTLs par jitter, lock ya request coalescing, ya HybridCache (Day 13).</li>
 <li>Follow-up: "Cache-aside ya write-through?" Cache-aside saral hai aur cache khone ko sah leta hai; write-through cache ko zyada fresh rakhta hai par har write ko cache se baandh deta hai.</li>
 </ul>`
@@ -1119,21 +1131,21 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
       },
       explain: {
         en: `<ul>
-<li>Clarify (custom alias? expiry? analytics?), estimate (about 38 writes/s, 3,900 reads/s, 3 TB in 5 years), API (<code>POST /api/urls</code>, <code>GET /{code}</code>), data (one table by code).</li>
+<li>Clarify (custom alias? expiry? analytics?), estimate (read-heavy, small data; see the capacity puzzle), API (<code>POST /api/urls</code>, <code>GET /{code}</code>), data (one table by code).</li>
 <li>Code generation: counter + base62 (7 characters is about 3.5 trillion), servers lease id blocks. Alternatives: truncated hash (collisions) or random code with a unique check.</li>
-<li>Reads: Redis cache-aside with TTL; click events go to a queue so analytics stay off the hot path. 302 keeps clicks visible; 301 is cached by browsers.</li>
+<li>Reads: Redis cache-aside with TTL; click events go to a queue so analytics stay off the hot path. 301 versus 302 has its own question.</li>
 <li>Follow-up: "How do you stop guessing?" Random or scrambled codes for private links, plus a rate limit on lookups.</li>
 </ul>`,
         hi: `<ul>
-<li>Clarify (custom alias? expiry? analytics?), estimate (लगभग 38 writes/s, 3,900 reads/s, 5 साल में 3 TB), API (<code>POST /api/urls</code>, <code>GET /{code}</code>), data (code से एक table)।</li>
-<li>Code generation: counter + base62 (7 characters लगभग 3.5 trillion), servers id blocks lease करते हैं। विकल्प: कटा हुआ hash (collisions) या unique check वाला random code।</li>
-<li>Reads: TTL के साथ Redis cache-aside; click events queue में जाते हैं ताकि analytics hot path से बाहर रहे। 302 clicks दिखाता है; 301 को browsers cache करते हैं।</li>
+<li>Clarify (custom alias? expiry? analytics?), estimate (read-heavy, छोटा data; capacity puzzle देखो), API (<code>POST /api/urls</code>, <code>GET /{code}</code>), data (code से एक table)।</li>
+<li>Code generation: counter + base62 (7 characters लगभग 3.5 trillion), servers id blocks lease करते हैं। options: कटा हुआ hash (collisions) या unique check वाला random code।</li>
+<li>Reads: TTL के साथ Redis cache-aside; click events queue में जाते हैं ताकि analytics hot path से बाहर रहे। 301 बनाम 302 का अपना सवाल है।</li>
 <li>Follow-up: "Guess करना कैसे रोकोगे?" Private links के लिए random या scrambled codes, और lookups पर rate limit।</li>
 </ul>`,
         hg: `<ul>
-<li>Clarify (custom alias? expiry? analytics?), estimate (lagbhag 38 writes/s, 3,900 reads/s, 5 saal mein 3 TB), API (<code>POST /api/urls</code>, <code>GET /{code}</code>), data (code se ek table).</li>
-<li>Code generation: counter + base62 (7 characters lagbhag 3.5 trillion), servers id blocks lease karte hain. Vikalp: kata hua hash (collisions) ya unique check wala random code.</li>
-<li>Reads: TTL ke saath Redis cache-aside; click events queue mein jaate hain taaki analytics hot path se bahar rahe. 302 clicks dikhata hai; 301 ko browsers cache karte hain.</li>
+<li>Clarify (custom alias? expiry? analytics?), estimate (read-heavy, chhota data; capacity puzzle dekho), API (<code>POST /api/urls</code>, <code>GET /{code}</code>), data (code se ek table).</li>
+<li>Code generation: counter + base62 (7 characters lagbhag 3.5 trillion), servers id blocks lease karte hain. Options: kata hua hash (collisions) ya unique check wala random code.</li>
+<li>Reads: TTL ke saath Redis cache-aside; click events queue mein jaate hain taaki analytics hot path se bahar rahe. 301 vs 302 ka apna sawaal hai.</li>
 <li>Follow-up: "Guess karna kaise rokoge?" Private links ke liye random ya scrambled codes, aur lookups par rate limit.</li>
 </ul>`
       }
@@ -1151,19 +1163,19 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
         en: `<ul>
 <li>Requirements: no lost messages, fast webhook ack, provider rate limits, no duplicates, campaign spikes, opt-outs, delivery status callbacks.</li>
 <li>Ingress does the minimum because the provider retries on errors; dedupe on the provider message id. Outbound uses our own message id as the idempotency key and records "sent" only after the provider accepts.</li>
-<li>Retries: transient (429, 5xx, timeout) with exponential backoff and jitter; permanent (4xx) go to the dead-letter queue. Status callbacks can be late or out of order, so only move status forward.</li>
+<li>Retries: transient (429, 5xx, timeout) with exponential backoff and jitter; permanent (other 4xx) go to the dead-letter queue. Status callbacks can be late or out of order, so only move status forward.</li>
 <li>Follow-up: "A 1 million campaign arrives." The queue absorbs it; the per-provider token bucket sets the sending speed; add priority so OTP messages go before marketing. Azure service names come on Day 20.</li>
 </ul>`,
         hi: `<ul>
 <li>Requirements: कोई message न खोए, webhook का तेज़ ack, provider rate limits, कोई duplicate नहीं, campaign spikes, opt-outs, delivery status callbacks।</li>
 <li>Ingress कम से कम काम करता है क्योंकि errors पर provider retry करता है; provider message id पर dedupe। Outbound में हमारा अपना message id idempotency key है और "sent" तभी लिखते हैं जब provider accept करे।</li>
-<li>Retries: transient (429, 5xx, timeout) पर exponential backoff और jitter; permanent (4xx) dead-letter queue में। Status callbacks देर से या उल्टे order में आ सकते हैं, इसलिए status सिर्फ़ आगे बढ़ाओ।</li>
+<li>Retries: transient (429, 5xx, timeout) पर exponential backoff और jitter; permanent (बाकी 4xx) dead-letter queue में। Status callbacks देर से या उल्टे order में आ सकते हैं, इसलिए status सिर्फ़ आगे बढ़ाओ।</li>
 <li>Follow-up: "1 million का campaign आ गया।" Queue उसे सोख लेती है; per-provider token bucket sending की speed तय करता है; priority जोड़ो ताकि OTP messages marketing से पहले जाएँ। Azure service names Day 20 में आएँगे।</li>
 </ul>`,
         hg: `<ul>
 <li>Requirements: koi message na khoye, webhook ka tez ack, provider rate limits, koi duplicate nahi, campaign spikes, opt-outs, delivery status callbacks.</li>
 <li>Ingress kam se kam kaam karta hai kyunki errors par provider retry karta hai; provider message id par dedupe. Outbound mein hamara apna message id idempotency key hai aur "sent" tabhi likhte hain jab provider accept kare.</li>
-<li>Retries: transient (429, 5xx, timeout) par exponential backoff aur jitter; permanent (4xx) dead-letter queue mein. Status callbacks der se ya ulte order mein aa sakte hain, isliye status sirf aage badhao.</li>
+<li>Retries: transient (429, 5xx, timeout) par exponential backoff aur jitter; permanent (baaki 4xx) dead-letter queue mein. Status callbacks der se ya ulte order mein aa sakte hain, isliye status sirf aage badhao.</li>
 <li>Follow-up: "1 million ka campaign aa gaya." Queue use sokh leti hai; per-provider token bucket sending ki speed tay karta hai; priority jodo taaki OTP messages marketing se pehle jaayein. Azure service names Day 20 mein aayenge.</li>
 </ul>`
       }
@@ -1232,27 +1244,27 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
       id: "consistent-hashing-why",
       depth: "detailed",
       q: "What problem does consistent hashing solve?",
-      answer: "With hash modulo N, changing N moves most keys. Consistent hashing places nodes and keys on a ring so adding or removing a node moves only about 1/N of the keys.",
+      answer: "With hash modulo N, changing N moves most keys. Consistent hashing places nodes and keys on a ring so adding or removing a node moves about 1/N of the keys on average.",
       meaning: {
-        hi: "hash modulo N में N बदलने पर ज़्यादातर keys हिल जाती हैं। Consistent hashing nodes और keys को ring पर रखती है, इसलिए node जोड़ने या हटाने पर लगभग 1/N keys ही हिलती हैं।",
-        hg: "hash modulo N mein N badalne par zyadatar keys hil jaati hain. Consistent hashing nodes aur keys ko ring par rakhti hai, isliye node jodne ya hatane par lagbhag 1/N keys hi hilti hain."
+        hi: "hash modulo N में N बदलने पर ज़्यादातर keys हिल जाती हैं। Consistent hashing nodes और keys को ring पर रखती है, इसलिए node जोड़ने या हटाने पर औसतन लगभग 1/N keys हिलती हैं।",
+        hg: "hash modulo N mein N badalne par zyadatar keys hil jaati hain. Consistent hashing nodes aur keys ko ring par rakhti hai, isliye node jodne ya hatane par ausatan lagbhag 1/N keys hilti hain."
       },
       explain: {
         en: `<ul>
-<li>With modulo, going from 3 to 4 nodes moved 15 of 20 keys in the puzzle; for a cache that is a mass miss and a database stampede.</li>
-<li>On a ring each node owns arcs; a key goes to the next point clockwise. Virtual nodes (many points per node) even out the load and let stronger machines take more points.</li>
+<li>The ring puzzle shows modulo moving 15 of 20 keys when going from 3 to 4 nodes; for a cache that is a mass miss and a database stampede.</li>
+<li>On a ring each node owns arcs; a key goes to the next point clockwise. Virtual nodes (many points per node) even out the load and let stronger machines take more points. Moved keys go only to the new node; 1/N is the expected share, and uneven arcs can give less (the ring puzzle shows 2 of 20).</li>
 <li>Use a stable hash such as FNV-1a or Murmur; <code>string.GetHashCode()</code> differs per process in .NET.</li>
 <li>Follow-up: "Does Redis Cluster use it?" No: it uses a fixed set of 16,384 hash slots that are assigned to nodes. Dynamo-style stores use rings. Name the idea, not the product, if unsure.</li>
 </ul>`,
         hi: `<ul>
-<li>Modulo में 3 से 4 nodes करने पर puzzle में 20 में से 15 keys हिलीं; cache के लिए यह बड़े पैमाने का miss और database stampede है।</li>
-<li>Ring पर हर node के arcs होते हैं; key अगले point पर clockwise जाती है। Virtual nodes (हर node के कई points) load बराबर करते हैं और ताक़तवर machines को ज़्यादा points दे सकते हैं।</li>
+<li>Ring puzzle दिखाता है कि modulo में 3 से 4 nodes करने पर 20 में से 15 keys हिलती हैं; cache के लिए यह बड़े पैमाने का miss और database stampede है।</li>
+<li>Ring पर हर node के arcs होते हैं; key अगले point पर clockwise जाती है। Virtual nodes (हर node के कई points) load बराबर करते हैं और ताक़तवर machines को ज़्यादा points दे सकते हैं। हिली हुई keys सिर्फ़ नए node पर जाती हैं; 1/N expected हिस्सा है, और असमान arcs से कम भी हो सकता है (ring puzzle में 20 में से 2)।</li>
 <li>FNV-1a या Murmur जैसा stable hash use करो; .NET में <code>string.GetHashCode()</code> हर process में अलग होता है।</li>
 <li>Follow-up: "क्या Redis Cluster यह use करता है?" नहीं: वह 16,384 fixed hash slots use करता है जो nodes को assign होते हैं। Dynamo-style stores rings use करते हैं। पक्का न हो तो product नहीं, idea का नाम बोलो।</li>
 </ul>`,
         hg: `<ul>
-<li>Modulo mein 3 se 4 nodes karne par puzzle mein 20 mein se 15 keys hili; cache ke liye yeh bade pamane ka miss aur database stampede hai.</li>
-<li>Ring par har node ke arcs hote hain; key agle point par clockwise jaati hai. Virtual nodes (har node ke kai points) load barabar karte hain aur taqatwar machines ko zyada points de sakte hain.</li>
+<li>Ring puzzle dikhata hai ki modulo mein 3 se 4 nodes karne par 20 mein se 15 keys hilti hain; cache ke liye yeh bade pamane ka miss aur database stampede hai.</li>
+<li>Ring par har node ke arcs hote hain; key agle point par clockwise jaati hai. Virtual nodes (har node ke kai points) load barabar karte hain aur taqatwar machines ko zyada points de sakte hain. Hili hui keys sirf naye node par jaati hain; 1/N expected hissa hai, aur asamaan arcs se kam bhi ho sakta hai (ring puzzle mein 20 mein se 2).</li>
 <li>FNV-1a ya Murmur jaisa stable hash use karo; .NET mein <code>string.GetHashCode()</code> har process mein alag hota hai.</li>
 <li>Follow-up: "Kya Redis Cluster yeh use karta hai?" Nahi: woh 16,384 fixed hash slots use karta hai jo nodes ko assign hote hain. Dynamo-style stores rings use karte hain. Pakka na ho to product nahi, idea ka naam bolo.</li>
 </ul>`
@@ -1264,27 +1276,27 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
       q: "301 or 302 for a URL shortener redirect?",
       answer: "301 is permanent and browsers cache it, so later clicks skip your server. I use 302 when I need click analytics or the ability to change the target.",
       meaning: {
-        hi: "301 permanent है और browsers उसे cache करते हैं, इसलिए बाद के clicks आपके server तक नहीं आते। Click analytics या target बदलने की क्षमता चाहिए तो मैं 302 use करता हूँ।",
-        hg: "301 permanent hai aur browsers use cache karte hain, isliye baad ke clicks aapke server tak nahi aate. Click analytics ya target badalne ki kshamta chahiye to main 302 use karta hoon."
+        hi: "301 permanent है और browsers उसे cache करते हैं, इसलिए बाद के clicks आपके server तक नहीं आते। Click analytics या target बदलने की ability चाहिए तो मैं 302 use करता हूँ।",
+        hg: "301 permanent hai aur browsers use cache karte hain, isliye baad ke clicks aapke server tak nahi aate. Click analytics ya target badalne ki ability chahiye to main 302 use karta hoon."
       },
       explain: {
         en: `<ul>
 <li>301 (Moved Permanently): cheaper for you, good for SEO-style permanence, but you lose click counts and cannot easily change the target because clients remember it.</li>
 <li>302 (Found, temporary): every click comes to you; analytics, expiry, A/B targets and takedowns work. Cost: more load, so the cache and rate limit matter.</li>
 <li>307 and 308 are the method-preserving variants (temporary and permanent); for a GET redirect the practical choice is still permanent versus temporary.</li>
-<li>Follow-up: "Can you keep analytics with 301?" Only if the click is counted before the redirect, which a cached 301 skips, so no. Decide by the product need.</li>
+<li>Follow-up: "Can you keep analytics with 301?" Only if the click is counted before the redirect, which a cached 301 may skip, so not reliably (Cache-Control can limit 301 caching). Decide by the product need.</li>
 </ul>`,
         hi: `<ul>
 <li>301 (Moved Permanently): तुम्हारे लिए सस्ता, SEO-जैसी permanence के लिए अच्छा, पर click counts जाते हैं और target आसानी से नहीं बदल सकते क्योंकि clients याद रखते हैं।</li>
 <li>302 (Found, temporary): हर click तुम्हारे पास आता है; analytics, expiry, A/B targets और takedowns चलते हैं। कीमत: ज़्यादा load, इसलिए cache और rate limit मायने रखते हैं।</li>
 <li>307 और 308 method बचाने वाले variants हैं (temporary और permanent); GET redirect में असली choice फिर भी permanent बनाम temporary है।</li>
-<li>Follow-up: "301 के साथ analytics रख सकते हो?" सिर्फ़ तब जब click redirect से पहले गिना जाए, जिसे cached 301 छोड़ देता है, इसलिए नहीं। Product की ज़रूरत से तय करो।</li>
+<li>Follow-up: "301 के साथ analytics रख सकते हो?" सिर्फ़ तब जब click redirect से पहले गिना जाए, जिसे cached 301 छोड़ सकता है, इसलिए पक्का नहीं (Cache-Control से 301 की caching सीमित हो सकती है)। Product की ज़रूरत से तय करो।</li>
 </ul>`,
         hg: `<ul>
 <li>301 (Moved Permanently): tumhare liye sasta, SEO-jaisi permanence ke liye achha, par click counts jaate hain aur target aasani se nahi badal sakte kyunki clients yaad rakhte hain.</li>
 <li>302 (Found, temporary): har click tumhare paas aata hai; analytics, expiry, A/B targets aur takedowns chalte hain. Keemat: zyada load, isliye cache aur rate limit maayne rakhte hain.</li>
 <li>307 aur 308 method bachane wale variants hain (temporary aur permanent); GET redirect mein asli choice phir bhi permanent vs temporary hai.</li>
-<li>Follow-up: "301 ke saath analytics rakh sakte ho?" Sirf tab jab click redirect se pehle ginna jaaye, jise cached 301 chhod deta hai, isliye nahi. Product ki zaroorat se tay karo.</li>
+<li>Follow-up: "301 ke saath analytics rakh sakte ho?" Sirf tab jab click redirect se pehle ginna jaaye, jise cached 301 chhod sakta hai, isliye pakka nahi (Cache-Control se 301 ki caching seemit ho sakti hai). Product ki zaroorat se tay karo.</li>
 </ul>`
       }
     },
@@ -1302,18 +1314,21 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
 <li>Counter + base62: unique by construction; servers lease id blocks (A: 1-1000, B: 1001-2000) so no database call per create. Downside: sequential, so guessable.</li>
 <li>Hash of the long URL, truncated: the same URL gives the same code (dedupe), but truncation causes collisions, so you check and re-hash with a salt.</li>
 <li>Random code: hard to guess; check uniqueness on insert (unique key) and retry on conflict. Longer codes make collisions rarer.</li>
+<li>Snowflake-style 64-bit ids: timestamp + worker id + per-millisecond sequence. Roughly time-ordered, and no coordination per id once each worker has an id. Risks: clock skew or rollback, and handing out unique worker ids. Base62 of a 64-bit id is up to 11 characters.</li>
 <li>Follow-up: "What if two users shorten the same URL?" Decide by product: share one code (hash-style) or give each user their own (counter or random). Base62 is an encoding, not security.</li>
 </ul>`,
         hi: `<ul>
-<li>Counter + base62: बनावट से unique; servers id blocks lease करते हैं (A: 1-1000, B: 1001-2000) इसलिए हर create पर database call नहीं। कमी: sequential है, इसलिए guess हो सकती है।</li>
+<li>Counter + base62: design से ही unique; servers id blocks lease करते हैं (A: 1-1000, B: 1001-2000) इसलिए हर create पर database call नहीं। कमी: sequential है, इसलिए guess हो सकती है।</li>
 <li>Long URL का कटा हुआ hash: वही URL वही code देता है (dedupe), पर कटने से collisions होते हैं, इसलिए check करो और salt से दोबारा hash करो।</li>
 <li>Random code: guess करना मुश्किल; insert पर uniqueness check (unique key) और conflict पर retry। लंबे codes में collisions कम होते हैं।</li>
+<li>Snowflake-style 64-bit ids: timestamp + worker id + हर millisecond का sequence। लगभग time-ordered, और worker को id मिलने के बाद हर id पर coordination नहीं। Risks: clock skew या rollback, और unique worker ids बाँटना। 64-bit id का base62 अधिकतम 11 characters का होता है।</li>
 <li>Follow-up: "दो users एक ही URL छोटा करें तो?" Product से तय करो: एक code साझा (hash-style) या हर user का अपना (counter या random)। Base62 encoding है, security नहीं।</li>
 </ul>`,
         hg: `<ul>
-<li>Counter + base62: banawat se unique; servers id blocks lease karte hain (A: 1-1000, B: 1001-2000) isliye har create par database call nahi. Kami: sequential hai, isliye guess ho sakti hai.</li>
+<li>Counter + base62: design se hi unique; servers id blocks lease karte hain (A: 1-1000, B: 1001-2000) isliye har create par database call nahi. Kami: sequential hai, isliye guess ho sakti hai.</li>
 <li>Long URL ka kata hua hash: wahi URL wahi code deta hai (dedupe), par katne se collisions hote hain, isliye check karo aur salt se dobara hash karo.</li>
 <li>Random code: guess karna mushkil; insert par uniqueness check (unique key) aur conflict par retry. Lambe codes mein collisions kam hote hain.</li>
+<li>Snowflake-style 64-bit ids: timestamp + worker id + har millisecond ka sequence. Lagbhag time-ordered, aur worker ko id milne ke baad har id par coordination nahi. Risks: clock skew ya rollback, aur unique worker ids baantna. 64-bit id ka base62 adhiktam 11 characters ka hota hai.</li>
 <li>Follow-up: "Do users ek hi URL chhota karein to?" Product se tay karo: ek code saajha (hash-style) ya har user ka apna (counter ya random). Base62 encoding hai, security nahi.</li>
 </ul>`
       }
@@ -1472,10 +1487,10 @@ Reflection: I accepted eventual consistency for status updates. Next time I woul
       id: "tell-me-a-design-story",
       depth: "detailed",
       q: "Tell me about a system you designed.",
-      answer: "I use STAR with a real project: situation, my role, the options and trade-offs I weighed, and a measurable result. I say clearly what I did and what the team did.",
+      answer: "In [my system] I owned [part]: the goal was [goal], I weighed [A] against [B] and chose [A] because [reason], and the result was [real outcome].",
       meaning: {
-        hi: "मैं असली project के साथ STAR use करता हूँ: situation, मेरा role, जो options और trade-offs तौले, और मापने लायक result। मैं साफ़ बताता हूँ कि मैंने क्या किया और team ने क्या।",
-        hg: "Main asli project ke saath STAR use karta hoon: situation, mera role, jo options aur trade-offs taule, aur maapne layak result. Main saaf batata hoon ki maine kya kiya aur team ne kya."
+        hi: "[मेरे system] में मैंने [हिस्सा] संभाला: goal [goal] था, मैंने [A] और [B] तौले, [A] इसलिए चुना क्योंकि [वजह], और result [असली नतीजा] रहा।",
+        hg: "[Mere system] mein maine [hissa] sambhala: goal [goal] tha, maine [A] aur [B] taule, [A] isliye chuna kyunki [wajah], aur result [asli nateeja] raha."
       },
       explain: {
         en: `<ul>
@@ -1562,21 +1577,21 @@ read bandwidth: 1929 KB/s`,
 <li>100 million per month over 2,592,000 seconds is 38.58 writes per second; <code>long</code> division truncates it to <b>38</b>.</li>
 <li>Rounding <b>first</b> and then multiplying by 100 gives 3,800 reads/s. Multiplying first and dividing last gives <b>3,858</b>. Keep full precision as long as you can and round only at the end (in an interview, say "about 4,000").</li>
 <li>Peak = average x 2 is a common rule of thumb: 7,716 reads/s. Size for peak, not for average.</li>
-<li>Storage: 100M x 12 months x 5 years = 6 billion records; x 500 bytes = 3,000 GB = 3 TB (decimal units). Bandwidth: 3,858 x 500 bytes is about 1.9 MB/s, tiny for one server.</li>
+<li>Storage: 100M x 12 months x 5 years = 6 billion records; x 500 bytes = 3,000 GB = 3 TB (decimal units; about 9 TB with 3 copies). Bandwidth: 3,858 x 500 bytes is about 1.9 MB/s, tiny for one server.</li>
 <li>Lesson: the arithmetic is easy; the value is stating your assumptions aloud and seeing that reads, not storage, drive this design.</li>
 </ul>`,
         hi: `<ul>
 <li>हर महीने 100 million, 2,592,000 seconds में बँटे तो 38.58 writes per second आते हैं; <code>long</code> division इसे <b>38</b> पर काट देता है।</li>
 <li>पहले round करके फिर 100 से गुणा करो तो 3,800 reads/s आता है। पहले गुणा और आख़िर में divide करो तो <b>3,858</b>। जितना हो सके पूरी precision रखो और round सिर्फ़ आख़िर में करो (interview में बोलो "लगभग 4,000")।</li>
 <li>Peak = average x 2 एक आम rule of thumb है: 7,716 reads/s। Size peak के हिसाब से करो, average से नहीं।</li>
-<li>Storage: 100M x 12 महीने x 5 साल = 6 billion records; x 500 bytes = 3,000 GB = 3 TB (decimal units)। Bandwidth: 3,858 x 500 bytes लगभग 1.9 MB/s है, एक server के लिए बहुत छोटा।</li>
+<li>Storage: 100M x 12 महीने x 5 साल = 6 billion records; x 500 bytes = 3,000 GB = 3 TB (decimal units; 3 copies के साथ लगभग 9 TB)। Bandwidth: 3,858 x 500 bytes लगभग 1.9 MB/s है, एक server के लिए बहुत छोटा।</li>
 <li>Lesson: हिसाब आसान है; असली value यह है कि तुम assumptions ज़ोर से बोलो और देखो कि इस design को reads चलाते हैं, storage नहीं।</li>
 </ul>`,
         hg: `<ul>
 <li>Har mahine 100 million, 2,592,000 seconds mein banten to 38.58 writes per second aate hain; <code>long</code> division ise <b>38</b> par kaat deta hai.</li>
 <li>Pehle round karke phir 100 se guna karo to 3,800 reads/s aata hai. Pehle guna aur aakhir mein divide karo to <b>3,858</b>. Jitna ho sake poori precision rakho aur round sirf aakhir mein karo (interview mein bolo "lagbhag 4,000").</li>
 <li>Peak = average x 2 ek aam rule of thumb hai: 7,716 reads/s. Size peak ke hisaab se karo, average se nahi.</li>
-<li>Storage: 100M x 12 mahine x 5 saal = 6 billion records; x 500 bytes = 3,000 GB = 3 TB (decimal units). Bandwidth: 3,858 x 500 bytes lagbhag 1.9 MB/s hai, ek server ke liye bahut chhota.</li>
+<li>Storage: 100M x 12 mahine x 5 saal = 6 billion records; x 500 bytes = 3,000 GB = 3 TB (decimal units; about 9 TB with 3 copies). Bandwidth: 3,858 x 500 bytes lagbhag 1.9 MB/s hai, ek server ke liye bahut chhota.</li>
 <li>Lesson: hisaab aasan hai; asli value yeh hai ki tum assumptions zor se bolo aur dekho ki is design ko reads chalate hain, storage nahi.</li>
 </ul>`
       }
@@ -1700,21 +1715,21 @@ all ring moves went to N3: True`,
 <li>The hash is <b>FNV-1a</b>, written by hand. <code>string.GetHashCode()</code> is randomised per process in .NET, so it must not decide which node owns a key.</li>
 <li>With <code>hash % nodes</code>, going from 3 to 4 nodes changes the divisor, so most keys change owner: 15 of 20 here (about 3 out of 4 in general). A cache would lose most of its entries at once.</li>
 <li>On the <b>ring</b>, each node has 20 points (virtual nodes). A key belongs to the first point clockwise from its hash. Adding N3 only takes the keys that fall just before N3's new points: 2 of 20 here.</li>
-<li>Every key that moved went to the <b>new</b> node; no key moved between old nodes. That is the guarantee of consistent hashing: adding or removing a node moves roughly 1/N of the keys.</li>
+<li>Every key that moved went to the <b>new</b> node; no key moved between old nodes. That is the guarantee: moved keys go only to the new node. The expected share moved is about 1/N (a quarter here), but uneven arcs can give less, as the 2 of 20 shows.</li>
 <li>Virtual nodes smooth the distribution; with very few points one node can own a big arc. The exact "2" depends on the hash and the points, so do not quote it as a rule.</li>
 </ul>`,
         hi: `<ul>
 <li>Hash हाथ से लिखा <b>FNV-1a</b> है। .NET में <code>string.GetHashCode()</code> हर process में randomise होता है, इसलिए key का owner node तय करने के लिए उसे use मत करो।</li>
 <li><code>hash % nodes</code> में 3 से 4 nodes करने पर divisor बदल जाता है, इसलिए ज़्यादातर keys का owner बदल जाता है: यहाँ 20 में से 15 (आम तौर पर चार में से लगभग तीन)। Cache की ज़्यादातर entries एक साथ चली जाएँगी।</li>
 <li><b>Ring</b> पर हर node के 20 points (virtual nodes) हैं। Key उस पहले point की है जो उसके hash से clockwise मिले। N3 जोड़ने पर सिर्फ़ वही keys जाती हैं जो N3 के नए points से ठीक पहले गिरती हैं: यहाँ 20 में से 2।</li>
-<li>जो हर key हिली वह <b>नए</b> node पर गई; कोई key पुराने nodes के बीच नहीं हिली। यही consistent hashing की guarantee है: node जोड़ने या हटाने पर लगभग 1/N keys हिलती हैं।</li>
+<li>जो हर key हिली वह <b>नए</b> node पर गई; कोई key पुराने nodes के बीच नहीं हिली। यही guarantee है: हिली हुई keys सिर्फ़ नए node पर जाती हैं। हिलने वाला expected हिस्सा लगभग 1/N है (यहाँ एक चौथाई), पर असमान arcs से कम भी हो सकता है, जैसे यहाँ 20 में से 2।</li>
 <li>Virtual nodes distribution को smooth करते हैं; बहुत कम points हों तो एक node बड़े arc का मालिक बन सकता है। यहाँ का "2" hash और points पर निर्भर है, इसे rule की तरह मत बोलो।</li>
 </ul>`,
         hg: `<ul>
 <li>Hash haath se likha <b>FNV-1a</b> hai. .NET mein <code>string.GetHashCode()</code> har process mein randomise hota hai, isliye key ka owner node tay karne ke liye ise use mat karo.</li>
 <li><code>hash % nodes</code> mein 3 se 4 nodes karne par divisor badal jaata hai, isliye zyadatar keys ka owner badal jaata hai: yahan 20 mein se 15 (aam taur par chaar mein se lagbhag teen). Cache ki zyadatar entries ek saath chali jaengi.</li>
 <li><b>Ring</b> par har node ke 20 points (virtual nodes) hain. Key us pehle point ki hai jo uske hash se clockwise mile. N3 jodne par sirf wahi keys jaati hain jo N3 ke naye points se theek pehle girti hain: yahan 20 mein se 2.</li>
-<li>Jo har key hili woh <b>naye</b> node par gayi; koi key purane nodes ke beech nahi hili. Yahi consistent hashing ki guarantee hai: node jodne ya hatane par lagbhag 1/N keys hilti hain.</li>
+<li>Jo har key hili woh <b>naye</b> node par gayi; koi key purane nodes ke beech nahi hili. Yahi guarantee hai: hili hui keys sirf naye node par jaati hain. Hilne wala expected hissa lagbhag 1/N hai (yahan ek chauthai), par asamaan arcs se kam bhi ho sakta hai, jaise yahan 20 mein se 2.</li>
 <li>Virtual nodes distribution ko smooth karte hain; bahut kam points hon to ek node bade arc ka malik ban sakta hai. Yahan ka "2" hash aur points par depend karta hai, ise rule ki tarah mat bolo.</li>
 </ul>`
       }
@@ -1886,21 +1901,21 @@ hash by country: 0,2,7,1`,
       explain: {
         en: `<ul>
 <li>Range sharding by order id (0-999, 1000-1999, ...) looks tidy, but new orders always have the <b>highest ids</b>: all 100 new inserts land on the last shard. That is a <b>write hotspot</b>, and the other shards sit idle.</li>
-<li>Hashing the id (a stable hash, FNV-1a here) spreads the same 100 inserts 25 / 25 / 25 / 25. The price: range queries ("orders 3000-3050") now touch every shard.</li>
+<li>Hashing the id (a stable hash, FNV-1a here) spreads the same 100 inserts 25 / 25 / 25 / 25 (the exact 25s come from these sequential ids; real hashes give roughly even, not exact, splits). The price: range queries ("orders 3000-3050") now touch every shard.</li>
 <li>A <b>low-cardinality or skewed key</b> is the other classic mistake. Sharding by country puts 7 of 10 customers on one shard because most customers are in "IN". A good shard key has many distinct values and an even spread.</li>
 <li>The key should also match the main access pattern: "all orders of a customer" is fast if the customer id is the key; a query by anything else becomes scatter-gather across shards.</li>
 <li>Changing the number of shards later with <code>hash % N</code> reshuffles most data; this is why consistent hashing or a lookup directory is used (previous puzzle).</li>
 </ul>`,
         hi: `<ul>
 <li>Order id से range sharding (0-999, 1000-1999, ...) साफ़-सुथरी लगती है, पर नए orders की ids हमेशा <b>सबसे ऊँची</b> होती हैं: सारे 100 नए inserts आख़िरी shard पर गिरते हैं। यह <b>write hotspot</b> है, और बाकी shards खाली बैठे रहते हैं।</li>
-<li>Id को hash करें (stable hash, यहाँ FNV-1a) तो वही 100 inserts 25 / 25 / 25 / 25 बँटते हैं। कीमत: range queries ("orders 3000-3050") अब हर shard को छूती हैं।</li>
+<li>Id को hash करें (stable hash, यहाँ FNV-1a) तो वही 100 inserts 25 / 25 / 25 / 25 बँटते हैं (ठीक 25 इन sequential ids की वजह से हैं; असली hashes लगभग बराबर बाँटते हैं, ठीक बराबर नहीं)। कीमत: range queries ("orders 3000-3050") अब हर shard को छूती हैं।</li>
 <li><b>कम distinct values या skewed key</b> दूसरी classic ग़लती है। Country से sharding करने पर 10 में से 7 customers एक shard पर आ गए क्योंकि ज़्यादातर customers "IN" में हैं। अच्छी shard key में बहुत सारी अलग values और बराबर spread होता है।</li>
 <li>Key main access pattern से भी मेल खानी चाहिए: "एक customer के सारे orders" तब तेज़ है जब customer id ही key हो; किसी और चीज़ से query हो तो वह सब shards पर scatter-gather बन जाती है।</li>
 <li>बाद में <code>hash % N</code> से shards की संख्या बदलो तो ज़्यादातर data हिल जाता है; इसीलिए consistent hashing या lookup directory use होती है (पिछला puzzle)।</li>
 </ul>`,
         hg: `<ul>
 <li>Order id se range sharding (0-999, 1000-1999, ...) saaf-suthri lagti hai, par naye orders ki ids hamesha <b>sabse unchi</b> hoti hain: saare 100 naye inserts aakhri shard par girte hain. Yeh <b>write hotspot</b> hai, aur baaki shards khaali baithe rehte hain.</li>
-<li>Id ko hash karein (stable hash, yahan FNV-1a) to wahi 100 inserts 25 / 25 / 25 / 25 bante hain. Keemat: range queries ("orders 3000-3050") ab har shard ko chhuti hain.</li>
+<li>Id ko hash karein (stable hash, yahan FNV-1a) to wahi 100 inserts 25 / 25 / 25 / 25 bante hain (theek 25 in sequential ids ki wajah se hain; asli hashes lagbhag barabar baantte hain, theek barabar nahi). Keemat: range queries ("orders 3000-3050") ab har shard ko chhuti hain.</li>
 <li><b>Kam distinct values ya skewed key</b> doosri classic galti hai. Country se sharding karne par 10 mein se 7 customers ek shard par aa gaye kyunki zyadatar customers "IN" mein hain. Achhi shard key mein bahut saari alag values aur barabar spread hota hai.</li>
 <li>Key main access pattern se bhi mel khaani chahiye: "ek customer ke saare orders" tab tez hai jab customer id hi key ho; kisi aur cheez se query ho to woh sab shards par scatter-gather ban jaati hai.</li>
 <li>Baad mein <code>hash % N</code> se shards ki sankhya badlo to zyadatar data hil jaata hai; isiliye consistent hashing ya lookup directory use hoti hai (pichla puzzle).</li>
@@ -1916,12 +1931,12 @@ hash by country: 0,2,7,1`,
       "Cache-aside: read the cache, else load and fill; on write update the database and delete the key; keep a TTL.",
       "Scale a database in order: indexes, caching, read replicas, then sharding by a well-chosen key.",
       "A good shard key has many values, even traffic and matches the main query; sequential ids make hotspots.",
-      "Consistent hashing moves only about 1/N of the keys when a node changes; use a stable hash, not string.GetHashCode().",
+      "Consistent hashing moves about 1/N of the keys on average when a node is added or removed.",
       "CAP: during a partition choose consistency or availability; PACELC adds latency versus consistency otherwise.",
       "URL shortener: counter plus base62 codes, cache-aside redirects, and 302 when you need click analytics.",
-      "Notification system: fast webhook ack, queue, rate-limited sender, idempotency keys, retries and a dead-letter queue.",
+      "Notification system: acknowledge the webhook fast and process the work from a queue.",
       "Order management: no distributed transaction; use an outbox, a saga with compensations and idempotent consumers.",
-      "Tell your design story with STAR from a real project; the sample is only a shape, never invent details."
+      "Tell your design story from a real project and never invent details."
     ],
     meaning: {
       hi: [
@@ -1931,12 +1946,12 @@ hash by country: 0,2,7,1`,
         "Cache-aside: cache पढ़ो, नहीं तो load करके भरो; write पर database update करो और key delete करो; TTL रखो।",
         "Database को क्रम से scale करो: indexes, caching, read replicas, फिर अच्छी चुनी key से sharding।",
         "अच्छी shard key में बहुत values, बराबर traffic होता है और वह main query से मेल खाती है; sequential ids hotspots बनाती हैं।",
-        "Node बदलने पर consistent hashing में सिर्फ़ लगभग 1/N keys हिलती हैं; stable hash use करो, string.GetHashCode() नहीं।",
+        "Node जुड़ने या हटने पर consistent hashing में औसतन लगभग 1/N keys हिलती हैं।",
         "CAP: partition के दौरान consistency या availability चुनो; PACELC बाकी समय latency बनाम consistency जोड़ता है।",
         "URL shortener: counter + base62 codes, cache-aside redirects, और click analytics चाहिए तो 302।",
-        "Notification system: तेज़ webhook ack, queue, rate-limited sender, idempotency keys, retries और dead-letter queue।",
+        "Notification system: webhook को जल्दी ack करो और काम queue से process करो।",
         "Order management: distributed transaction नहीं; outbox, compensations वाला saga और idempotent consumers।",
-        "अपनी design story असली project से STAR में बोलो; sample सिर्फ़ shape है, details कभी गढ़ो मत।"
+        "अपनी design story असली project से बोलो और details कभी गढ़ो मत।"
       ],
       hg: [
         "Framework: clarify, estimate, API, data model, high-level design, deep dives, trade-offs; lagbhag 45 minute.",
@@ -1945,12 +1960,12 @@ hash by country: 0,2,7,1`,
         "Cache-aside: cache padho, nahi to load karke bharo; write par database update karo aur key delete karo; TTL rakho.",
         "Database ko kram se scale karo: indexes, caching, read replicas, phir achhi chuni key se sharding.",
         "Achhi shard key mein bahut values, barabar traffic hota hai aur woh main query se mel khaati hai; sequential ids hotspots banati hain.",
-        "Node badalne par consistent hashing mein sirf lagbhag 1/N keys hilti hain; stable hash use karo, string.GetHashCode() nahi.",
+        "Node judne ya hatne par consistent hashing mein ausatan lagbhag 1/N keys hilti hain.",
         "CAP: partition ke dauran consistency ya availability chuno; PACELC baaki samay latency vs consistency jodta hai.",
         "URL shortener: counter + base62 codes, cache-aside redirects, aur click analytics chahiye to 302.",
-        "Notification system: tez webhook ack, queue, rate-limited sender, idempotency keys, retries aur dead-letter queue.",
+        "Notification system: webhook ko jaldi ack karo aur kaam queue se process karo.",
         "Order management: distributed transaction nahi; outbox, compensations wala saga aur idempotent consumers.",
-        "Apni design story asli project se STAR mein bolo; sample sirf shape hai, details kabhi gadho mat."
+        "Apni design story asli project se bolo aur details kabhi gadho mat."
       ]
     }
   }
