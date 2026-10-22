@@ -475,7 +475,7 @@ Console.WriteLine($"CanSeek={ms.CanSeek}, CanWrite={ms.CanWrite}");`,
 <li>Design interfaces from the <b>caller's</b> needs (role interfaces), not from the implementer's feature list.</li>
 <li>Pitfall — interface explosion: 40 one-method interfaces for one team's internal code is its own smell. Group methods that always change and are used together.</li>
 </ul>
-<p><b>When to use / when not:</b> segregate when implementers are forced to throw or leave methods empty, or when tests need big fakes to satisfy methods the code under test never calls. Keep one interface when all methods are always used together (a <code>ICustomerRepository</code> with Get/Add/Update is fine if every client needs them).</p>`,
+<p><b>When to use / when not:</b> segregate when implementers are forced to throw or leave methods empty, or when tests need big fakes to satisfy methods the code under test never calls. Keep one interface when all methods are always used together (an <code>ICustomerRepository</code> with Get/Add/Update is fine if every client needs them).</p>`,
         hi: `<p><b>Analogy — mobile recharge:</b> सोचो एक mega-plan जो calls, 5G data, OTT apps, roaming और landline सब साथ ख़रीदने पर मजबूर करे, जबकि आपको सिर्फ़ calls चाहिए। आप अलग-अलग छोटे packs चुनना पसंद करोगे। Interface भी ऐसा ही है: class को उन features की क़ीमत (implement) मत भरवाओ जो वो देती ही नहीं।</p>
 <p><b>Bad:</b> मोटा <code>IMultiFunctionDevice</code> जिसमें <code>Print</code>, <code>Scan</code> और <code>Fax</code> हैं। Simple printer को तीनों implement करने पड़ते हैं, तो वो दो के लिए <code>NotSupportedException</code> फेंकता है — यह LSP की smell भी है। Callers अब interface पर भरोसा नहीं कर सकते।</p>
 <p><b>Good:</b> <code>IPrinter</code>, <code>IScanner</code>, <code>IFax</code>। Simple printer एक implement करता है; office machine तीनों (class कई interfaces implement कर सकती है)। जो method सिर्फ़ print करता है वो <code>IPrinter</code> माँगता है, इसलिए उसे छोटे fake से test कर सकते हैं।</p>
@@ -785,7 +785,7 @@ public interface IPaymentGateway
       id: "what-is-solid",
       depth: "short",
       q: "What is SOLID, and why do we care about it?",
-      answer: "SOLID is five design principles — Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion — that reduce coupling and keep code easy to change and test. I treat them as guidelines for code that changes, not laws.",
+      answer: "SOLID is five design principles — Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion — that reduce coupling and ease change and testing. I treat them as guidelines, not laws.",
       meaning: {
         hi: "SOLID पाँच design principles हैं जो coupling घटाते हैं और code को बदलना और test करना आसान रखते हैं। मैं इन्हें उस code के guidelines मानता हूँ जो बदलता है, कानून नहीं।",
         hg: "SOLID paanch design principles hain jo coupling ghatate hain aur code ko badalna aur test karna aasan rakhte hain. Main inhe us code ke guidelines manta hoon jo badalta hai, kanoon nahi."
@@ -794,21 +794,21 @@ public interface IPaymentGateway
         en: `<ul>
 <li><b>S</b> one reason to change; <b>O</b> extend by adding code; <b>L</b> subtypes are substitutable; <b>I</b> small interfaces; <b>D</b> depend on abstractions.</li>
 <li>Goal: <b>low coupling, high cohesion</b>. The payoff is cheaper change and easier unit tests.</li>
-<li>The principles were popularised by Robert C. Martin ("Uncle Bob"); LSP is by Barbara Liskov.</li>
+<li>The principles were popularised by Robert C. Martin ("Uncle Bob"); OCP comes from Bertrand Meyer (1988), LSP from Barbara Liskov, and the SOLID acronym was coined by Michael Feathers.</li>
 </ul>
 <p><b>TL angle:</b> explain it through consequences ("this makes the payment change a one-file change") rather than reciting the acronym.</p>
 <p>Follow-up: "Do you always follow SOLID?" — No; at boundaries and in volatile code yes, in tiny stable code no (YAGNI).</p>`,
         hi: `<ul>
 <li><b>S</b> बदलने की एक वजह; <b>O</b> code जोड़कर extend करो; <b>L</b> subtypes बदले जा सकें; <b>I</b> छोटे interfaces; <b>D</b> abstractions पर depend करो।</li>
 <li>Goal: <b>कम coupling, ज़्यादा cohesion</b>। फ़ायदा: बदलाव सस्ता और unit tests आसान।</li>
-<li>इन principles को Robert C. Martin ("Uncle Bob") ने popular किया; LSP Barbara Liskov का है।</li>
+<li>इन principles को Robert C. Martin ("Uncle Bob") ने popular किया; OCP Bertrand Meyer (1988) से आया, LSP Barbara Liskov का है, और SOLID acronym Michael Feathers ने बनाया।</li>
 </ul>
 <p><b>TL angle:</b> acronym रटने की जगह नतीजे बताओ ("इससे payment बदलना एक-file का काम हो जाता है")।</p>
 <p>Follow-up: "क्या आप हमेशा SOLID follow करते हो?" — नहीं; boundaries और बदलने वाले code में हाँ, छोटे stable code में नहीं (YAGNI)।</p>`,
         hg: `<ul>
 <li><b>S</b> badalne ki ek wajah; <b>O</b> code jodkar extend karo; <b>L</b> subtypes badle ja sakein; <b>I</b> chhote interfaces; <b>D</b> abstractions par depend karo.</li>
 <li>Goal: <b>kam coupling, zyada cohesion</b>. Fayda: badlaav sasta aur unit tests aasan.</li>
-<li>In principles ko Robert C. Martin ("Uncle Bob") ne popular kiya; LSP Barbara Liskov ka hai.</li>
+<li>In principles ko Robert C. Martin ("Uncle Bob") ne popular kiya; OCP Bertrand Meyer (1988) se aaya, LSP Barbara Liskov ka hai, aur SOLID acronym Michael Feathers ne banaya.</li>
 </ul>
 <p><b>TL angle:</b> acronym ratne ki jagah nateeje batao ("isse payment badalna ek-file ka kaam ho jaata hai").</p>
 <p>Follow-up: "Kya aap hamesha SOLID follow karte ho?" — Nahi; boundaries aur badalne wale code mein haan, chhote stable code mein nahi (YAGNI).</p>`
@@ -818,7 +818,7 @@ public interface IPaymentGateway
       id: "srp-meaning",
       depth: "short",
       q: "What does the Single Responsibility Principle mean? Give an example.",
-      answer: "A class should have one reason to change — one stakeholder who can ask for changes. An OrderService that validates, saves to a file and builds emails has three; I split it into validator, store and notifier.",
+      answer: "A class should have one reason to change — one stakeholder asking for changes. An OrderService that validates, saves and builds emails has three; I split it into validator, store and notifier.",
       meaning: {
         hi: "Class के बदलने की एक ही वजह होनी चाहिए — बदलाव माँगने वाला एक stakeholder। जो OrderService validate, file में save और email बनाता है उसकी तीन वजहें हैं; मैं उसे validator, store और notifier में बाँटता हूँ।",
         hg: "Class ke badalne ki ek hi wajah honi chahiye — badlaav maangne wala ek stakeholder. Jo OrderService validate, file mein save aur email banata hai uski teen wajahein hain; main use validator, store aur notifier mein baanta hoon."
@@ -851,7 +851,7 @@ public interface IPaymentGateway
       id: "ocp-csharp",
       depth: "short",
       q: "Explain the Open/Closed Principle. How do you achieve it in C#?",
-      answer: "Classes should be open for extension but closed for modification: new behaviour comes from adding a new class, not editing tested code. In C# I use an interface or abstract member with polymorphism — the Strategy idea — and register implementations in DI.",
+      answer: "Open for extension, closed for modification: new behaviour comes from adding a class, not editing tested code. In C# I use interfaces and polymorphism (Strategy) and register implementations in DI.",
       meaning: {
         hi: "Classes extension के लिए खुली और modification के लिए बंद हों: नया behaviour नई class जोड़कर आए, tested code edit करके नहीं। C# में मैं interface या abstract member और polymorphism (Strategy idea) use करता हूँ और implementations DI में register करता हूँ।",
         hg: "Classes extension ke liye khuli aur modification ke liye band hon: naya behaviour nayi class jodkar aaye, tested code edit karke nahi. C# mein main interface ya abstract member aur polymorphism (Strategy idea) use karta hoon aur implementations DI mein register karta hoon."
@@ -1103,7 +1103,7 @@ public static class Zoo
       id: "lsp-dotnet",
       depth: "detailed",
       q: "Does .NET itself violate LSP? What about ReadOnlyCollection and Stream?",
-      answer: "Partly, and it is documented. ICollection<T>.Add can throw NotSupportedException on a read-only collection, and Stream exposes CanRead, CanWrite and CanSeek because not every stream supports everything. Those are known compromises; I avoid copying them in new designs.",
+      answer: "Partly, and it is documented: ICollection<T>.Add can throw NotSupportedException on a read-only collection, and Stream has CanRead, CanWrite and CanSeek flags. They are known compromises I avoid copying.",
       meaning: {
         hi: "कुछ हद तक, और यह documented है। Read-only collection पर ICollection<T>.Add NotSupportedException फेंक सकता है, और Stream में CanRead, CanWrite, CanSeek हैं क्योंकि हर stream सब कुछ support नहीं करता। ये जाने-माने compromises हैं; नए designs में मैं इन्हें दोहराता नहीं।",
         hg: "Kuch had tak, aur yeh documented hai. Read-only collection par ICollection<T>.Add NotSupportedException phenk sakta hai, aur Stream mein CanRead, CanWrite, CanSeek hain kyunki har stream sab kuch support nahi karta. Yeh jaane-maane compromises hain; naye designs mein main inhe dohrata nahi."
@@ -1172,7 +1172,7 @@ public static class Zoo
       id: "di-lifetimes-captive",
       depth: "detailed",
       q: "Which DI lifetimes exist in .NET and what is a captive dependency?",
-      answer: "Transient creates a new instance per resolve, Scoped one per scope (a web request), Singleton one for the app. A captive dependency is a longer-lived service holding a shorter-lived one, such as a singleton injecting a scoped DbContext.",
+      answer: "Transient: new instance per resolve; Scoped: one per scope (a web request); Singleton: one per app. A captive dependency is a longer-lived service holding a shorter-lived one, like a singleton with a scoped DbContext.",
       meaning: {
         hi: "Transient हर resolve पर नया instance बनाता है, Scoped हर scope (web request) में एक, Singleton पूरे app में एक। Captive dependency तब है जब लंबी उम्र वाली service छोटी उम्र वाली को पकड़े रखे, जैसे singleton में scoped DbContext inject करना।",
         hg: "Transient har resolve par naya instance banata hai, Scoped har scope (web request) mein ek, Singleton poore app mein ek. Captive dependency tab hai jab lambi umar wali service chhoti umar wali ko pakde rakhe, jaise singleton mein scoped DbContext inject karna."
@@ -1185,7 +1185,7 @@ public static class Zoo
 <li>Fix: inject <code>IServiceScopeFactory</code> and create a scope per unit of work, or use <code>IDbContextFactory&lt;T&gt;</code> for contexts (see Day 5); or make the consumer scoped too.</li>
 <li>Also: singletons must be thread-safe. Transient <code>IDisposable</code> services resolved from the root provider are kept alive until the provider is disposed — resolve from a scope.</li>
 </ul>
-<p>Follow-up: "Is <code>HttpClient</code> a singleton?" — use <code>IHttpClientFactory</code> (Day 7); it manages handler lifetime for you.</p>`,
+<p>Follow-up: "Is <code>HttpClient</code> a singleton?" — it is meant to be reused, not created per request. Use <code>IHttpClientFactory</code> (Day 3), or one long-lived client with <code>SocketsHttpHandler.PooledConnectionLifetime</code> set.</p>`,
         hi: `<ul>
 <li><b>Rule:</b> service उन services पर depend कर सकती है जिनकी उम्र <b>बराबर या ज़्यादा</b> हो, कम नहीं। Singleton → Scoped bug है।</li>
 <li>नुकसान क्यों: scoped object app की पूरी उम्र जीता है, concurrent requests में share होता है (thread-safety) और पुराना state रखता है।</li>
@@ -1193,7 +1193,7 @@ public static class Zoo
 <li>Fix: <code>IServiceScopeFactory</code> inject करो और हर unit of work का scope बनाओ, या contexts के लिए <code>IDbContextFactory&lt;T&gt;</code> (Day 5 देखो); या consumer को भी scoped बनाओ।</li>
 <li>और: singletons को thread-safe होना चाहिए। Root provider से resolve हुई transient <code>IDisposable</code> services provider dispose होने तक ज़िंदा रहती हैं — scope से resolve करो।</li>
 </ul>
-<p>Follow-up: "क्या <code>HttpClient</code> singleton है?" — <code>IHttpClientFactory</code> use करो (Day 7); वो handler का lifetime सँभालता है।</p>`,
+<p>Follow-up: "क्या <code>HttpClient</code> singleton है?" — इसे reuse करने के लिए बनाया गया है, हर request पर नया बनाने के लिए नहीं। <code>IHttpClientFactory</code> use करो (Day 3), या एक long-lived client जिसमें <code>SocketsHttpHandler.PooledConnectionLifetime</code> set हो।</p>`,
         hg: `<ul>
 <li><b>Rule:</b> service un services par depend kar sakti hai jinki umar <b>barabar ya zyada</b> ho, kam nahi. Singleton → Scoped bug hai.</li>
 <li>Nuksaan kyun: scoped object app ki poori umar jeeta hai, concurrent requests mein share hota hai (thread-safety) aur purana state rakhta hai.</li>
@@ -1201,14 +1201,14 @@ public static class Zoo
 <li>Fix: <code>IServiceScopeFactory</code> inject karo aur har unit of work ka scope banao, ya contexts ke liye <code>IDbContextFactory&lt;T&gt;</code> (Day 5 dekho); ya consumer ko bhi scoped banao.</li>
 <li>Aur: singletons ko thread-safe hona chahiye. Root provider se resolve hui transient <code>IDisposable</code> services provider dispose hone tak zinda rehti hain — scope se resolve karo.</li>
 </ul>
-<p>Follow-up: "Kya <code>HttpClient</code> singleton hai?" — <code>IHttpClientFactory</code> use karo (Day 7); woh handler ka lifetime sambhalta hai.</p>`
+<p>Follow-up: "Kya <code>HttpClient</code> singleton hai?" — ise reuse karne ke liye banaya gaya hai, har request par naya banane ke liye nahi. <code>IHttpClientFactory</code> use karo (Day 3), ya ek long-lived client jismein <code>SocketsHttpHandler.PooledConnectionLifetime</code> set ho.</p>`
       }
     },
     {
       id: "service-locator-antipattern",
       depth: "detailed",
       q: "Why is injecting IServiceProvider and calling GetService considered an anti-pattern?",
-      answer: "It hides dependencies, so the constructor no longer shows what the class needs, and failures move from startup to runtime. It also makes tests harder. I inject the actual dependencies, keeping the container only in the composition root.",
+      answer: "It hides dependencies, so the constructor no longer shows what the class needs, failures move to runtime, and tests get harder. I inject the actual dependencies and keep the container in the composition root.",
       meaning: {
         hi: "यह dependencies छुपाता है, इसलिए constructor अब नहीं बताता कि class को क्या चाहिए, और failures startup से runtime पर चले जाते हैं। Tests भी मुश्किल होते हैं। मैं असली dependencies inject करता हूँ और container सिर्फ़ composition root में रखता हूँ।",
         hg: "Yeh dependencies chhupata hai, isliye constructor ab nahi batata ki class ko kya chahiye, aur failures startup se runtime par chale jaate hain. Tests bhi mushkil hote hain. Main asli dependencies inject karta hoon aur container sirf composition root mein rakhta hoon."
@@ -1241,7 +1241,7 @@ public static class Zoo
       id: "too-many-ctor-params",
       depth: "detailed",
       q: "A class's constructor takes 9 dependencies. What does that tell you and what do you do?",
-      answer: "It is usually a Single Responsibility violation: the class does too many jobs. I look for clusters of dependencies that belong together and extract them into a smaller collaborator, instead of hiding the problem behind a facade or property injection.",
+      answer: "Usually a Single Responsibility violation: the class does too many jobs. I extract clusters of dependencies that belong together into a smaller collaborator, rather than hiding it behind a facade or property injection.",
       meaning: {
         hi: "यह अक्सर Single Responsibility violation है: class बहुत सारे काम कर रही है। मैं साथ रहने वाली dependencies के clusters ढूँढकर उन्हें छोटे collaborator में निकालता हूँ, समस्या को facade या property injection के पीछे नहीं छुपाता।",
         hg: "Yeh aksar Single Responsibility violation hai: class bahut saare kaam kar rahi hai. Main saath rehne wali dependencies ke clusters dhoondhkar unhe chhote collaborator mein nikalta hoon, samasya ko facade ya property injection ke peeche nahi chhupata."
@@ -1287,7 +1287,7 @@ public static class Zoo
 <li><b>Strategy</b> (Day 9–11): swap an algorithm behind an interface — OCP.</li>
 <li><b>Decorator</b>: wrap an implementation to add logging/caching without editing it — OCP + SRP (cross-cutting concern in its own class).</li>
 <li><b>Factory</b> / <b>DI</b>: creation is separated from use — DIP.</li>
-<li><b>Tests</b>: DIP gives you a seam; SRP makes a class small enough to test; ISP makes fakes small; LSP guarantees a fake behaves like the real thing.</li>
+<li><b>Tests</b>: DIP gives you a seam; SRP makes a class small enough to test; ISP makes fakes small; LSP is what lets a fake stand in for the real thing.</li>
 <li>Connection to Day 1: all of this is <b>composition over inheritance</b> plus interface-based polymorphism.</li>
 <li>Do not start from the pattern name. Start from the pain (a growing switch, a hard-to-test class), then pick the pattern.</li>
 </ul>
@@ -1296,7 +1296,7 @@ public static class Zoo
 <li><b>Strategy</b> (Day 9–11): interface के पीछे algorithm बदलना — OCP।</li>
 <li><b>Decorator</b>: बिना edit किए logging/caching जोड़ने के लिए implementation को लपेटना — OCP + SRP (cross-cutting concern अपनी class में)।</li>
 <li><b>Factory</b> / <b>DI</b>: creation को use से अलग करना — DIP।</li>
-<li><b>Tests</b>: DIP seam देता है; SRP class को test करने लायक छोटा रखता है; ISP fakes छोटे रखता है; LSP guarantee करता है कि fake असली जैसा behave करे।</li>
+<li><b>Tests</b>: DIP seam देता है; SRP class को test करने लायक छोटा रखता है; ISP fakes छोटे रखता है; LSP की वजह से fake असली की जगह खड़ा हो सकता है।</li>
 <li>Day 1 से जुड़ाव: यह सब <b>composition over inheritance</b> और interface-based polymorphism है।</li>
 <li>Pattern के नाम से शुरू मत करो। दर्द से शुरू करो (बढ़ता switch, test करने में मुश्किल class), फिर pattern चुनो।</li>
 </ul>
@@ -1305,7 +1305,7 @@ public static class Zoo
 <li><b>Strategy</b> (Day 9–11): interface ke peeche algorithm badalna — OCP.</li>
 <li><b>Decorator</b>: bina edit kiye logging/caching jodne ke liye implementation ko lapetna — OCP + SRP (cross-cutting concern apni class mein).</li>
 <li><b>Factory</b> / <b>DI</b>: creation ko use se alag karna — DIP.</li>
-<li><b>Tests</b>: DIP seam deta hai; SRP class ko test karne layak chhota rakhta hai; ISP fakes chhote rakhta hai; LSP guarantee karta hai ki fake asli jaisa behave kare.</li>
+<li><b>Tests</b>: DIP seam deta hai; SRP class ko test karne layak chhota rakhta hai; ISP fakes chhote rakhta hai; LSP ki wajah se fake asli ki jagah khada ho sakta hai.</li>
 <li>Day 1 se judaav: yeh sab <b>composition over inheritance</b> aur interface-based polymorphism hai.</li>
 <li>Pattern ke naam se shuru mat karo. Dard se shuru karo (badhta switch, test karne mein mushkil class), phir pattern chuno.</li>
 </ul>
@@ -1316,7 +1316,7 @@ public static class Zoo
       id: "solid-legacy-refactor",
       depth: "detailed",
       q: "You inherit a legacy 2000-line service with new everywhere. How do you move it toward SOLID safely?",
-      answer: "I first add characterization tests, then introduce seams at the boundaries — extract an interface for I/O like the database, email and clock — and refactor in small steps, one responsibility at a time, with the tests green each time.",
+      answer: "I add characterization tests first, then create seams at I/O boundaries (database, email, clock) by extracting interfaces, and refactor in small steps, one responsibility at a time, keeping tests green.",
       meaning: {
         hi: "पहले characterization tests जोड़ता हूँ, फिर boundaries पर seams बनाता हूँ — database, email और clock जैसे I/O के लिए interface निकालता हूँ — और छोटे steps में, एक बार में एक responsibility, हर बार tests green रखकर refactor करता हूँ।",
         hg: "Pehle characterization tests jodta hoon, phir boundaries par seams banata hoon — database, email aur clock jaise I/O ke liye interface nikalta hoon — aur chhote steps mein, ek baar mein ek responsibility, har baar tests green rakhkar refactor karta hoon."
@@ -1325,7 +1325,7 @@ public static class Zoo
         en: `<ul>
 <li><b>Step 0:</b> agree why — pick the part that hurts (changes often, has the most bugs). Do not refactor stable code for beauty.</li>
 <li><b>Step 1:</b> characterization tests: pin down current behaviour, even if odd.</li>
-<li><b>Step 2:</b> seams: extract interfaces for external effects (<code>TimeProvider</code> for time, <code>IEmailSender</code>, a file or HTTP gateway). Constructor-inject them; keep a default constructor temporarily if needed.</li>
+<li><b>Step 2:</b> seams: extract abstractions for external effects (<code>TimeProvider</code> for time, <code>IEmailSender</code>, a file or HTTP gateway). Constructor-inject them; keep a default constructor temporarily if needed.</li>
 <li><b>Step 3:</b> extract classes by responsibility (SRP), one per PR; replace big switches with strategies when they next change (OCP).</li>
 <li><b>Step 4:</b> register in DI, delete the old paths. Use feature flags or the strangler approach for risky areas.</li>
 <li>Communicate: small PRs, a short design note, and a "definition of done" so the team does not stall mid-way.</li>
@@ -1334,7 +1334,7 @@ public static class Zoo
         hi: `<ul>
 <li><b>Step 0:</b> पहले वजह तय करो — वो हिस्सा चुनो जो दुखता है (अक्सर बदलता है, सबसे ज़्यादा bugs)। Stable code को सुंदरता के लिए refactor मत करो।</li>
 <li><b>Step 1:</b> characterization tests: मौजूदा behaviour पक्का करो, चाहे अजीब हो।</li>
-<li><b>Step 2:</b> seams: बाहरी effects के लिए interfaces निकालो (time के लिए <code>TimeProvider</code>, <code>IEmailSender</code>, file या HTTP gateway)। उन्हें constructor से inject करो; ज़रूरत हो तो अस्थायी default constructor रखो।</li>
+<li><b>Step 2:</b> seams: बाहरी effects के लिए abstractions निकालो (time के लिए <code>TimeProvider</code>, <code>IEmailSender</code>, file या HTTP gateway)। उन्हें constructor से inject करो; ज़रूरत हो तो अस्थायी default constructor रखो।</li>
 <li><b>Step 3:</b> responsibility के हिसाब से classes निकालो (SRP), हर PR में एक; बड़े switches को अगली बार बदलते समय strategies से बदलो (OCP)।</li>
 <li><b>Step 4:</b> DI में register करो, पुराने paths हटाओ। जोखिम वाले हिस्सों में feature flags या strangler approach।</li>
 <li>Communicate करो: छोटे PRs, छोटा design note और "definition of done" ताकि team बीच में न रुके।</li>
@@ -1343,7 +1343,7 @@ public static class Zoo
         hg: `<ul>
 <li><b>Step 0:</b> pehle wajah tay karo — woh hissa chuno jo dukhta hai (aksar badalta hai, sabse zyada bugs). Stable code ko sundarta ke liye refactor mat karo.</li>
 <li><b>Step 1:</b> characterization tests: maujooda behaviour pakka karo, chahe ajeeb ho.</li>
-<li><b>Step 2:</b> seams: bahari effects ke liye interfaces nikalo (time ke liye <code>TimeProvider</code>, <code>IEmailSender</code>, file ya HTTP gateway). Unhe constructor se inject karo; zaroorat ho to asthayi default constructor rakho.</li>
+<li><b>Step 2:</b> seams: bahari effects ke liye abstractions nikalo (time ke liye <code>TimeProvider</code>, <code>IEmailSender</code>, file ya HTTP gateway). Unhe constructor se inject karo; zaroorat ho to asthayi default constructor rakho.</li>
 <li><b>Step 3:</b> responsibility ke hisaab se classes nikalo (SRP), har PR mein ek; bade switches ko agli baar badalte samay strategies se badlo (OCP).</li>
 <li><b>Step 4:</b> DI mein register karo, purane paths hatao. Jokhim wale hisson mein feature flags ya strangler approach.</li>
 <li>Communicate karo: chhote PRs, chhota design note aur "definition of done" taaki team beech mein na ruke.</li>
@@ -1670,45 +1670,45 @@ class LoggingDecorator : IOrderService
   ],
   revision: {
     en: [
-      "<b>SOLID</b> = SRP, OCP, LSP, ISP, DIP: five habits that lower coupling and make change and testing cheap. Guidelines, not laws.",
+      "<b>SOLID</b> = five habits (SRP, OCP, LSP, ISP, DIP) that lower coupling and make change and testing cheap. Guidelines, not laws.",
       "<b>SRP</b>: one class, one <i>reason to change</i> (one stakeholder). Split validator / store / notifier; wait for a second reason before splitting small classes.",
       "<b>OCP</b>: add behaviour by adding a class (interface + polymorphism = Strategy), not by growing a type-<code>switch</code>. A small closed switch is fine.",
-      "<b>LSP</b>: a child must work wherever the parent is expected. Square/Rectangle; overrides that throw <code>NotSupportedException</code> are red flags.",
-      "LSP rules: do not tighten preconditions, do not weaken postconditions, keep invariants, add no new exceptions.",
-      "<b>.NET and LSP</b>: <code>ReadOnlyCollection&lt;T&gt;.Add</code> throws; <code>Stream</code> has CanRead/CanWrite/CanSeek. Prefer <code>IReadOnlyList&lt;T&gt;</code> in your own APIs.",
+      "<b>LSP</b>: a child must work wherever the parent is expected (Square/Rectangle). Do not tighten preconditions, weaken postconditions, break invariants, or add exception types the parent's contract does not allow.",
+      "<b>.NET and LSP</b>: <code>ICollection&lt;T&gt;.Add</code> on a <code>ReadOnlyCollection&lt;T&gt;</code> throws; <code>Stream</code> has CanRead/CanWrite/CanSeek. Prefer <code>IReadOnlyList&lt;T&gt;</code> in your own APIs.",
       "<b>ISP</b>: small role interfaces from the caller's view (<code>IPrinter</code>, <code>IScanner</code>); ask for the smallest abstraction, e.g. <code>IEnumerable&lt;T&gt;</code>.",
       "<b>DIP</b> = principle (depend on abstractions); <b>DI</b> = technique (pass dependencies in); <b>IoC container</b> = tool (Microsoft.Extensions.DependencyInjection).",
-      "DI container facts: last registration wins for one service, <code>IEnumerable&lt;T&gt;</code> gets all; Transient / Scoped / Singleton; avoid injecting Scoped into Singleton (captive).",
-      "Prefer <b>constructor injection</b>; register only in the composition root; <code>IServiceProvider</code> + <code>GetService</code> in business code is the Service Locator anti-pattern.",
+      "<b>Resolution</b>: the last registration wins for a single service; <code>IEnumerable&lt;T&gt;</code> gets all of them in registration order.",
+      "<b>Lifetimes</b>: Transient / Scoped / Singleton; avoid injecting Scoped into Singleton (captive dependency).",
+      "Prefer <b>constructor injection</b> and register only in the composition root; <code>IServiceProvider.GetService</code> in business code is the Service Locator anti-pattern.",
       "Over-engineering: no interface for a pure helper or a class with one implementation and nothing to fake; YAGNI and rule of three.",
       "<b>TL review</b>: ask change-cost questions (\"what happens when we add a fourth case?\"), refactor in small PRs, and write the reason in the comment."
     ],
     meaning: {
       hi: [
-        "SOLID = SRP, OCP, LSP, ISP, DIP: पाँच आदतें जो coupling घटाती हैं और बदलाव व testing सस्ता करती हैं। Guidelines हैं, कानून नहीं।",
+        "SOLID = पाँच आदतें (SRP, OCP, LSP, ISP, DIP) जो coupling घटाती हैं और बदलाव व testing सस्ता करती हैं। Guidelines हैं, कानून नहीं।",
         "SRP: एक class, बदलने की एक वजह (एक stakeholder)। Validator / store / notifier बाँटो; छोटी classes बाँटने से पहले दूसरी वजह का इंतज़ार करो।",
         "OCP: behaviour नई class जोड़कर लाओ (interface + polymorphism = Strategy), type-switch बढ़ाकर नहीं। छोटा closed switch ठीक है।",
-        "LSP: child वहाँ चले जहाँ parent expected है। Square/Rectangle; NotSupportedException फेंकने वाले overrides red flag हैं।",
-        "LSP rules: preconditions मत कसो, postconditions कमज़ोर मत करो, invariants रखो, नई exceptions मत जोड़ो।",
-        ".NET और LSP: ReadOnlyCollection<T>.Add फेंकता है; Stream में CanRead/CanWrite/CanSeek हैं। अपने APIs में IReadOnlyList<T> पसंद करो।",
+        "LSP: child वहाँ चले जहाँ parent expected है (Square/Rectangle)। Preconditions मत कसो, postconditions कमज़ोर मत करो, invariants मत तोड़ो, और ऐसी exception types मत जोड़ो जो parent का contract allow नहीं करता।",
+        ".NET और LSP: ReadOnlyCollection<T> पर ICollection<T>.Add फेंकता है; Stream में CanRead/CanWrite/CanSeek हैं। अपने APIs में IReadOnlyList<T> पसंद करो।",
         "ISP: caller की नज़र से छोटे role interfaces (IPrinter, IScanner); सबसे छोटी abstraction माँगो, जैसे IEnumerable<T>।",
         "DIP = principle (abstractions पर depend करो); DI = technique (dependencies बाहर से दो); IoC container = tool (Microsoft.Extensions.DependencyInjection)।",
-        "DI container facts: एक service के लिए आख़िरी registration जीतती है, IEnumerable<T> को सब मिलती हैं; Transient / Scoped / Singleton; Scoped को Singleton में inject करने से बचो (captive)।",
-        "Constructor injection पसंद करो; register सिर्फ़ composition root में; business code में IServiceProvider + GetService Service Locator anti-pattern है।",
+        "Resolution: एक service के लिए आख़िरी registration जीतती है; IEnumerable<T> को सब registration order में मिलती हैं।",
+        "Lifetimes: Transient / Scoped / Singleton; Scoped को Singleton में inject करने से बचो (captive dependency)।",
+        "Constructor injection पसंद करो और register सिर्फ़ composition root में; business code में IServiceProvider.GetService Service Locator anti-pattern है।",
         "Over-engineering: pure helper या ऐसी class के लिए interface नहीं जिसकी एक implementation है और fake करने को कुछ नहीं; YAGNI और rule of three।",
         "TL review: change-cost के सवाल पूछो (\"चौथा case जोड़ेंगे तो क्या होगा?\"), छोटे PRs में refactor करो, और comment में वजह लिखो।"
       ],
       hg: [
-        "SOLID = SRP, OCP, LSP, ISP, DIP: paanch aadatein jo coupling ghatati hain aur badlaav va testing sasta karti hain. Guidelines hain, kanoon nahi.",
+        "SOLID = paanch aadatein (SRP, OCP, LSP, ISP, DIP) jo coupling ghatati hain aur badlaav va testing sasta karti hain. Guidelines hain, kanoon nahi.",
         "SRP: ek class, badalne ki ek wajah (ek stakeholder). Validator / store / notifier baanto; chhoti classes baantne se pehle doosri wajah ka intezaar karo.",
         "OCP: behaviour nayi class jodkar lao (interface + polymorphism = Strategy), type-switch badhakar nahi. Chhota closed switch theek hai.",
-        "LSP: child wahan chale jahan parent expected hai. Square/Rectangle; NotSupportedException phenkne wale overrides red flag hain.",
-        "LSP rules: preconditions mat kaso, postconditions kamzor mat karo, invariants rakho, nayi exceptions mat jodo.",
-        ".NET aur LSP: ReadOnlyCollection<T>.Add phenkta hai; Stream mein CanRead/CanWrite/CanSeek hain. Apne APIs mein IReadOnlyList<T> pasand karo.",
+        "LSP: child wahan chale jahan parent expected hai (Square/Rectangle). Preconditions mat kaso, postconditions kamzor mat karo, invariants mat todo, aur aisi exception types mat jodo jo parent ka contract allow nahi karta.",
+        ".NET aur LSP: ReadOnlyCollection<T> par ICollection<T>.Add phenkta hai; Stream mein CanRead/CanWrite/CanSeek hain. Apne APIs mein IReadOnlyList<T> pasand karo.",
         "ISP: caller ki nazar se chhote role interfaces (IPrinter, IScanner); sabse chhoti abstraction maango, jaise IEnumerable<T>.",
         "DIP = principle (abstractions par depend karo); DI = technique (dependencies bahar se do); IoC container = tool (Microsoft.Extensions.DependencyInjection).",
-        "DI container facts: ek service ke liye aakhri registration jeetti hai, IEnumerable<T> ko sab milti hain; Transient / Scoped / Singleton; Scoped ko Singleton mein inject karne se bacho (captive).",
-        "Constructor injection pasand karo; register sirf composition root mein; business code mein IServiceProvider + GetService Service Locator anti-pattern hai.",
+        "Resolution: ek service ke liye aakhri registration jeetti hai; IEnumerable<T> ko sab registration order mein milti hain.",
+        "Lifetimes: Transient / Scoped / Singleton; Scoped ko Singleton mein inject karne se bacho (captive dependency).",
+        "Constructor injection pasand karo aur register sirf composition root mein; business code mein IServiceProvider.GetService Service Locator anti-pattern hai.",
         "Over-engineering: pure helper ya aisi class ke liye interface nahi jiski ek implementation hai aur fake karne ko kuch nahi; YAGNI aur rule of three.",
         "TL review: change-cost ke sawaal poochho (\"chautha case jodenge to kya hoga?\"), chhote PRs mein refactor karo, aur comment mein wajah likho."
       ]
