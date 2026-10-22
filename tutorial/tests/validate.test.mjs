@@ -185,3 +185,22 @@ test('min_puzzles_for_days_1_to_14', async () => {
   for (let n = 1; n <= 14; n++) assert.equal(minPuzzlesFor(n), 5, `day ${n}`);
   assert.equal(minPuzzlesFor(15), 0);
 });
+
+test('raw_generic_tag_in_html_field_is_error', () => {
+  const d = good();
+  d.qa[0].answer = 'Inject ILogger<T> into the class.';
+  const errs = validateDay(d, RELAXED);
+  assert.ok(errs.includes('qa[0].answer: raw tag <T> (escape as &lt;T&gt;)'), errs.join('\n'));
+});
+
+test('escaped_generic_and_allowed_tags_ok', () => {
+  const d = good();
+  d.qa[0].answer = 'Use Lazy&lt;T&gt; and <code>x</code> with <b>bold</b><br>';
+  assert.deepEqual(validateDay(d, RELAXED), []);
+});
+
+test('raw_generic_in_code_src_is_ok', () => {
+  const d = good();
+  d.qa[0].code = [{ caption: d.summary, src: 'ILogger<T> log;', check: 'none' }];
+  assert.deepEqual(validateDay(d, RELAXED), []);
+});

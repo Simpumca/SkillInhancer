@@ -128,9 +128,9 @@ window.TL_DAY = {
       id: "singleton-in-code",
       depth: "detailed",
       title: {
-        en: "Singleton in C#: naive, lock, double-checked, static, Lazy<T>",
-        hi: "C# में Singleton: naive, lock, double-checked, static, Lazy<T>",
-        hg: "C# mein Singleton: naive, lock, double-checked, static, Lazy<T>"
+        en: "Singleton in C#: naive, lock, double-checked, static, Lazy&lt;T&gt;",
+        hi: "C# में Singleton: naive, lock, double-checked, static, Lazy&lt;T&gt;",
+        hg: "C# mein Singleton: naive, lock, double-checked, static, Lazy&lt;T&gt;"
       },
       body: {
         en: `<p><b>Analogy — one ATM cabin and a queue:</b> if the guard checks "is the cabin empty?" and two people both hear "yes" at the same instant, both walk in. Locking the door fixes it, but making everyone wait at the door even after the cabin is built is wasteful.</p>
@@ -224,9 +224,9 @@ public sealed class DoubleCheckedSingleton
         },
         {
           caption: {
-            en: "The two simple, safe versions: static initialiser and Lazy<T> (compiles)",
-            hi: "दो simple, safe versions: static initialiser और Lazy<T> (compile होता है)",
-            hg: "Do simple, safe versions: static initialiser aur Lazy<T> (compile hota hai)"
+            en: "The two simple, safe versions: static initialiser and Lazy&lt;T&gt; (compiles)",
+            hi: "दो simple, safe versions: static initialiser और Lazy&lt;T&gt; (compile होता है)",
+            hg: "Do simple, safe versions: static initialiser aur Lazy&lt;T&gt; (compile hota hai)"
           },
           check: "compile",
           src: `// Cheap object: a static property initialiser is enough. The runtime guarantees thread safety.
@@ -618,9 +618,9 @@ public sealed class Greeter
       code: [
         {
           caption: {
-            en: "Keyed services and a Func<string, T> factory (runs)",
-            hi: "Keyed services और Func<string, T> factory (run होता है)",
-            hg: "Keyed services aur Func<string, T> factory (run hota hai)"
+            en: "Keyed services and a Func&lt;string, T&gt; factory (runs)",
+            hi: "Keyed services और Func&lt;string, T&gt; factory (run होता है)",
+            hg: "Keyed services aur Func&lt;string, T&gt; factory (run hota hai)"
           },
           check: "run",
           packages: ["Microsoft.Extensions.DependencyInjection"],
@@ -729,10 +729,10 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
       id: "thread-safe-singleton",
       depth: "short",
       q: "How do you make a Singleton thread-safe in C#?",
-      answer: "Simplest is a static readonly field or property initialiser; the runtime runs it once, thread-safely. For expensive start-up use Lazy<T>. Double-checked locking should use a volatile field.",
+      answer: "Simplest is a static readonly field or property initialiser; the runtime runs it once, thread-safely. For expensive start-up use Lazy&lt;T&gt;. Double-checked locking should use a volatile field.",
       meaning: {
-        hi: "सबसे आसान है static readonly field या property initialiser; runtime उसे एक बार और thread-safe चलाता है। महँगे start-up के लिए Lazy<T>। Double-checked locking में volatile field रखना चाहिए।",
-        hg: "Sabse aasan hai static readonly field ya property initialiser; runtime use ek baar aur thread-safe chalata hai. Mehnge start-up ke liye Lazy<T>. Double-checked locking mein volatile field rakhna chahiye."
+        hi: "सबसे आसान है static readonly field या property initialiser; runtime उसे एक बार और thread-safe चलाता है। महँगे start-up के लिए Lazy&lt;T&gt;। Double-checked locking में volatile field रखना चाहिए।",
+        hg: "Sabse aasan hai static readonly field ya property initialiser; runtime use ek baar aur thread-safe chalata hai. Mehnge start-up ke liye Lazy&lt;T&gt;. Double-checked locking mein volatile field rakhna chahiye."
       },
       explain: {
         en: `<ul>
@@ -903,10 +903,10 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
       id: "di-replaces-factories",
       depth: "short",
       q: "With dependency injection, do we still need Singleton and Factory patterns?",
-      answer: "Often not: AddSingleton replaces hand-written singletons, and Func<T> or keyed services replace many factories. I still write a factory when creation needs runtime data plus real logic.",
+      answer: "Often not: AddSingleton replaces hand-written singletons, and Func&lt;T&gt; or keyed services replace many factories. I still write a factory when creation needs runtime data plus real logic.",
       meaning: {
-        hi: "अक्सर नहीं: AddSingleton hand-written singletons की जगह लेता है, और Func<T> या keyed services कई factories की। जब creation को runtime data और असली logic चाहिए तब मैं factory लिखता हूँ।",
-        hg: "Aksar nahi: AddSingleton hand-written singletons ki jagah leta hai, aur Func<T> ya keyed services kai factories ki. Jab creation ko runtime data aur asli logic chahiye tab main factory likhta hoon."
+        hi: "अक्सर नहीं: AddSingleton hand-written singletons की जगह लेता है, और Func&lt;T&gt; या keyed services कई factories की। जब creation को runtime data और असली logic चाहिए तब मैं factory लिखता हूँ।",
+        hg: "Aksar nahi: AddSingleton hand-written singletons ki jagah leta hai, aur Func&lt;T&gt; ya keyed services kai factories ki. Jab creation ko runtime data aur asli logic chahiye tab main factory likhta hoon."
       },
       explain: {
         en: `<ul>
@@ -939,10 +939,10 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
       id: "double-checked-locking-volatile",
       depth: "detailed",
       q: "Why is volatile recommended in double-checked locking?",
-      answer: "The ECMA-335 spec allows the reference to be published before the constructor finishes; volatile rules that out portably. Modern .NET is stronger, but do not rely on that: use Lazy<T> or static readonly.",
+      answer: "The ECMA-335 spec allows the reference to be published before the constructor finishes; volatile rules that out portably. Modern .NET is stronger, but do not rely on that: use Lazy&lt;T&gt; or static readonly.",
       meaning: {
-        hi: "ECMA-335 spec reference को constructor ख़त्म होने से पहले publish होने देता है; volatile इसे portable तरीके से रोकता है। Modern .NET ज़्यादा मज़बूत है, पर उस पर भरोसा मत करो: Lazy<T> या static readonly लो।",
-        hg: "ECMA-335 spec reference ko constructor khatam hone se pehle publish hone deta hai; volatile ise portable tareeke se rokta hai. Modern .NET zyada mazboot hai, par us par bharosa mat karo: Lazy<T> ya static readonly lo."
+        hi: "ECMA-335 spec reference को constructor ख़त्म होने से पहले publish होने देता है; volatile इसे portable तरीके से रोकता है। Modern .NET ज़्यादा मज़बूत है, पर उस पर भरोसा मत करो: Lazy&lt;T&gt; या static readonly लो।",
+        hg: "ECMA-335 spec reference ko constructor khatam hone se pehle publish hone deta hai; volatile ise portable tareeke se rokta hai. Modern .NET zyada mazboot hai, par us par bharosa mat karo: Lazy&lt;T&gt; ya static readonly lo."
       },
       explain: {
         en: `<ul>
@@ -971,7 +971,7 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
     {
       id: "lazy-thread-safety-modes",
       depth: "detailed",
-      q: "What are the LazyThreadSafetyMode options for Lazy<T>?",
+      q: "What are the LazyThreadSafetyMode options for Lazy&lt;T&gt;?",
       answer: "None: no thread safety. PublicationOnly: several threads may run the factory, the first result wins. ExecutionAndPublication (the default): one lock, the factory runs once, and exceptions are cached.",
       meaning: {
         hi: "None: कोई thread safety नहीं। PublicationOnly: कई threads factory चला सकते हैं, पहला result जीतता है। ExecutionAndPublication (default): एक lock, factory एक बार चलती है, और exceptions cache होते हैं।",
@@ -1261,10 +1261,10 @@ public record Basket(string Id, List<string> Items);`
       id: "keyed-services-func",
       depth: "detailed",
       q: "How do you pick one of several implementations at runtime with DI?",
-      answer: "Register implementations with keys (AddKeyedSingleton) and resolve by key, or inject a Func<string, T> you registered. Injecting IServiceProvider into business classes hides dependencies, so I avoid it.",
+      answer: "Register implementations with keys (AddKeyedSingleton) and resolve by key, or inject a Func&lt;string, T&gt; you registered. Injecting IServiceProvider into business classes hides dependencies, so I avoid it.",
       meaning: {
-        hi: "Implementations को keys के साथ register करो (AddKeyedSingleton) और key से resolve करो, या अपना register किया Func<string, T> inject करो। Business classes में IServiceProvider inject करना dependencies छुपाता है, इसलिए मैं बचता हूँ।",
-        hg: "Implementations ko keys ke saath register karo (AddKeyedSingleton) aur key se resolve karo, ya apna register kiya Func<string, T> inject karo. Business classes mein IServiceProvider inject karna dependencies chhupata hai, isliye main bachta hoon."
+        hi: "Implementations को keys के साथ register करो (AddKeyedSingleton) और key से resolve करो, या अपना register किया Func&lt;string, T&gt; inject करो। Business classes में IServiceProvider inject करना dependencies छुपाता है, इसलिए मैं बचता हूँ।",
+        hg: "Implementations ko keys ke saath register karo (AddKeyedSingleton) aur key se resolve karo, ya apna register kiya Func&lt;string, T&gt; inject karo. Business classes mein IServiceProvider inject karna dependencies chhupata hai, isliye main bachta hoon."
       },
       explain: {
         en: `<ul>

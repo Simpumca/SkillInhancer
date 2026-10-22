@@ -609,9 +609,9 @@ public sealed class OrderTracker
         },
         {
           caption: {
-            en: "Observer with IObservable<T> and IDisposable unsubscribe (runs)",
-            hi: "IObservable<T> और IDisposable unsubscribe से Observer (run होता है)",
-            hg: "IObservable<T> aur IDisposable unsubscribe se Observer (run hota hai)"
+            en: "Observer with IObservable&lt;T&gt; and IDisposable unsubscribe (runs)",
+            hi: "IObservable&lt;T&gt; और IDisposable unsubscribe से Observer (run होता है)",
+            hg: "IObservable&lt;T&gt; aur IDisposable unsubscribe se Observer (run hota hai)"
           },
           check: "run",
           expected: `A got 100
@@ -1086,10 +1086,10 @@ public sealed class CachedRepo : IRepo
       id: "observer-dotnet",
       depth: "short",
       q: "How is the Observer pattern implemented in .NET?",
-      answer: "With C# events for in-process notification, or IObservable<T> and IObserver<T>, where Subscribe returns an IDisposable to unsubscribe. Handlers run synchronously in subscription order.",
+      answer: "With C# events for in-process notification, or IObservable&lt;T&gt; and IObserver&lt;T&gt;, where Subscribe returns an IDisposable to unsubscribe. Handlers run synchronously in subscription order.",
       meaning: {
-        hi: "In-process notification के लिए C# events से, या IObservable<T> और IObserver<T> से, जहाँ Subscribe unsubscribe के लिए IDisposable लौटाता है। Handlers synchronously, subscribe के क्रम में चलते हैं।",
-        hg: "In-process notification ke liye C# events se, ya IObservable<T> aur IObserver<T> se, jahan Subscribe unsubscribe ke liye IDisposable lautata hai. Handlers synchronously, subscribe ke kram mein chalte hain."
+        hi: "In-process notification के लिए C# events से, या IObservable&lt;T&gt; और IObserver&lt;T&gt; से, जहाँ Subscribe unsubscribe के लिए IDisposable लौटाता है। Handlers synchronously, subscribe के क्रम में चलते हैं।",
+        hg: "In-process notification ke liye C# events se, ya IObservable&lt;T&gt; aur IObserver&lt;T&gt; se, jahan Subscribe unsubscribe ke liye IDisposable lautata hai. Handlers synchronously, subscribe ke kram mein chalte hain."
       },
       explain: {
         en: `<ul>
@@ -1371,10 +1371,10 @@ public sealed class CachedRepo : IRepo
       id: "strategy-di-keyed",
       depth: "detailed",
       q: "How do you choose a Strategy at runtime when using dependency injection?",
-      answer: "Register each strategy under a key with AddKeyedSingleton and resolve by key at the composition root, or inject IEnumerable<IStrategy> and pick one by a property. Avoid injecting IServiceProvider into business code.",
+      answer: "Register each strategy under a key with AddKeyedSingleton and resolve by key at the composition root, or inject IEnumerable&lt;IStrategy&gt; and pick one by a property. Avoid injecting IServiceProvider into business code.",
       meaning: {
-        hi: "हर strategy को AddKeyedSingleton से key के साथ register करो और composition root पर key से resolve करो, या IEnumerable<IStrategy> inject करके property से एक चुनो। Business code में IServiceProvider inject करने से बचो।",
-        hg: "Har strategy ko AddKeyedSingleton se key ke saath register karo aur composition root par key se resolve karo, ya IEnumerable<IStrategy> inject karke property se ek chuno. Business code mein IServiceProvider inject karne se bacho."
+        hi: "हर strategy को AddKeyedSingleton से key के साथ register करो और composition root पर key से resolve करो, या IEnumerable&lt;IStrategy&gt; inject करके property से एक चुनो। Business code में IServiceProvider inject करने से बचो।",
+        hg: "Har strategy ko AddKeyedSingleton se key ke saath register karo aur composition root par key se resolve karo, ya IEnumerable&lt;IStrategy&gt; inject karke property se ek chuno. Business code mein IServiceProvider inject karne se bacho."
       },
       explain: {
         en: `<ul>
@@ -1433,7 +1433,7 @@ public sealed class CachedRepo : IRepo
     {
       id: "event-vs-iobservable",
       depth: "detailed",
-      q: "When would you choose IObservable<T> over a plain C# event?",
+      q: "When would you choose IObservable&lt;T&gt; over a plain C# event?",
       answer: "When I need streams: composing, filtering or throttling notifications with Rx operators, or explicit completion and error signals. For simple in-process notifications, a plain event is lighter and enough.",
       meaning: {
         hi: "जब मुझे streams चाहिए: Rx operators से notifications को compose, filter या throttle करना, या साफ़ completion और error signals। सरल in-process notifications के लिए सादा event हल्का और काफ़ी है।",
@@ -1933,7 +1933,7 @@ caught boom`,
       "Decorator vs Proxy vs Adapter: same wrapper shape; intent is add behaviour, control access, change interface.",
       "Strategy swaps an algorithm behind an interface or delegate.",
       "Strategy vs State: the client picks a Strategy; the context swaps its State object, often triggered by the states.",
-      "Observer is one-to-many notification, via C# events or IObservable<T>.",
+      "Observer is one-to-many notification, via C# events or IObservable&lt;T&gt;.",
       "Mediator is a hub so components do not reference each other.",
       "Chain of Responsibility passes a request along handlers that may stop it; ASP.NET Core middleware is a chain.",
       "Chain vs Decorator: a chain link may stop the request; a decorator normally always delegates.",
@@ -1948,7 +1948,7 @@ caught boom`,
         "Decorator vs Proxy vs Adapter: wrapper की shape एक; intent है behaviour जोड़ना, access control, interface बदलना।",
         "Strategy algorithm को interface या delegate के पीछे बदलती है।",
         "Strategy vs State: Strategy client चुनता है; context अपना State object बदलता है, अक्सर states के trigger से।",
-        "Observer one-to-many notification है, C# events या IObservable<T> से।",
+        "Observer one-to-many notification है, C# events या IObservable&lt;T&gt; से।",
         "Mediator एक hub है ताकि components एक-दूसरे को reference न करें।",
         "Chain of Responsibility request को handlers में आगे बढ़ाती है जो उसे रोक सकते हैं; ASP.NET Core middleware chain है।",
         "Chain vs Decorator: chain का link request रोक सकता है; decorator आम तौर पर हमेशा आगे देता है।",
@@ -1962,7 +1962,7 @@ caught boom`,
         "Decorator vs Proxy vs Adapter: wrapper ki shape ek; intent hai behaviour jodna, access control, interface badalna.",
         "Strategy algorithm ko interface ya delegate ke peeche badalti hai.",
         "Strategy vs State: Strategy client chunta hai; context apna State object badalta hai, aksar states ke trigger se.",
-        "Observer one-to-many notification hai, C# events ya IObservable<T> se.",
+        "Observer one-to-many notification hai, C# events ya IObservable&lt;T&gt; se.",
         "Mediator ek hub hai taaki components ek-doosre ko reference na karein.",
         "Chain of Responsibility request ko handlers mein aage badhati hai jo use rok sakte hain; ASP.NET Core middleware chain hai.",
         "Chain vs Decorator: chain ka link request rok sakta hai; decorator aam taur par hamesha aage deta hai.",

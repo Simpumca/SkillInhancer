@@ -938,10 +938,10 @@ public static class Zoo
       id: "isp-example",
       depth: "short",
       q: "What is Interface Segregation? Where do you see it in .NET?",
-      answer: "No client should be forced to depend on methods it does not use, so prefer several small interfaces to one fat one. In .NET: IReadOnlyList<T> vs IList<T>, and IDisposable and IAsyncDisposable being separate.",
+      answer: "No client should be forced to depend on methods it does not use, so prefer several small interfaces to one fat one. In .NET: IReadOnlyList&lt;T&gt; vs IList&lt;T&gt;, and IDisposable and IAsyncDisposable being separate.",
       meaning: {
-        hi: "किसी client को ऐसे methods पर depend करने को मजबूर नहीं करना चाहिए जो वो use नहीं करता, इसलिए एक मोटे interface की जगह कई छोटे interfaces रखो। .NET में: IReadOnlyList<T> vs IList<T>, और IDisposable व IAsyncDisposable का अलग होना।",
-        hg: "Kisi client ko aise methods par depend karne par majboor nahi karna chahiye jo woh use nahi karta, isliye ek mote interface ki jagah kai chhote interfaces rakho. .NET mein: IReadOnlyList<T> vs IList<T>, aur IDisposable va IAsyncDisposable ka alag hona."
+        hi: "किसी client को ऐसे methods पर depend करने को मजबूर नहीं करना चाहिए जो वो use नहीं करता, इसलिए एक मोटे interface की जगह कई छोटे interfaces रखो। .NET में: IReadOnlyList&lt;T&gt; vs IList&lt;T&gt;, और IDisposable व IAsyncDisposable का अलग होना।",
+        hg: "Kisi client ko aise methods par depend karne par majboor nahi karna chahiye jo woh use nahi karta, isliye ek mote interface ki jagah kai chhote interfaces rakho. .NET mein: IReadOnlyList&lt;T&gt; vs IList&lt;T&gt;, aur IDisposable va IAsyncDisposable ka alag hona."
       },
       explain: {
         en: `<ul>
@@ -1103,10 +1103,10 @@ public static class Zoo
       id: "lsp-dotnet",
       depth: "detailed",
       q: "Does .NET itself violate LSP? What about ReadOnlyCollection and Stream?",
-      answer: "Partly, and it is documented: ICollection<T>.Add can throw NotSupportedException on a read-only collection, and Stream has CanRead, CanWrite and CanSeek flags. They are known compromises I avoid copying.",
+      answer: "Partly, and it is documented: ICollection&lt;T&gt;.Add can throw NotSupportedException on a read-only collection, and Stream has CanRead, CanWrite and CanSeek flags. They are known compromises I avoid copying.",
       meaning: {
-        hi: "कुछ हद तक, और यह documented है। Read-only collection पर ICollection<T>.Add NotSupportedException फेंक सकता है, और Stream में CanRead, CanWrite, CanSeek हैं क्योंकि हर stream सब कुछ support नहीं करता। ये जाने-माने compromises हैं; नए designs में मैं इन्हें दोहराता नहीं।",
-        hg: "Kuch had tak, aur yeh documented hai. Read-only collection par ICollection<T>.Add NotSupportedException phenk sakta hai, aur Stream mein CanRead, CanWrite, CanSeek hain kyunki har stream sab kuch support nahi karta. Yeh jaane-maane compromises hain; naye designs mein main inhe dohrata nahi."
+        hi: "कुछ हद तक, और यह documented है। Read-only collection पर ICollection&lt;T&gt;.Add NotSupportedException फेंक सकता है, और Stream में CanRead, CanWrite, CanSeek हैं क्योंकि हर stream सब कुछ support नहीं करता। ये जाने-माने compromises हैं; नए designs में मैं इन्हें दोहराता नहीं।",
+        hg: "Kuch had tak, aur yeh documented hai. Read-only collection par ICollection&lt;T&gt;.Add NotSupportedException phenk sakta hai, aur Stream mein CanRead, CanWrite, CanSeek hain kyunki har stream sab kuch support nahi karta. Yeh jaane-maane compromises hain; naye designs mein main inhe dohrata nahi."
       },
       explain: {
         en: `<ul>
@@ -1689,10 +1689,10 @@ class LoggingDecorator : IOrderService
         "SRP: एक class, बदलने की एक वजह (एक stakeholder)। Validator / store / notifier बाँटो; छोटी classes बाँटने से पहले दूसरी वजह का इंतज़ार करो।",
         "OCP: behaviour नई class जोड़कर लाओ (interface + polymorphism = Strategy), type-switch बढ़ाकर नहीं। छोटा closed switch ठीक है।",
         "LSP: child वहाँ चले जहाँ parent expected है (Square/Rectangle)। Preconditions मत कसो, postconditions कमज़ोर मत करो, invariants मत तोड़ो, और ऐसी exception types मत जोड़ो जो parent का contract allow नहीं करता।",
-        ".NET और LSP: ReadOnlyCollection<T> पर ICollection<T>.Add फेंकता है; Stream में CanRead/CanWrite/CanSeek हैं। अपने APIs में IReadOnlyList<T> पसंद करो।",
-        "ISP: caller की नज़र से छोटे role interfaces (IPrinter, IScanner); सबसे छोटी abstraction माँगो, जैसे IEnumerable<T>।",
+        ".NET और LSP: ReadOnlyCollection&lt;T&gt; पर ICollection&lt;T&gt;.Add फेंकता है; Stream में CanRead/CanWrite/CanSeek हैं। अपने APIs में IReadOnlyList&lt;T&gt; पसंद करो।",
+        "ISP: caller की नज़र से छोटे role interfaces (IPrinter, IScanner); सबसे छोटी abstraction माँगो, जैसे IEnumerable&lt;T&gt;।",
         "DIP = principle (abstractions पर depend करो); DI = technique (dependencies बाहर से दो); IoC container = tool (Microsoft.Extensions.DependencyInjection)।",
-        "Resolution: एक service के लिए आख़िरी registration जीतती है; IEnumerable<T> को सब registration order में मिलती हैं।",
+        "Resolution: एक service के लिए आख़िरी registration जीतती है; IEnumerable&lt;T&gt; को सब registration order में मिलती हैं।",
         "Lifetimes: Transient / Scoped / Singleton; Scoped को Singleton में inject करने से बचो (captive dependency)।",
         "Constructor injection पसंद करो और register सिर्फ़ composition root में; business code में IServiceProvider.GetService Service Locator anti-pattern है।",
         "Over-engineering: pure helper या ऐसी class के लिए interface नहीं जिसकी एक implementation है और fake करने को कुछ नहीं; YAGNI और rule of three।",
@@ -1703,10 +1703,10 @@ class LoggingDecorator : IOrderService
         "SRP: ek class, badalne ki ek wajah (ek stakeholder). Validator / store / notifier baanto; chhoti classes baantne se pehle doosri wajah ka intezaar karo.",
         "OCP: behaviour nayi class jodkar lao (interface + polymorphism = Strategy), type-switch badhakar nahi. Chhota closed switch theek hai.",
         "LSP: child wahan chale jahan parent expected hai (Square/Rectangle). Preconditions mat kaso, postconditions kamzor mat karo, invariants mat todo, aur aisi exception types mat jodo jo parent ka contract allow nahi karta.",
-        ".NET aur LSP: ReadOnlyCollection<T> par ICollection<T>.Add phenkta hai; Stream mein CanRead/CanWrite/CanSeek hain. Apne APIs mein IReadOnlyList<T> pasand karo.",
-        "ISP: caller ki nazar se chhote role interfaces (IPrinter, IScanner); sabse chhoti abstraction maango, jaise IEnumerable<T>.",
+        ".NET aur LSP: ReadOnlyCollection&lt;T&gt; par ICollection&lt;T&gt;.Add phenkta hai; Stream mein CanRead/CanWrite/CanSeek hain. Apne APIs mein IReadOnlyList&lt;T&gt; pasand karo.",
+        "ISP: caller ki nazar se chhote role interfaces (IPrinter, IScanner); sabse chhoti abstraction maango, jaise IEnumerable&lt;T&gt;.",
         "DIP = principle (abstractions par depend karo); DI = technique (dependencies bahar se do); IoC container = tool (Microsoft.Extensions.DependencyInjection).",
-        "Resolution: ek service ke liye aakhri registration jeetti hai; IEnumerable<T> ko sab registration order mein milti hain.",
+        "Resolution: ek service ke liye aakhri registration jeetti hai; IEnumerable&lt;T&gt; ko sab registration order mein milti hain.",
         "Lifetimes: Transient / Scoped / Singleton; Scoped ko Singleton mein inject karne se bacho (captive dependency).",
         "Constructor injection pasand karo aur register sirf composition root mein; business code mein IServiceProvider.GetService Service Locator anti-pattern hai.",
         "Over-engineering: pure helper ya aisi class ke liye interface nahi jiski ek implementation hai aur fake karne ko kuch nahi; YAGNI aur rule of three.",

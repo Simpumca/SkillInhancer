@@ -79,6 +79,59 @@ function arrayOrError(v, name, errors) {
   return [];
 }
 
+export const ALLOWED_TAGS = ['b', 'i', 'code', 'ul', 'ol', 'li', 'br', 'p', 'strong', 'em', 'pre', 'span', 'a',
+  'table', 'tr', 'td', 'th', 'thead', 'tbody', 'sup', 'sub', 'small', 'kbd', 'div'];
+// Matches anything that looks like a tag: <name ...>, </name>, <name/>. Text like "a < b" has no match.
+export const TAG_RE = /<\/?([A-Za-z_][\w.]*)[^<>]*>/g;
+
+// Returns [{path, value}] for every field app.js renders via innerHTML (not code src/expected or puzzle answer).
+export function htmlFields(day) {
+  const out = [];
+  if (!isObj(day)) return out;
+  const add = (v, p) => { if (typeof v === 'string') out.push({ path: p, value: v }); };
+  const addL = (v, p) => { if (isObj(v)) for (const k of LANGS) add(v[k], `${p}.${k}`); };
+  const addCode = (list, p) => { if (Array.isArray(list)) list.forEach((c, i) => { if (isObj(c)) addL(c.caption, `${p}.code[${i}].caption`); }); };
+  addL(day.title, 'title');
+  addL(day.summary, 'summary');
+  addL(day.whatsNew, 'whatsNew');
+  if (Array.isArray(day.sections)) day.sections.forEach((s, i) => {
+    if (!isObj(s)) return;
+    addL(s.title, `sections[${i}].title`);
+    addL(s.body, `sections[${i}].body`);
+    addCode(s.code, `sections[${i}]`);
+  });
+  if (Array.isArray(day.qa)) day.qa.forEach((q, i) => {
+    if (!isObj(q)) return;
+    const l = `qa[${i}]`;
+    add(q.q, `${l}.q`);
+    add(q.answer, `${l}.answer`);
+    if (isObj(q.meaning)) for (const k of ['hi', 'hg']) add(q.meaning[k], `${l}.meaning.${k}`);
+    addL(q.explain, `${l}.explain`);
+    addCode(q.code, l);
+  });
+  if (Array.isArray(day.puzzles)) day.puzzles.forEach((p, i) => { if (isObj(p)) addL(p.explain, `puzzles[${i}].explain`); });
+  if (isObj(day.revision)) {
+    if (Array.isArray(day.revision.en)) day.revision.en.forEach((t, i) => add(t, `revision.en[${i}]`));
+    if (isObj(day.revision.meaning)) for (const k of ['hi', 'hg']) {
+      if (Array.isArray(day.revision.meaning[k])) day.revision.meaning[k].forEach((t, i) => add(t, `revision.meaning.${k}[${i}]`));
+    }
+  }
+  return out;
+}
+
+// Raw tags (full match text) in an HTML field whose name is not allowed.
+export function rawTags(value) {
+  const bad = [];
+  for (const m of value.matchAll(TAG_RE)) if (!ALLOWED_TAGS.includes(m[1].toLowerCase())) bad.push(m[0]);
+  return bad;
+}
+
+function checkRawTags(day, errors) {
+  for (const { path: p, value } of htmlFields(day)) {
+    for (const t of rawTags(value)) errors.push(`${p}: raw tag ${t} (escape as ${t.replace(/</g, '&lt;').replace(/>/g, '&gt;')})`);
+  }
+}
+
 export function validateDay(day, opts = {}) {
   const { minShortQa = 8, minQa = 15, maxQa = 25, minPuzzles = 0,
     minSections = 4, minShortSections = 2, minRevision = 8, maxRevision = 12 } = opts;
@@ -147,6 +200,7 @@ export function validateDay(day, opts = {}) {
       arr.forEach(t => checkScript(k, String(t), 'revision.meaning', errors));
     }
   }
+  checkRawTags(day, errors);
   return errors;
 }
 
