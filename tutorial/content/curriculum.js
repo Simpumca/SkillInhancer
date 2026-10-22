@@ -11,7 +11,7 @@ window.TL_CURRICULUM = [
   { day: 9, week: 2, title: { en: "Creational Patterns", hi: "क्रिएशनल पैटर्न्स", hg: "Creational Patterns" }, ready: true },
   { day: 10, week: 2, title: { en: "Structural + Behavioral Patterns", hi: "स्ट्रक्चरल + बिहेवियरल पैटर्न्स", hg: "Structural + Behavioral Patterns" }, ready: true },
   { day: 11, week: 2, title: { en: "Enterprise Patterns + DI", hi: "एंटरप्राइज़ पैटर्न्स + DI", hg: "Enterprise Patterns + DI" }, ready: true },
-  { day: 12, week: 2, title: { en: "ASP.NET Core Fundamentals", hi: "ASP.NET Core की बुनियाद", hg: "ASP.NET Core ki buniyad" }, ready: false },
+  { day: 12, week: 2, title: { en: "ASP.NET Core Fundamentals", hi: "ASP.NET Core की बुनियाद", hg: "ASP.NET Core ki buniyad" }, ready: true },
   { day: 13, week: 2, title: { en: "Web API", hi: "वेब API", hg: "Web API" }, ready: false },
   { day: 14, week: 2, title: { en: "Week 2 Revision + Quiz", hi: "हफ़्ता 2 रिवीज़न + क्विज़", hg: "Week 2 Revision + Quiz" }, ready: false },
   { day: 15, week: 3, title: { en: "Architecture", hi: "आर्किटेक्चर", hg: "Architecture" }, ready: false },
