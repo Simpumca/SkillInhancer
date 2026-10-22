@@ -136,7 +136,7 @@ window.TL_DAY = {
         en: `<p><b>Picture — a tiffin service:</b> the kitchen cooks once (<b>build</b>), packs the tiffin in a sealed box (<b>artifact or image</b>), and the same box is delivered to every office (<b>dev, test, prod</b>). Only the pickle on the side changes per customer (<b>configuration</b>). You never re-cook at the customer's door.</p>
 <ul>
 <li><b>CI</b> (continuous integration): every push or PR builds and tests the code. <b>CD</b>: continuous <i>delivery</i> keeps every build releasable (a person approves the release); continuous <i>deployment</i> releases automatically after the checks pass.</li>
-<li><b>Azure Pipelines YAML:</b> <code>trigger</code> (CI on pushes) and <code>pr</code> (PR validation) start it. A pipeline has <b>stages</b> (Build, Test, Deploy), a stage has <b>jobs</b>, a job has <b>steps</b> (script or task). A job runs on an <b>agent</b> from a <b>pool</b>: Microsoft-hosted (fresh VM per job, you maintain nothing) or self-hosted (your machines, private network access, you patch them).</li>
+<li><b>Azure Pipelines YAML:</b> <code>trigger</code> (CI on pushes) starts it. For PR validation, <code>pr</code> in YAML works for GitHub and Bitbucket repos; for Azure Repos Git you add a <b>Build validation</b> branch policy instead. A pipeline has <b>stages</b> (Build, Test, Deploy), a stage has <b>jobs</b>, a job has <b>steps</b> (script or task). A job runs on an <b>agent</b> from a <b>pool</b>: Microsoft-hosted (fresh VM per job, you maintain nothing) or self-hosted (your machines, private network access, you patch them).</li>
 <li><b>Variables and secrets:</b> plain variables in YAML, <b>variable groups</b> in the Library, and groups <b>linked to Key Vault</b> for secrets (Day 20). Secret variables are masked in logs. Pass them to scripts explicitly (for example through <code>env:</code>).</li>
 <li><b>Templates and environments:</b> step, job and stage <b>templates</b> remove copy-paste; an <code>extends</code> template can force a company-approved structure. An <b>environment</b> (dev, test, prod) is a deployment target that records history and can require <b>approvals and checks</b> before a deployment job runs. Deployment strategies: <b>runOnce</b>, <b>rolling</b> (VM targets), <b>canary</b>.</li>
 <li><b>GitHub Actions</b> is the same idea: workflow file in <code>.github/workflows</code>, <code>on:</code> triggers, jobs with <code>runs-on</code>, steps with <code>uses</code> or <code>run</code>, environments with required reviewers, secrets in repo or environment settings.</li>
@@ -147,7 +147,7 @@ window.TL_DAY = {
         hi: `<p><b>Picture — tiffin service:</b> kitchen एक बार पकाती है (<b>build</b>), tiffin को sealed डिब्बे में पैक करती है (<b>artifact या image</b>), और वही डिब्बा हर office में जाता है (<b>dev, test, prod</b>)। हर customer के लिए बस बगल का अचार बदलता है (<b>configuration</b>)। Customer के दरवाज़े पर दोबारा नहीं पकाते।</p>
 <ul>
 <li><b>CI</b> (continuous integration): हर push या PR पर code build और test होता है। <b>CD</b>: continuous <i>delivery</i> हर build को releasable रखती है (release कोई इंसान approve करता है); continuous <i>deployment</i> checks पास होने पर अपने-आप release करती है।</li>
-<li><b>Azure Pipelines YAML:</b> <code>trigger</code> (push पर CI) और <code>pr</code> (PR validation) इसे शुरू करते हैं। Pipeline में <b>stages</b> (Build, Test, Deploy), stage में <b>jobs</b>, job में <b>steps</b> (script या task)। Job एक <b>pool</b> के <b>agent</b> पर चलता है: Microsoft-hosted (हर job के लिए fresh VM, तुम कुछ maintain नहीं करते) या self-hosted (तुम्हारी machines, private network access, patch तुम करते हो)।</li>
+<li><b>Azure Pipelines YAML:</b> <code>trigger</code> (push पर CI) इसे शुरू करता है। PR validation के लिए YAML का <code>pr</code> GitHub और Bitbucket repos में चलता है; Azure Repos Git में इसकी जगह <b>Build validation</b> branch policy लगाते हैं। Pipeline में <b>stages</b> (Build, Test, Deploy), stage में <b>jobs</b>, job में <b>steps</b> (script या task)। Job एक <b>pool</b> के <b>agent</b> पर चलता है: Microsoft-hosted (हर job के लिए fresh VM, तुम कुछ maintain नहीं करते) या self-hosted (तुम्हारी machines, private network access, patch तुम करते हो)।</li>
 <li><b>Variables और secrets:</b> YAML में plain variables, Library में <b>variable groups</b>, और secrets के लिए <b>Key Vault से linked</b> groups (Day 20)। Secret variables logs में masked रहते हैं। उन्हें scripts को साफ़ तौर पर दो (जैसे <code>env:</code> से)।</li>
 <li><b>Templates और environments:</b> step, job और stage <b>templates</b> copy-paste हटाते हैं; <code>extends</code> template company-approved structure force कर सकता है। <b>Environment</b> (dev, test, prod) एक deployment target है जो history रखता है और deployment job चलने से पहले <b>approvals और checks</b> माँग सकता है। Deployment strategies: <b>runOnce</b>, <b>rolling</b> (VM targets), <b>canary</b>।</li>
 <li><b>GitHub Actions</b> वही idea है: <code>.github/workflows</code> में workflow file, <code>on:</code> triggers, <code>runs-on</code> वाले jobs, <code>uses</code> या <code>run</code> वाले steps, required reviewers वाले environments, repo या environment settings में secrets।</li>
@@ -158,7 +158,7 @@ window.TL_DAY = {
         hg: `<p><b>Picture — tiffin service:</b> kitchen ek baar pakati hai (<b>build</b>), tiffin ko sealed dabbe mein pack karti hai (<b>artifact ya image</b>), aur wahi dabba har office mein jaata hai (<b>dev, test, prod</b>). Har customer ke liye bas bagal ka achaar badalta hai (<b>configuration</b>). Customer ke darwaze par dobara nahi pakate.</p>
 <ul>
 <li><b>CI</b> (continuous integration): har push ya PR par code build aur test hota hai. <b>CD</b>: continuous <i>delivery</i> har build ko releasable rakhti hai (release koi insaan approve karta hai); continuous <i>deployment</i> checks pass hone par apne-aap release karti hai.</li>
-<li><b>Azure Pipelines YAML:</b> <code>trigger</code> (push par CI) aur <code>pr</code> (PR validation) ise shuru karte hain. Pipeline mein <b>stages</b> (Build, Test, Deploy), stage mein <b>jobs</b>, job mein <b>steps</b> (script ya task). Job ek <b>pool</b> ke <b>agent</b> par chalta hai: Microsoft-hosted (har job ke liye fresh VM, tum kuch maintain nahi karte) ya self-hosted (tumhari machines, private network access, patch tum karte ho).</li>
+<li><b>Azure Pipelines YAML:</b> <code>trigger</code> (push par CI) ise shuru karta hai. PR validation ke liye YAML ka <code>pr</code> GitHub aur Bitbucket repos mein chalta hai; Azure Repos Git mein iski jagah <b>Build validation</b> branch policy lagate hain. Pipeline mein <b>stages</b> (Build, Test, Deploy), stage mein <b>jobs</b>, job mein <b>steps</b> (script ya task). Job ek <b>pool</b> ke <b>agent</b> par chalta hai: Microsoft-hosted (har job ke liye fresh VM, tum kuch maintain nahi karte) ya self-hosted (tumhari machines, private network access, patch tum karte ho).</li>
 <li><b>Variables aur secrets:</b> YAML mein plain variables, Library mein <b>variable groups</b>, aur secrets ke liye <b>Key Vault se linked</b> groups (Day 20). Secret variables logs mein masked rehte hain. Unhe scripts ko saaf taur par do (jaise <code>env:</code> se).</li>
 <li><b>Templates aur environments:</b> step, job aur stage <b>templates</b> copy-paste hataate hain; <code>extends</code> template company-approved structure force kar sakta hai. <b>Environment</b> (dev, test, prod) ek deployment target hai jo history rakhta hai aur deployment job chalne se pehle <b>approvals aur checks</b> maang sakta hai. Deployment strategies: <b>runOnce</b>, <b>rolling</b> (VM targets), <b>canary</b>.</li>
 <li><b>GitHub Actions</b> wahi idea hai: <code>.github/workflows</code> mein workflow file, <code>on:</code> triggers, <code>runs-on</code> wale jobs, <code>uses</code> ya <code>run</code> wale steps, required reviewers wale environments, repo ya environment settings mein secrets.</li>
@@ -221,14 +221,15 @@ git commit -am "fix: rounding"
 git fetch origin
 git rebase origin/main            # replay your commits on the latest main
 git rebase -i origin/main         # optional: squash/reword YOUR commits before review
-git push --force-with-lease -u origin feature/coupon-codes
+git push -u origin feature/coupon-codes   # first push: no force needed
+# if you rebase AFTER pushing, update your own PR branch with: git push --force-with-lease
 
 # --- hotfix: fix on main first, then back-port to the release branch ---
 git switch release/1.4
 git cherry-pick -x 3f2a9c1        # -x records "(cherry picked from commit ...)"
 
 # --- undo, from safest to most dangerous ---
-git revert 9d41e07                # shared branch: add an undo commit, history kept
+git revert 4c8a1f3                # shared branch: add an undo commit, history kept
 git revert -m 1 7be3c52           # undo a MERGE commit, keep parent 1 (the mainline)
 git reset --soft HEAD~1           # local only: un-commit, keep the changes staged
 
@@ -249,8 +250,8 @@ git branch rescue 9d41e07         # point a new branch at it`
       body: {
         en: `<p><b>Analogy — a factory assembly line with a quality gate:</b> the Build stage makes one sealed product; test and prod are later stations. The prod station has a supervisor who must sign before the line moves on (an <b>approval</b> on the environment).</p>
 <ul>
-<li><b>Main file:</b> <code>trigger</code> and <code>pr</code> on <code>main</code>; a variable group for shared values; a <b>Build</b> stage that restores, tests, publishes and uploads ONE artifact named <code>drop</code>; then deploy stages that <b>reuse</b> that artifact (build once, deploy many).</li>
-<li><b>Deployment job:</b> <code>deployment:</code> with an <code>environment:</code> records deployment history and enables approvals and checks. These are configured on the environment in Azure DevOps (not in the YAML): add the prod approver there. A deployment job does not check out the repo automatically and downloads the artifact in its <code>deploy</code> hook.</li>
+<li><b>Main file:</b> <code>trigger</code> and <code>pr</code> on <code>main</code> (<code>pr</code> works for GitHub repos; Azure Repos Git uses a Build validation branch policy instead); a variable group for shared values; a <b>Build</b> stage that restores, tests, publishes and uploads ONE artifact named <code>drop</code>; then deploy stages that <b>reuse</b> that artifact (build once, deploy many).</li>
+<li><b>Deployment job:</b> <code>deployment:</code> with an <code>environment:</code> records deployment history and enables approvals and checks. These are configured on the environment in Azure DevOps (not in the YAML): add the prod approver there, and protect the service connection too, because checks only run for jobs that target the protected resource. A deployment job does not check out the repo automatically and downloads the artifact in its <code>deploy</code> hook.</li>
 <li><b>Stage template:</b> <code>deploy-stage.yml</code> takes parameters (stage name, environment, app name, service connection) so test and prod are the same steps with different values. Prod is just a second call. An <code>extends</code> template goes further and forces every pipeline to follow a company-approved shape.</li>
 <li><b>Secrets:</b> the Azure service connection holds the identity used to deploy; app secrets come from a Key Vault-linked variable group (Day 20) or, better, from the app's managed identity at runtime. Never echo secrets in scripts.</li>
 <li><b>Strategies:</b> <code>runOnce</code> here; <code>rolling</code> (only for VM targets) and <code>canary</code> add lifecycle hooks (<code>preDeploy</code>, <code>deploy</code>, <code>routeTraffic</code>, <code>postRouteTraffic</code>, <code>on: failure</code>). For App Service, many teams get the same safety by deploying to a slot and swapping (Day 20).</li>
@@ -259,8 +260,8 @@ git branch rescue 9d41e07         # point a new branch at it`
 <p><b>When to use:</b> YAML in the repo for every service (reviewable, versioned with the code), templates once you copy the same stage a second time. <b>When not:</b> do not template everything on day one (premature abstraction), and do not put approvals on dev, which only slows feedback.</p>`,
         hi: `<p><b>Analogy — quality gate वाली factory assembly line:</b> Build stage एक sealed product बनाता है; test और prod बाद के stations हैं। Prod station पर एक supervisor है जिसके sign के बिना line आगे नहीं बढ़ती (environment पर <b>approval</b>)।</p>
 <ul>
-<li><b>Main file:</b> <code>main</code> पर <code>trigger</code> और <code>pr</code>; shared values के लिए variable group; <b>Build</b> stage जो restore, test, publish करता है और <code>drop</code> नाम का एक ही artifact upload करता है; फिर deploy stages जो उसी artifact को <b>reuse</b> करते हैं (build once, deploy many)।</li>
-<li><b>Deployment job:</b> <code>environment:</code> वाला <code>deployment:</code> deployment history दर्ज करता है और approvals व checks चालू करता है। ये Azure DevOps में environment पर configure होते हैं (YAML में नहीं): prod approver वहीं जोड़ो। Deployment job repo को खुद checkout नहीं करता और artifact अपने <code>deploy</code> hook में download करता है।</li>
+<li><b>Main file:</b> <code>main</code> पर <code>trigger</code> और <code>pr</code> (<code>pr</code> GitHub repos में चलता है; Azure Repos Git में Build validation branch policy लगती है); shared values के लिए variable group; <b>Build</b> stage जो restore, test, publish करता है और <code>drop</code> नाम का एक ही artifact upload करता है; फिर deploy stages जो उसी artifact को <b>reuse</b> करते हैं (build once, deploy many)।</li>
+<li><b>Deployment job:</b> <code>environment:</code> वाला <code>deployment:</code> deployment history दर्ज करता है और approvals व checks चालू करता है। ये Azure DevOps में environment पर configure होते हैं (YAML में नहीं): prod approver वहीं जोड़ो, और service connection भी protect करो, क्योंकि checks सिर्फ़ protected resource को target करने वाले jobs पर चलते हैं। Deployment job repo को खुद checkout नहीं करता और artifact अपने <code>deploy</code> hook में download करता है।</li>
 <li><b>Stage template:</b> <code>deploy-stage.yml</code> parameters लेता है (stage name, environment, app name, service connection) ताकि test और prod वही steps हों बस values अलग। Prod बस दूसरी call है। <code>extends</code> template आगे जाकर हर pipeline को company-approved shape में चलने को मजबूर करता है।</li>
 <li><b>Secrets:</b> Azure service connection में वह identity है जिससे deploy होता है; app secrets Key Vault-linked variable group (Day 20) से, या बेहतर, runtime पर app की managed identity से आते हैं। Scripts में secrets echo मत करो।</li>
 <li><b>Strategies:</b> यहाँ <code>runOnce</code>; <code>rolling</code> (सिर्फ़ VM targets के लिए) और <code>canary</code> lifecycle hooks जोड़ते हैं (<code>preDeploy</code>, <code>deploy</code>, <code>routeTraffic</code>, <code>postRouteTraffic</code>, <code>on: failure</code>)। App Service के लिए कई teams वही safety slot पर deploy और swap से पाती हैं (Day 20)।</li>
@@ -269,8 +270,8 @@ git branch rescue 9d41e07         # point a new branch at it`
 <p><b>कब use करें:</b> हर service के लिए repo में YAML (reviewable, code के साथ versioned), और templates तब जब वही stage दूसरी बार copy करो। <b>कब नहीं:</b> पहले दिन सब कुछ template मत बनाओ (premature abstraction), और dev पर approvals मत लगाओ, उससे सिर्फ़ feedback धीमा होता है।</p>`,
         hg: `<p><b>Analogy — quality gate wali factory assembly line:</b> Build stage ek sealed product banata hai; test aur prod baad ke stations hain. Prod station par ek supervisor hai jiske sign ke bina line aage nahi badhti (environment par <b>approval</b>).</p>
 <ul>
-<li><b>Main file:</b> <code>main</code> par <code>trigger</code> aur <code>pr</code>; shared values ke liye variable group; <b>Build</b> stage jo restore, test, publish karta hai aur <code>drop</code> naam ka ek hi artifact upload karta hai; phir deploy stages jo usi artifact ko <b>reuse</b> karte hain (build once, deploy many).</li>
-<li><b>Deployment job:</b> <code>environment:</code> wala <code>deployment:</code> deployment history darj karta hai aur approvals aur checks chalu karta hai. Yeh Azure DevOps mein environment par configure hote hain (YAML mein nahi): prod approver wahin jodo. Deployment job repo ko khud checkout nahi karta aur artifact apne <code>deploy</code> hook mein download karta hai.</li>
+<li><b>Main file:</b> <code>main</code> par <code>trigger</code> aur <code>pr</code> (<code>pr</code> GitHub repos mein chalta hai; Azure Repos Git mein Build validation branch policy lagti hai); shared values ke liye variable group; <b>Build</b> stage jo restore, test, publish karta hai aur <code>drop</code> naam ka ek hi artifact upload karta hai; phir deploy stages jo usi artifact ko <b>reuse</b> karte hain (build once, deploy many).</li>
+<li><b>Deployment job:</b> <code>environment:</code> wala <code>deployment:</code> deployment history darj karta hai aur approvals aur checks chalu karta hai. Yeh Azure DevOps mein environment par configure hote hain (YAML mein nahi): prod approver wahin jodo, aur service connection bhi protect karo, kyunki checks sirf protected resource ko target karne wale jobs par chalte hain. Deployment job repo ko khud checkout nahi karta aur artifact apne <code>deploy</code> hook mein download karta hai.</li>
 <li><b>Stage template:</b> <code>deploy-stage.yml</code> parameters leta hai (stage name, environment, app name, service connection) taaki test aur prod wahi steps hon bas values alag. Prod bas doosri call hai. <code>extends</code> template aage jaakar har pipeline ko company-approved shape mein chalne par majboor karta hai.</li>
 <li><b>Secrets:</b> Azure service connection mein woh identity hai jisse deploy hota hai; app secrets Key Vault-linked variable group (Day 20) se, ya behtar, runtime par app ki managed identity se aate hain. Scripts mein secrets echo mat karo.</li>
 <li><b>Strategies:</b> yahan <code>runOnce</code>; <code>rolling</code> (sirf VM targets ke liye) aur <code>canary</code> lifecycle hooks jodte hain (<code>preDeploy</code>, <code>deploy</code>, <code>routeTraffic</code>, <code>postRouteTraffic</code>, <code>on: failure</code>). App Service ke liye kai teams wahi safety slot par deploy aur swap se paati hain (Day 20).</li>
@@ -290,6 +291,8 @@ git branch rescue 9d41e07         # point a new branch at it`
           src: `trigger:
   branches:
     include: [ main ]
+# pr: works for GitHub and Bitbucket repos. For Azure Repos Git it has no effect:
+# PR validation there comes from a Build validation branch policy on main.
 pr:
   branches:
     include: [ main ]
@@ -394,13 +397,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
       - run: dotnet test --configuration Release
       - run: dotnet publish src/Shop.Api -c Release -o out
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: drop
           path: out
@@ -411,7 +414,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production       # required reviewers are set on the environment
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: drop
       - run: echo "deploy the downloaded artifact here"`
@@ -434,7 +437,7 @@ jobs:
 <li><b><code>.dockerignore</code>:</b> keeps <code>bin</code>, <code>obj</code>, <code>.git</code>, local settings and secrets out of the build context. It makes builds faster and stops secrets leaking into layers.</li>
 <li><b>Non-root:</b> since .NET 8 the Microsoft images ship a non-root user <code>app</code> and define <code>APP_UID</code>, but the default tags still start as root unless you add <code>USER $APP_UID</code>. They listen on port <b>8080</b> by default (not 80), which a non-root user can bind.</li>
 <li><b>Chiseled images</b> (for example <code>mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled</code>): Ubuntu-based, minimal packages, <b>no shell and no package manager</b>, and non-root by default. Smaller and safer, but you cannot <code>RUN</code> shell commands in the final stage or <code>docker exec</code> a shell to debug. Verify tags on the .NET Docker documentation; they change with each release.</li>
-<li><b>Without a Dockerfile:</b> <code>dotnet publish /t:PublishContainer</code> (SDK 8+) builds and pushes an image directly. For ASP.NET apps it picks the aspnet base image and runs as the non-root <code>app</code> user by default; <code>ContainerFamily</code> picks a flavour such as <code>noble-chiseled</code>. It cannot run <code>RUN</code> commands, so use a Dockerfile if you need OS packages.</li>
+<li><b>Without a Dockerfile:</b> <code>dotnet publish /t:PublishContainer</code> (SDK 8+) builds an image directly and loads it into your local container runtime (Docker or Podman); set <code>ContainerRegistry</code> to push it to a registry instead. For ASP.NET apps it picks the aspnet base image and runs as the non-root <code>app</code> user by default; <code>ContainerFamily</code> picks a flavour such as <code>noble-chiseled</code>. It cannot run <code>RUN</code> commands, so use a Dockerfile if you need OS packages.</li>
 <li><b>Tags:</b> tag with the version (and optionally the commit id), not only <code>latest</code>. For repeatable builds, pin base images by version (or digest) and update them on purpose.</li>
 </ul>
 <p><b>When to use:</b> containers for services you deploy to Container Apps, AKS or any host with Docker; chiseled plus non-root for production. <b>When not:</b> do not containerize for its own sake: a plain web API on App Service (Day 20) needs no Dockerfile. Do not put secrets in <code>ENV</code> or <code>COPY</code> them into the image.</p>`,
@@ -445,7 +448,7 @@ jobs:
 <li><b><code>.dockerignore</code>:</b> <code>bin</code>, <code>obj</code>, <code>.git</code>, local settings और secrets को build context से बाहर रखता है। Build तेज़ होता है और secrets layers में leak नहीं होते।</li>
 <li><b>Non-root:</b> .NET 8 से Microsoft images में non-root user <code>app</code> आता है और <code>APP_UID</code> defined है, पर default tags फिर भी root से शुरू होते हैं जब तक तुम <code>USER $APP_UID</code> न जोड़ो। वे default रूप से port <b>8080</b> पर सुनते हैं (80 नहीं), जिसे non-root user bind कर सकता है।</li>
 <li><b>Chiseled images</b> (जैसे <code>mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled</code>): Ubuntu-based, minimal packages, <b>shell नहीं और package manager नहीं</b>, और default से non-root। छोटी और ज़्यादा safe, पर final stage में shell commands <code>RUN</code> नहीं कर सकते और debug के लिए shell में <code>docker exec</code> नहीं कर सकते। Tags .NET Docker documentation पर verify करो; वे हर release के साथ बदलते हैं।</li>
-<li><b>बिना Dockerfile:</b> <code>dotnet publish /t:PublishContainer</code> (SDK 8+) सीधे image build और push करता है। ASP.NET apps के लिए aspnet base image चुनता है और default से non-root <code>app</code> user से चलता है; <code>ContainerFamily</code> <code>noble-chiseled</code> जैसा flavour चुनता है। वह <code>RUN</code> commands नहीं चला सकता, इसलिए OS packages चाहिए तो Dockerfile लो।</li>
+<li><b>बिना Dockerfile:</b> <code>dotnet publish /t:PublishContainer</code> (SDK 8+) सीधे image build करके तुम्हारे local container runtime (Docker या Podman) में load करता है; registry में push करने के लिए <code>ContainerRegistry</code> set करो। ASP.NET apps के लिए aspnet base image चुनता है और default से non-root <code>app</code> user से चलता है; <code>ContainerFamily</code> <code>noble-chiseled</code> जैसा flavour चुनता है। वह <code>RUN</code> commands नहीं चला सकता, इसलिए OS packages चाहिए तो Dockerfile लो।</li>
 <li><b>Tags:</b> version (और चाहें तो commit id) से tag करो, सिर्फ़ <code>latest</code> से नहीं। Repeatable builds के लिए base images को version (या digest) पर pin करो और जान-बूझकर update करो।</li>
 </ul>
 <p><b>कब use करें:</b> जिन services को Container Apps, AKS या Docker वाले किसी host पर deploy करते हो उनके लिए containers; production के लिए chiseled plus non-root। <b>कब नहीं:</b> containers सिर्फ़ containers के लिए मत बनाओ: App Service (Day 20) पर सादी web API को Dockerfile नहीं चाहिए। Secrets को <code>ENV</code> में मत रखो या image में <code>COPY</code> मत करो।</p>`,
@@ -456,7 +459,7 @@ jobs:
 <li><b><code>.dockerignore</code>:</b> <code>bin</code>, <code>obj</code>, <code>.git</code>, local settings aur secrets ko build context se bahar rakhta hai. Build tez hota hai aur secrets layers mein leak nahi hote.</li>
 <li><b>Non-root:</b> .NET 8 se Microsoft images mein non-root user <code>app</code> aata hai aur <code>APP_UID</code> defined hai, par default tags phir bhi root se shuru hote hain jab tak tum <code>USER $APP_UID</code> na jodo. Woh default roop se port <b>8080</b> par sunte hain (80 nahi), jise non-root user bind kar sakta hai.</li>
 <li><b>Chiseled images</b> (jaise <code>mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled</code>): Ubuntu-based, minimal packages, <b>shell nahi aur package manager nahi</b>, aur default se non-root. Chhoti aur zyada safe, par final stage mein shell commands <code>RUN</code> nahi kar sakte aur debug ke liye shell mein <code>docker exec</code> nahi kar sakte. Tags .NET Docker documentation par verify karo; woh har release ke saath badalte hain.</li>
-<li><b>Bina Dockerfile:</b> <code>dotnet publish /t:PublishContainer</code> (SDK 8+) seedha image build aur push karta hai. ASP.NET apps ke liye aspnet base image chunta hai aur default se non-root <code>app</code> user se chalta hai; <code>ContainerFamily</code> <code>noble-chiseled</code> jaisa flavour chunta hai. Woh <code>RUN</code> commands nahi chala sakta, isliye OS packages chahiye to Dockerfile lo.</li>
+<li><b>Bina Dockerfile:</b> <code>dotnet publish /t:PublishContainer</code> (SDK 8+) seedha image build karke tumhare local container runtime (Docker ya Podman) mein load karta hai; registry mein push karne ke liye <code>ContainerRegistry</code> set karo. ASP.NET apps ke liye aspnet base image chunta hai aur default se non-root <code>app</code> user se chalta hai; <code>ContainerFamily</code> <code>noble-chiseled</code> jaisa flavour chunta hai. Woh <code>RUN</code> commands nahi chala sakta, isliye OS packages chahiye to Dockerfile lo.</li>
 <li><b>Tags:</b> version (aur chaho to commit id) se tag karo, sirf <code>latest</code> se nahi. Repeatable builds ke liye base images ko version (ya digest) par pin karo aur jaan-boojhkar update karo.</li>
 </ul>
 <p><b>Kab use karein:</b> jin services ko Container Apps, AKS ya Docker wale kisi host par deploy karte ho unke liye containers; production ke liye chiseled plus non-root. <b>Kab nahi:</b> containers sirf containers ke liye mat banao: App Service (Day 20) par saadi web API ko Dockerfile nahi chahiye. Secrets ko <code>ENV</code> mein mat rakho ya image mein <code>COPY</code> mat karo.</p>`
@@ -474,7 +477,8 @@ jobs:
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# 1) project files first: this layer + restore stay cached until a package changes
+# 1) project files first: this layer + restore stay cached until a package changes.
+#    Copy EVERY referenced .csproj (plus Directory.Packages.props and nuget.config if you have them) before restore.
 COPY src/Shop.Api/Shop.Api.csproj src/Shop.Api/
 RUN dotnet restore src/Shop.Api/Shop.Api.csproj
 
@@ -526,7 +530,8 @@ docker build -t shop-api:1.4.2 .
 docker run --rm -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Production shop-api:1.4.2
 
 # without a Dockerfile: the .NET SDK builds the image (SDK 8 or later).
-# ContainerFamily is appended to the base tag, here 10.0-noble-chiseled
+# ContainerFamily is appended to the base tag, here 10.0-noble-chiseled.
+# The image is loaded into local Docker/Podman; add -p ContainerRegistry=<registry> to push it.
 dotnet publish src/Shop.Api --os linux --arch x64 /t:PublishContainer \\
   -p ContainerFamily=noble-chiseled -p ContainerImageTag=1.4.2`
         }
@@ -549,6 +554,7 @@ dotnet publish src/Shop.Api --os linux --arch x64 /t:PublishContainer \\
 <li><b>Rollback options:</b> redeploy the previous artifact (it still exists because you build once); swap the App Service slot back (Day 20); turn off the feature flag (fastest, no deploy). Database rollback is the hard part, which is why migrations should be backward-compatible and rolling forward with a fix is often safer than reversing data changes.</li>
 <li><b>Blue-green and canary:</b> blue-green keeps two full environments and switches traffic at once (a slot swap is the App Service form); canary sends a small percentage to the new version first and watches errors (puzzle 5 shows a stable percentage rollout). Both need good monitoring (Day 20).</li>
 <li><b>DORA metrics</b> (five): deployment frequency, change lead time, failed deployment recovery time, change fail rate, and deployment rework rate. The first three show throughput and the last two show instability. Use them to find bottlenecks as a team, not to rank people.</li>
+<li><b>Infrastructure as code:</b> keep Bicep or Terraform in the repo (Day 20). Show the <code>what-if</code> (Bicep) or <code>plan</code> (Terraform) output in the PR, apply through the pipeline after approval, and make no portal changes in prod.</li>
 <li><b>Pipeline secrets scanning:</b> add a secret scanner step in CI, as promised on Day 20, and never print secret variables.</li>
 </ul>
 <p><b>When to use:</b> all of it for anything that reaches users. <b>When not:</b> do not chase blue-green or canary for an internal tool with ten users, and do not measure DORA numbers as targets for individuals (Goodhart's law: a measure that becomes a target stops being a good measure).</p>`,
@@ -560,6 +566,7 @@ dotnet publish src/Shop.Api --os linux --arch x64 /t:PublishContainer \\
 <li><b>Rollback options:</b> पिछला artifact दोबारा deploy करो (वह मौजूद है क्योंकि build once); App Service slot वापस swap करो (Day 20); feature flag बंद करो (सबसे तेज़, deploy नहीं)। Database rollback मुश्किल हिस्सा है, इसीलिए migrations backward-compatible हों और data changes उलटने से अक्सर fix के साथ आगे बढ़ना ज़्यादा safe है।</li>
 <li><b>Blue-green और canary:</b> blue-green दो पूरे environments रखता है और traffic एक साथ switch करता है (slot swap उसका App Service रूप है); canary पहले छोटा percentage नए version को भेजता है और errors देखता है (puzzle 5 stable percentage rollout दिखाता है)। दोनों को अच्छी monitoring चाहिए (Day 20)।</li>
 <li><b>DORA metrics</b> (पाँच): deployment frequency, change lead time, failed deployment recovery time, change fail rate और deployment rework rate। पहले तीन throughput दिखाते हैं और आख़िरी दो instability। इन्हें team के bottlenecks ढूँढने के लिए use करो, लोगों को rank करने के लिए नहीं।</li>
+<li><b>Infrastructure as code:</b> Bicep या Terraform repo में रखो (Day 20)। PR में <code>what-if</code> (Bicep) या <code>plan</code> (Terraform) का output दिखाओ, approval के बाद pipeline से apply करो, और prod में portal से कोई बदलाव मत करो।</li>
 <li><b>Pipeline में secrets scanning:</b> CI में secret scanner step जोड़ो, जैसा Day 20 में वादा किया था, और secret variables कभी print मत करो।</li>
 </ul>
 <p><b>कब use करें:</b> जो कुछ users तक पहुँचता है उस सबके लिए। <b>कब नहीं:</b> दस users वाले internal tool के लिए blue-green या canary के पीछे मत भागो, और DORA numbers को लोगों के targets मत बनाओ (Goodhart's law: जो measure target बन जाता है वह अच्छा measure नहीं रहता)।</p>`,
@@ -571,6 +578,7 @@ dotnet publish src/Shop.Api --os linux --arch x64 /t:PublishContainer \\
 <li><b>Rollback options:</b> pichhla artifact dobara deploy karo (woh maujood hai kyunki build once); App Service slot wapas swap karo (Day 20); feature flag band karo (sabse tez, deploy nahi). Database rollback mushkil hissa hai, isiliye migrations backward-compatible hon aur data changes ulatne se aksar fix ke saath aage badhna zyada safe hai.</li>
 <li><b>Blue-green aur canary:</b> blue-green do poore environments rakhta hai aur traffic ek saath switch karta hai (slot swap uska App Service roop hai); canary pehle chhota percentage naye version ko bhejta hai aur errors dekhta hai (puzzle 5 stable percentage rollout dikhata hai). Dono ko achhi monitoring chahiye (Day 20).</li>
 <li><b>DORA metrics</b> (paanch): deployment frequency, change lead time, failed deployment recovery time, change fail rate aur deployment rework rate. Pehle teen throughput dikhate hain aur aakhri do instability. Inhe team ke bottlenecks dhoondhne ke liye use karo, logon ko rank karne ke liye nahi.</li>
+<li><b>Infrastructure as code:</b> Bicep ya Terraform repo mein rakho (Day 20). PR mein <code>what-if</code> (Bicep) ya <code>plan</code> (Terraform) ka output dikhao, approval ke baad pipeline se apply karo, aur prod mein portal se koi badlaav mat karo.</li>
 <li><b>Pipeline mein secrets scanning:</b> CI mein secret scanner step jodo, jaisa Day 20 mein waada kiya tha, aur secret variables kabhi print mat karo.</li>
 </ul>
 <p><b>Kab use karein:</b> jo kuch users tak pahunchta hai us sabke liye. <b>Kab nahi:</b> das users wale internal tool ke liye blue-green ya canary ke peeche mat bhaago, aur DORA numbers ko logon ke targets mat banao (Goodhart's law: jo measure target ban jaata hai woh achha measure nahi rehta).</p>`
@@ -663,24 +671,24 @@ az webapp deployment slot swap -n shop-api-prod -g rg-shop-prod --slot staging -
       q: "A bad commit reached the main branch. Revert or reset?",
       answer: "Revert: it adds a new commit that undoes the bad one and keeps history intact, so it is safe on shared branches. Reset rewrites history and suits only local, unpushed work.",
       meaning: {
-        hi: "Revert: नया commit जो बुरे commit को undo करे, history सुरक्षित, shared branch पर safe। Reset history rewrite करता है, सिर्फ़ local काम के लिए।",
-        hg: "Revert: naya commit jo bure commit ko undo kare, history surakshit, shared branch par safe. Reset history rewrite karta hai, sirf local kaam ke liye."
+        hi: "Revert: नया commit जो बुरे commit को undo करे, history safe, shared branch पर safe। Reset history rewrite करता है, सिर्फ़ local काम के लिए।",
+        hg: "Revert: naya commit jo bure commit ko undo kare, history safe, shared branch par safe. Reset history rewrite karta hai, sirf local kaam ke liye."
       },
       explain: {
         en: `<ul>
 <li><code>git revert &lt;id&gt;</code> works on any commit; for a merge commit add <code>-m 1</code> to pick the mainline parent. Note that after reverting a merge, merging the same branch again later needs the revert itself to be reverted first.</li>
 <li><code>reset --soft</code> keeps changes staged, <code>--mixed</code> (default) keeps them unstaged, <code>--hard</code> discards them.</li>
-<li>Follow-up: "I reset and pushed by mistake." Find the old id with <code>git reflog</code>, restore it, and avoid force-pushing a shared branch.</li>
+<li>Follow-up: "I reset and pushed by mistake." Find the old id with <code>git reflog</code> and restore it locally; to fix the remote, either add a <code>git revert</code> commit or, if the team agrees, a coordinated <code>--force-with-lease</code> push. Avoid force-pushing a shared branch on your own.</li>
 </ul>`,
         hi: `<ul>
 <li><code>git revert &lt;id&gt;</code> किसी भी commit पर चलता है; merge commit के लिए mainline parent चुनने को <code>-m 1</code> जोड़ो। ध्यान रहे, merge revert करने के बाद वही branch दोबारा merge करनी हो तो पहले उस revert को ही revert करना पड़ता है।</li>
 <li><code>reset --soft</code> changes को staged रखता है, <code>--mixed</code> (default) unstaged रखता है, <code>--hard</code> उन्हें फेंक देता है।</li>
-<li>Follow-up: "मैंने reset करके गलती से push कर दिया।" <code>git reflog</code> से पुराना id ढूँढो, restore करो, और shared branch को force-push करने से बचो।</li>
+<li>Follow-up: "मैंने reset करके गलती से push कर दिया।" <code>git reflog</code> से पुराना id ढूँढकर local में restore करो; remote ठीक करने के लिए या तो <code>git revert</code> commit जोड़ो या team सहमत हो तो coordinated <code>--force-with-lease</code> push करो। Shared branch को अकेले force-push मत करो।</li>
 </ul>`,
         hg: `<ul>
 <li><code>git revert &lt;id&gt;</code> kisi bhi commit par chalta hai; merge commit ke liye mainline parent chunne ko <code>-m 1</code> jodo. Dhyaan rahe, merge revert karne ke baad wahi branch dobara merge karni ho to pehle us revert ko hi revert karna padta hai.</li>
 <li><code>reset --soft</code> changes ko staged rakhta hai, <code>--mixed</code> (default) unstaged rakhta hai, <code>--hard</code> unhe phenk deta hai.</li>
-<li>Follow-up: "Maine reset karke galti se push kar diya." <code>git reflog</code> se purana id dhoondo, restore karo, aur shared branch ko force-push karne se bacho.</li>
+<li>Follow-up: "Maine reset karke galti se push kar diya." <code>git reflog</code> se purana id dhoondkar local mein restore karo; remote theek karne ke liye ya to <code>git revert</code> commit jodo ya team sehmat ho to coordinated <code>--force-with-lease</code> push karo. Shared branch ko akele force-push mat karo.</li>
 </ul>`
       }
     },
@@ -704,13 +712,13 @@ az webapp deployment slot swap -n shop-api-prod -g rg-shop-prod --slot staging -
 <li>Trunk-based को चाहिए: fast CI, मज़बूत tests, अधूरे काम के लिए feature flags, और ऐसी team जो छोटा और बार-बार merge करे। लंबी branches का मतलब बड़े दर्दनाक merges और देर से feedback।</li>
 <li>GitFlow उन packaged products में फिट है जिनके versions maintain करने हैं; इसकी कीमत ceremony और धीमा integration है।</li>
 <li>TL angle: team का context बताओ (cadence, test maturity, hosting), एक चुनो, rules लिख दो, और जब metrics (lead time, change fail rate) बताएँ कि तकलीफ़ है तब दोबारा देखो।</li>
-<li>Follow-up: "अधूरा काम कैसे छिपाते हो?" Feature flags से, और rollout के बाद flag हटाने की योजना के साथ ताकि पुराने flags जमा न हों।</li>
+<li>Follow-up: "अधूरा काम कैसे छिपाते हो?" Feature flags से, और rollout के बाद flag हटाने के plan के साथ ताकि पुराने flags जमा न हों।</li>
 </ul>`,
         hg: `<ul>
 <li>Trunk-based ko chahiye: fast CI, majboot tests, adhoore kaam ke liye feature flags, aur aisi team jo chhota aur baar-baar merge kare. Lambi branches ka matlab bade dardnaak merges aur der se feedback.</li>
 <li>GitFlow un packaged products mein fit hai jinke versions maintain karne hain; iski keemat ceremony aur dheema integration hai.</li>
 <li>TL angle: team ka context batao (cadence, test maturity, hosting), ek chuno, rules likh do, aur jab metrics (lead time, change fail rate) batayein ki takleef hai tab dobara dekho.</li>
-<li>Follow-up: "Adhoora kaam kaise chhupate ho?" Feature flags se, aur rollout ke baad flag hatane ki yojana ke saath taaki purane flags jama na hon.</li>
+<li>Follow-up: "Adhoora kaam kaise chhupate ho?" Feature flags se, aur rollout ke baad flag hatane ke plan ke saath taaki purane flags jama na hon.</li>
 </ul>`
       }
     },
@@ -757,19 +765,19 @@ az webapp deployment slot swap -n shop-api-prod -g rg-shop-prod --slot staging -
         en: `<ul>
 <li>Stages run in order unless you use <code>dependsOn</code>; independent stages and jobs can run in parallel. Each job gets its own agent and a fresh workspace, so share files through <b>artifacts</b>.</li>
 <li>A simple pipeline can skip <code>stages</code> and <code>jobs</code> and list only <code>steps</code>; the structure is added when you need it.</li>
-<li><code>trigger</code> controls CI on pushes, <code>pr</code> controls PR validation, and <code>condition</code> can skip a stage (for example deploy only from main).</li>
+<li><code>trigger</code> controls CI on pushes, <code>pr</code> controls PR validation for GitHub and Bitbucket repos (Azure Repos Git uses a Build validation branch policy), and <code>condition</code> can skip a stage (for example deploy only from main).</li>
 <li>Follow-up: "Classic release pipelines vs YAML?" YAML lives in the repo, is reviewed like code, and covers build and deploy; new work should be YAML.</li>
 </ul>`,
         hi: `<ul>
 <li><code>dependsOn</code> न हो तो stages order में चलते हैं; independent stages और jobs parallel चल सकते हैं। हर job को अपना agent और fresh workspace मिलता है, इसलिए files <b>artifacts</b> से share करो।</li>
 <li>Simple pipeline <code>stages</code> और <code>jobs</code> छोड़कर सिर्फ़ <code>steps</code> लिख सकती है; structure तब जोड़ो जब ज़रूरत हो।</li>
-<li><code>trigger</code> push पर CI तय करता है, <code>pr</code> PR validation तय करता है, और <code>condition</code> किसी stage को skip कर सकती है (जैसे सिर्फ़ main से deploy)।</li>
+<li><code>trigger</code> push पर CI तय करता है, <code>pr</code> GitHub और Bitbucket repos में PR validation तय करता है (Azure Repos Git में Build validation branch policy), और <code>condition</code> किसी stage को skip कर सकती है (जैसे सिर्फ़ main से deploy)।</li>
 <li>Follow-up: "Classic release pipelines बनाम YAML?" YAML repo में रहता है, code की तरह review होता है, और build व deploy दोनों cover करता है; नया काम YAML में हो।</li>
 </ul>`,
         hg: `<ul>
 <li><code>dependsOn</code> na ho to stages order mein chalte hain; independent stages aur jobs parallel chal sakte hain. Har job ko apna agent aur fresh workspace milta hai, isliye files <b>artifacts</b> se share karo.</li>
 <li>Simple pipeline <code>stages</code> aur <code>jobs</code> chhodkar sirf <code>steps</code> likh sakti hai; structure tab jodo jab zaroorat ho.</li>
-<li><code>trigger</code> push par CI tay karta hai, <code>pr</code> PR validation tay karta hai, aur <code>condition</code> kisi stage ko skip kar sakti hai (jaise sirf main se deploy).</li>
+<li><code>trigger</code> push par CI tay karta hai, <code>pr</code> GitHub aur Bitbucket repos mein PR validation tay karta hai (Azure Repos Git mein Build validation branch policy), aur <code>condition</code> kisi stage ko skip kar sakti hai (jaise sirf main se deploy).</li>
 <li>Follow-up: "Classic release pipelines vs YAML?" YAML repo mein rehta hai, code ki tarah review hota hai, aur build aur deploy dono cover karta hai; naya kaam YAML mein ho.</li>
 </ul>`
       }
@@ -950,17 +958,17 @@ az webapp deployment slot swap -n shop-api-prod -g rg-shop-prod --slot staging -
       },
       explain: {
         en: `<ul>
-<li>Hosted: nothing to patch, clean machine each time, but limited customization, parallel-job limits and no access to private networks unless you add networking. Check current limits and pricing in the docs.</li>
+<li>Hosted: nothing to patch, clean machine each time, but limited customization, parallel-job limits and no direct access to private networks (the middle options are Managed DevOps Pools, which can join your VNet, or scale set agents). Check current limits and pricing in the docs.</li>
 <li>Self-hosted: your VMs or containers run the agent software, so you can reach private endpoints (a database in a VNet), keep caches between runs, and pick hardware. You patch, secure and scale them, and a shared long-lived machine can leak state between builds.</li>
 <li>Follow-up: "Security concern?" Do not let untrusted PRs (for example from forks) run on self-hosted agents that can reach internal systems.</li>
 </ul>`,
         hi: `<ul>
-<li>Hosted: patch करने को कुछ नहीं, हर बार साफ़ machine, पर customization सीमित, parallel-job limits, और private networks तक access नहीं जब तक networking न जोड़ो। Current limits और pricing docs में देखो।</li>
+<li>Hosted: patch करने को कुछ नहीं, हर बार साफ़ machine, पर customization सीमित, parallel-job limits, और private networks तक सीधा access नहीं (बीच के options हैं Managed DevOps Pools, जो तुम्हारे VNet से जुड़ सकते हैं, या scale set agents)। Current limits और pricing docs में देखो।</li>
 <li>Self-hosted: तुम्हारे VMs या containers agent software चलाते हैं, इसलिए private endpoints तक पहुँच सकते हो (VNet का database), runs के बीच caches रख सकते हो, और hardware चुन सकते हो। Patch, secure और scale तुम करते हो, और shared लंबी-उम्र वाली machine builds के बीच state leak कर सकती है।</li>
 <li>Follow-up: "Security concern?" Untrusted PRs (जैसे forks से) को ऐसे self-hosted agents पर मत चलने दो जो internal systems तक पहुँच सकते हैं।</li>
 </ul>`,
         hg: `<ul>
-<li>Hosted: patch karne ko kuch nahi, har baar saaf machine, par customization seemit, parallel-job limits, aur private networks tak access nahi jab tak networking na jodo. Current limits aur pricing docs mein dekho.</li>
+<li>Hosted: patch karne ko kuch nahi, har baar saaf machine, par customization seemit, parallel-job limits, aur private networks tak seedha access nahi (beech ke options hain Managed DevOps Pools, jo tumhare VNet se jud sakte hain, ya scale set agents). Current limits aur pricing docs mein dekho.</li>
 <li>Self-hosted: tumhare VMs ya containers agent software chalate hain, isliye private endpoints tak pahunch sakte ho (VNet ka database), runs ke beech caches rakh sakte ho, aur hardware chun sakte ho. Patch, secure aur scale tum karte ho, aur shared lambi-umar wali machine builds ke beech state leak kar sakti hai.</li>
 <li>Follow-up: "Security concern?" Untrusted PRs (jaise forks se) ko aise self-hosted agents par mat chalne do jo internal systems tak pahunch sakte hain.</li>
 </ul>`
@@ -1009,16 +1017,19 @@ az webapp deployment slot swap -n shop-api-prod -g rg-shop-prod --slot staging -
         en: `<ul>
 <li>Include templates insert content (<code>- template: file.yml</code>); extends templates control the whole structure. Templates can live in another repo and be pinned to a tag.</li>
 <li>Template expressions are expanded when the pipeline is compiled, before it runs; runtime variables are not all available there. There are limits on template nesting and file count, so keep structure simple.</li>
+<li>Three syntaxes, three moments: <code>\${{ }}</code> is compile time (template expansion and parameters); <code>$(var)</code> is a macro replaced just before a task runs; <code>$[ ]</code> is a runtime expression (conditions, and output variables from other jobs).</li>
 <li>Follow-up: "Risks of shared templates?" A change affects every consumer, so version them (pin by tag) and test changes on a sample pipeline.</li>
 </ul>`,
         hi: `<ul>
 <li>Include templates content insert करते हैं (<code>- template: file.yml</code>); extends templates पूरा structure control करते हैं। Templates दूसरे repo में रह सकते हैं और tag पर pin हो सकते हैं।</li>
-<li>Template expressions pipeline compile होते समय expand होते हैं, चलने से पहले; runtime variables वहाँ सब उपलब्ध नहीं होते। Template nesting और file count पर limits हैं, इसलिए structure simple रखो।</li>
+<li>Template expressions pipeline compile होते समय expand होते हैं, चलने से पहले; runtime variables वहाँ सब available नहीं होते। Template nesting और file count पर limits हैं, इसलिए structure simple रखो।</li>
+<li>तीन syntaxes, तीन moments: <code>\${{ }}</code> compile time है (template expansion और parameters); <code>$(var)</code> macro है जो task चलने से ठीक पहले replace होता है; <code>$[ ]</code> runtime expression है (conditions, और दूसरे jobs के output variables)।</li>
 <li>Follow-up: "Shared templates के risks?" एक बदलाव हर consumer पर असर करता है, इसलिए version दो (tag से pin) और बदलाव sample pipeline पर test करो।</li>
 </ul>`,
         hg: `<ul>
 <li>Include templates content insert karte hain (<code>- template: file.yml</code>); extends templates poora structure control karte hain. Templates doosre repo mein reh sakte hain aur tag par pin ho sakte hain.</li>
-<li>Template expressions pipeline compile hote samay expand hote hain, chalne se pehle; runtime variables wahan sab uplabdh nahi hote. Template nesting aur file count par limits hain, isliye structure simple rakho.</li>
+<li>Template expressions pipeline compile hote samay expand hote hain, chalne se pehle; runtime variables wahan sab available nahi hote. Template nesting aur file count par limits hain, isliye structure simple rakho.</li>
+<li>Teen syntaxes, teen moments: <code>\${{ }}</code> compile time hai (template expansion aur parameters); <code>$(var)</code> macro hai jo task chalne se theek pehle replace hota hai; <code>$[ ]</code> runtime expression hai (conditions, aur dusre jobs ke output variables).</li>
 <li>Follow-up: "Shared templates ke risks?" Ek badlaav har consumer par asar karta hai, isliye version do (tag se pin) aur badlaav sample pipeline par test karo.</li>
 </ul>`
       }
@@ -1034,19 +1045,19 @@ az webapp deployment slot swap -n shop-api-prod -g rg-shop-prod --slot staging -
       },
       explain: {
         en: `<ul>
-<li>Approvals and checks (approvers, branch control, business hours, an Azure Monitor check and others) are set on the environment, so a pipeline cannot skip them by editing its YAML.</li>
+<li>Approvals and checks (approvers, branch control, business hours, an Azure Monitor check and others) are configured on the resource (environment, service connection), not in YAML. They run only for jobs that use that resource, so protect the service connection too, or a job can bypass them.</li>
 <li><code>runOnce</code> runs the hooks once; <code>rolling</code> updates VM targets in batches (<code>maxParallel</code>); <code>canary</code> goes through increments such as 10 then 20 percent while you watch health (the docs example targets Kubernetes).</li>
 <li>For App Service, the slot swap from Day 20 often replaces the need for these strategies.</li>
 <li>Follow-up: "Where does rollback live?" In the <code>on: failure</code> hook or by redeploying the previous artifact.</li>
 </ul>`,
         hi: `<ul>
-<li>Approvals और checks (approvers, branch control, business hours, Azure Monitor check वगैरह) environment पर set होते हैं, इसलिए pipeline अपना YAML बदलकर उन्हें skip नहीं कर सकती।</li>
+<li>Approvals और checks (approvers, branch control, business hours, Azure Monitor check वगैरह) resource (environment, service connection) पर configure होते हैं, YAML में नहीं। वे सिर्फ़ उन jobs के लिए चलते हैं जो उस resource को use करते हैं, इसलिए service connection भी protect करो, वरना कोई job उन्हें bypass कर सकता है।</li>
 <li><code>runOnce</code> hooks एक बार चलाता है; <code>rolling</code> VM targets को batches में update करता है (<code>maxParallel</code>); <code>canary</code> increments से गुज़रता है जैसे 10 फिर 20 percent, जबकि तुम health देखते हो (docs का example Kubernetes पर है)।</li>
 <li>App Service के लिए Day 20 का slot swap अक्सर इन strategies की ज़रूरत हटा देता है।</li>
 <li>Follow-up: "Rollback कहाँ रहता है?" <code>on: failure</code> hook में, या पिछला artifact दोबारा deploy करके।</li>
 </ul>`,
         hg: `<ul>
-<li>Approvals aur checks (approvers, branch control, business hours, Azure Monitor check waghera) environment par set hote hain, isliye pipeline apna YAML badalkar unhe skip nahi kar sakti.</li>
+<li>Approvals aur checks (approvers, branch control, business hours, Azure Monitor check waghera) resource (environment, service connection) par configure hote hain, YAML mein nahi. Woh sirf un jobs ke liye chalte hain jo us resource ko use karte hain, isliye service connection bhi protect karo, warna koi job unhe bypass kar sakta hai.</li>
 <li><code>runOnce</code> hooks ek baar chalata hai; <code>rolling</code> VM targets ko batches mein update karta hai (<code>maxParallel</code>); <code>canary</code> increments se guzarta hai jaise 10 phir 20 percent, jabki tum health dekhte ho (docs ka example Kubernetes par hai).</li>
 <li>App Service ke liye Day 20 ka slot swap aksar in strategies ki zaroorat hata deta hai.</li>
 <li>Follow-up: "Rollback kahan rehta hai?" <code>on: failure</code> hook mein, ya pichhla artifact dobara deploy karke.</li>
@@ -1451,9 +1462,9 @@ wave 4: DeployTest
 wave 5: DeployProd
 cycle detected among: Build, UnitTests, SecurityScan, DeployDev, DeployTest, DeployProd`,
       explain: {
-        en: `<p>Each wave contains the stages whose <code>dependsOn</code> are all finished. <code>Build</code> goes first; <code>UnitTests</code> and <code>SecurityScan</code> both need only <code>Build</code>, so they can run in parallel in wave 2. <code>DeployTest</code> waits for both <code>DeployDev</code> and <code>SecurityScan</code>, then <code>DeployProd</code> follows. In the second run <code>Build</code> depends on <code>DeployProd</code>, which depends (through the chain) on <code>Build</code>: nothing is ready, so the loop reports a cycle. Azure Pipelines rejects such a pipeline when it validates the YAML.</p>`,
-        hi: `<p>हर wave में वे stages हैं जिनके <code>dependsOn</code> सब पूरे हो चुके हैं। <code>Build</code> पहले; <code>UnitTests</code> और <code>SecurityScan</code> दोनों को सिर्फ़ <code>Build</code> चाहिए, इसलिए वे wave 2 में parallel चल सकते हैं। <code>DeployTest</code> <code>DeployDev</code> और <code>SecurityScan</code> दोनों का इंतज़ार करता है, फिर <code>DeployProd</code>। दूसरे run में <code>Build</code>, <code>DeployProd</code> पर depend करता है, जो chain के ज़रिए <code>Build</code> पर depend करता है: कुछ ready नहीं, इसलिए loop cycle report करता है। Azure Pipelines ऐसी pipeline को YAML validate करते समय reject कर देता है।</p>`,
-        hg: `<p>Har wave mein woh stages hain jinke <code>dependsOn</code> sab poore ho chuke hain. <code>Build</code> pehle; <code>UnitTests</code> aur <code>SecurityScan</code> dono ko sirf <code>Build</code> chahiye, isliye woh wave 2 mein parallel chal sakte hain. <code>DeployTest</code> <code>DeployDev</code> aur <code>SecurityScan</code> dono ka intezaar karta hai, phir <code>DeployProd</code>. Doosre run mein <code>Build</code>, <code>DeployProd</code> par depend karta hai, jo chain ke zariye <code>Build</code> par depend karta hai: kuch ready nahi, isliye loop cycle report karta hai. Azure Pipelines aisi pipeline ko YAML validate karte samay reject kar deta hai.</p>`
+        en: `<p>Each wave contains the stages whose <code>dependsOn</code> are all finished. <code>Build</code> goes first; <code>UnitTests</code> and <code>SecurityScan</code> both need only <code>Build</code>, so they can run in parallel in wave 2. <code>DeployTest</code> waits for both <code>DeployDev</code> and <code>SecurityScan</code>, then <code>DeployProd</code> follows. In the second run <code>Build</code> depends on <code>DeployProd</code>, which depends (through the chain) on <code>Build</code>: nothing is ready, so the loop reports a cycle. Azure Pipelines rejects such a pipeline when it validates the YAML. The wave model is a simplification: Azure starts a stage as soon as its own dependencies finish, without waiting for the rest of the wave.</p>`,
+        hi: `<p>हर wave में वे stages हैं जिनके <code>dependsOn</code> सब पूरे हो चुके हैं। <code>Build</code> पहले; <code>UnitTests</code> और <code>SecurityScan</code> दोनों को सिर्फ़ <code>Build</code> चाहिए, इसलिए वे wave 2 में parallel चल सकते हैं। <code>DeployTest</code> <code>DeployDev</code> और <code>SecurityScan</code> दोनों का इंतज़ार करता है, फिर <code>DeployProd</code>। दूसरे run में <code>Build</code>, <code>DeployProd</code> पर depend करता है, जो chain के ज़रिए <code>Build</code> पर depend करता है: कुछ ready नहीं, इसलिए loop cycle report करता है। Azure Pipelines ऐसी pipeline को YAML validate करते समय reject कर देता है। Wave model एक simplification है: Azure किसी stage को तभी शुरू कर देता है जब उसकी अपनी dependencies पूरी हों, बाकी wave का इंतज़ार नहीं करता।</p>`,
+        hg: `<p>Har wave mein woh stages hain jinke <code>dependsOn</code> sab poore ho chuke hain. <code>Build</code> pehle; <code>UnitTests</code> aur <code>SecurityScan</code> dono ko sirf <code>Build</code> chahiye, isliye woh wave 2 mein parallel chal sakte hain. <code>DeployTest</code> <code>DeployDev</code> aur <code>SecurityScan</code> dono ka intezaar karta hai, phir <code>DeployProd</code>. Doosre run mein <code>Build</code>, <code>DeployProd</code> par depend karta hai, jo chain ke zariye <code>Build</code> par depend karta hai: kuch ready nahi, isliye loop cycle report karta hai. Azure Pipelines aisi pipeline ko YAML validate karte samay reject kar deta hai. Wave model ek simplification hai: Azure kisi stage ko tabhi shuru kar deta hai jab uski apni dependencies poori hon, baaki wave ka intezaar nahi karta.</p>`
       }
     },
     {
@@ -1522,7 +1533,7 @@ foreach (var commits in batches)
     Console.WriteLine($"{bump,-5} -> {current.Major}.{current.Minor}.{current.Patch}");
 }
 
-var runs = new[] { "2026-10-21", "2026-10-21", "2026-10-22", "2026-10-21", "2026-10-22" };
+var runs = new[] { "2026-10-21", "2026-10-21", "2026-10-21", "2026-10-22", "2026-10-22" };
 var counters = new Dictionary<string, int>();
 foreach (var day in runs)
 {
@@ -1544,13 +1555,13 @@ Major -> 2.0.0
 None  -> 2.0.0
 20261021.1
 20261021.2
-20261022.1
 20261021.3
+20261022.1
 20261022.2`,
       explain: {
-        en: `<p>The highest-impact commit in a batch decides the bump: <code>fix</code> is a patch, <code>feat</code> is a minor, and <code>!</code> after the type marks a breaking change, a major. The first batch has only fixes (plus a docs commit that does not count), so 1.4.2 becomes 1.4.3. A minor resets the patch to 0 (1.5.0), a major resets minor and patch (2.0.0), and a batch with only docs and chores leaves the version alone (<code>None</code>). The build number <code>yyyyMMdd.r</code> restarts the revision counter on each new date: 21 Oct gets .1, .2, then .3 even though a 22 Oct run happened in between, because the counter is per day. Azure Pipelines offers the same idea with <code>name: $(Date:yyyyMMdd)$(Rev:.r)</code>.</p>`,
-        hi: `<p>Batch में सबसे ज़्यादा असर वाला commit bump तय करता है: <code>fix</code> patch है, <code>feat</code> minor है, और type के बाद <code>!</code> breaking change यानी major दिखाता है। पहले batch में सिर्फ़ fixes हैं (plus एक docs commit जो गिना नहीं जाता), इसलिए 1.4.2 से 1.4.3। Minor patch को 0 कर देता है (1.5.0), major minor और patch दोनों reset करता है (2.0.0), और सिर्फ़ docs व chores वाला batch version को वैसा ही छोड़ता है (<code>None</code>)। Build number <code>yyyyMMdd.r</code> हर नई date पर revision counter restart करता है: 21 Oct को .1, .2, फिर .3 मिलता है भले बीच में 22 Oct का run हुआ हो, क्योंकि counter दिन के हिसाब से है। Azure Pipelines में यही idea <code>name: $(Date:yyyyMMdd)$(Rev:.r)</code> से मिलता है।</p>`,
-        hg: `<p>Batch mein sabse zyada asar wala commit bump tay karta hai: <code>fix</code> patch hai, <code>feat</code> minor hai, aur type ke baad <code>!</code> breaking change yaani major dikhata hai. Pehle batch mein sirf fixes hain (plus ek docs commit jo ginaa nahi jaata), isliye 1.4.2 se 1.4.3. Minor patch ko 0 kar deta hai (1.5.0), major minor aur patch dono reset karta hai (2.0.0), aur sirf docs va chores wala batch version ko waisa hi chhodta hai (<code>None</code>). Build number <code>yyyyMMdd.r</code> har nayi date par revision counter restart karta hai: 21 Oct ko .1, .2, phir .3 milta hai bhale beech mein 22 Oct ka run hua ho, kyunki counter din ke hisaab se hai. Azure Pipelines mein yahi idea <code>name: $(Date:yyyyMMdd)$(Rev:.r)</code> se milta hai.</p>`
+        en: `<p>The highest-impact commit in a batch decides the bump: <code>fix</code> is a patch, <code>feat</code> is a minor, and <code>!</code> after the type marks a breaking change, a major. The first batch has only fixes (plus a docs commit that does not count), so 1.4.2 becomes 1.4.3. A minor resets the patch to 0 (1.5.0), a major resets minor and patch (2.0.0), and a batch with only docs and chores leaves the version alone (<code>None</code>). The build number <code>yyyyMMdd.r</code> restarts the revision counter on each new date: 21 Oct gets .1, .2, .3, then 22 Oct starts again at .1, because the counter is per day (a simple model of the idea). Azure Pipelines offers the same idea with <code>name: $(Date:yyyyMMdd)$(Rev:.r)</code>.</p>`,
+        hi: `<p>Batch में सबसे ज़्यादा असर वाला commit bump तय करता है: <code>fix</code> patch है, <code>feat</code> minor है, और type के बाद <code>!</code> breaking change यानी major दिखाता है। पहले batch में सिर्फ़ fixes हैं (plus एक docs commit जो गिना नहीं जाता), इसलिए 1.4.2 से 1.4.3। Minor patch को 0 कर देता है (1.5.0), major minor और patch दोनों reset करता है (2.0.0), और सिर्फ़ docs व chores वाला batch version को वैसा ही छोड़ता है (<code>None</code>)। Build number <code>yyyyMMdd.r</code> हर नई date पर revision counter restart करता है: 21 Oct को .1, .2, .3 मिलता है, फिर 22 Oct फिर से .1 से शुरू होता है, क्योंकि counter दिन के हिसाब से है (idea का एक simple model)। Azure Pipelines में यही idea <code>name: $(Date:yyyyMMdd)$(Rev:.r)</code> से मिलता है।</p>`,
+        hg: `<p>Batch mein sabse zyada asar wala commit bump tay karta hai: <code>fix</code> patch hai, <code>feat</code> minor hai, aur type ke baad <code>!</code> breaking change yaani major dikhata hai. Pehle batch mein sirf fixes hain (plus ek docs commit jo ginaa nahi jaata), isliye 1.4.2 se 1.4.3. Minor patch ko 0 kar deta hai (1.5.0), major minor aur patch dono reset karta hai (2.0.0), aur sirf docs va chores wala batch version ko waisa hi chhodta hai (<code>None</code>). Build number <code>yyyyMMdd.r</code> har nayi date par revision counter restart karta hai: 21 Oct ko .1, .2, .3 milta hai, phir 22 Oct phir se .1 se shuru hota hai, kyunki counter din ke hisaab se hai (idea ka ek simple model). Azure Pipelines mein yahi idea <code>name: $(Date:yyyyMMdd)$(Rev:.r)</code> se milta hai.</p>`
       }
     }
   ],
@@ -1562,10 +1573,10 @@ None  -> 2.0.0
       "Trunk-based means short branches, frequent merges and feature flags; GitFlow suits scheduled, versioned releases.",
       "A good PR is small, passes the build, and is reviewed for correctness, design, tests and risk.",
       "Pipeline structure: stages contain jobs, jobs contain steps, and jobs run on agents from a pool.",
-      "Approvals and checks live on the environment, so a pipeline cannot skip them by editing its YAML.",
-      "Keep secrets in secret variables or Key Vault-linked groups, and prefer managed identity over stored secrets.",
+      "Approvals and checks live on the resource, so protect the service connection as well as the environment.",
+      "Keep secrets in secret variables or Key Vault-linked groups, never in the repo or YAML.",
       "Multi-stage Dockerfile: the SDK image builds, the small runtime image runs.",
-      "Run as non-root (USER $APP_UID); chiseled images have no shell and no package manager.",
+      "Run containers as non-root, for example with USER $APP_UID.",
       "Build once and deploy the same artifact everywhere, with config kept outside it.",
       "Apply database changes with idempotent scripts or bundles and keep them backward-compatible so rollback stays possible."
     ],
@@ -1577,12 +1588,12 @@ None  -> 2.0.0
         "Trunk-based यानी छोटी branches, बार-बार merge और feature flags; GitFlow scheduled, versioned releases के लिए।",
         "अच्छा PR छोटा होता है, build pass करता है, और correctness, design, tests, risk के लिए review होता है।",
         "Pipeline structure: stages में jobs, jobs में steps, और jobs pool के agents पर चलते हैं।",
-        "Approvals और checks environment पर रहते हैं, इसलिए pipeline अपना YAML बदलकर उन्हें skip नहीं कर सकती।",
-        "Secrets को secret variables या Key Vault-linked groups में रखो, और stored secrets से बेहतर managed identity।",
+        "Approvals और checks resource पर रहते हैं, इसलिए environment के साथ service connection भी protect करो।",
+        "Secrets को secret variables या Key Vault-linked groups में रखो, repo या YAML में कभी नहीं।",
         "Multi-stage Dockerfile: SDK image build करती है, छोटी runtime image चलाती है।",
-        "Non-root चलाओ (USER $APP_UID); chiseled images में shell और package manager नहीं होता।",
+        "Containers non-root चलाओ, जैसे USER $APP_UID से।",
         "एक बार build करो और हर जगह वही artifact deploy करो, config उसके बाहर रखकर।",
-        "Database changes idempotent scripts या bundles से लगाओ और उन्हें backward-compatible रखो ताकि rollback संभव रहे।"
+        "Database changes idempotent scripts या bundles से लगाओ और उन्हें backward-compatible रखो ताकि rollback possible रहे।"
       ],
       hg: [
         "Merge sachchi history rakhta hai; rebase use rewrite karta hai, isliye sirf apne unshared commits rebase karo.",
@@ -1591,12 +1602,12 @@ None  -> 2.0.0
         "Trunk-based yaani chhoti branches, baar-baar merge aur feature flags; GitFlow scheduled, versioned releases ke liye.",
         "Achha PR chhota hota hai, build pass karta hai, aur correctness, design, tests, risk ke liye review hota hai.",
         "Pipeline structure: stages mein jobs, jobs mein steps, aur jobs pool ke agents par chalte hain.",
-        "Approvals aur checks environment par rehte hain, isliye pipeline apna YAML badalkar unhe skip nahi kar sakti.",
-        "Secrets ko secret variables ya Key Vault-linked groups mein rakho, aur stored secrets se behtar managed identity.",
+        "Approvals aur checks resource par rehte hain, isliye environment ke saath service connection bhi protect karo.",
+        "Secrets ko secret variables ya Key Vault-linked groups mein rakho, repo ya YAML mein kabhi nahi.",
         "Multi-stage Dockerfile: SDK image build karti hai, chhoti runtime image chalati hai.",
-        "Non-root chalao (USER $APP_UID); chiseled images mein shell aur package manager nahi hota.",
+        "Containers non-root chalao, jaise USER $APP_UID se.",
         "Ek baar build karo aur har jagah wahi artifact deploy karo, config uske bahar rakhkar.",
-        "Database changes idempotent scripts ya bundles se lagao aur unhe backward-compatible rakho taaki rollback sambhav rahe."
+        "Database changes idempotent scripts ya bundles se lagao aur unhe backward-compatible rakho taaki rollback possible rahe."
       ]
     }
   },
