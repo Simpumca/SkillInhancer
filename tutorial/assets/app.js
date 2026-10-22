@@ -18,6 +18,7 @@
       week: 'Week', soon: 'Coming soon', day: 'Day',
       prev: '◀ Prev', next: 'Next ▶', home: '🏠 Home', short: 'Short', detailed: 'Detailed',
       estimate: '⏱ ≈ {time} for this depth',
+      estimateDetailed: '⏱ ≈ {time} more after Short',
       summary: '⚡ 2-minute summary', learn: '📘 Concept & code', whatsNew: '🆕 What’s new in recent versions',
       qa: '❓ Interview Q&A', showAnswer: 'Show answer ▼', meaning: '',
       puzzles: '🧩 Puzzles', puzzle: 'Puzzle', whatPrint: 'What will this print?',
@@ -39,6 +40,7 @@
       week: 'हफ़्ता', soon: 'जल्द आ रहा है', day: 'दिन',
       prev: '◀ पिछला', next: 'अगला ▶', home: '🏠 होम', short: 'Short', detailed: 'Detailed',
       estimate: '⏱ इस depth के लिए ≈ {time}',
+      estimateDetailed: '⏱ Short के बाद ≈ {time} और',
       summary: '⚡ 2 मिनट में सार', learn: '📘 कॉन्सेप्ट और कोड', whatsNew: '🆕 हाल के versions में नया क्या है',
       qa: '❓ इंटरव्यू सवाल-जवाब', showAnswer: 'जवाब देखो ▼', meaning: 'मतलब:',
       puzzles: '🧩 पहेलियाँ', puzzle: 'पहेली', whatPrint: 'यह क्या print करेगा?',
@@ -60,6 +62,7 @@
       week: 'Week', soon: 'Jaldi aa raha hai', day: 'Day',
       prev: '◀ Pichla', next: 'Agla ▶', home: '🏠 Home', short: 'Short', detailed: 'Detailed',
       estimate: '⏱ Is depth ke liye ≈ {time}',
+      estimateDetailed: '⏱ Short ke baad ≈ {time} aur',
       summary: '⚡ 2 minute mein summary', learn: '📘 Concept aur code', whatsNew: '🆕 Haal ke versions mein naya kya hai',
       qa: '❓ Interview sawaal-jawaab', showAnswer: 'Jawaab dekho ▼', meaning: 'Matlab:',
       puzzles: '🧩 Puzzles', puzzle: 'Puzzle', whatPrint: 'Ye kya print karega?',
@@ -268,7 +271,7 @@
     out.push(h('header', { 'class': 'day-head' }, [
       h('span', { 'class': 'eyebrow', text: t('day') + ' ' + dayNum + ' · ' + t('week') + ' ' + c.week }),
       h('h1', { html: C.pick(d.title, lang) }),
-      h('p', { 'class': 'estimate', text: t('estimate', { time: C.formatMinutes(C.estimateMinutes(d, depth)) }) })
+      h('p', { 'class': 'estimate', text: t(depth === 'detailed' ? 'estimateDetailed' : 'estimate', { time: C.formatMinutes(C.estimateMinutes(d, depth)) }) })
     ]));
 
     out.push(block(t('summary'), [h('div', { 'class': 'card summary', html: C.pick(d.summary, lang) })]));

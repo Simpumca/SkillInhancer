@@ -82,26 +82,46 @@
     return n;
   }
 
-  // Rough study time for one day at a depth: English words of what that depth shows
-  // (summary, sections + code, Q&A, what's new, revision) at 200 wpm, plus 3 min per puzzle
-  // (puzzles are detailed-only). Rounded to the nearest 5 min, at least 5.
+  function countCodeLines(src) {
+    var parts = String(src || '').split(/\r?\n/);
+    var n = 0;
+    for (var i = 0; i < parts.length; i++) if (parts[i].trim()) n++;
+    return n;
+  }
+
+  // Rough study time for one day at a depth, in minutes (rounded to nearest 5, min 5).
+  // Prose (visible English text, tags stripped, code excluded) at 150 wpm; code at 6 lines/min.
+  // short    = summary + short sections/Q&A + revision.
+  // detailed = the DELTA after Short: only detailed sections/Q&A + puzzles (3 min each, plus
+  //            their code and explanation) + whatsNew.
   function estimateMinutes(day, depth) {
     var words = 0;
+    var codeLines = 0;
+    var extra = 0;
+    var detailed = depth === 'detailed';
     function add(s) { words += countWords(s); }
     function addCode(list) {
-      (list || []).forEach(function (c) { add(pick(c.caption, 'en')); add(c.src); });
+      (list || []).forEach(function (c) { add(pick(c.caption, 'en')); codeLines += countCodeLines(c.src); });
     }
-    add(pick(day.summary, 'en'));
-    filterDepth(day.sections, depth).forEach(function (s) {
+    function items(list) {
+      return (list || []).filter(function (it) { return it.depth === (detailed ? 'detailed' : 'short'); });
+    }
+    if (!detailed) {
+      add(pick(day.summary, 'en'));
+      ((day.revision && day.revision.en) || []).forEach(add);
+    } else {
+      add(pick(day.whatsNew, 'en'));
+      (day.puzzles || []).forEach(function (p) {
+        add(pick(p.explain, 'en')); codeLines += countCodeLines(p.src); extra += 3;
+      });
+    }
+    items(day.sections).forEach(function (s) {
       add(pick(s.title, 'en')); add(pick(s.body, 'en')); addCode(s.code);
     });
-    filterDepth(day.qa, depth).forEach(function (q) {
+    items(day.qa).forEach(function (q) {
       add(q.q); add(q.answer); add(pick(q.explain, 'en')); addCode(q.code);
     });
-    add(pick(day.whatsNew, 'en'));
-    ((day.revision && day.revision.en) || []).forEach(add);
-    var puzzles = depth === 'detailed' ? (day.puzzles || []).length : 0;
-    var minutes = words / 200 + puzzles * 3;
+    var minutes = words / 150 + codeLines / 6 + extra;
     return Math.max(5, Math.round(minutes / 5) * 5);
   }
 
