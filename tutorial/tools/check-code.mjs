@@ -14,14 +14,14 @@ export function collectSnippets(day) {
   const out = [];
   const addCode = (prefix, list) => (list || []).forEach((c, k) => {
     if (c.check === 'none') return;
-    const item = { key: `${prefix}-${k}`, src: c.src, mode: c.check, packages: c.packages || [] };
+    const item = { key: `${prefix}-${k}`, src: c.src, mode: c.check, packages: c.packages || [], frameworks: c.frameworks || [] };
     if (c.check === 'run' && c.expected !== undefined) item.expected = c.expected;
     out.push(item);
   });
   for (const s of day.sections || []) addCode(`day${pad}-sec-${s.id}`, s.code);
   for (const q of day.qa || []) addCode(`day${pad}-qa-${q.id}`, q.code);
   for (const p of day.puzzles || []) {
-    out.push({ key: `day${pad}-puz-${p.id}`, src: p.src, mode: 'run', expected: p.answer, packages: p.packages || [] });
+    out.push({ key: `day${pad}-puz-${p.id}`, src: p.src, mode: 'run', expected: p.answer, packages: p.packages || [], frameworks: p.frameworks || [] });
   }
   return out;
 }
@@ -29,7 +29,11 @@ export function collectSnippets(day) {
 export const normalize = (s) =>
   s.replace(/\r\n/g, '\n').split('\n').map(l => l.replace(/\s+$/, '')).join('\n').replace(/\s+$/, '');
 
-function csproj(packages) {
+const FRAMEWORK_REFS = { aspnetcore: 'Microsoft.AspNetCore.App' };
+
+export function csproj(packages = [], frameworks = []) {
+  for (const f of frameworks) if (!FRAMEWORK_REFS[f]) throw new Error(`unknown framework ${f}`);
+  const fwRefs = frameworks.map(f => `    <FrameworkReference Include="${FRAMEWORK_REFS[f]}" />`).join('\n');
   const refs = packages.map(p => `    <PackageReference Include="${p}" Version="9.*" />`).join('\n');
   return `<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -43,7 +47,7 @@ function csproj(packages) {
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
-${refs ? `  <ItemGroup>\n${refs}\n  </ItemGroup>\n` : ''}</Project>
+${fwRefs ? `  <ItemGroup>\n${fwRefs}\n  </ItemGroup>\n` : ''}${refs ? `  <ItemGroup>\n${refs}\n  </ItemGroup>\n` : ''}</Project>
 `;
 }
 
@@ -74,7 +78,7 @@ export function checkSnippet(snip) {
   const dir = path.join(SNIPPETS_DIR, snip.key);
   mkdirSync(dir, { recursive: true });
   writeIfChanged(path.join(dir, 'Program.cs'), snip.src);
-  writeIfChanged(path.join(dir, 'snippet.csproj'), csproj(snip.packages));
+  writeIfChanged(path.join(dir, 'snippet.csproj'), csproj(snip.packages, snip.frameworks || []));
   const entry = path.join(dir, 'Entry.cs');
   if (existsSync(entry)) rmSync(entry); // re-detect each run; a stale stub would clash with top-level statements
 

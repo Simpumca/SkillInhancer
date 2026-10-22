@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { loadDay } from '../tools/load-content.mjs';
-import { collectSnippets, isRestoreFailure, normalize } from '../tools/check-code.mjs';
+import { collectSnippets, isRestoreFailure, normalize, csproj } from '../tools/check-code.mjs';
 
 const hasDotnet = spawnSync('dotnet', ['--version'], { encoding: 'utf8' }).status === 0;
 const runCli = (file) =>
@@ -50,4 +50,37 @@ test('cli_ignores_stderr_in_compare', (t) => {
   const r = runCli('tests/fixtures/day-code-stderr.js');
   assert.equal(r.status, 0, r.stdout + r.stderr);
   assert.match(r.stdout, /PASS day99-puz-sum/);
+});
+
+test('csproj_frameworks_generates_framework_reference', () => {
+  const web = csproj([], ['aspnetcore']);
+  assert.match(web, /<FrameworkReference Include="Microsoft\.AspNetCore\.App" \/>/);
+  assert.doesNotMatch(csproj([], []), /FrameworkReference/);
+  assert.doesNotMatch(csproj(['X.Y']), /FrameworkReference/);
+  assert.match(csproj(['Microsoft.AspNetCore.TestHost'], ['aspnetcore']), /PackageReference Include="Microsoft\.AspNetCore\.TestHost" Version="9\.\*"/);
+  assert.throws(() => csproj([], ['blazor']), /unknown framework blazor/);
+});
+
+test('collect_snippets_carries_frameworks', () => {
+  const items = collectSnippets(loadDay('tests/fixtures/day-web.js'));
+  assert.deepEqual(items.map(i => i.key), ['day98-sec-web-0', 'day98-puz-status']);
+  assert.deepEqual([...items[0].frameworks], ['aspnetcore']);
+  assert.deepEqual([...items[1].frameworks], ['aspnetcore']);
+  assert.deepEqual([...items[1].packages], ['Microsoft.AspNetCore.TestHost']);
+});
+
+test('cli_passes_aspnetcore_testhost_fixture', (t) => {
+  if (!hasDotnet) return t.skip('dotnet not on PATH');
+  const r = runCli('tests/fixtures/day-web.js');
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /PASS day98-puz-status/);
+  assert.match(r.stdout, /PASS day98-sec-web-0/);
+});
+
+test('cli_fails_loudly_when_frameworks_missing', (t) => {
+  if (!hasDotnet) return t.skip('dotnet not on PATH');
+  const r = runCli('tests/fixtures/day-web-noframework.js');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /FAIL day97-puz-status/);
+  assert.doesNotMatch(r.stdout, /SKIP/);
 });

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { loadDay, loadCurriculum } from '../tools/load-content.mjs';
 import { validateDay } from '../tools/validate.mjs';
 
-const RELAXED = { minShortQa: 1, minQa: 1, maxQa: 25, minPuzzles: 1 };
+const RELAXED = { minShortQa: 1, minQa: 1, maxQa: 25, minPuzzles: 1, minSections: 1, minShortSections: 1, minRevision: 1, maxRevision: 12 };
 const good = () => loadDay('tests/fixtures/day-good.js');
 
 function makeQa(n, depth = 'short', prefix = 'q') {
@@ -81,4 +81,104 @@ test('curriculum_has_30', () => {
   assert.equal(c[7].week, 2);
   assert.equal(c[14].week, 3);
   assert.equal(c[21].week, 4);
+});
+
+const has = (errs, text) => errs.some(e => e.includes(text));
+
+test('sections_count_and_short_count', () => {
+  const d = good();
+  const strict = { ...RELAXED, minSections: 4, minShortSections: 2 };
+  assert.ok(validateDay(d, strict).includes('sections: 1 < 4'));
+  assert.ok(validateDay(d, strict).includes('sections: short count 1 < 2'));
+  const base = good().sections[0];
+  d.sections = ['a', 'b', 'c', 'd'].map(id => ({ ...base, id, depth: id === 'a' ? 'short' : 'detailed' }));
+  const errs = validateDay(d, strict);
+  assert.ok(!has(errs, 'sections: 4 <'));
+  assert.ok(errs.includes('sections: short count 1 < 2'));
+});
+
+test('sections_and_revision_defaults_are_strict', () => {
+  const errs = validateDay(good(), { minShortQa: 1, minQa: 1, minPuzzles: 1 });
+  assert.ok(errs.includes('sections: 1 < 4'));
+  assert.ok(errs.includes('sections: short count 1 < 2'));
+  assert.ok(errs.includes('revision: 1 not in 8..12'));
+});
+
+test('revision_range', () => {
+  const d = good();
+  const o = { ...RELAXED, minRevision: 8, maxRevision: 12 };
+  assert.ok(validateDay(d, o).includes('revision: 1 not in 8..12'));
+  const mk = n => Array.from({ length: n }, () => 'x');
+  const set = n => { d.revision = { en: mk(n), meaning: { hi: mk(n).map(() => 'क'), hg: mk(n) } }; };
+  set(8); assert.ok(!has(validateDay(d, o), 'not in 8..12'));
+  set(12); assert.ok(!has(validateDay(d, o), 'not in 8..12'));
+  set(10); assert.ok(!has(validateDay(d, o), 'not in 8..12'));
+  set(13); assert.ok(validateDay(d, o).includes('revision: 13 not in 8..12'));
+});
+
+test('run_snippet_needs_expected', () => {
+  let d = good();
+  delete d.sections[0].code[0].expected;
+  assert.ok(validateDay(d, RELAXED).includes('sections[0].code[0]: run snippet without expected'));
+  d = good();
+  d.qa[0].code = [{ ...good().sections[0].code[0], expected: undefined }];
+  assert.ok(validateDay(d, RELAXED).includes('qa[0].code[0]: run snippet without expected'));
+  d = good();
+  d.sections[0].code[0].expected = '';   // empty expected output is legitimate
+  assert.ok(!has(validateDay(d, RELAXED), 'without expected'));
+});
+
+test('devanagari_in_english_fields', () => {
+  let d = good();
+  d.qa[0].answer = 'Abstract class में state';
+  assert.ok(validateDay(d, RELAXED).includes('qa[0].answer: contains Devanagari'));
+  d = good();
+  d.revision.en[0] = 'क्लास';
+  assert.ok(validateDay(d, RELAXED).includes('revision.en[0]: contains Devanagari'));
+});
+
+test('null_items_do_not_throw', () => {
+  const d = good();
+  d.sections = [null, 5, { ...good().sections[0], id: 'z', code: [null] }];
+  d.qa = [null];
+  d.puzzles = [undefined];
+  let errs;
+  assert.doesNotThrow(() => { errs = validateDay(d, RELAXED); });
+  assert.ok(errs.includes('sections[0]: not an object'));
+  assert.ok(errs.includes('sections[1]: not an object'));
+  assert.ok(errs.includes('qa[0]: not an object'));
+  assert.ok(errs.includes('puzzles[0]: not an object'));
+  assert.ok(errs.includes('sections[2].code[0]: not an object'));
+});
+
+test('frameworks_validation', () => {
+  let d = good();
+  d.sections[0].code[0].frameworks = ['aspnetcore'];
+  d.puzzles[0].frameworks = ['aspnetcore'];
+  assert.deepEqual(validateDay(d, RELAXED), []);
+  d = good();
+  d.sections[0].code[0].frameworks = ['blazor'];
+  assert.ok(validateDay(d, RELAXED).includes('sections[0].code[0]: unknown framework blazor'));
+  d = good();
+  d.puzzles[0].frameworks = ['wpf'];
+  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: unknown framework wpf'));
+  d = good();
+  d.qa[0].code = [{ ...good().sections[0].code[0], frameworks: 'aspnetcore' }];
+  assert.ok(validateDay(d, RELAXED).includes('qa[0].code[0]: frameworks must be an array of strings'));
+  d = good();
+  d.puzzles[0].frameworks = [1];
+  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: frameworks must be an array of strings'));
+});
+
+test('filename_day_mismatch', async () => {
+  const { validateContentFile } = await import('../tools/validate.mjs');
+  const errs = validateContentFile('tests/fixtures/day-good.js', 7, RELAXED);
+  assert.ok(errs.includes('day: file 07 != day.day 1'));
+  assert.ok(!validateContentFile('tests/fixtures/day-good.js', 1, RELAXED).some(e => e.startsWith('day: file')));
+});
+
+test('min_puzzles_for_days_1_to_14', async () => {
+  const { minPuzzlesFor } = await import('../tools/validate.mjs');
+  for (let n = 1; n <= 14; n++) assert.equal(minPuzzlesFor(n), 5, `day ${n}`);
+  assert.equal(minPuzzlesFor(15), 0);
 });
