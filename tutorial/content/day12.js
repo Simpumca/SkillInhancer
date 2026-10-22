@@ -35,7 +35,7 @@ window.TL_DAY = {
 <li><b>Middleware pipeline</b>: components ki chain (Day 10, Chain of Responsibility). Har ek ko <code>next</code> milta hai; <code>await next()</code> se pehle ka code andar jaate samay chalta hai, baad ka bahar aate samay. <b>Order = Program.cs mein calls ka order</b>, isliye order matter karta hai.</li>
 <li><b><code>Use</code> / <code>Run</code> / <code>Map</code> / <code>MapWhen</code> / <code>UseWhen</code></b>: <code>Use</code> <code>next</code> bula sakta hai; <code>Run</code> terminal hai; <code>Map</code> aur <code>MapWhen</code> alag branch banate hain aur wapas nahi judte; <code>UseWhen</code> branch banakar wapas judta hai. <b>Short-circuit</b> = <code>next</code> na bulana.</li>
 <li><b>Authentication vs authorization</b>: <code>UseAuthentication</code> sirf caller ko pehchanta hai (<code>HttpContext.User</code> set karta hai) aur <code>next</code> bulata hai. Faisla authorization step karta hai: 401 (challenge) ya 403 (forbid).</li>
-<li><b>Configuration</b>: providers ki parten, <b>aakhri jeetta hai</b>: appsettings.json, appsettings.{Environment}.json, user secrets (Development), environment variables, command line. Sections ko Options pattern se class mein bind karo (Day 11).</li>
+<li><b>Configuration</b>: providers parton mein hain, <b>aakhri jeetta hai</b>: appsettings.json, appsettings.{Environment}.json, user secrets (Development), environment variables, command line. Sections ko Options pattern se class mein bind karo (Day 11).</li>
 <li><b>Environment aur logging</b>: <code>ASPNETCORE_ENVIRONMENT</code> se Development/Staging/Production chunte hain (default Production). <code>ILogger&lt;T&gt;</code> aur <b>message templates</b> (<code>{OrderId}</code>) se log karo, string interpolation se nahi.</li>
 <li><b>DI</b>: har request ke liye ek scope (<code>HttpContext.RequestServices</code>); lifetimes Day 11 mein the. <b>Filters</b> (authorization, resource, action, exception, result) MVC ke andar chalte hain aur actions ko jaante hain; middleware har request dekhta hai.</li>
 <li><b>Minimal API vs Controllers</b>: dono production mein theek hain. Minimal APIs halke hain aur unmein route groups, endpoint filters, <code>TypedResults</code> (.NET 7+) hain; controllers mein filters, model binding conventions aur badi teams ke liye structure milta hai.</li>
@@ -96,6 +96,7 @@ window.TL_DAY = {
 <li><b>Use</b>: runs your code and may call <code>next</code>. <b>Run</b>: terminal, there is no <code>next</code>, so anything added after it is never reached. <b>Map</b>: branch by path prefix. <b>MapWhen</b>: branch by any condition. <code>Map</code> and <code>MapWhen</code> do not rejoin the main pipeline; <b>UseWhen</b> branches and then rejoins.</li>
 <li><b>Short-circuit</b>: not calling <code>next</code>. Later middleware and the endpoint are skipped, but the earlier middleware still runs its "after" code. Static files, failed authorization and rate limiting are typical short-circuits.</li>
 <li><b>Usual order</b> (from the Microsoft docs): exception handling → HSTS → HTTPS redirection → static files → routing → CORS → authentication → authorization → your custom middleware → endpoints. CORS and rate limiting arrive in Day 13.</li>
+<li><b>Routing is implicit</b>: since .NET 6, <code>WebApplication</code> adds <code>UseRouting</code> at the start of the pipeline and <code>UseEndpoints</code> at the end if you do not call them, so your middleware normally runs after routing. Call <code>app.UseRouting()</code> yourself where you want it, for example after <code>UseStaticFiles</code> when static files must run <i>before</i> routing.</li>
 <li><b>Be exact about security</b>: <code>UseAuthentication</code> runs the authentication handlers, sets <code>HttpContext.User</code> and calls <code>next</code>; it does not reject anyone. The authorization step (<code>UseAuthorization</code> plus the endpoint's policy) answers <b>401</b> when the caller is not authenticated and <b>403</b> when authenticated but not allowed. In the docs order, <code>UseAuthentication</code> comes before <code>UseAuthorization</code>.</li>
 </ul>`,
         hi: `<p><b>Analogy — railway station में entry:</b> पहले ticket check, फिर security scan, फिर platform। हर gate आपको जाने दे सकता है या रोक सकता है। लौटते समय वही gates उल्टे क्रम में आते हैं। यही pipeline है, और यही Day 10 वाला <b>Chain of Responsibility</b> है।</p>
@@ -105,6 +106,7 @@ window.TL_DAY = {
 <li><b>Use</b>: आपका code चलाता है और <code>next</code> बुला सकता है। <b>Run</b>: terminal, इसमें <code>next</code> नहीं होता, इसलिए उसके बाद जोड़ा गया कुछ भी कभी नहीं पहुँचता। <b>Map</b>: path prefix से branch। <b>MapWhen</b>: किसी भी condition से branch। <code>Map</code> और <code>MapWhen</code> main pipeline में वापस नहीं जुड़ते; <b>UseWhen</b> branch बनाकर वापस जुड़ता है।</li>
 <li><b>Short-circuit</b>: <code>next</code> न बुलाना। बाद के middleware और endpoint skip हो जाते हैं, पर पहले वाले middleware अपना "after" code फिर भी चलाते हैं। Static files, failed authorization और rate limiting आम short-circuits हैं।</li>
 <li><b>आम order</b> (Microsoft docs से): exception handling → HSTS → HTTPS redirection → static files → routing → CORS → authentication → authorization → आपका custom middleware → endpoints। CORS और rate limiting Day 13 में आएँगे।</li>
+<li><b>Routing implicit है</b>: .NET 6 से, अगर आप ख़ुद न बुलाओ तो <code>WebApplication</code> pipeline की शुरुआत में <code>UseRouting</code> और अंत में <code>UseEndpoints</code> जोड़ देता है, इसलिए आपका middleware आम तौर पर routing के बाद चलता है। जहाँ चाहिए वहाँ <code>app.UseRouting()</code> ख़ुद बुलाओ, जैसे static files को routing से <i>पहले</i> चलाना हो तो <code>UseStaticFiles</code> के बाद।</li>
 <li><b>Security में सटीक रहो</b>: <code>UseAuthentication</code> authentication handlers चलाता है, <code>HttpContext.User</code> set करता है और <code>next</code> बुलाता है; वह किसी को reject नहीं करता। Authorization step (<code>UseAuthorization</code> और endpoint की policy) <b>401</b> देता है जब caller authenticated नहीं है और <b>403</b> जब authenticated है पर allowed नहीं। Docs के order में <code>UseAuthentication</code>, <code>UseAuthorization</code> से पहले आता है।</li>
 </ul>`,
         hg: `<p><b>Analogy — railway station mein entry:</b> pehle ticket check, phir security scan, phir platform. Har gate aapko jaane de sakta hai ya rok sakta hai. Lautte samay wahi gates ulte kram mein aate hain. Yahi pipeline hai, aur yahi Day 10 wala <b>Chain of Responsibility</b> hai.</p>
@@ -114,6 +116,7 @@ window.TL_DAY = {
 <li><b>Use</b>: aapka code chalata hai aur <code>next</code> bula sakta hai. <b>Run</b>: terminal, ismein <code>next</code> nahi hota, isliye uske baad joda gaya kuch bhi kabhi nahi pahunchta. <b>Map</b>: path prefix se branch. <b>MapWhen</b>: kisi bhi condition se branch. <code>Map</code> aur <code>MapWhen</code> main pipeline mein wapas nahi judte; <b>UseWhen</b> branch banakar wapas judta hai.</li>
 <li><b>Short-circuit</b>: <code>next</code> na bulana. Baad ke middleware aur endpoint skip ho jaate hain, par pehle wale middleware apna "after" code phir bhi chalate hain. Static files, failed authorization aur rate limiting aam short-circuits hain.</li>
 <li><b>Aam order</b> (Microsoft docs se): exception handling → HSTS → HTTPS redirection → static files → routing → CORS → authentication → authorization → aapka custom middleware → endpoints. CORS aur rate limiting Day 13 mein aayenge.</li>
+<li><b>Routing implicit hai</b>: .NET 6 se, agar aap khud na bulao to <code>WebApplication</code> pipeline ki shuruaat mein <code>UseRouting</code> aur ant mein <code>UseEndpoints</code> jod deta hai, isliye aapka middleware aam taur par routing ke baad chalta hai. Jahan chahiye wahan <code>app.UseRouting()</code> khud bulao, jaise static files ko routing se <i>pehle</i> chalana ho to <code>UseStaticFiles</code> ke baad.</li>
 <li><b>Security mein sateek raho</b>: <code>UseAuthentication</code> authentication handlers chalata hai, <code>HttpContext.User</code> set karta hai aur <code>next</code> bulata hai; woh kisi ko reject nahi karta. Authorization step (<code>UseAuthorization</code> aur endpoint ki policy) <b>401</b> deta hai jab caller authenticated nahi hai aur <b>403</b> jab authenticated hai par allowed nahi. Docs ke order mein <code>UseAuthentication</code>, <code>UseAuthorization</code> se pehle aata hai.</li>
 </ul>`
       }
@@ -131,7 +134,6 @@ window.TL_DAY = {
 <ul>
 <li><b>Configuration providers</b> are layered. With <code>WebApplication.CreateBuilder</code>, the later source overrides the earlier one: <b>appsettings.json → appsettings.{Environment}.json → user secrets (only in Development) → environment variables → command-line arguments</b>.</li>
 <li><b>Keys</b> are hierarchical and case-insensitive: <code>Shop:Currency</code> in JSON is <code>Shop__Currency</code> as an environment variable (double underscore) and <code>--Shop:Currency=USD</code> on the command line. Read with <code>IConfiguration</code> (<code>GetSection</code>, <code>GetValue</code>, <code>GetConnectionString</code>) or bind to a class with the Options pattern (Day 11).</li>
-<li><b>Secrets</b>: user secrets are for local development only (stored in your user profile, outside the repo, not encrypted). In production use environment variables or a secret store such as Azure Key Vault.</li>
 <li><b>Environments</b>: <code>ASPNETCORE_ENVIRONMENT</code> (or <code>DOTNET_ENVIRONMENT</code>) selects Development, Staging or Production; if nothing is set the app runs as <b>Production</b>. Use <code>app.Environment.IsDevelopment()</code> for behaviour such as detailed error pages. Think of it as the classic <code>Web.config</code> transform, minus the XML.</li>
 <li><b>Logging</b>: ask for <code>ILogger&lt;T&gt;</code> through DI; the <b>category</b> is the full name of <code>T</code>. Levels from low to high: Trace, Debug, Information, Warning, Error, Critical. Minimum levels are set per category in the <code>Logging:LogLevel</code> configuration section.</li>
 <li><b>Message templates</b>: <code>logger.LogInformation("Order {OrderId} shipped", id)</code> keeps <code>OrderId</code> as a named value that log tools can search and filter. Interpolation (<code>$"..."</code>) throws that structure away and always builds the string, even when the level is off.</li>
@@ -140,16 +142,14 @@ window.TL_DAY = {
 <ul>
 <li><b>Configuration providers</b> परतों में हैं। <code>WebApplication.CreateBuilder</code> के साथ, बाद वाला source पहले वाले को override करता है: <b>appsettings.json → appsettings.{Environment}.json → user secrets (सिर्फ़ Development में) → environment variables → command-line arguments</b>।</li>
 <li><b>Keys</b> hierarchical और case-insensitive हैं: JSON का <code>Shop:Currency</code> environment variable में <code>Shop__Currency</code> (double underscore) और command line पर <code>--Shop:Currency=USD</code> होता है। <code>IConfiguration</code> (<code>GetSection</code>, <code>GetValue</code>, <code>GetConnectionString</code>) से पढ़ो या Options pattern से class में bind करो (Day 11)।</li>
-<li><b>Secrets</b>: user secrets सिर्फ़ local development के लिए हैं (आपके user profile में, repo के बाहर, encrypted नहीं)। Production में environment variables या Azure Key Vault जैसा secret store use करो।</li>
 <li><b>Environments</b>: <code>ASPNETCORE_ENVIRONMENT</code> (या <code>DOTNET_ENVIRONMENT</code>) Development, Staging या Production चुनता है; कुछ set न हो तो app <b>Production</b> की तरह चलती है। Detailed error pages जैसे behaviour के लिए <code>app.Environment.IsDevelopment()</code> use करो। इसे classic <code>Web.config</code> transform समझो, बिना XML के।</li>
 <li><b>Logging</b>: DI से <code>ILogger&lt;T&gt;</code> माँगो; <b>category</b> <code>T</code> का पूरा नाम होता है। Levels छोटे से बड़े: Trace, Debug, Information, Warning, Error, Critical। Minimum levels <code>Logging:LogLevel</code> section में category के हिसाब से तय होते हैं।</li>
 <li><b>Message templates</b>: <code>logger.LogInformation("Order {OrderId} shipped", id)</code> में <code>OrderId</code> एक named value रहता है जिसे log tools search और filter कर सकते हैं। Interpolation (<code>$"..."</code>) वह structure फेंक देता है और string हमेशा बनाता है, level बंद हो तब भी।</li>
 </ul>`,
         hg: `<p><b>Analogy — school ke rules:</b> school ka ek general rule hai (appsettings.json), aapki class apna jodti hai (appsettings.Development.json), aur aaj ka teacher keh sakta hai "aaj nahi" (environment variable ya command line). Sabse specific aur sabse taaza instruction jeetta hai.</p>
 <ul>
-<li><b>Configuration providers</b> partein hain. <code>WebApplication.CreateBuilder</code> ke saath, baad wala source pehle wale ko override karta hai: <b>appsettings.json → appsettings.{Environment}.json → user secrets (sirf Development mein) → environment variables → command-line arguments</b>.</li>
+<li><b>Configuration providers</b> parton mein hain. <code>WebApplication.CreateBuilder</code> ke saath, baad wala source pehle wale ko override karta hai: <b>appsettings.json → appsettings.{Environment}.json → user secrets (sirf Development mein) → environment variables → command-line arguments</b>.</li>
 <li><b>Keys</b> hierarchical aur case-insensitive hain: JSON ka <code>Shop:Currency</code> environment variable mein <code>Shop__Currency</code> (double underscore) aur command line par <code>--Shop:Currency=USD</code> hota hai. <code>IConfiguration</code> (<code>GetSection</code>, <code>GetValue</code>, <code>GetConnectionString</code>) se padho ya Options pattern se class mein bind karo (Day 11).</li>
-<li><b>Secrets</b>: user secrets sirf local development ke liye hain (aapke user profile mein, repo ke bahar, encrypted nahi). Production mein environment variables ya Azure Key Vault jaisa secret store use karo.</li>
 <li><b>Environments</b>: <code>ASPNETCORE_ENVIRONMENT</code> (ya <code>DOTNET_ENVIRONMENT</code>) Development, Staging ya Production chunta hai; kuch set na ho to app <b>Production</b> ki tarah chalti hai. Detailed error pages jaise behaviour ke liye <code>app.Environment.IsDevelopment()</code> use karo. Ise classic <code>Web.config</code> transform samjho, bina XML ke.</li>
 <li><b>Logging</b>: DI se <code>ILogger&lt;T&gt;</code> maango; <b>category</b> <code>T</code> ka poora naam hota hai. Levels chhote se bade: Trace, Debug, Information, Warning, Error, Critical. Minimum levels <code>Logging:LogLevel</code> section mein category ke hisaab se tay hote hain.</li>
 <li><b>Message templates</b>: <code>logger.LogInformation("Order {OrderId} shipped", id)</code> mein <code>OrderId</code> ek named value rehta hai jise log tools search aur filter kar sakte hain. Interpolation (<code>$"..."</code>) woh structure phenk deta hai aur string hamesha banata hai, level band ho tab bhi.</li>
@@ -157,40 +157,60 @@ window.TL_DAY = {
       }
     },
     {
-      id: "di-filters-apis-overview",
+      id: "di-filters-overview",
       depth: "short",
       title: {
-        en: "DI per request, filters, and Minimal API vs Controllers",
-        hi: "हर request में DI, filters, और Minimal API vs Controllers",
-        hg: "Har request mein DI, filters, aur Minimal API vs Controllers"
+        en: "DI per request and filters",
+        hi: "हर request में DI और filters",
+        hg: "Har request mein DI aur filters"
       },
       body: {
         en: `<p><b>Analogy — a mall:</b> middleware is the mall's main gate and security, which every visitor passes, even someone only walking to the parking lot. Filters are the rules inside one shop (the MVC shop): they only apply to people who walk into that shop, and they know what the customer is buying (the action).</p>
 <ul>
-<li><b>DI per request</b>: register in <code>builder.Services</code>; the framework creates one scope per request, available as <code>HttpContext.RequestServices</code>. Scoped services (such as <code>DbContext</code>) live for that request. Lifetimes and captive dependencies are Day 11; do not repeat them here, just apply them.</li>
-<li><b>Filter types and order</b>: <b>authorization → resource → action → exception → result</b>. Authorization filters run first and can stop everything. Resource filters wrap the rest (and run again on the way out). Action filters run around your action method. Exception filters handle exceptions thrown by actions and action filters. Result filters run around the execution of the result.</li>
+<li><b>DI per request</b>: register in <code>builder.Services</code>; the framework creates one scope per request, available as <code>HttpContext.RequestServices</code>. Scoped services (such as <code>DbContext</code>) live for that request. Lifetimes and captive dependencies are Day 11; just apply them.</li>
+<li><b>Filter types and order</b>: <b>authorization → resource → action → exception → result</b>. Authorization filters run first and can stop everything. Resource filters wrap the rest. Action filters run around your action method. Exception filters handle unhandled exceptions from controller creation, model binding, action filters and action methods (not from resource or result filters). Result filters run around the execution of the result.</li>
 <li><b>Filters vs middleware</b>: middleware works for every request (static files, health checks, any endpoint) and knows only <code>HttpContext</code>. Filters run only for MVC actions (controllers, Razor Pages) and can see the action, model-binding results and <code>ModelState</code>. Use middleware for cross-cutting HTTP concerns; use a filter when you need action-level context.</li>
-<li><b>Minimal API</b>: <code>app.MapGet("/x", handler)</code>; less ceremony, good for small services and microservices. <b>Controllers</b>: classes with attributes, filters and conventions; good for large APIs with many endpoints and teams. Both run on the same pipeline and performance is rarely the reason to choose.</li>
-<li><b>.NET 7+ for Minimal APIs</b>: <code>MapGroup</code> (shared prefix and filters), <b>endpoint filters</b> (<code>AddEndpointFilter</code>, like action filters for endpoints) and <code>TypedResults</code> (compile-time-checked return types).</li>
-<li><b>Web API topics</b> (ProblemDetails, JWT, CORS, caching, rate limiting, OpenAPI) come in Day 13.</li>
 </ul>`,
         hi: `<p><b>Analogy — mall:</b> middleware mall का main gate और security है, जिससे हर visitor गुज़रता है, parking की तरफ़ जाने वाला भी। Filters एक दुकान (MVC की दुकान) के अंदर के rules हैं: वे सिर्फ़ उसी दुकान में आने वालों पर लगते हैं, और उन्हें पता होता है कि customer क्या ख़रीद रहा है (action)।</p>
 <ul>
-<li><b>हर request में DI</b>: <code>builder.Services</code> में register करो; framework हर request के लिए एक scope बनाता है, जो <code>HttpContext.RequestServices</code> से मिलता है। Scoped services (जैसे <code>DbContext</code>) उसी request तक जीती हैं। Lifetimes और captive dependencies Day 11 में हैं; यहाँ दोहराना नहीं, बस लगाना है।</li>
-<li><b>Filter types और order</b>: <b>authorization → resource → action → exception → result</b>। Authorization filters सबसे पहले चलते हैं और सब कुछ रोक सकते हैं। Resource filters बाक़ी सबको लपेटते हैं (और बाहर आते समय फिर चलते हैं)। Action filters आपके action method के आसपास चलते हैं। Exception filters actions और action filters के exceptions संभालते हैं। Result filters result के execution के आसपास चलते हैं।</li>
+<li><b>हर request में DI</b>: <code>builder.Services</code> में register करो; framework हर request के लिए एक scope बनाता है, जो <code>HttpContext.RequestServices</code> से मिलता है। Scoped services (जैसे <code>DbContext</code>) उसी request तक जीती हैं। Lifetimes और captive dependencies Day 11 में हैं; बस लगाओ।</li>
+<li><b>Filter types और order</b>: <b>authorization → resource → action → exception → result</b>। Authorization filters सबसे पहले चलते हैं और सब कुछ रोक सकते हैं। Resource filters बाक़ी सबको लपेटते हैं। Action filters आपके action method के आसपास चलते हैं। Exception filters controller बनने, model binding, action filters और action methods के unhandled exceptions संभालते हैं (resource या result filters के नहीं)। Result filters result के execution के आसपास चलते हैं।</li>
 <li><b>Filters vs middleware</b>: middleware हर request के लिए काम करता है (static files, health checks, कोई भी endpoint) और सिर्फ़ <code>HttpContext</code> जानता है। Filters सिर्फ़ MVC actions (controllers, Razor Pages) के लिए चलते हैं और action, model-binding results और <code>ModelState</code> देख सकते हैं। Cross-cutting HTTP काम के लिए middleware; action-level context चाहिए तो filter।</li>
-<li><b>Minimal API</b>: <code>app.MapGet("/x", handler)</code>; कम ceremony, छोटी services और microservices के लिए अच्छा। <b>Controllers</b>: attributes, filters और conventions वाली classes; कई endpoints और teams वाली बड़ी APIs के लिए अच्छा। दोनों एक ही pipeline पर चलते हैं और चुनने की वजह शायद ही performance होती है।</li>
-<li><b>Minimal APIs के लिए .NET 7+</b>: <code>MapGroup</code> (साझा prefix और filters), <b>endpoint filters</b> (<code>AddEndpointFilter</code>, endpoints के लिए action filters जैसे) और <code>TypedResults</code> (compile-time checked return types)।</li>
-<li><b>Web API के topics</b> (ProblemDetails, JWT, CORS, caching, rate limiting, OpenAPI) Day 13 में आएँगे।</li>
 </ul>`,
         hg: `<p><b>Analogy — mall:</b> middleware mall ka main gate aur security hai, jisse har visitor guzarta hai, parking ki taraf jaane wala bhi. Filters ek dukaan (MVC ki dukaan) ke andar ke rules hain: woh sirf usi dukaan mein aane walon par lagte hain, aur unhe pata hota hai ki customer kya kharid raha hai (action).</p>
 <ul>
-<li><b>Har request mein DI</b>: <code>builder.Services</code> mein register karo; framework har request ke liye ek scope banata hai, jo <code>HttpContext.RequestServices</code> se milta hai. Scoped services (jaise <code>DbContext</code>) usi request tak jeeti hain. Lifetimes aur captive dependencies Day 11 mein hain; yahan dohrana nahi, bas lagana hai.</li>
-<li><b>Filter types aur order</b>: <b>authorization → resource → action → exception → result</b>. Authorization filters sabse pehle chalte hain aur sab kuch rok sakte hain. Resource filters baaki sabko lapetate hain (aur bahar aate samay phir chalte hain). Action filters aapke action method ke aaspaas chalte hain. Exception filters actions aur action filters ke exceptions sambhalte hain. Result filters result ke execution ke aaspaas chalte hain.</li>
+<li><b>Har request mein DI</b>: <code>builder.Services</code> mein register karo; framework har request ke liye ek scope banata hai, jo <code>HttpContext.RequestServices</code> se milta hai. Scoped services (jaise <code>DbContext</code>) usi request tak jeeti hain. Lifetimes aur captive dependencies Day 11 mein hain; bas lagao.</li>
+<li><b>Filter types aur order</b>: <b>authorization → resource → action → exception → result</b>. Authorization filters sabse pehle chalte hain aur sab kuch rok sakte hain. Resource filters baaki sabko lapetate hain. Action filters aapke action method ke aaspaas chalte hain. Exception filters controller banne, model binding, action filters aur action methods ke unhandled exceptions sambhalte hain (resource ya result filters ke nahi). Result filters result ke execution ke aaspaas chalte hain.</li>
 <li><b>Filters vs middleware</b>: middleware har request ke liye kaam karta hai (static files, health checks, koi bhi endpoint) aur sirf <code>HttpContext</code> jaanta hai. Filters sirf MVC actions (controllers, Razor Pages) ke liye chalte hain aur action, model-binding results aur <code>ModelState</code> dekh sakte hain. Cross-cutting HTTP kaam ke liye middleware; action-level context chahiye to filter.</li>
-<li><b>Minimal API</b>: <code>app.MapGet("/x", handler)</code>; kam ceremony, chhoti services aur microservices ke liye achha. <b>Controllers</b>: attributes, filters aur conventions wali classes; kai endpoints aur teams wali badi APIs ke liye achha. Dono ek hi pipeline par chalte hain aur chunne ki wajah shayad hi performance hoti hai.</li>
-<li><b>Minimal APIs ke liye .NET 7+</b>: <code>MapGroup</code> (saajha prefix aur filters), <b>endpoint filters</b> (<code>AddEndpointFilter</code>, endpoints ke liye action filters jaise) aur <code>TypedResults</code> (compile-time checked return types).</li>
-<li><b>Web API ke topics</b> (ProblemDetails, JWT, CORS, caching, rate limiting, OpenAPI) Day 13 mein aayenge.</li>
+</ul>`
+      }
+    },
+    {
+      id: "minimal-vs-controllers-overview",
+      depth: "short",
+      title: {
+        en: "Minimal API vs Controllers",
+        hi: "Minimal API बनाम Controllers",
+        hg: "Minimal API vs Controllers"
+      },
+      body: {
+        en: `<p><b>Analogy — chai stall vs sit-down restaurant:</b> a chai stall (Minimal API) opens fast with little setup and is perfect for a small menu. A restaurant (controllers) needs more structure, but it scales to a big menu and a big kitchen team. Both serve real customers.</p>
+<ul>
+<li><b>Minimal API</b>: <code>app.MapGet("/x", handler)</code>; less ceremony, good for small services and microservices. <b>Controllers</b>: classes with attributes, filters and conventions; good for large APIs with many endpoints and teams.</li>
+<li><b>Same engine</b>: both run on the same pipeline, routing and DI, can live in one app, and performance is rarely the reason to choose.</li>
+<li><b>.NET 7+ for Minimal APIs</b>: <code>MapGroup</code> (shared prefix and filters), <b>endpoint filters</b> (<code>AddEndpointFilter</code>, like action filters for endpoints) and <code>TypedResults</code> (compile-time-checked return types). ProblemDetails, JWT, CORS, caching, rate limiting and OpenAPI come in Day 13.</li>
+</ul>`,
+        hi: `<p><b>Analogy — चाय की टपरी vs बैठकर खाने वाला restaurant:</b> चाय की टपरी (Minimal API) कम setup में जल्दी खुलती है और छोटे menu के लिए बढ़िया है। Restaurant (controllers) को ज़्यादा structure चाहिए, पर वह बड़े menu और बड़ी kitchen team तक फैल सकता है। दोनों असली customers को serve करते हैं।</p>
+<ul>
+<li><b>Minimal API</b>: <code>app.MapGet("/x", handler)</code>; कम ceremony, छोटी services और microservices के लिए अच्छा। <b>Controllers</b>: attributes, filters और conventions वाली classes; कई endpoints और teams वाली बड़ी APIs के लिए अच्छा।</li>
+<li><b>एक ही engine</b>: दोनों एक ही pipeline, routing और DI पर चलते हैं, एक app में रह सकते हैं, और चुनने की वजह शायद ही performance होती है।</li>
+<li><b>Minimal APIs के लिए .NET 7+</b>: <code>MapGroup</code> (साझा prefix और filters), <b>endpoint filters</b> (<code>AddEndpointFilter</code>, endpoints के लिए action filters जैसे) और <code>TypedResults</code> (compile-time checked return types)। ProblemDetails, JWT, CORS, caching, rate limiting और OpenAPI Day 13 में आएँगे।</li>
+</ul>`,
+        hg: `<p><b>Analogy — chai ki tapri vs baithkar khane wala restaurant:</b> chai ki tapri (Minimal API) kam setup mein jaldi khulti hai aur chhote menu ke liye badhiya hai. Restaurant (controllers) ko zyada structure chahiye, par woh bade menu aur badi kitchen team tak phail sakta hai. Dono asli customers ko serve karte hain.</p>
+<ul>
+<li><b>Minimal API</b>: <code>app.MapGet("/x", handler)</code>; kam ceremony, chhoti services aur microservices ke liye achha. <b>Controllers</b>: attributes, filters aur conventions wali classes; kai endpoints aur teams wali badi APIs ke liye achha.</li>
+<li><b>Ek hi engine</b>: dono ek hi pipeline, routing aur DI par chalte hain, ek app mein reh sakte hain, aur chunne ki wajah shayad hi performance hoti hai.</li>
+<li><b>Minimal APIs ke liye .NET 7+</b>: <code>MapGroup</code> (saajha prefix aur filters), <b>endpoint filters</b> (<code>AddEndpointFilter</code>, endpoints ke liye action filters jaise) aur <code>TypedResults</code> (compile-time checked return types). ProblemDetails, JWT, CORS, caching, rate limiting aur OpenAPI Day 13 mein aayenge.</li>
 </ul>`
       }
     },
@@ -208,6 +228,7 @@ window.TL_DAY = {
 <li><b>Three steps</b> in every <code>Program.cs</code>: (1) register services on <code>builder.Services</code>; (2) <code>Build()</code> and add middleware in the right order; (3) map endpoints, then <code>Run()</code>.</li>
 <li><b>Environment-aware pipeline</b>: in Development the <code>WebApplication</code> already adds the developer exception page; in other environments add <code>UseExceptionHandler</code> and <code>UseHsts</code> yourself.</li>
 <li><b>Startup.cs bridge</b>: <code>ConfigureServices(IServiceCollection)</code> becomes <code>builder.Services...</code>; <code>Configure(IApplicationBuilder, IWebHostEnvironment)</code> becomes the <code>app.Use...</code> calls. Existing apps with <code>Startup</code> keep working with the generic host, so you rarely need to rewrite them just for fashion.</li>
+<li><b>Why no <code>UseRouting</code> in the Program.cs snippet, but one in the Startup snippet?</b> <code>WebApplication</code> adds <code>UseRouting</code> and <code>UseEndpoints</code> for you; with a <code>Startup</code> class you call them yourself.</li>
 <li><b>Interview angle</b>: if asked "how do you migrate a classic MVC app?", mention the mapping (<code>Global.asax</code> → <code>Program.cs</code>, <code>HttpModule</code> → middleware, <code>Web.config</code> → <code>appsettings.json</code> and environment variables, <code>System.Web</code> → <code>HttpContext</code> abstractions) and a step-by-step plan rather than a big-bang rewrite.</li>
 </ul>
 <p><b>When to use / when not:</b> use the minimal hosting model for all new apps. Keep an existing <code>Startup</code> class if the app is stable and the team is comfortable with it. Do not put business logic in <code>Program.cs</code>; move heavy registration into extension methods such as <code>AddShopServices()</code> so the file stays readable.</p>`,
@@ -216,6 +237,7 @@ window.TL_DAY = {
 <li>हर <code>Program.cs</code> में <b>तीन steps</b>: (1) <code>builder.Services</code> पर services register करो; (2) <code>Build()</code> करके middleware सही order में जोड़ो; (3) endpoints map करो, फिर <code>Run()</code>।</li>
 <li><b>Environment-aware pipeline</b>: Development में <code>WebApplication</code> developer exception page पहले से जोड़ देता है; दूसरे environments में <code>UseExceptionHandler</code> और <code>UseHsts</code> आप ख़ुद जोड़ो।</li>
 <li><b>Startup.cs से पुल</b>: <code>ConfigureServices(IServiceCollection)</code> बन जाता है <code>builder.Services...</code>; <code>Configure(IApplicationBuilder, IWebHostEnvironment)</code> बन जाता है <code>app.Use...</code> calls। <code>Startup</code> वाली मौजूदा apps generic host के साथ चलती रहती हैं, इसलिए सिर्फ़ फ़ैशन के लिए rewrite की ज़रूरत कम ही होती है।</li>
+<li><b>Program.cs snippet में <code>UseRouting</code> क्यों नहीं, पर Startup snippet में है?</b> <code>WebApplication</code> <code>UseRouting</code> और <code>UseEndpoints</code> ख़ुद जोड़ देता है; <code>Startup</code> class के साथ आप उन्हें ख़ुद बुलाते हो।</li>
 <li><b>Interview angle</b>: अगर पूछा जाए "classic MVC app कैसे migrate करोगे?", तो mapping बताओ (<code>Global.asax</code> → <code>Program.cs</code>, <code>HttpModule</code> → middleware, <code>Web.config</code> → <code>appsettings.json</code> और environment variables, <code>System.Web</code> → <code>HttpContext</code> abstractions) और step-by-step plan बताओ, big-bang rewrite नहीं।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> सारी नई apps के लिए minimal hosting model use करो। app stable हो और team सहज हो तो मौजूदा <code>Startup</code> class रखो। <code>Program.cs</code> में business logic मत डालो; भारी registration को <code>AddShopServices()</code> जैसे extension methods में ले जाओ ताकि file पढ़ने लायक रहे।</p>`,
@@ -224,6 +246,7 @@ window.TL_DAY = {
 <li>Har <code>Program.cs</code> mein <b>teen steps</b>: (1) <code>builder.Services</code> par services register karo; (2) <code>Build()</code> karke middleware sahi order mein jodo; (3) endpoints map karo, phir <code>Run()</code>.</li>
 <li><b>Environment-aware pipeline</b>: Development mein <code>WebApplication</code> developer exception page pehle se jod deta hai; doosre environments mein <code>UseExceptionHandler</code> aur <code>UseHsts</code> aap khud jodo.</li>
 <li><b>Startup.cs se pul</b>: <code>ConfigureServices(IServiceCollection)</code> ban jaata hai <code>builder.Services...</code>; <code>Configure(IApplicationBuilder, IWebHostEnvironment)</code> ban jaata hai <code>app.Use...</code> calls. <code>Startup</code> wali maujooda apps generic host ke saath chalti rehti hain, isliye sirf fashion ke liye rewrite ki zaroorat kam hi hoti hai.</li>
+<li><b>Program.cs snippet mein <code>UseRouting</code> kyun nahi, par Startup snippet mein hai?</b> <code>WebApplication</code> <code>UseRouting</code> aur <code>UseEndpoints</code> khud jod deta hai; <code>Startup</code> class ke saath aap unhe khud bulate ho.</li>
 <li><b>Interview angle</b>: agar pucha jaye "classic MVC app kaise migrate karoge?", to mapping batao (<code>Global.asax</code> → <code>Program.cs</code>, <code>HttpModule</code> → middleware, <code>Web.config</code> → <code>appsettings.json</code> aur environment variables, <code>System.Web</code> → <code>HttpContext</code> abstractions) aur step-by-step plan batao, big-bang rewrite nahi.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> saari nayi apps ke liye minimal hosting model use karo. App stable ho aur team sahaj ho to maujooda <code>Startup</code> class rakho. <code>Program.cs</code> mein business logic mat daalo; bhari registration ko <code>AddShopServices()</code> jaise extension methods mein le jao taaki file padhne layak rahe.</p>`
@@ -261,7 +284,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();   // who is calling? sets HttpContext.User, then calls next
-app.UseAuthorization();    // is that caller allowed? 401 / 403 happen here
+app.UseAuthorization();    // is that caller allowed? challenge / forbid happen here (a cookie scheme redirects to login)
 
 // 3. Map endpoints
 app.MapGet("/error", () => Results.Text("Something went wrong", statusCode: 500));
@@ -303,6 +326,7 @@ public class Startup
     // was: the middleware pipeline
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        // no implicit routing here: with Startup you call UseRouting and UseEndpoints yourself
         app.UseRouting();
         app.UseAuthorization();
         app.UseEndpoints(endpoints => endpoints.MapControllers());
@@ -614,27 +638,27 @@ static partial class Log
       body: {
         en: `<p><b>Analogy — a canteen counter:</b> before you reach the counter, a guard checks your ID card (authorization filter), then the cashier checks your coupon (resource/action filter); after the food is served, a staff member wraps it (result filter). If the ID is wrong, you never reach the food: that is a short-circuit.</p>
 <ul>
-<li><b>Order of filters</b>: authorization → resource → (model binding) → action → your action method → result. Exception filters handle exceptions thrown by actions and action filters. <b>Within one type</b>, filters run global → controller → action on the way in, and in reverse on the way out. The puzzles below print this order.</li>
+<li><b>Order of filters</b>: authorization → resource → (model binding) → action → your action method → result. Exception filters handle unhandled exceptions from controller creation, model binding, action filters and action methods (not from resource or result filters). <b>Within one type</b>, filters run global → controller → action on the way in, and in reverse on the way out. The puzzles below print this order.</li>
 <li><b>Short-circuit in a filter</b>: set <code>context.Result</code> (for action filters, and do not call <code>next</code> in the async version). The action method is skipped.</li>
-<li><b>Filters with DI</b>: attributes cannot take constructor services directly. Use <code>[ServiceFilter(typeof(T))]</code> (resolved from DI; register <code>T</code>) or <code>[TypeFilter]</code>.</li>
+<li><b>Filters with DI</b>: attributes cannot take constructor services directly. Use <code>[ServiceFilter(typeof(T))]</code> (resolved from DI, so register <code>T</code>) or <code>[TypeFilter(typeof(T))]</code> (created with constructor arguments from DI; <code>T</code> itself need not be registered).</li>
 <li><b>Minimal API building blocks</b>: <code>MapGroup</code> shares a prefix and filters; <code>AddEndpointFilter</code> (or an <code>IEndpointFilter</code> class) is the minimal-API cousin of an action filter; <code>TypedResults</code> / <code>Results&lt;Ok&lt;T&gt;, NotFound&gt;</code> make the possible responses part of the method signature, so they can be tested and documented.</li>
 <li><b>Same DI, same pipeline</b>: both styles use the same middleware, routing and DI; the handler parameters (<code>IProductStore</code> below) come from the request scope.</li>
 </ul>
 <p><b>When to use / when not:</b> choose <b>Minimal APIs</b> for small services, internal endpoints and teams that like functional style; choose <b>Controllers</b> when you want filters, attribute-based conventions and a familiar structure for a large team (they feel like classic MVC / Web API). Mixing both in one app is allowed. Do not copy-paste logic between endpoints: put shared rules in a group filter, a service or an extension method. Use a filter, not middleware, when you need the action or <code>ModelState</code>.</p>`,
         hi: `<p><b>Analogy — canteen का counter:</b> counter तक पहुँचने से पहले guard आपका ID card देखता है (authorization filter), फिर cashier आपका coupon देखता है (resource/action filter); खाना परोसने के बाद staff उसे पैक करता है (result filter)। ID ग़लत हो तो आप खाने तक पहुँचते ही नहीं: यही short-circuit है।</p>
 <ul>
-<li><b>Filters का order</b>: authorization → resource → (model binding) → action → आपका action method → result। Exception filters actions और action filters के exceptions संभालते हैं। <b>एक ही type में</b>, filters अंदर जाते समय global → controller → action के क्रम में चलते हैं, और बाहर आते समय उल्टे। नीचे के puzzles यह order print करते हैं।</li>
+<li><b>Filters का order</b>: authorization → resource → (model binding) → action → आपका action method → result। Exception filters controller बनने, model binding, action filters और action methods के unhandled exceptions संभालते हैं (resource या result filters के नहीं)। <b>एक ही type में</b>, filters अंदर जाते समय global → controller → action के क्रम में चलते हैं, और बाहर आते समय उल्टे। नीचे के puzzles यह order print करते हैं।</li>
 <li><b>Filter में short-circuit</b>: <code>context.Result</code> set करो (action filters में, और async version में <code>next</code> मत बुलाओ)। Action method skip हो जाता है।</li>
-<li><b>DI वाले filters</b>: attributes सीधे constructor services नहीं ले सकते। <code>[ServiceFilter(typeof(T))]</code> (DI से resolve होता है; <code>T</code> register करो) या <code>[TypeFilter]</code> use करो।</li>
+<li><b>DI वाले filters</b>: attributes सीधे constructor services नहीं ले सकते। <code>[ServiceFilter(typeof(T))]</code> (DI से resolve होता है, इसलिए <code>T</code> register करो) या <code>[TypeFilter(typeof(T))]</code> (constructor arguments DI से मिलते हैं; <code>T</code> को ख़ुद register करना ज़रूरी नहीं) use करो।</li>
 <li><b>Minimal API के building blocks</b>: <code>MapGroup</code> prefix और filters साझा करता है; <code>AddEndpointFilter</code> (या <code>IEndpointFilter</code> class) action filter का minimal-API भाई है; <code>TypedResults</code> / <code>Results&lt;Ok&lt;T&gt;, NotFound&gt;</code> संभव responses को method signature का हिस्सा बना देते हैं, इसलिए उन्हें test और document किया जा सकता है।</li>
 <li><b>वही DI, वही pipeline</b>: दोनों styles में middleware, routing और DI एक ही हैं; handler के parameters (नीचे <code>IProductStore</code>) request scope से आते हैं।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> छोटी services, internal endpoints और functional style पसंद करने वाली teams के लिए <b>Minimal APIs</b>; जब filters, attribute-based conventions और बड़ी team के लिए जानी-पहचानी structure चाहिए तब <b>Controllers</b> (ये classic MVC / Web API जैसे लगते हैं)। एक app में दोनों मिलाना allowed है। Endpoints के बीच logic copy-paste मत करो: साझा rules को group filter, service या extension method में रखो। जब action या <code>ModelState</code> चाहिए तब middleware नहीं, filter use करो।</p>`,
         hg: `<p><b>Analogy — canteen ka counter:</b> counter tak pahunchne se pehle guard aapka ID card dekhta hai (authorization filter), phir cashier aapka coupon dekhta hai (resource/action filter); khana parosne ke baad staff use pack karta hai (result filter). ID galat ho to aap khane tak pahunchte hi nahi: yahi short-circuit hai.</p>
 <ul>
-<li><b>Filters ka order</b>: authorization → resource → (model binding) → action → aapka action method → result. Exception filters actions aur action filters ke exceptions sambhalte hain. <b>Ek hi type mein</b>, filters andar jaate samay global → controller → action ke kram mein chalte hain, aur bahar aate samay ulte. Neeche ke puzzles yeh order print karte hain.</li>
+<li><b>Filters ka order</b>: authorization → resource → (model binding) → action → aapka action method → result. Exception filters controller banne, model binding, action filters aur action methods ke unhandled exceptions sambhalte hain (resource ya result filters ke nahi). <b>Ek hi type mein</b>, filters andar jaate samay global → controller → action ke kram mein chalte hain, aur bahar aate samay ulte. Neeche ke puzzles yeh order print karte hain.</li>
 <li><b>Filter mein short-circuit</b>: <code>context.Result</code> set karo (action filters mein, aur async version mein <code>next</code> mat bulao). Action method skip ho jaata hai.</li>
-<li><b>DI wale filters</b>: attributes seedhe constructor services nahi le sakte. <code>[ServiceFilter(typeof(T))]</code> (DI se resolve hota hai; <code>T</code> register karo) ya <code>[TypeFilter]</code> use karo.</li>
+<li><b>DI wale filters</b>: attributes seedhe constructor services nahi le sakte. <code>[ServiceFilter(typeof(T))]</code> (DI se resolve hota hai, isliye <code>T</code> register karo) ya <code>[TypeFilter(typeof(T))]</code> (constructor arguments DI se milte hain; <code>T</code> ko khud register karna zaroori nahi) use karo.</li>
 <li><b>Minimal API ke building blocks</b>: <code>MapGroup</code> prefix aur filters saajha karta hai; <code>AddEndpointFilter</code> (ya <code>IEndpointFilter</code> class) action filter ka minimal-API bhai hai; <code>TypedResults</code> / <code>Results&lt;Ok&lt;T&gt;, NotFound&gt;</code> sambhav responses ko method signature ka hissa bana dete hain, isliye unhe test aur document kiya ja sakta hai.</li>
 <li><b>Wahi DI, wahi pipeline</b>: dono styles mein middleware, routing aur DI ek hi hain; handler ke parameters (neeche <code>IProductStore</code>) request scope se aate hain.</li>
 </ul>
@@ -807,7 +831,7 @@ class PositiveIdFilter : IEndpointFilter
 </ul>`,
         hg: `<ul>
 <li><code>await next()</code> se pehle ka code registration order mein chalta hai; baad ka code ulte order mein. Yeh Day 10 wala Chain of Responsibility hai.</li>
-<li>Udaharan: exception handling sabse pehle aana chahiye taaki baad ke middleware ke errors pakde; <code>UseAuthentication</code>, <code>UseAuthorization</code> se pehle aana chahiye.</li>
+<li>Jaise: exception handling sabse pehle aana chahiye taaki baad ke middleware ke errors pakde; <code>UseAuthentication</code>, <code>UseAuthorization</code> se pehle aana chahiye.</li>
 <li>Aam order: exception handler, HSTS, HTTPS redirection, static files, routing, CORS, authentication, authorization, custom middleware, endpoints.</li>
 <li>Follow-up: "CORS authorization se pehle kyun?" — taaki short-circuit hue 401 ya 403 response mein bhi CORS headers hon; warna browser uljhane wala CORS error dikhata hai. CORS khud Day 13 mein hai.</li>
 <li>TL angle: pipeline ka order chhote comment ya test mein likho; galat order ke bugs random 401 ya missing CORS headers jaise dikhte hain.</li>
@@ -921,19 +945,19 @@ class PositiveIdFilter : IEndpointFilter
 <li>Middleware examples: correlation ID, request logging, security headers, exception handler. It also covers static files and endpoints that are not MVC.</li>
 <li>Filter examples: validate a parameter, audit an action by name, wrap results, translate a controller exception. Minimal APIs have their own endpoint filters.</li>
 <li>Filters are registered globally, per controller or per action; middleware is registered once for the whole pipeline (or a branch).</li>
-<li>Follow-up: "Can a filter replace the exception-handling middleware?" — no for the whole app: exception filters only see exceptions from actions and action filters, not from other middleware or from result execution.</li>
+<li>Follow-up: "Can a filter replace the exception-handling middleware?" — no for the whole app: exception filters handle unhandled exceptions from controller creation, model binding, action filters and action methods, but not from other middleware, resource or result filters, or result execution.</li>
 </ul>`,
         hi: `<ul>
 <li>Middleware के उदाहरण: correlation ID, request logging, security headers, exception handler। यह static files और non-MVC endpoints को भी कवर करता है।</li>
 <li>Filter के उदाहरण: parameter validate करना, action का नाम लेकर audit करना, results wrap करना, controller exception translate करना। Minimal APIs के अपने endpoint filters हैं।</li>
 <li>Filters globally, per controller या per action register होते हैं; middleware पूरी pipeline (या एक branch) के लिए एक बार register होता है।</li>
-<li>Follow-up: "क्या filter exception-handling middleware की जगह ले सकता है?" — पूरी app के लिए नहीं: exception filters सिर्फ़ actions और action filters के exceptions देखते हैं, दूसरे middleware या result execution के नहीं।</li>
+<li>Follow-up: "क्या filter exception-handling middleware की जगह ले सकता है?" — पूरी app के लिए नहीं: exception filters controller बनने, model binding, action filters और action methods के unhandled exceptions संभालते हैं, पर दूसरे middleware, resource या result filters और result execution के नहीं।</li>
 </ul>`,
         hg: `<ul>
-<li>Middleware ke udaharan: correlation ID, request logging, security headers, exception handler. Yeh static files aur non-MVC endpoints ko bhi cover karta hai.</li>
-<li>Filter ke udaharan: parameter validate karna, action ka naam lekar audit karna, results wrap karna, controller exception translate karna. Minimal APIs ke apne endpoint filters hain.</li>
+<li>Middleware ke examples: correlation ID, request logging, security headers, exception handler. Yeh static files aur non-MVC endpoints ko bhi cover karta hai.</li>
+<li>Filter ke examples: parameter validate karna, action ka naam lekar audit karna, results wrap karna, controller exception translate karna. Minimal APIs ke apne endpoint filters hain.</li>
 <li>Filters globally, per controller ya per action register hote hain; middleware poori pipeline (ya ek branch) ke liye ek baar register hota hai.</li>
-<li>Follow-up: "kya filter exception-handling middleware ki jagah le sakta hai?" — poori app ke liye nahi: exception filters sirf actions aur action filters ke exceptions dekhte hain, doosre middleware ya result execution ke nahi.</li>
+<li>Follow-up: "kya filter exception-handling middleware ki jagah le sakta hai?" — poori app ke liye nahi: exception filters controller banne, model binding, action filters aur action methods ke unhandled exceptions sambhalte hain, par doosre middleware, resource ya result filters aur result execution ke nahi.</li>
 </ul>`
       }
     },
@@ -1014,21 +1038,21 @@ class PositiveIdFilter : IEndpointFilter
       },
       explain: {
         en: `<ul>
-<li>Convention class: constructor gets <code>RequestDelegate</code> and singleton-safe services; <code>InvokeAsync(HttpContext, ...)</code> gets per-request services (this avoids the captive dependency from Day 11).</li>
+<li>Convention class: constructor gets <code>RequestDelegate</code> and singleton-safe services; <code>InvokeAsync(HttpContext, ...)</code> gets per-request services (this avoids the captive dependency from Day 11; puzzle 2 shows the one-instance behaviour).</li>
 <li><code>IMiddleware</code>: resolved from DI by <code>IMiddlewareFactory</code> and must be registered; strongly typed and can use scoped constructor injection.</li>
 <li>Wrap it in an extension method (<code>UseXxx</code>) for readability, and write a short-circuit as <code>return</code> without calling <code>next</code>.</li>
 <li>Follow-up: "How do you unit test middleware?" — build a <code>DefaultHttpContext</code> and a fake <code>next</code> delegate, or host it in <code>TestServer</code> as the puzzles do.</li>
 <li>TL angle: middleware is for cross-cutting HTTP behaviour; business rules belong in services.</li>
 </ul>`,
         hi: `<ul>
-<li>Convention class: constructor में <code>RequestDelegate</code> और singleton-safe services आती हैं; <code>InvokeAsync(HttpContext, ...)</code> में per-request services (इससे Day 11 वाली captive dependency बचती है)।</li>
+<li>Convention class: constructor में <code>RequestDelegate</code> और singleton-safe services आती हैं; <code>InvokeAsync(HttpContext, ...)</code> में per-request services (इससे Day 11 वाली captive dependency बचती है; puzzle 2 एक-instance वाला behaviour दिखाता है)।</li>
 <li><code>IMiddleware</code>: <code>IMiddlewareFactory</code> इसे DI से resolve करता है और इसे register करना पड़ता है; strongly typed है और scoped constructor injection ले सकता है।</li>
 <li>पढ़ने में आसानी के लिए extension method (<code>UseXxx</code>) में लपेटो, और short-circuit को <code>next</code> बुलाए बिना <code>return</code> की तरह लिखो।</li>
 <li>Follow-up: "middleware का unit test कैसे करोगे?" — <code>DefaultHttpContext</code> और नकली <code>next</code> delegate बनाओ, या puzzles की तरह <code>TestServer</code> में host करो।</li>
 <li>TL angle: middleware cross-cutting HTTP behaviour के लिए है; business rules services में रहने चाहिए।</li>
 </ul>`,
         hg: `<ul>
-<li>Convention class: constructor mein <code>RequestDelegate</code> aur singleton-safe services aati hain; <code>InvokeAsync(HttpContext, ...)</code> mein per-request services (isse Day 11 wali captive dependency bachti hai).</li>
+<li>Convention class: constructor mein <code>RequestDelegate</code> aur singleton-safe services aati hain; <code>InvokeAsync(HttpContext, ...)</code> mein per-request services (isse Day 11 wali captive dependency bachti hai; puzzle 2 ek-instance wala behaviour dikhata hai).</li>
 <li><code>IMiddleware</code>: <code>IMiddlewareFactory</code> ise DI se resolve karta hai aur ise register karna padta hai; strongly typed hai aur scoped constructor injection le sakta hai.</li>
 <li>Padhne mein aasani ke liye extension method (<code>UseXxx</code>) mein lapeto, aur short-circuit ko <code>next</code> bulaye bina <code>return</code> ki tarah likho.</li>
 <li>Follow-up: "middleware ka unit test kaise karoge?" — <code>DefaultHttpContext</code> aur nakli <code>next</code> delegate banao, ya puzzles ki tarah <code>TestServer</code> mein host karo.</li>
@@ -1040,30 +1064,30 @@ class PositiveIdFilter : IEndpointFilter
       id: "filter-order",
       depth: "detailed",
       q: "What is the filter execution order in ASP.NET Core MVC?",
-      answer: "Authorization, resource, action, then result filters; exception filters handle errors from actions and action filters. Within a type, global runs before controller, then action, and the order reverses on the way out.",
+      answer: "Authorization, resource, action, then result filters; exception filters handle errors raised in the action stage. Within a type, global runs before controller, then action, and the order reverses on the way out.",
       meaning: {
-        hi: "Authorization, resource, action, फिर result filters; exception filters actions और action filters के errors संभालते हैं। एक type में global, फिर controller, फिर action चलता है, और बाहर आते समय order उल्टा हो जाता है।",
-        hg: "Authorization, resource, action, phir result filters; exception filters actions aur action filters ke errors sambhalte hain. Ek type mein global, phir controller, phir action chalta hai, aur bahar aate samay order ulta ho jaata hai."
+        hi: "Authorization, resource, action, फिर result filters; exception filters action stage में उठे errors संभालते हैं। एक type में global, फिर controller, फिर action चलता है, और बाहर आते समय order उल्टा हो जाता है।",
+        hg: "Authorization, resource, action, phir result filters; exception filters action stage mein uthe errors sambhalte hain. Ek type mein global, phir controller, phir action chalta hai, aur bahar aate samay order ulta ho jaata hai."
       },
       explain: {
         en: `<ul>
 <li>Authorization filters run first and may short-circuit. Resource filters wrap model binding and everything after it, so they suit caching. Action filters surround the action method; result filters surround result execution.</li>
 <li>"Executing" methods run global → controller → action; "executed" methods run in reverse. Puzzle 5 prints the exact order.</li>
-<li>Exception filters do not catch exceptions from resource filters, result filters or result execution.</li>
+<li>Exception filters handle unhandled exceptions from controller creation, model binding, action filters and action methods; they do not catch exceptions from resource filters, result filters or result execution.</li>
 <li>Follow-up: "How can you change the order within a scope?" — implement <code>IOrderedFilter</code> or set the <code>Order</code> property on the attribute; lower values run first for "executing".</li>
 <li>Follow-up: "Do these filters apply to Minimal APIs?" — no, they use endpoint filters (puzzle 6).</li>
 </ul>`,
         hi: `<ul>
 <li>Authorization filters सबसे पहले चलते हैं और short-circuit कर सकते हैं। Resource filters model binding और उसके बाद की हर चीज़ को लपेटते हैं, इसलिए caching के लिए ठीक हैं। Action filters action method को घेरते हैं; result filters result execution को घेरते हैं।</li>
 <li>"Executing" methods global → controller → action के क्रम में चलते हैं; "executed" methods उल्टे क्रम में। Puzzle 5 सटीक order print करता है।</li>
-<li>Exception filters resource filters, result filters या result execution के exceptions नहीं पकड़ते।</li>
+<li>Exception filters controller बनने, model binding, action filters और action methods के unhandled exceptions संभालते हैं; resource filters, result filters या result execution के exceptions नहीं पकड़ते।</li>
 <li>Follow-up: "एक scope के अंदर order कैसे बदलोगे?" — <code>IOrderedFilter</code> implement करो या attribute पर <code>Order</code> property set करो; "executing" के लिए छोटी value पहले चलती है।</li>
 <li>Follow-up: "क्या ये filters Minimal APIs पर लगते हैं?" — नहीं, उनमें endpoint filters होते हैं (puzzle 6)।</li>
 </ul>`,
         hg: `<ul>
 <li>Authorization filters sabse pehle chalte hain aur short-circuit kar sakte hain. Resource filters model binding aur uske baad ki har cheez ko lapetate hain, isliye caching ke liye theek hain. Action filters action method ko gherte hain; result filters result execution ko gherte hain.</li>
 <li>"Executing" methods global → controller → action ke kram mein chalte hain; "executed" methods ulte kram mein. Puzzle 5 sateek order print karta hai.</li>
-<li>Exception filters resource filters, result filters ya result execution ke exceptions nahi pakadte.</li>
+<li>Exception filters controller banne, model binding, action filters aur action methods ke unhandled exceptions sambhalte hain; resource filters, result filters ya result execution ke exceptions nahi pakadte.</li>
 <li>Follow-up: "ek scope ke andar order kaise badloge?" — <code>IOrderedFilter</code> implement karo ya attribute par <code>Order</code> property set karo; "executing" ke liye chhoti value pehle chalti hai.</li>
 <li>Follow-up: "kya yeh filters Minimal APIs par lagte hain?" — nahi, unmein endpoint filters hote hain (puzzle 6).</li>
 </ul>`
@@ -1115,21 +1139,21 @@ class PositiveIdFilter : IEndpointFilter
         en: `<ul>
 <li>Controllers, endpoint handlers, filters and <code>InvokeAsync</code> parameters resolve from <code>RequestServices</code>. Lifetimes themselves were covered in Day 11 (captive dependencies, <code>ValidateScopes</code>).</li>
 <li>Scope validation is on by default in the Development environment, which catches a singleton that takes a scoped service early.</li>
-<li>Middleware constructors and background services are not inside a request scope: use <code>InvokeAsync</code> parameters or <code>IServiceScopeFactory</code>.</li>
+<li>Convention-middleware constructors and background services are not inside a request scope: use <code>InvokeAsync</code> parameters or <code>IServiceScopeFactory</code>.</li>
 <li>Follow-up: "Why is <code>DbContext</code> scoped?" — it is not thread-safe and tracks changes for one unit of work (Day 5, Day 7), and a request is that unit.</li>
 <li>Avoid the service-locator habit of calling <code>RequestServices.GetService</code> in business code (Day 8).</li>
 </ul>`,
         hi: `<ul>
 <li>Controllers, endpoint handlers, filters और <code>InvokeAsync</code> parameters <code>RequestServices</code> से resolve होते हैं। Lifetimes ख़ुद Day 11 में थीं (captive dependencies, <code>ValidateScopes</code>)।</li>
 <li>Development environment में scope validation default चालू है, जो scoped service लेने वाले singleton को जल्दी पकड़ लेता है।</li>
-<li>Middleware constructors और background services request scope के अंदर नहीं होते: <code>InvokeAsync</code> parameters या <code>IServiceScopeFactory</code> use करो।</li>
+<li>Convention-middleware constructors और background services request scope के अंदर नहीं होते: <code>InvokeAsync</code> parameters या <code>IServiceScopeFactory</code> use करो।</li>
 <li>Follow-up: "<code>DbContext</code> scoped क्यों है?" — यह thread-safe नहीं है और एक unit of work के बदलाव track करता है (Day 5, Day 7), और request वही unit है।</li>
 <li>Business code में <code>RequestServices.GetService</code> बुलाने की service-locator आदत से बचो (Day 8)।</li>
 </ul>`,
         hg: `<ul>
 <li>Controllers, endpoint handlers, filters aur <code>InvokeAsync</code> parameters <code>RequestServices</code> se resolve hote hain. Lifetimes khud Day 11 mein thi (captive dependencies, <code>ValidateScopes</code>).</li>
 <li>Development environment mein scope validation default chalu hai, jo scoped service lene wale singleton ko jaldi pakad leta hai.</li>
-<li>Middleware constructors aur background services request scope ke andar nahi hote: <code>InvokeAsync</code> parameters ya <code>IServiceScopeFactory</code> use karo.</li>
+<li>Convention-middleware constructors aur background services request scope ke andar nahi hote: <code>InvokeAsync</code> parameters ya <code>IServiceScopeFactory</code> use karo.</li>
 <li>Follow-up: "<code>DbContext</code> scoped kyun hai?" — yeh thread-safe nahi hai aur ek unit of work ke badlav track karta hai (Day 5, Day 7), aur request wahi unit hai.</li>
 <li>Business code mein <code>RequestServices.GetService</code> bulane ki service-locator aadat se bacho (Day 8).</li>
 </ul>`
@@ -1162,7 +1186,7 @@ class PositiveIdFilter : IEndpointFilter
         hg: `<ul>
 <li><code>logger.LogInformation("Order {OrderId} shipped to {City}", id, city)</code> se log tool <code>OrderId = 42</code> query kar sakta hai; <code>$"Order {id} shipped"</code> sirf text deta hai.</li>
 <li>Placeholders <b>position</b> se match hote hain, naam se nahi, isliye arguments ka kram template jaisa rakho.</li>
-<li>Levels: Trace, Debug, Information, Warning, Error, Critical. Warning "anapekshit par sambhala hua" ke liye, Error fail hue operations ke liye, aur hot loops mein Information se bacho.</li>
+<li>Levels: Trace, Debug, Information, Warning, Error, Critical. Warning "unexpected par sambhala hua" ke liye, Error fail hue operations ke liye, aur hot loops mein Information se bacho.</li>
 <li>Category = <code>ILogger&lt;T&gt;</code> mein <code>T</code> ka poora type name; <code>Logging:LogLevel</code> ke filter rules category prefix se match hote hain.</li>
 <li>Follow-up: "services ke beech logs kaise jodoge?" — correlation ya trace ID use karo (framework trace jaankari wale scopes jodta hai) aur use log karo.</li>
 </ul>`
@@ -1210,19 +1234,19 @@ class PositiveIdFilter : IEndpointFilter
       explain: {
         en: `<ul>
 <li>The middleware writes the response itself (status and body) and returns.</li>
-<li>Earlier middleware still unwinds: their code after <code>await next()</code> runs and can see the final status code (puzzle 2).</li>
+<li>Earlier middleware still unwinds: their code after <code>await next()</code> runs and can see the final status code (the "after" lines in puzzle 1 unwind the same way).</li>
 <li>Do not call <code>next</code> after you have written a response unless you know what the rest of the pipeline will do; the response may already have started.</li>
 <li>Follow-up: "How is that different from throwing an exception?" — a short-circuit is a planned, normal response; an exception travels back up to the exception handler.</li>
 </ul>`,
         hi: `<ul>
 <li>Middleware ख़ुद response लिखता है (status और body) और return कर जाता है।</li>
-<li>पहले वाले middleware फिर भी लौटते हैं: उनका <code>await next()</code> के बाद का code चलता है और अंतिम status code देख सकता है (puzzle 2)।</li>
+<li>पहले वाले middleware फिर भी लौटते हैं: उनका <code>await next()</code> के बाद का code चलता है और अंतिम status code देख सकता है (puzzle 1 की "after" lines भी ऐसे ही लौटती हैं)।</li>
 <li>Response लिखने के बाद <code>next</code> तब तक मत बुलाओ जब तक पता न हो कि बाक़ी pipeline क्या करेगी; response शुरू हो चुका हो सकता है।</li>
 <li>Follow-up: "यह exception फेंकने से कैसे अलग है?" — short-circuit सोचा-समझा, सामान्य response है; exception वापस ऊपर exception handler तक जाता है।</li>
 </ul>`,
         hg: `<ul>
 <li>Middleware khud response likhta hai (status aur body) aur return kar jaata hai.</li>
-<li>Pehle wale middleware phir bhi lautte hain: unka <code>await next()</code> ke baad ka code chalta hai aur antim status code dekh sakta hai (puzzle 2).</li>
+<li>Pehle wale middleware phir bhi lautte hain: unka <code>await next()</code> ke baad ka code chalta hai aur antim status code dekh sakta hai (puzzle 1 ki "after" lines bhi aise hi lautti hain).</li>
 <li>Response likhne ke baad <code>next</code> tab tak mat bulao jab tak pata na ho ki baaki pipeline kya karegi; response shuru ho chuka ho sakta hai.</li>
 <li>Follow-up: "yeh exception phenkne se kaise alag hai?" — short-circuit socha-samjha, saamanya response hai; exception wapas upar exception handler tak jaata hai.</li>
 </ul>`
@@ -1292,30 +1316,33 @@ class PositiveIdFilter : IEndpointFilter
       id: "global-exceptions",
       depth: "detailed",
       q: "How do you handle exceptions globally in ASP.NET Core?",
-      answer: "Put UseExceptionHandler first in the pipeline, or register an IExceptionHandler (.NET 8+), so it catches errors from later middleware, and log them. Show detailed error pages only in Development.",
+      answer: "Put UseExceptionHandler first in the pipeline so it catches errors from later middleware, and log them. On .NET 8+ it can call IExceptionHandler implementations registered with AddExceptionHandler<T>.",
       meaning: {
-        hi: "UseExceptionHandler को pipeline में सबसे पहले रखो, या IExceptionHandler (.NET 8+) register करो, ताकि वह बाद के middleware के errors पकड़े, और उन्हें log करो। Detailed error pages सिर्फ़ Development में दिखाओ।",
-        hg: "UseExceptionHandler ko pipeline mein sabse pehle rakho, ya IExceptionHandler (.NET 8+) register karo, taaki woh baad ke middleware ke errors pakde, aur unhe log karo. Detailed error pages sirf Development mein dikhao."
+        hi: "UseExceptionHandler को pipeline में सबसे पहले रखो ताकि वह बाद के middleware के errors पकड़े, और उन्हें log करो। .NET 8+ में वह AddExceptionHandler<T> से register हुए IExceptionHandler implementations को call कर सकता है।",
+        hg: "UseExceptionHandler ko pipeline mein sabse pehle rakho taaki woh baad ke middleware ke errors pakde, aur unhe log karo. .NET 8+ mein woh AddExceptionHandler<T> se register hue IExceptionHandler implementations ko call kar sakta hai."
       },
       explain: {
         en: `<ul>
 <li>It sits first because middleware only catches exceptions thrown by components after it.</li>
 <li>In Development the developer exception page shows details; in other environments return a safe, generic response and keep the details in logs.</li>
-<li>MVC exception filters cover only actions and action filters; the exception handler middleware covers the whole pipeline after it.</li>
+<li><code>IExceptionHandler</code> (.NET 8+) is called only by the exception-handler middleware: register it with <code>AddExceptionHandler&lt;T&gt;()</code> and still call <code>UseExceptionHandler()</code>; return <code>true</code> from <code>TryHandleAsync</code> when you handled the error. Registering the handler alone does nothing.</li>
+<li>MVC exception filters handle unhandled exceptions from controller creation, model binding, action filters and action methods, not from resource filters, result filters or result execution; the exception handler middleware covers the whole pipeline after it.</li>
 <li>Follow-up: "What should the error response look like?" — a consistent JSON shape; ProblemDetails is covered in Day 13.</li>
 <li>TL angle: one global handler plus logging with a trace ID beats try/catch blocks in every action.</li>
 </ul>`,
         hi: `<ul>
 <li>यह सबसे पहले इसलिए आता है क्योंकि middleware सिर्फ़ अपने बाद के components के exceptions पकड़ता है।</li>
 <li>Development में developer exception page details दिखाता है; दूसरे environments में सुरक्षित, general response दो और details logs में रखो।</li>
-<li>MVC exception filters सिर्फ़ actions और action filters को कवर करते हैं; exception handler middleware अपने बाद की पूरी pipeline को।</li>
+<li><code>IExceptionHandler</code> (.NET 8+) को सिर्फ़ exception-handler middleware बुलाता है: <code>AddExceptionHandler&lt;T&gt;()</code> से register करो और <code>UseExceptionHandler()</code> फिर भी बुलाओ; error संभाल लिया तो <code>TryHandleAsync</code> से <code>true</code> लौटाओ। सिर्फ़ handler register करने से कुछ नहीं होता।</li>
+<li>MVC exception filters controller बनने, model binding, action filters और action methods के unhandled exceptions संभालते हैं, resource filters, result filters या result execution के नहीं; exception handler middleware अपने बाद की पूरी pipeline को कवर करता है।</li>
 <li>Follow-up: "error response कैसा दिखे?" — एक जैसी JSON shape; ProblemDetails Day 13 में है।</li>
 <li>TL angle: एक global handler और trace ID के साथ logging, हर action में try/catch से बेहतर है।</li>
 </ul>`,
         hg: `<ul>
 <li>Yeh sabse pehle isliye aata hai kyunki middleware sirf apne baad ke components ke exceptions pakadta hai.</li>
 <li>Development mein developer exception page details dikhata hai; doosre environments mein surakshit, general response do aur details logs mein rakho.</li>
-<li>MVC exception filters sirf actions aur action filters ko cover karte hain; exception handler middleware apne baad ki poori pipeline ko.</li>
+<li><code>IExceptionHandler</code> (.NET 8+) ko sirf exception-handler middleware bulata hai: <code>AddExceptionHandler&lt;T&gt;()</code> se register karo aur <code>UseExceptionHandler()</code> phir bhi bulao; error sambhal liya to <code>TryHandleAsync</code> se <code>true</code> lautao. Sirf handler register karne se kuch nahi hota.</li>
+<li>MVC exception filters controller banne, model binding, action filters aur action methods ke unhandled exceptions sambhalte hain, resource filters, result filters ya result execution ke nahi; exception handler middleware apne baad ki poori pipeline ko cover karta hai.</li>
 <li>Follow-up: "error response kaisa dikhe?" — ek jaisi JSON shape; ProblemDetails Day 13 mein hai.</li>
 <li>TL angle: ek global handler aur trace ID ke saath logging, har action mein try/catch se behtar hai.</li>
 </ul>`
@@ -1403,61 +1430,71 @@ await app.StopAsync();`,
       }
     },
     {
-      id: "short-circuit-unwinds",
+      id: "middleware-activation-lifetime",
       frameworks: ["aspnetcore"],
       packages: ["Microsoft.AspNetCore.TestHost"],
       src: `using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder();
 builder.Logging.ClearProviders();
 builder.WebHost.UseTestServer();
+builder.Services.AddTransient<FactoryMiddleware>();   // IMiddleware must be registered
 var app = builder.Build();
 
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("outer before");
-    await next();
-    Console.WriteLine("outer after, status " + context.Response.StatusCode);
-});
-app.Use(async (context, next) =>
-{
-    if (!context.Request.Headers.ContainsKey("X-Key"))
-    {
-        Console.WriteLine("gate: blocked");
-        context.Response.StatusCode = 401;
-        await context.Response.WriteAsync("no key");
-        return;
-    }
-    Console.WriteLine("gate: allowed");
-    await next();
-});
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("audit");
-    await next();
-});
-app.Run(context => context.Response.WriteAsync("secret data"));
+app.UseMiddleware<ConventionMiddleware>();
+app.UseMiddleware<FactoryMiddleware>();
+app.Run(context => context.Response.WriteAsync("ok"));
 
 await app.StartAsync();
+Console.WriteLine("app started");
 var client = app.GetTestClient();
+for (var i = 1; i <= 3; i++)
+{
+    Console.WriteLine("request " + i);
+    await client.GetStringAsync("/");
+}
+await app.StopAsync();
 
-var denied = await client.GetAsync("/");
-Console.WriteLine($"{(int)denied.StatusCode} {await denied.Content.ReadAsStringAsync()}");
+class ConventionMiddleware
+{
+    private static int _created;
+    private readonly RequestDelegate _next;
 
-var request = new HttpRequestMessage(HttpMethod.Get, "/");
-request.Headers.Add("X-Key", "1");
-var allowed = await client.SendAsync(request);
-Console.WriteLine($"{(int)allowed.StatusCode} {await allowed.Content.ReadAsStringAsync()}");
-await app.StopAsync();`,
-      answer: "outer before\ngate: blocked\nouter after, status 401\n401 no key\nouter before\ngate: allowed\naudit\nouter after, status 200\n200 secret data",
+    public ConventionMiddleware(RequestDelegate next)
+    {
+        _next = next;
+        Console.WriteLine("convention ctor #" + ++_created);
+    }
+
+    public Task InvokeAsync(HttpContext context)
+    {
+        Console.WriteLine("  convention invoke");
+        return _next(context);
+    }
+}
+
+class FactoryMiddleware : IMiddleware
+{
+    private static int _created;
+
+    public FactoryMiddleware() => Console.WriteLine("  factory ctor #" + ++_created);
+
+    public Task InvokeAsync(HttpContext context, RequestDelegate next)
+    {
+        Console.WriteLine("  factory invoke");
+        return next(context);
+    }
+}`,
+      answer: "convention ctor #1\napp started\nrequest 1\n  convention invoke\n  factory ctor #1\n  factory invoke\nrequest 2\n  convention invoke\n  factory ctor #2\n  factory invoke\nrequest 3\n  convention invoke\n  factory ctor #3\n  factory invoke",
       explain: {
-        en: "<p>Request 1 has no <code>X-Key</code> header. The gate writes 401 and <b>returns without calling next</b>, so \"audit\" and the endpoint never run. The outer middleware is before the gate, so it still gets control back and prints its \"after\" line with status 401. Request 2 has the header, so the gate calls <code>next</code>, \"audit\" runs, the endpoint answers 200, and the outer \"after\" shows 200. Short-circuiting skips the <b>rest</b> of the chain, not the middleware that came before it. In real apps the 401 would come from the authorization step, as covered above.</p>",
-        hi: "<p>Request 1 में <code>X-Key</code> header नहीं है। Gate 401 लिखता है और <b>next बुलाए बिना return</b> कर जाता है, इसलिए \"audit\" और endpoint कभी नहीं चलते। Outer middleware gate से पहले है, इसलिए उसे control वापस मिलता है और वह status 401 के साथ अपनी \"after\" line print करता है। Request 2 में header है, इसलिए gate <code>next</code> बुलाता है, \"audit\" चलता है, endpoint 200 देता है, और outer \"after\" में 200 दिखता है। Short-circuit chain का <b>बाक़ी हिस्सा</b> skip करता है, उससे पहले आए middleware को नहीं। असली apps में 401 ऊपर बताए अनुसार authorization step से आएगा।</p>",
-        hg: "<p>Request 1 mein <code>X-Key</code> header nahi hai. Gate 401 likhta hai aur <b>next bulaye bina return</b> kar jaata hai, isliye \"audit\" aur endpoint kabhi nahi chalte. Outer middleware gate se pehle hai, isliye use control wapas milta hai aur woh status 401 ke saath apni \"after\" line print karta hai. Request 2 mein header hai, isliye gate <code>next</code> bulata hai, \"audit\" chalta hai, endpoint 200 deta hai, aur outer \"after\" mein 200 dikhta hai. Short-circuit chain ka <b>baaki hissa</b> skip karta hai, usse pehle aaye middleware ko nahi. Asli apps mein 401 upar bataye anusaar authorization step se aayega.</p>"
+        en: "<p>The <b>convention</b> middleware is instantiated once, when the pipeline is built at start-up (\"convention ctor #1\" appears before \"app started\"), and that single instance serves all three requests. That is why scoped services must not go in its constructor. The <code>IMiddleware</code> class is created by <code>IMiddlewareFactory</code> from the DI container on each request; because it is registered as transient, every request gets a new instance (#1, #2, #3). Its lifetime follows its registration: a singleton registration would be created once, and a scoped or transient one can safely take scoped services in the constructor.</p>",
+        hi: "<p><b>Convention</b> middleware का instance एक बार बनता है, जब start-up पर pipeline बनती है (\"convention ctor #1\" \"app started\" से पहले आता है), और वही एक instance तीनों requests को serve करता है। इसीलिए scoped services को उसके constructor में नहीं डालना चाहिए। <code>IMiddleware</code> class को <code>IMiddlewareFactory</code> हर request पर DI container से बनाता है; क्योंकि वह transient register है, हर request को नया instance मिलता है (#1, #2, #3)। उसकी lifetime registration के हिसाब से चलती है: singleton registration एक बार बनेगी, और scoped या transient constructor में scoped services सुरक्षित रूप से ले सकती है।</p>",
+        hg: "<p><b>Convention</b> middleware ka instance ek baar banta hai, jab start-up par pipeline banti hai (\"convention ctor #1\" \"app started\" se pehle aata hai), aur wahi ek instance teeno requests ko serve karta hai. Isiliye scoped services ko uske constructor mein nahi daalna chahiye. <code>IMiddleware</code> class ko <code>IMiddlewareFactory</code> har request par DI container se banata hai; kyunki woh transient register hai, har request ko naya instance milta hai (#1, #2, #3). Uski lifetime registration ke hisaab se chalti hai: singleton registration ek baar banegi, aur scoped ya transient constructor mein scoped services surakshit roop se le sakti hai.</p>"
       }
     },
     {
@@ -1671,7 +1708,7 @@ await app.StopAsync();`,
       "The environment defaults to Production; ASPNETCORE_ENVIRONMENT selects Development or Staging.",
       "Log with ILogger<T> and message templates, not string interpolation.",
       "A convention middleware is created once, so take scoped services as InvokeAsync parameters.",
-      "MVC filter order: authorization, resource, action, result; exception filters handle errors from actions and action filters.",
+      "MVC filter order: authorization, resource, action, result; exception filters cover the action stage, not resource or result filters.",
       "Middleware sees every request; filters run only inside MVC and know the action.",
       "Minimal APIs and controllers are both production-ready; choose by structure and team needs."
     ],
@@ -1686,7 +1723,7 @@ await app.StopAsync();`,
         "Environment का default Production है; ASPNETCORE_ENVIRONMENT से Development या Staging चुनते हैं।",
         "ILogger<T> और message templates से log करो, string interpolation से नहीं।",
         "Convention middleware एक बार बनता है, इसलिए scoped services को InvokeAsync के parameters में लो।",
-        "MVC filter order: authorization, resource, action, result; exception filters actions और action filters के errors संभालते हैं।",
+        "MVC filter order: authorization, resource, action, result; exception filters action stage को cover करते हैं, resource या result filters को नहीं।",
         "Middleware हर request देखता है; filters सिर्फ़ MVC के अंदर चलते हैं और action को जानते हैं।",
         "Minimal APIs और controllers दोनों production-ready हैं; structure और team की ज़रूरत से चुनो।"
       ],
@@ -1700,7 +1737,7 @@ await app.StopAsync();`,
         "Environment ka default Production hai; ASPNETCORE_ENVIRONMENT se Development ya Staging chunte hain.",
         "ILogger<T> aur message templates se log karo, string interpolation se nahi.",
         "Convention middleware ek baar banta hai, isliye scoped services ko InvokeAsync ke parameters mein lo.",
-        "MVC filter order: authorization, resource, action, result; exception filters actions aur action filters ke errors sambhalte hain.",
+        "MVC filter order: authorization, resource, action, result; exception filters action stage ko cover karte hain, resource ya result filters ko nahi.",
         "Middleware har request dekhta hai; filters sirf MVC ke andar chalte hain aur action ko jaante hain.",
         "Minimal APIs aur controllers dono production-ready hain; structure aur team ki zaroorat se chuno."
       ]
