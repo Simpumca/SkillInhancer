@@ -101,9 +101,7 @@ window.TL_DAY = {
         en: `<p><b>Analogy — the school principal's office:</b> there is exactly one, everyone knows where it is, and if ten students knock at the same time they must not create ten principals. That is the thread-safety question.</p>
 <ul>
 <li><b>Definition:</b> one instance for the whole app, reachable from one global point.</li>
-<li><b>Ways to get it in C# (worst → best for a hand-written one):</b> naive <code>if (_i == null)</code> (not thread-safe), <code>lock</code> on every call (safe but slow-ish), double-checked locking (fast, easy to get wrong), <code>static readonly</code> field initialiser, and <code>Lazy&lt;T&gt;</code>.</li>
-<li><b>Simplest correct one:</b> <code>static readonly</code> — the runtime runs a type initialiser exactly once, thread-safely. Use <code>Lazy&lt;T&gt;</code> when creation is expensive and may never be needed.</li>
-<li><b>Vs a static class:</b> a singleton is an object — it can implement an interface, be passed around, be faked in tests and be disposed. A static class cannot. (This builds on Day 1's static-class-vs-singleton.)</li>
+<li><b>Ways to get it in C#, from naive to recommended:</b> naive <code>if (_i == null)</code> (not thread-safe), <code>lock</code> on every call (safe, slow-ish), double-checked locking (fast, easy to get wrong), <code>static readonly</code> or <code>Lazy&lt;T&gt;</code> (simplest correct hand-written choice), and DI <code>AddSingleton</code> in apps (recommended).</li>
 <li><b>Modern recommendation:</b> in ASP.NET Core do not write the pattern; register it with <code>services.AddSingleton&lt;IPriceCache, PriceCache&gt;()</code> (or <code>TimeProvider.System</code>). Same single instance, but the lifetime is owned by the container and the class stays testable.</li>
 <li><b>Why it is controversial:</b> a hand-written <code>Instance</code> property is hidden global state; callers hide their dependency, tests share state, and shared mutable state needs locks.</li>
 </ul>
@@ -111,9 +109,7 @@ window.TL_DAY = {
         hi: `<p><b>Analogy — school principal का office:</b> ठीक एक होता है, सबको पता है कहाँ है, और अगर दस students एक साथ knock करें तो दस principals नहीं बनने चाहिए। यही thread-safety का सवाल है।</p>
 <ul>
 <li><b>Definition:</b> पूरे app के लिए एक instance, एक global point से मिलता है।</li>
-<li><b>C# में पाने के तरीके (hand-written के लिए खराब → अच्छा):</b> naive <code>if (_i == null)</code> (thread-safe नहीं), हर call पर <code>lock</code> (safe पर थोड़ा slow), double-checked locking (तेज़, पर गलती आसान), <code>static readonly</code> field initialiser, और <code>Lazy&lt;T&gt;</code>।</li>
-<li><b>सबसे आसान सही तरीका:</b> <code>static readonly</code> — runtime type initialiser ठीक एक बार और thread-safe तरीके से चलाता है। जब creation महँगी हो और शायद कभी ज़रूरत न पड़े तब <code>Lazy&lt;T&gt;</code> लो।</li>
-<li><b>Static class से फ़र्क:</b> singleton एक object है — interface implement कर सकता है, पास किया जा सकता है, tests में fake हो सकता है और dispose हो सकता है। Static class यह सब नहीं कर सकती। (यह Day 1 के static-class-vs-singleton पर बनता है।)</li>
+<li><b>C# में पाने के तरीके, naive से recommended तक:</b> naive <code>if (_i == null)</code> (thread-safe नहीं), हर call पर <code>lock</code> (safe, थोड़ा slow), double-checked locking (तेज़, पर गलती आसान), <code>static readonly</code> या <code>Lazy&lt;T&gt;</code> (हाथ से लिखने का सबसे आसान सही तरीका), और apps में DI <code>AddSingleton</code> (recommended)।</li>
 <li><b>Modern recommendation:</b> ASP.NET Core में pattern खुद मत लिखो; <code>services.AddSingleton&lt;IPriceCache, PriceCache&gt;()</code> (या <code>TimeProvider.System</code>) से register करो। Instance वही एक, पर lifetime container के पास और class testable।</li>
 <li><b>Controversial क्यों:</b> हाथ से लिखी <code>Instance</code> property छुपा हुआ global state है; callers अपनी dependency छुपाते हैं, tests state share करते हैं, और shared mutable state को locks चाहिए।</li>
 </ul>
@@ -121,9 +117,7 @@ window.TL_DAY = {
         hg: `<p><b>Analogy — school principal ka office:</b> theek ek hota hai, sabko pata hai kahaan hai, aur agar das students ek saath knock karein to das principals nahi banne chahiye. Yehi thread-safety ka sawaal hai.</p>
 <ul>
 <li><b>Definition:</b> poore app ke liye ek instance, ek global point se milta hai.</li>
-<li><b>C# mein paane ke tareeke (hand-written ke liye kharab → achha):</b> naive <code>if (_i == null)</code> (thread-safe nahi), har call par <code>lock</code> (safe par thoda slow), double-checked locking (tez, par galti aasan), <code>static readonly</code> field initialiser, aur <code>Lazy&lt;T&gt;</code>.</li>
-<li><b>Sabse aasan sahi tareeka:</b> <code>static readonly</code> — runtime type initialiser theek ek baar aur thread-safe tareeke se chalata hai. Jab creation mehngi ho aur shayad kabhi zaroorat na pade tab <code>Lazy&lt;T&gt;</code> lo.</li>
-<li><b>Static class se fark:</b> singleton ek object hai — interface implement kar sakta hai, pass kiya ja sakta hai, tests mein fake ho sakta hai aur dispose ho sakta hai. Static class yeh sab nahi kar sakti. (Yeh Day 1 ke static-class-vs-singleton par banta hai.)</li>
+<li><b>C# mein paane ke tareeke, naive se recommended tak:</b> naive <code>if (_i == null)</code> (thread-safe nahi), har call par <code>lock</code> (safe, thoda slow), double-checked locking (tez, par galti aasan), <code>static readonly</code> ya <code>Lazy&lt;T&gt;</code> (haath se likhne ka sabse aasan sahi tareeka), aur apps mein DI <code>AddSingleton</code> (recommended).</li>
 <li><b>Modern recommendation:</b> ASP.NET Core mein pattern khud mat likho; <code>services.AddSingleton&lt;IPriceCache, PriceCache&gt;()</code> (ya <code>TimeProvider.System</code>) se register karo. Instance wahi ek, par lifetime container ke paas aur class testable.</li>
 <li><b>Controversial kyun:</b> haath se likhi <code>Instance</code> property chhupa hua global state hai; callers apni dependency chhupate hain, tests state share karte hain, aur shared mutable state ko locks chahiye.</li>
 </ul>
@@ -143,8 +137,8 @@ window.TL_DAY = {
 <ul>
 <li><b>Naive</b> (<code>_instance ??= new()</code>): two threads can both see <code>null</code> and create two objects. Not thread-safe.</li>
 <li><b>lock on every call:</b> correct, but each read pays for the lock. Fine when the property is rarely read.</li>
-<li><b>Double-checked locking:</b> check without a lock, lock only when <code>null</code>, check again inside. It needs a <code>volatile</code> field. It is easy to get wrong, so most teams skip it.</li>
-<li><b>static readonly / static property initialiser:</b> the runtime runs the type initialiser exactly once and thread-safely. Shortest correct code. Without an explicit static constructor the class is marked <code>beforefieldinit</code>, so the runtime may run it earlier than the first access — usually harmless, but do not rely on the exact moment. (Day 1 covers static constructors.)</li>
+<li><b>Double-checked locking:</b> check without a lock, lock only when <code>null</code>, check again inside. Use a <code>volatile</code> field (recommended). It is easy to get wrong, so most teams skip it.</li>
+<li><b>static readonly / static property initialiser:</b> the runtime runs the type initialiser exactly once and thread-safely. Shortest correct code. Without an explicit static constructor the class is marked <code>beforefieldinit</code>, so the runtime may run it at any point before the first static <i>field</i> access — earlier or lazier than you expect; usually harmless, but do not rely on the exact moment. (Day 1 covers static constructors.)</li>
 <li><b>Lazy&lt;T&gt;:</b> creation happens on first <code>.Value</code>, once, thread-safe by default (<code>ExecutionAndPublication</code>). Pick it when start-up is expensive.</li>
 <li>Usually <code>sealed</code> + private constructor, so nobody can derive or create a second instance.</li>
 </ul>
@@ -153,8 +147,8 @@ window.TL_DAY = {
 <ul>
 <li><b>Naive</b> (<code>_instance ??= new()</code>): दो threads दोनों को <code>null</code> दिख सकता है और दो objects बन सकते हैं। Thread-safe नहीं।</li>
 <li><b>हर call पर lock:</b> सही है, पर हर read lock का दाम देता है। जब property कम पढ़ी जाए तब ठीक।</li>
-<li><b>Double-checked locking:</b> बिना lock check करो, <code>null</code> हो तभी lock लो, अंदर फिर check करो। इसमें <code>volatile</code> field चाहिए। गलती आसान है, इसलिए ज़्यादातर teams इसे छोड़ देती हैं।</li>
-<li><b>static readonly / static property initialiser:</b> runtime type initialiser ठीक एक बार और thread-safe चलाता है। सबसे छोटा सही code। Explicit static constructor न हो तो class <code>beforefieldinit</code> होती है, यानी runtime उसे पहले access से पहले भी चला सकता है — आम तौर पर बेअसर, पर सही समय पर भरोसा मत करो। (Static constructors Day 1 में हैं।)</li>
+<li><b>Double-checked locking:</b> बिना lock check करो, <code>null</code> हो तभी lock लो, अंदर फिर check करो। इसमें <code>volatile</code> field रखना recommended है। गलती आसान है, इसलिए ज़्यादातर teams इसे छोड़ देती हैं।</li>
+<li><b>static readonly / static property initialiser:</b> runtime type initialiser ठीक एक बार और thread-safe चलाता है। सबसे छोटा सही code। Explicit static constructor न हो तो class <code>beforefieldinit</code> होती है, यानी runtime उसे पहले static <i>field</i> access से पहले किसी भी समय चला सकता है — उम्मीद से जल्दी या देर से; आम तौर पर बेअसर, पर सही समय पर भरोसा मत करो। (Static constructors Day 1 में हैं।)</li>
 <li><b>Lazy&lt;T&gt;:</b> creation पहले <code>.Value</code> पर, एक बार, default में thread-safe (<code>ExecutionAndPublication</code>)। Start-up महँगा हो तो चुनो।</li>
 <li>आम तौर पर <code>sealed</code> + private constructor, ताकि कोई derive न करे और दूसरा instance न बना सके।</li>
 </ul>
@@ -163,12 +157,12 @@ window.TL_DAY = {
 <ul>
 <li><b>Naive</b> (<code>_instance ??= new()</code>): do threads dono ko <code>null</code> dikh sakta hai aur do objects ban sakte hain. Thread-safe nahi.</li>
 <li><b>Har call par lock:</b> sahi hai, par har read lock ka daam deta hai. Jab property kam padhi jaaye tab theek.</li>
-<li><b>Double-checked locking:</b> bina lock check karo, <code>null</code> ho tabhi lock lo, andar phir check karo. Isme <code>volatile</code> field chahiye. Galti aasan hai, isliye zyadatar teams ise chhod deti hain.</li>
-<li><b>static readonly / static property initialiser:</b> runtime type initialiser theek ek baar aur thread-safe chalata hai. Sabse chhota sahi code. Explicit static constructor na ho to class <code>beforefieldinit</code> hoti hai, yaani runtime use pehle access se pehle bhi chala sakta hai — aam taur par beasar, par sahi samay par bharosa mat karo. (Static constructors Day 1 mein hain.)</li>
+<li><b>Double-checked locking:</b> bina lock check karo, <code>null</code> ho tabhi lock lo, andar phir check karo. Isme <code>volatile</code> field rakhna recommended hai. Galti aasan hai, isliye zyadatar teams ise chhod deti hain.</li>
+<li><b>static readonly / static property initialiser:</b> runtime type initialiser theek ek baar aur thread-safe chalata hai. Sabse chhota sahi code. Explicit static constructor na ho to class <code>beforefieldinit</code> hoti hai, yaani runtime use pehle static <i>field</i> access se pehle kisi bhi samay chala sakta hai — ummeed se jaldi ya der se; aam taur par beasar, par sahi samay par bharosa mat karo. (Static constructors Day 1 mein hain.)</li>
 <li><b>Lazy&lt;T&gt;:</b> creation pehle <code>.Value</code> par, ek baar, default mein thread-safe (<code>ExecutionAndPublication</code>). Start-up mehnga ho to chuno.</li>
 <li>Aam taur par <code>sealed</code> + private constructor, taaki koi derive na kare aur doosra instance na bana sake.</li>
 </ul>
-<p><b>Kab use karein / kab nahi:</b> agar haath se likha singleton sach mein chahiye (jaise DI-rahit library mein) to sasti objects ke liye <code>static readonly</code> aur mehngi ke liye <code>Lazy&lt;T&gt;</code> lo. Double-checked locking tabhi jab <code>volatile</code> samjha sako. DI wale app mein yeh sab chhodo aur <code>AddSingleton</code> register karo.</p>`
+<p><b>Kab use karein / kab nahi:</b> agar haath se likha singleton sach mein chahiye (jaise DI-rahit library mein) to saste objects ke liye <code>static readonly</code> aur mehnge objects ke liye <code>Lazy&lt;T&gt;</code> lo. Double-checked locking tabhi jab <code>volatile</code> samjha sako. DI wale app mein yeh sab chhodo aur <code>AddSingleton</code> register karo.</p>`
       },
       code: [
         {
@@ -205,7 +199,7 @@ public sealed class LockSingleton
     }
 }
 
-// 3) Double-checked locking: fast path without a lock. The field must be volatile.
+// 3) Double-checked locking: fast path without a lock. Mark the field volatile (recommended).
 public sealed class DoubleCheckedSingleton
 {
     private static readonly object Gate = new();
@@ -306,7 +300,7 @@ public sealed class Checkout(IPriceCache prices)
 <li><b>Abstract Factory</b> — an interface with several <code>Create...()</code> methods that return <b>related</b> products. Swap the factory and the whole family changes together. Decided by <b>composition</b>.</li>
 <li><b>Quick tell:</b> one product + subclass decides → Factory Method. A matching family → Abstract Factory. One static switch → Simple Factory.</li>
 <li><b>In .NET:</b> <code>DbProviderFactory</code> (creates connection, command, parameter for one database provider) is a textbook Abstract Factory; <code>ILoggerFactory</code> and <code>IHttpClientFactory</code> are factories you inject; <code>Encoding.GetEncoding(name)</code> behaves like a Simple Factory.</li>
-<li><b>TL angle:</b> with DI, a factory interface is needed mainly when the choice depends on a <i>runtime value</i> (a channel name in the request). If the choice is fixed at start-up, just register the right implementation. Keyed services (next section) cover many runtime-choice cases.</li>
+<li><b>TL angle:</b> with DI, a factory interface is needed mainly when the choice depends on a <i>runtime value</i> (a channel name in the request). If the choice is fixed at start-up, just register the right implementation. Keyed services (last section, "TL view") cover many runtime-choice cases.</li>
 </ul>
 <p><b>When to use / when not:</b> use a factory when the concrete type depends on input or configuration, or when creation needs set-up the caller should not know. Use Abstract Factory only when products truly must match. Do not add a factory interface that has one implementation and one caller — plain DI or <code>new</code> is simpler.</p>`,
         hi: `<p><b>Analogy — pizza outlets:</b> <b>Simple Factory</b> = एक counter जिस पर menu है; आप "paneer" बोलते हो और counter pizza दे देता है। <b>Factory Method</b> = हर शहर का outlet वही ordering workflow inherit करता है पर अपनी local recipe खुद तय करता है। <b>Abstract Factory</b> = combo desk जो हमेशा मेल खाता set देता है, ताकि आपको Domino's के box में Pizza Hut का sauce sachet न मिले।</p>
@@ -316,7 +310,7 @@ public sealed class Checkout(IPriceCache prices)
 <li><b>Abstract Factory</b> — ऐसा interface जिसमें कई <code>Create...()</code> methods <b>related</b> products लौटाते हैं। Factory बदलो तो पूरा family साथ बदलता है। <b>Composition</b> से तय।</li>
 <li><b>जल्दी पहचान:</b> एक product + subclass तय करे → Factory Method। मेल खाता family → Abstract Factory। एक static switch → Simple Factory।</li>
 <li><b>.NET में:</b> <code>DbProviderFactory</code> (एक database provider के लिए connection, command, parameter बनाता है) textbook Abstract Factory है; <code>ILoggerFactory</code> और <code>IHttpClientFactory</code> ऐसी factories हैं जिन्हें आप inject करते हो; <code>Encoding.GetEncoding(name)</code> Simple Factory जैसा चलता है।</li>
-<li><b>TL angle:</b> DI के साथ factory interface मुख्य रूप से तब चाहिए जब choice <i>runtime value</i> पर निर्भर हो (request में channel का नाम)। अगर choice start-up पर तय है तो सही implementation register कर दो। Keyed services (अगला section) कई runtime-choice cases संभाल लेते हैं।</li>
+<li><b>TL angle:</b> DI के साथ factory interface मुख्य रूप से तब चाहिए जब choice <i>runtime value</i> पर निर्भर हो (request में channel का नाम)। अगर choice start-up पर तय है तो सही implementation register कर दो। Keyed services (आख़िरी section, "TL view") कई runtime-choice cases संभाल लेते हैं।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> जब concrete type input या configuration पर निर्भर हो, या creation में ऐसा set-up हो जो caller को पता नहीं होना चाहिए, तब factory लो। Abstract Factory तभी जब products सच में मेल खाने चाहिए। एक implementation और एक caller वाला factory interface मत जोड़ो — सीधा DI या <code>new</code> आसान है।</p>`,
         hg: `<p><b>Analogy — pizza outlets:</b> <b>Simple Factory</b> = ek counter jis par menu hai; aap "paneer" bolte ho aur counter pizza de deta hai. <b>Factory Method</b> = har shehar ka outlet wahi ordering workflow inherit karta hai par apni local recipe khud tay karta hai. <b>Abstract Factory</b> = combo desk jo hamesha match karta set deta hai, taaki aapko Domino's ke box mein Pizza Hut ka sauce sachet na mile.</p>
@@ -326,7 +320,7 @@ public sealed class Checkout(IPriceCache prices)
 <li><b>Abstract Factory</b> — aisa interface jisme kai <code>Create...()</code> methods <b>related</b> products lautate hain. Factory badlo to poora family saath badalta hai. <b>Composition</b> se tay.</li>
 <li><b>Jaldi pehchaan:</b> ek product + subclass tay kare → Factory Method. Match karta family → Abstract Factory. Ek static switch → Simple Factory.</li>
 <li><b>.NET mein:</b> <code>DbProviderFactory</code> (ek database provider ke liye connection, command, parameter banata hai) textbook Abstract Factory hai; <code>ILoggerFactory</code> aur <code>IHttpClientFactory</code> aisi factories hain jinhe aap inject karte ho; <code>Encoding.GetEncoding(name)</code> Simple Factory jaisa chalta hai.</li>
-<li><b>TL angle:</b> DI ke saath factory interface mukhya roop se tab chahiye jab choice <i>runtime value</i> par nirbhar ho (request mein channel ka naam). Agar choice start-up par tay hai to sahi implementation register kar do. Keyed services (agla section) kai runtime-choice cases sambhaal lete hain.</li>
+<li><b>TL angle:</b> DI ke saath factory interface mukhya roop se tab chahiye jab choice <i>runtime value</i> par nirbhar ho (request mein channel ka naam). Agar choice start-up par tay hai to sahi implementation register kar do. Keyed services (aakhri section, "TL view") kai runtime-choice cases sambhaal lete hain.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> jab concrete type input ya configuration par nirbhar ho, ya creation mein aisa set-up ho jo caller ko pata nahi hona chahiye, tab factory lo. Abstract Factory tabhi jab products sach mein match hone chahiye. Ek implementation aur ek caller wala factory interface mat jodo — seedha DI ya <code>new</code> aasan hai.</p>`
       },
@@ -593,7 +587,7 @@ public sealed class Greeter
         en: `<p><b>Analogy — a restaurant with a head waiter:</b> you do not walk into the kitchen to find the cook; the head waiter (the container) brings the right dish. You only keep a private chef (a hand-written factory) when the order depends on something the waiter cannot know in advance.</p>
 <ul>
 <li><b>Singleton → <code>AddSingleton</code>:</b> same one instance, but you ask for an interface in the constructor. No global <code>Instance</code>, so tests can pass a fake. Day 8's DIP in action.</li>
-<li><b>Choose by value at runtime → <code>Func&lt;string, T&gt;</code> or keyed services (.NET 8):</b> register each implementation under a key (<code>AddKeyedSingleton&lt;IPayment, UpiPayment&gt;("upi")</code>), then either inject one with <code>[FromKeyedServices("upi")]</code> or look one up with <code>GetRequiredKeyedService</code>.</li>
+<li><b>Choose a named implementation → keyed services (.NET 8):</b> register each implementation under a key (<code>AddKeyedSingleton&lt;IPayment, UpiPayment&gt;("upi")</code>). <i>Fixed</i> choice: put <code>[FromKeyedServices("upi")]</code> on the constructor parameter. <i>Runtime</i> choice: register a <code>Func&lt;string, T&gt;</code> over <code>GetRequiredKeyedService</code>.</li>
 <li><b>Several implementations of one interface:</b> inject <code>IEnumerable&lt;IPayment&gt;</code> and pick one — fine for a few, a <code>switch</code> in disguise for many.</li>
 <li><b>Create when needed, repeatedly → <code>Func&lt;T&gt;</code> or <code>IServiceScopeFactory</code>:</b> a delegate you register yourself (the built-in container does not supply <code>Func&lt;T&gt;</code> automatically).</li>
 <li><b>Avoid:</b> injecting <code>IServiceProvider</code> into business classes. That is the <b>Service Locator</b> anti-pattern: it hides what the class needs. Keep lookups inside a small factory or the composition root.</li>
@@ -603,7 +597,7 @@ public sealed class Greeter
         hi: `<p><b>Analogy — head waiter वाला restaurant:</b> आप cook ढूँढने kitchen में नहीं जाते; head waiter (container) सही dish ले आता है। निजी chef (hand-written factory) तभी रखो जब order ऐसी चीज़ पर निर्भर हो जो waiter को पहले से पता नहीं हो सकती।</p>
 <ul>
 <li><b>Singleton → <code>AddSingleton</code>:</b> वही एक instance, पर आप constructor में interface माँगते हो। Global <code>Instance</code> नहीं, इसलिए tests fake पास कर सकते हैं। Day 8 का DIP असल में।</li>
-<li><b>Runtime value से चुनना → <code>Func&lt;string, T&gt;</code> या keyed services (.NET 8):</b> हर implementation को key से register करो (<code>AddKeyedSingleton&lt;IPayment, UpiPayment&gt;("upi")</code>), फिर <code>[FromKeyedServices("upi")]</code> से एक inject करो या <code>GetRequiredKeyedService</code> से ढूँढो।</li>
+<li><b>नाम से implementation चुनना → keyed services (.NET 8):</b> हर implementation को key से register करो (<code>AddKeyedSingleton&lt;IPayment, UpiPayment&gt;("upi")</code>)। <i>Fixed</i> choice: constructor parameter पर <code>[FromKeyedServices("upi")]</code> लगाओ। <i>Runtime</i> choice: <code>GetRequiredKeyedService</code> पर <code>Func&lt;string, T&gt;</code> register करो।</li>
 <li><b>एक interface के कई implementations:</b> <code>IEnumerable&lt;IPayment&gt;</code> inject करके एक चुनो — कुछ के लिए ठीक, ज़्यादा हों तो भेस बदला हुआ <code>switch</code>।</li>
 <li><b>ज़रूरत पर बार-बार बनाना → <code>Func&lt;T&gt;</code> या <code>IServiceScopeFactory</code>:</b> ऐसा delegate जो आप खुद register करते हो (built-in container <code>Func&lt;T&gt;</code> अपने-आप नहीं देता)।</li>
 <li><b>बचो:</b> business classes में <code>IServiceProvider</code> inject करने से। यह <b>Service Locator</b> anti-pattern है: यह छुपा देता है कि class को क्या चाहिए। Lookups को छोटी factory या composition root में रखो।</li>
@@ -613,7 +607,7 @@ public sealed class Greeter
         hg: `<p><b>Analogy — head waiter wala restaurant:</b> aap cook dhoondhne kitchen mein nahi jaate; head waiter (container) sahi dish le aata hai. Niji chef (hand-written factory) tabhi rakho jab order aisi cheez par nirbhar ho jo waiter ko pehle se pata nahi ho sakti.</p>
 <ul>
 <li><b>Singleton → <code>AddSingleton</code>:</b> wahi ek instance, par aap constructor mein interface maangte ho. Global <code>Instance</code> nahi, isliye tests fake pass kar sakte hain. Day 8 ka DIP asal mein.</li>
-<li><b>Runtime value se chunna → <code>Func&lt;string, T&gt;</code> ya keyed services (.NET 8):</b> har implementation ko key se register karo (<code>AddKeyedSingleton&lt;IPayment, UpiPayment&gt;("upi")</code>), phir <code>[FromKeyedServices("upi")]</code> se ek inject karo ya <code>GetRequiredKeyedService</code> se dhoondho.</li>
+<li><b>Naam se implementation chunna → keyed services (.NET 8):</b> har implementation ko key se register karo (<code>AddKeyedSingleton&lt;IPayment, UpiPayment&gt;("upi")</code>). <i>Fixed</i> choice: constructor parameter par <code>[FromKeyedServices("upi")]</code> lagao. <i>Runtime</i> choice: <code>GetRequiredKeyedService</code> par <code>Func&lt;string, T&gt;</code> register karo.</li>
 <li><b>Ek interface ke kai implementations:</b> <code>IEnumerable&lt;IPayment&gt;</code> inject karke ek chuno — kuch ke liye theek, zyada hon to bhes badla hua <code>switch</code>.</li>
 <li><b>Zaroorat par baar-baar banana → <code>Func&lt;T&gt;</code> ya <code>IServiceScopeFactory</code>:</b> aisa delegate jo aap khud register karte ho (built-in container <code>Func&lt;T&gt;</code> apne-aap nahi deta).</li>
 <li><b>Bacho:</b> business classes mein <code>IServiceProvider</code> inject karne se. Yeh <b>Service Locator</b> anti-pattern hai: yeh chhupa deta hai ki class ko kya chahiye. Lookups ko chhoti factory ya composition root mein rakho.</li>
@@ -714,38 +708,38 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
 <li>Shared mutable state means locks, and tests leak state into each other.</li>
 <li>Fix: keep "one instance" but get it by injection (<code>AddSingleton</code>) — the lifetime is still single, the global access goes away.</li>
 </ul>
-<p>Follow-up: "So is Singleton always bad?" — no; a stateless or immutable singleton (<code>TimeProvider.System</code>, <code>ArrayPool&lt;T&gt;.Shared</code>) is harmless. The risk is <i>mutable</i> shared state.</p>`,
+<p>Follow-up: "So is Singleton always bad?" — no; a stateless, immutable or thread-safe singleton (<code>TimeProvider.System</code>, <code>ArrayPool&lt;T&gt;.Shared</code>) is harmless. The risk is <i>mutable</i> shared state.</p>`,
         hi: `<ul>
 <li>Idea ठीक है: एक cache, एक configuration snapshot। समस्या <i>हाथ से लिखा global <code>Instance</code></i> है।</li>
 <li>Callers इसे बिना declare किए use करते हैं, इसलिए constructor झूठ बोलता है कि class को क्या चाहिए।</li>
 <li>Shared mutable state का मतलब locks, और tests एक-दूसरे में state leak करते हैं।</li>
 <li>Fix: "एक instance" रखो पर injection (<code>AddSingleton</code>) से लो — lifetime अब भी एक, global access गया।</li>
 </ul>
-<p>Follow-up: "तो क्या Singleton हमेशा बुरा है?" — नहीं; stateless या immutable singleton (<code>TimeProvider.System</code>, <code>ArrayPool&lt;T&gt;.Shared</code>) बेहानि है। ख़तरा <i>mutable</i> shared state का है।</p>`,
+<p>Follow-up: "तो क्या Singleton हमेशा बुरा है?" — नहीं; stateless, immutable या thread-safe singleton (<code>TimeProvider.System</code>, <code>ArrayPool&lt;T&gt;.Shared</code>) नुकसान नहीं करता। ख़तरा <i>mutable</i> shared state का है।</p>`,
         hg: `<ul>
 <li>Idea theek hai: ek cache, ek configuration snapshot. Samasya <i>haath se likha global <code>Instance</code></i> hai.</li>
 <li>Callers ise bina declare kiye use karte hain, isliye constructor jhooth bolta hai ki class ko kya chahiye.</li>
 <li>Shared mutable state ka matlab locks, aur tests ek-doosre mein state leak karte hain.</li>
 <li>Fix: "ek instance" rakho par injection (<code>AddSingleton</code>) se lo — lifetime ab bhi ek, global access gaya.</li>
 </ul>
-<p>Follow-up: "To kya Singleton hamesha bura hai?" — nahi; stateless ya immutable singleton (<code>TimeProvider.System</code>, <code>ArrayPool&lt;T&gt;.Shared</code>) behaani hai. Khatra <i>mutable</i> shared state ka hai.</p>`
+<p>Follow-up: "To kya Singleton hamesha bura hai?" — nahi; stateless, immutable ya thread-safe singleton (<code>TimeProvider.System</code>, <code>ArrayPool&lt;T&gt;.Shared</code>) nuksaan nahi karta. Khatra <i>mutable</i> shared state ka hai.</p>`
       }
     },
     {
       id: "thread-safe-singleton",
       depth: "short",
       q: "How do you make a Singleton thread-safe in C#?",
-      answer: "Simplest is a static readonly field or property initialiser; the runtime runs it once, thread-safely. For expensive start-up use Lazy<T>. Double-checked locking needs a volatile field.",
+      answer: "Simplest is a static readonly field or property initialiser; the runtime runs it once, thread-safely. For expensive start-up use Lazy<T>. Double-checked locking should use a volatile field.",
       meaning: {
-        hi: "सबसे आसान है static readonly field या property initialiser; runtime उसे एक बार और thread-safe चलाता है। महँगे start-up के लिए Lazy<T>। Double-checked locking में volatile field चाहिए।",
-        hg: "Sabse aasan hai static readonly field ya property initialiser; runtime use ek baar aur thread-safe chalata hai. Mehnge start-up ke liye Lazy<T>. Double-checked locking mein volatile field chahiye."
+        hi: "सबसे आसान है static readonly field या property initialiser; runtime उसे एक बार और thread-safe चलाता है। महँगे start-up के लिए Lazy<T>। Double-checked locking में volatile field रखना चाहिए।",
+        hg: "Sabse aasan hai static readonly field ya property initialiser; runtime use ek baar aur thread-safe chalata hai. Mehnge start-up ke liye Lazy<T>. Double-checked locking mein volatile field rakhna chahiye."
       },
       explain: {
         en: `<ul>
 <li><b>static readonly / static property initialiser</b> — the CLR guarantees the type initialiser runs once; no lock code to write.</li>
 <li><b>Lazy&lt;T&gt;</b> — create on first <code>.Value</code>; default mode takes a lock so the factory runs once.</li>
 <li><b>lock on every call</b> — correct but pays on each read.</li>
-<li><b>Double-checked locking</b> — fast but fragile; needs <code>volatile</code>.</li>
+<li><b>Double-checked locking</b> — fast but fragile; use <code>volatile</code>.</li>
 <li><b>Naive null-check</b> — not thread-safe; two threads can create two objects.</li>
 </ul>
 <p><b>TL angle:</b> in an ASP.NET Core app the real answer is "I let DI own it with <code>AddSingleton</code>"; the container creates it once and resolves it thread-safely. The instance itself must still be thread-safe to <i>use</i> — creating it safely does not make its fields safe.</p>
@@ -754,7 +748,7 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
 <li><b>static readonly / static property initialiser</b> — CLR गारंटी देता है कि type initialiser एक बार चलता है; lock का code नहीं लिखना।</li>
 <li><b>Lazy&lt;T&gt;</b> — पहले <code>.Value</code> पर बनाओ; default mode lock लेता है ताकि factory एक बार चले।</li>
 <li><b>हर call पर lock</b> — सही, पर हर read पर दाम।</li>
-<li><b>Double-checked locking</b> — तेज़ पर नाज़ुक; <code>volatile</code> चाहिए।</li>
+<li><b>Double-checked locking</b> — तेज़ पर नाज़ुक; <code>volatile</code> रखो।</li>
 <li><b>Naive null-check</b> — thread-safe नहीं; दो threads दो objects बना सकते हैं।</li>
 </ul>
 <p><b>TL angle:</b> ASP.NET Core app में असली जवाब है "मैं DI को <code>AddSingleton</code> से संभालने देता हूँ"; container एक बार बनाता है और thread-safe resolve करता है। Instance को <i>use</i> करने के लिए खुद thread-safe होना फिर भी ज़रूरी है — सुरक्षित बनाने से उसके fields सुरक्षित नहीं हो जाते।</p>
@@ -763,7 +757,7 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
 <li><b>static readonly / static property initialiser</b> — CLR guarantee deta hai ki type initialiser ek baar chalta hai; lock ka code nahi likhna.</li>
 <li><b>Lazy&lt;T&gt;</b> — pehle <code>.Value</code> par banao; default mode lock leta hai taaki factory ek baar chale.</li>
 <li><b>Har call par lock</b> — sahi, par har read par daam.</li>
-<li><b>Double-checked locking</b> — tez par nazuk; <code>volatile</code> chahiye.</li>
+<li><b>Double-checked locking</b> — tez par nazuk; <code>volatile</code> rakho.</li>
 <li><b>Naive null-check</b> — thread-safe nahi; do threads do objects bana sakte hain.</li>
 </ul>
 <p><b>TL angle:</b> ASP.NET Core app mein asli jawab hai "main DI ko <code>AddSingleton</code> se sambhalne deta hoon"; container ek baar banata hai aur thread-safe resolve karta hai. Instance ko <i>use</i> karne ke liye khud thread-safe hona phir bhi zaroori hai — surakshit banane se uske fields surakshit nahi ho jaate.</p>
@@ -840,10 +834,10 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
       id: "factory-method-vs-abstract-factory",
       depth: "short",
       q: "Explain Simple Factory, Factory Method and Abstract Factory. How are they different?",
-      answer: "Simple Factory is a static method with a switch. Factory Method is an overridable method that creates one product. Abstract Factory is an object that creates a matching family of products.",
+      answer: "Simple Factory is usually a static method with a switch. Factory Method is an overridable method that creates one product. Abstract Factory is an object that creates a matching family of products.",
       meaning: {
-        hi: "Simple Factory switch वाला static method है। Factory Method एक override होने वाला method है जो एक product बनाता है। Abstract Factory ऐसा object है जो मेल खाते products का family बनाता है।",
-        hg: "Simple Factory switch wala static method hai. Factory Method ek override hone wala method hai jo ek product banata hai. Abstract Factory aisa object hai jo match karte products ka family banata hai."
+        hi: "Simple Factory आम तौर पर switch वाला static method है। Factory Method एक override होने वाला method है जो एक product बनाता है। Abstract Factory ऐसा object है जो मेल खाते products का family बनाता है।",
+        hg: "Simple Factory aam taur par switch wala static method hai. Factory Method ek override hone wala method hai jo ek product banata hai. Abstract Factory aisa object hai jo match karte products ka family banata hai."
       },
       explain: {
         en: `<ul>
@@ -944,30 +938,30 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
     {
       id: "double-checked-locking-volatile",
       depth: "detailed",
-      q: "Why must the field be volatile in double-checked locking?",
-      answer: "Without volatile, writes can be reordered, so another thread may see a non-null reference to a half-constructed object. volatile prevents that. Lazy<T> avoids the question entirely.",
+      q: "Why is volatile recommended in double-checked locking?",
+      answer: "The ECMA-335 spec allows the reference to be published before the constructor finishes; volatile rules that out portably. Modern .NET is stronger, but do not rely on that: use Lazy<T> or static readonly.",
       meaning: {
-        hi: "volatile के बिना writes का क्रम बदल सकता है, इसलिए दूसरा thread आधे बने object का non-null reference देख सकता है। volatile इसे रोकता है। Lazy<T> इस सवाल से ही बचा लेता है।",
-        hg: "volatile ke bina writes ka kram badal sakta hai, isliye doosra thread aadhe bane object ka non-null reference dekh sakta hai. volatile ise rokta hai. Lazy<T> is sawaal se hi bacha leta hai."
+        hi: "ECMA-335 spec reference को constructor ख़त्म होने से पहले publish होने देता है; volatile इसे portable तरीके से रोकता है। Modern .NET ज़्यादा मज़बूत है, पर उस पर भरोसा मत करो: Lazy<T> या static readonly लो।",
+        hg: "ECMA-335 spec reference ko constructor khatam hone se pehle publish hone deta hai; volatile ise portable tareeke se rokta hai. Modern .NET zyada mazboot hai, par us par bharosa mat karo: Lazy<T> ya static readonly lo."
       },
       explain: {
         en: `<ul>
-<li>The first check runs outside the lock. If the compiler or CPU reorders "store reference" before "finish constructor", a second thread can pass the check and use a partly built object.</li>
-<li><code>volatile</code> adds the needed ordering for that field read and write. On x86 the bug is rarely visible; on weaker memory models such as ARM it can be.</li>
+<li>The first check runs outside the lock. The ECMA-335 memory model lets "store reference" become visible before "finish constructor", so in theory a second thread can pass the check and use a partly built object.</li>
+<li><code>volatile</code> (or <code>Volatile.Read</code>/<code>Volatile.Write</code>) rules that out portably. The dotnet/runtime memory-model document says object-reference stores are release operations in CoreCLR, so modern .NET is stronger than the spec — but that is an implementation detail, so do not rely on it.</li>
 <li>The cleaner answer: use <code>static readonly</code> or <code>Lazy&lt;T&gt;</code> and skip the technique.</li>
 </ul>
 <p><b>TL angle:</b> if someone proposes double-checked locking in a pull request, ask "why not Lazy&lt;T&gt;?" — hand-rolled lock-free code needs a strong reason.</p>
 <p>Follow-up: "Does <code>lock</code> alone make the first read safe?" — only if the read is also inside the lock; that is the "lock on every call" version.</p>`,
         hi: `<ul>
-<li>पहला check lock के बाहर चलता है। अगर compiler या CPU "reference store करो" को "constructor ख़त्म करो" से पहले कर दे, तो दूसरा thread check पार करके आधे बने object को use कर सकता है।</li>
-<li><code>volatile</code> उस field के read और write पर ज़रूरी ordering जोड़ता है। x86 पर bug कम दिखता है; ARM जैसे कमज़ोर memory models पर दिख सकता है।</li>
+<li>पहला check lock के बाहर चलता है। ECMA-335 memory model "reference store करो" को "constructor ख़त्म करो" से पहले दिखने देता है, इसलिए theory में दूसरा thread check पार करके आधे बने object को use कर सकता है।</li>
+<li><code>volatile</code> (या <code>Volatile.Read</code>/<code>Volatile.Write</code>) इसे portable तरीके से रोकता है। dotnet/runtime का memory-model document कहता है कि CoreCLR में object-reference stores release operations हैं, यानी modern .NET spec से मज़बूत है — पर यह implementation detail है, इसलिए उस पर भरोसा मत करो।</li>
 <li>साफ़ जवाब: <code>static readonly</code> या <code>Lazy&lt;T&gt;</code> लो और यह technique छोड़ो।</li>
 </ul>
 <p><b>TL angle:</b> pull request में कोई double-checked locking लाए तो पूछो "Lazy&lt;T&gt; क्यों नहीं?" — हाथ से बना lock-free code मज़बूत वजह माँगता है।</p>
 <p>Follow-up: "क्या सिर्फ़ <code>lock</code> पहली read को safe बना देता है?" — तभी जब read भी lock के अंदर हो; यही "हर call पर lock" वाला version है।</p>`,
         hg: `<ul>
-<li>Pehla check lock ke bahar chalta hai. Agar compiler ya CPU "reference store karo" ko "constructor khatam karo" se pehle kar de, to doosra thread check paar karke aadhe bane object ko use kar sakta hai.</li>
-<li><code>volatile</code> us field ke read aur write par zaroori ordering jodta hai. x86 par bug kam dikhta hai; ARM jaise kamzor memory models par dikh sakta hai.</li>
+<li>Pehla check lock ke bahar chalta hai. ECMA-335 memory model "reference store karo" ko "constructor khatam karo" se pehle dikhne deta hai, isliye theory mein doosra thread check paar karke aadhe bane object ko use kar sakta hai.</li>
+<li><code>volatile</code> (ya <code>Volatile.Read</code>/<code>Volatile.Write</code>) ise portable tareeke se rokta hai. dotnet/runtime ka memory-model document kehta hai ki CoreCLR mein object-reference stores release operations hain, yaani modern .NET spec se mazboot hai — par yeh implementation detail hai, isliye us par bharosa mat karo.</li>
 <li>Saaf jawab: <code>static readonly</code> ya <code>Lazy&lt;T&gt;</code> lo aur yeh technique chhodo.</li>
 </ul>
 <p><b>TL angle:</b> pull request mein koi double-checked locking laye to poochho "Lazy&lt;T&gt; kyun nahi?" — haath se bana lock-free code mazboot wajah maangta hai.</p>
@@ -1038,7 +1032,7 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
       id: "beforefieldinit-static-ctor",
       depth: "detailed",
       q: "What is beforefieldinit, and how does a static constructor change static initialisation?",
-      answer: "With an explicit static constructor, the type initialiser runs just before first use. Without one the class is beforefieldinit: it still runs once, but the runtime may run it earlier.",
+      answer: "With an explicit static constructor, the initialiser runs just before first use. Without one (beforefieldinit) it still runs once, but the runtime picks the moment, at or before first static field access.",
       meaning: {
         hi: "Explicit static constructor हो तो type initialiser पहले use से ठीक पहले चलता है। न हो तो class beforefieldinit होती है: वह अब भी एक बार चलता है, पर runtime उसे पहले भी चला सकता है।",
         hg: "Explicit static constructor ho to type initialiser pehle use se theek pehle chalta hai. Na ho to class beforefieldinit hoti hai: woh ab bhi ek baar chalta hai, par runtime use pehle bhi chala sakta hai."
@@ -1047,21 +1041,21 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
         en: `<ul>
 <li>Static field initialisers run in the order written, then the static constructor body (Day 1: static constructors run once, before first use).</li>
 <li><b>With</b> a static constructor: the exact moment is "before the first static member access or instance creation" — predictable.</li>
-<li><b>Without</b> one: the C# compiler marks the type <code>beforefieldinit</code>, which lets the runtime run initialisers earlier — for example when a method using the class is compiled. Exactly once, thread-safe, but the timing can differ between runtimes.</li>
+<li><b>Without</b> one: the C# compiler marks the type <code>beforefieldinit</code>, which lets the runtime run initialisers at any point before the first static <i>field</i> access — earlier (for example when JIT-compiling code that uses the class) or lazier; a static method call alone may not trigger it. Exactly once, thread-safe, but the timing can differ between runtimes.</li>
 <li>So: for a logging-order or "must happen at first use" requirement, add a static constructor (or use <code>Lazy&lt;T&gt;</code>); for plain singletons the difference does not matter.</li>
 </ul>
 <p>Follow-up: "Can static initialisation deadlock?" — yes, two types whose initialisers wait on each other across threads; keep static initialisers small and free of cross-type dependencies.</p>`,
         hi: `<ul>
 <li>Static field initialisers लिखे क्रम में चलते हैं, फिर static constructor की body (Day 1: static constructors एक बार, पहले use से पहले चलते हैं)।</li>
 <li>Static constructor <b>हो</b> तो: सही पल है "पहले static member access या instance बनाने से पहले" — अनुमान लगाने लायक।</li>
-<li><b>न हो</b> तो: C# compiler type को <code>beforefieldinit</code> मार्क करता है, जिससे runtime initialisers पहले चला सकता है — जैसे जब class use करने वाला method compile हो। ठीक एक बार, thread-safe, पर समय runtimes में अलग हो सकता है।</li>
+<li><b>न हो</b> तो: C# compiler type को <code>beforefieldinit</code> मार्क करता है, जिससे runtime initialisers को पहले static <i>field</i> access से पहले किसी भी समय चला सकता है — पहले (जैसे class use करने वाले code के JIT compile पर) या देर से; सिर्फ़ static method call से शायद न चले। ठीक एक बार, thread-safe, पर समय runtimes में अलग हो सकता है।</li>
 <li>इसलिए: logging-order या "पहले use पर ही होना चाहिए" ज़रूरत में static constructor जोड़ो (या <code>Lazy&lt;T&gt;</code>); साधारण singletons के लिए फ़र्क मायने नहीं रखता।</li>
 </ul>
 <p>Follow-up: "क्या static initialisation deadlock हो सकता है?" — हाँ, दो types जिनके initialisers threads के पार एक-दूसरे का इंतज़ार करें; static initialisers छोटे रखो और cross-type dependency से बचो।</p>`,
         hg: `<ul>
 <li>Static field initialisers likhe kram mein chalte hain, phir static constructor ki body (Day 1: static constructors ek baar, pehle use se pehle chalte hain).</li>
 <li>Static constructor <b>ho</b> to: sahi pal hai "pehle static member access ya instance banane se pehle" — anumaan lagane layak.</li>
-<li><b>Na ho</b> to: C# compiler type ko <code>beforefieldinit</code> mark karta hai, jisse runtime initialisers pehle chala sakta hai — jaise jab class use karne wala method compile ho. Theek ek baar, thread-safe, par samay runtimes mein alag ho sakta hai.</li>
+<li><b>Na ho</b> to: C# compiler type ko <code>beforefieldinit</code> mark karta hai, jisse runtime initialisers ko pehle static <i>field</i> access se pehle kisi bhi samay chala sakta hai — pehle (jaise class use karne wale code ke JIT compile par) ya der se; sirf static method call se shayad na chale. Theek ek baar, thread-safe, par samay runtimes mein alag ho sakta hai.</li>
 <li>Isliye: logging-order ya "pehle use par hi hona chahiye" zaroorat mein static constructor jodo (ya <code>Lazy&lt;T&gt;</code>); saadharan singletons ke liye fark maayne nahi rakhta.</li>
 </ul>
 <p>Follow-up: "Kya static initialisation deadlock ho sakta hai?" — haan, do types jinke initialisers threads ke paar ek-doosre ka intezaar karein; static initialisers chhote rakho aur cross-type dependency se bacho.</p>`
@@ -1235,7 +1229,7 @@ public sealed class UpiCheckout([FromKeyedServices("upi")] IPayment payment)
 <li><b>ICloneable</b> <code>object</code> lautata hai aur uska contract shallow vs deep nahi batata, isliye design guidelines naye public APIs mein ise expose na karne ki salah deti hain. Saaf <code>DeepCopy()</code> likho ya immutable members lo.</li>
 <li>Immutable collections (<code>ImmutableList&lt;T&gt;</code>, copy kiye array ki <code>IReadOnlyList&lt;T&gt;</code>) lo taaki shallow copy safe rahe.</li>
 </ul>
-<p>Follow-up: "Serialisation se deep copy theek hai?" — chalta hai, par dheema aur non-serialisable types par toot'ta hai; haath se likhi copy saaf hai.</p>`
+<p>Follow-up: "Serialisation se deep copy theek hai?" — chalta hai, par dheema aur non-serialisable types par tootta hai; haath se likhi copy saaf hai.</p>`
       },
       code: [
         {
@@ -1703,7 +1697,7 @@ True`,
       "<b>Creational patterns</b> hide <code>new</code> behind a name so callers depend on abstractions; the DI container is the modern default.",
       "<b>Singleton</b> = one instance plus a global access point; the risk is hidden mutable global state.",
       "Simplest thread-safe singleton: a <code>static readonly</code> field or property initialiser.",
-      "<code>Lazy&lt;T&gt;</code> defers expensive creation; the default mode runs the factory once and caches an exception.",
+      "<code>Lazy&lt;T&gt;</code> defers expensive creation until the first <code>.Value</code>.",
       "A static class is a bag of statics; a singleton is an object you can inject, fake and dispose.",
       "In ASP.NET Core use <code>AddSingleton</code> instead of a hand-written <code>Instance</code> (Day 8 DIP).",
       "<b>Factory Method</b>: a subclass picks one product. <b>Abstract Factory</b>: one factory creates a matching family.",
@@ -1718,7 +1712,7 @@ True`,
         "<b>Creational patterns</b> <code>new</code> को नाम के पीछे छुपाते हैं ताकि callers abstractions पर depend करें; DI container आज का default है।",
         "<b>Singleton</b> = एक instance + एक global access point; ख़तरा छुपा mutable global state है।",
         "सबसे आसान thread-safe singleton: <code>static readonly</code> field या property initialiser।",
-        "<code>Lazy&lt;T&gt;</code> महँगी creation टालता है; default mode factory एक बार चलाता है और exception cache करता है।",
+        "<code>Lazy&lt;T&gt;</code> पहले <code>.Value</code> तक महँगी creation टालता है।",
         "Static class statics का थैला है; singleton ऐसा object है जिसे inject, fake और dispose कर सकते हैं।",
         "ASP.NET Core में hand-written <code>Instance</code> की जगह <code>AddSingleton</code> लो (Day 8 DIP)।",
         "<b>Factory Method</b>: subclass एक product चुनती है। <b>Abstract Factory</b>: एक factory मेल खाता family बनाती है।",
@@ -1732,7 +1726,7 @@ True`,
         "<b>Creational patterns</b> <code>new</code> ko naam ke peeche chhupate hain taaki callers abstractions par depend karein; DI container aaj ka default hai.",
         "<b>Singleton</b> = ek instance + ek global access point; khatra chhupa mutable global state hai.",
         "Sabse aasan thread-safe singleton: <code>static readonly</code> field ya property initialiser.",
-        "<code>Lazy&lt;T&gt;</code> mehngi creation taalta hai; default mode factory ek baar chalata hai aur exception cache karta hai.",
+        "<code>Lazy&lt;T&gt;</code> pehle <code>.Value</code> tak mehngi creation taalta hai.",
         "Static class statics ka thaila hai; singleton aisa object hai jise inject, fake aur dispose kar sakte hain.",
         "ASP.NET Core mein hand-written <code>Instance</code> ki jagah <code>AddSingleton</code> lo (Day 8 DIP).",
         "<b>Factory Method</b>: subclass ek product chunti hai. <b>Abstract Factory</b>: ek factory match karta family banati hai.",
