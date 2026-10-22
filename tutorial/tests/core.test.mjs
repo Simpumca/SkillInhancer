@@ -122,3 +122,11 @@ test('formatMinutes', () => {
   assert.equal(formatMinutes(60), '1 h');
   assert.equal(formatMinutes(105), '1 h 45 min');
 });
+
+test('lang_class_maps_prism_names', () => {
+  const { langClass } = require('../assets/core.js');
+  const m = { csharp: 'csharp', sql: 'sql', yaml: 'yaml', dockerfile: 'docker', bash: 'bash', json: 'json', text: 'none' };
+  for (const [k, v] of Object.entries(m)) assert.equal(langClass(k), 'language-' + v);
+  assert.equal(langClass(undefined), 'language-csharp');
+  assert.equal(langClass('weird'), 'language-csharp');
+});

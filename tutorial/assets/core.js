@@ -133,7 +133,13 @@
     return h + ' h' + (m ? ' ' + m + ' min' : '');
   }
 
+  var PRISM_LANG = { csharp: 'csharp', sql: 'sql', yaml: 'yaml', dockerfile: 'docker', bash: 'bash', json: 'json', text: 'none' };
+  function langClass(lang) {
+    return 'language-' + (Object.prototype.hasOwnProperty.call(PRISM_LANG, lang) ? PRISM_LANG[lang] : 'csharp');
+  }
+
   return {
+    langClass: langClass,
     parseDay: parseDay,
     pick: pick,
     filterDepth: filterDepth,

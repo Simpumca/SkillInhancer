@@ -8,8 +8,17 @@ const DEVANAGARI = /[ऀ-ॿ]/;
 const isStr = v => typeof v === 'string' && v.length > 0;
 const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
 const FRAMEWORKS = ['aspnetcore'];
+const LANG_IDS = ['csharp', 'sql', 'yaml', 'dockerfile', 'bash', 'json', 'text'];
+const CHECKABLE_LANGS = ['csharp', 'sql'];
 
-export const minPuzzlesFor = n => (n >= 1 && n <= 14 ? 5 : 0);
+// lang?: one of LANG_IDS (default csharp). Returns true when the lang is known.
+function checkLang(item, label, errors) {
+  if (item.lang === undefined) return true;
+  if (!LANG_IDS.includes(item.lang)) { errors.push(`${label}: unknown lang ${item.lang}`); return false; }
+  return true;
+}
+
+export const minPuzzlesFor = n => (n >= 1 && n <= 21 ? 5 : 0);
 
 // frameworks?: string[] of known values; shared by code items and puzzles.
 function checkFrameworks(item, label, errors) {
@@ -55,6 +64,9 @@ function checkCode(list, label, errors) {
     if (!isStr(c.src)) errors.push(`${l}: missing src`);
     if (!['compile', 'run', 'none'].includes(c.check)) errors.push(`${l}: bad check`);
     if (c.check === 'run' && typeof c.expected !== 'string') errors.push(`${l}: run snippet without expected`);
+    if (checkLang(c, l, errors) && c.lang !== undefined && !CHECKABLE_LANGS.includes(c.lang) && c.check !== 'none') {
+      errors.push(`${l}: lang ${c.lang} must use check:"none"`);
+    }
     checkFrameworks(c, l, errors);
   });
 }
@@ -181,6 +193,9 @@ export function validateDay(day, opts = {}) {
     const l = `puzzles[${i}]`;
     if (!isObj(p)) { errors.push(`${l}: not an object`); return; }
     checkFrameworks(p, l, errors);
+    if (checkLang(p, l, errors) && p.lang !== undefined && !CHECKABLE_LANGS.includes(p.lang)) {
+      errors.push(`${l}: puzzle lang ${p.lang} must be csharp or sql`);
+    }
     if (!isStr(p.src)) errors.push(`${l}: missing src`);
     if (typeof p.answer !== 'string') errors.push(`${l}: missing answer`);
     checkL(p.explain, `${l}.explain`, errors);
@@ -213,6 +228,10 @@ export function validateCurriculum(c) {
     if (!Number.isInteger(e.week)) errors.push(`curriculum[${i}]: missing week`);
     if (typeof e.ready !== 'boolean') errors.push(`curriculum[${i}]: missing ready`);
     checkL(e.title, `curriculum[${i}].title`, errors);
+    if (isObj(e.title)) for (const k of LANGS) {
+      if (typeof e.title[k] !== 'string') continue;
+      for (const t of rawTags(e.title[k])) errors.push(`curriculum[${i}].title.${k}: raw tag ${t} (escape as ${t.replace(/</g, '&lt;').replace(/>/g, '&gt;')})`);
+    }
   });
   return errors;
 }

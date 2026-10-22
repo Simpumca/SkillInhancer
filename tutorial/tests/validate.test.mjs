@@ -180,10 +180,10 @@ test('filename_day_mismatch', async () => {
   assert.ok(!validateContentFile('tests/fixtures/day-good.js', 1, RELAXED).some(e => e.startsWith('day: file')));
 });
 
-test('min_puzzles_for_days_1_to_14', async () => {
+test('min_puzzles_for_days_1_to_21', async () => {
   const { minPuzzlesFor } = await import('../tools/validate.mjs');
-  for (let n = 1; n <= 14; n++) assert.equal(minPuzzlesFor(n), 5, `day ${n}`);
-  assert.equal(minPuzzlesFor(15), 0);
+  for (let n = 1; n <= 21; n++) assert.equal(minPuzzlesFor(n), 5, `day ${n}`);
+  assert.equal(minPuzzlesFor(22), 0);
 });
 
 test('raw_generic_tag_in_html_field_is_error', () => {
@@ -203,4 +203,57 @@ test('raw_generic_in_code_src_is_ok', () => {
   const d = good();
   d.qa[0].code = [{ caption: d.summary, src: 'ILogger<T> log;', check: 'none' }];
   assert.deepEqual(validateDay(d, RELAXED), []);
+});
+
+test('lang_unknown_is_error', () => {
+  const d = good();
+  d.qa[0].code = [{ caption: d.summary, src: 'x', check: 'none', lang: 'cobol' }];
+  assert.ok(validateDay(d, RELAXED).includes('qa[0].code[0]: unknown lang cobol'));
+});
+
+test('lang_non_checkable_must_be_check_none', () => {
+  const d = good();
+  d.qa[0].code = [{ caption: d.summary, src: 'a: 1', check: 'compile', lang: 'yaml' }];
+  assert.ok(validateDay(d, RELAXED).includes('qa[0].code[0]: lang yaml must use check:"none"'));
+  d.qa[0].code = [{ caption: d.summary, src: 'a: 1', check: 'none', lang: 'yaml' }];
+  assert.deepEqual(validateDay(d, RELAXED), []);
+});
+
+test('lang_sql_and_csharp_may_be_checked', () => {
+  const d = good();
+  d.qa[0].code = [
+    { caption: d.summary, src: 'SELECT 1;', check: 'run', expected: '1', lang: 'sql' },
+    { caption: d.summary, src: 'int a;', check: 'compile', lang: 'csharp' }
+  ];
+  assert.deepEqual(validateDay(d, RELAXED), []);
+});
+
+test('puzzle_lang_must_be_csharp_or_sql', () => {
+  const d = good();
+  d.puzzles[0].lang = 'bash';
+  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: puzzle lang bash must be csharp or sql'));
+  d.puzzles[0].lang = 'sql';
+  assert.deepEqual(validateDay(d, RELAXED), []);
+  d.puzzles[0].lang = 'nope';
+  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: unknown lang nope'));
+});
+
+test('raw_tags_scanned_in_caption_puzzle_explain_revision_meaning_title', () => {
+  const d = good();
+  d.title.en = 'A <T> title';
+  d.qa[0].code = [{ caption: { ...d.summary, hg: 'cap <T>' }, src: 'x', check: 'none' }];
+  d.puzzles[0].explain.en = 'e <T>';
+  d.revision.meaning.hg[0] = 'm <T>';
+  const errs = validateDay(d, RELAXED).join('\n');
+  for (const p of ['title.en', 'qa[0].code[0].caption.hg', 'puzzles[0].explain.en', 'revision.meaning.hg[0]']) {
+    assert.ok(errs.includes(`${p}: raw tag <T>`), p + '\n' + errs);
+  }
+});
+
+test('curriculum_titles_scanned_for_raw_tags', async () => {
+  const { validateCurriculum } = await import('../tools/validate.mjs');
+  const c = structuredClone(loadCurriculum('content/curriculum.js'));
+  assert.deepEqual(validateCurriculum(c), []);
+  c[3].title.en = 'Bad <T> title';
+  assert.ok(validateCurriculum(c).includes('curriculum[3].title.en: raw tag <T> (escape as &lt;T&gt;)'));
 });

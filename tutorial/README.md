@@ -19,13 +19,14 @@ An offline study site for .NET Tech Lead interview preparation. Every day has a 
 
 ## How to run the checks
 
-You need **Node.js 22+** and the **.NET SDK 9+**. Days 5–14 need NuGet access the first time, to restore packages such as `Microsoft.EntityFrameworkCore.*` and `Microsoft.AspNetCore.TestHost`. Run every command from the `tutorial/` folder:
+You need **Node.js 22+** and the **.NET SDK 9+**. SQL snippets also need SQL Server LocalDB and `sqlcmd` on the PATH. Days 5–14 need NuGet access the first time, to restore packages such as `Microsoft.EntityFrameworkCore.*` and `Microsoft.AspNetCore.TestHost`. Run every command from the `tutorial/` folder:
 
 ```sh
 node --test                    # unit tests for the site logic and the tools
 node tools/validate.mjs        # checks the content schema of every day file
 node tools/check-code.mjs day14  # compiles and runs one day's C# snippets and puzzles
 node tools/check-code.mjs        # all days (slow: one small project per snippet)
+node tools/check-code.mjs --strict day14  # any SKIP (for example no SQL tooling) becomes exit code 1
 ```
 
 - `validate.mjs` checks the required fields in all three languages, the script of each language (Devanagari must appear in Hindi and must not appear in Hinglish), the Q&A counts (at least 8 short questions, 15–25 in total) and the minimum number of puzzles.
@@ -39,6 +40,8 @@ node tools/check-code.mjs        # all days (slow: one small project per snippet
    - `qa[]` have an `id`, a `depth`, `q`, `answer` (English), `meaning: { hi, hg }` and `explain`.
    - `puzzles[]` have an `id`, `src` (a full runnable program), `answer` (the exact output) and `explain`.
    - `puzzles[]` and `code[]` items may carry `frameworks: ["aspnetcore"]`. The checker then adds the shared ASP.NET Core framework reference to the snippet project (and the validator rejects unknown framework names). Web puzzles also add `packages: ["Microsoft.AspNetCore.TestHost"]`, call `builder.Logging.ClearProviders()` (otherwise the default console logger writes `info:` lines into the output) and run in-process with `builder.WebHost.UseTestServer()`, `await app.StartAsync()` and `app.GetTestClient()`.
+   - `code[]` items and `puzzles[]` may carry `lang`: `"csharp"` (default), `"sql"`, `"yaml"`, `"dockerfile"`, `"bash"`, `"json"` or `"text"`. It only sets the highlighting (Prism grammar). Only `csharp` and `sql` may use `check: "compile"` or `"run"`; every other language must use `check: "none"`, and puzzles must be `csharp` or `sql`. Unknown values fail validation.
+   - `sql` snippets and puzzles are run on SQL Server LocalDB (`(localdb)\MSSQLLocalDB`) with `sqlcmd`. Each one gets its own throw-away database `tlsnip_<key>`, which is dropped afterwards, even on failure. `SET NOCOUNT ON;` is added at the top, a SQL error fails the snippet, and the output is compared with `expected` (or the puzzle `answer`) the same way as for C#. If `sqlcmd` or LocalDB is not available, the snippet is reported as SKIP ("sql tooling unavailable"); use `--strict` to make that an error.
    - `revision` is `{ en: [...], meaning: { hi: [...], hg: [...] } }`. All three arrays must have the same length.
 2. In `content/curriculum.js`, set `ready: true` for that day.
 3. Text fields are rendered as HTML, so write generics in prose as `ILogger&lt;T&gt;`. A raw `<T>` would vanish in the browser, and the validator rejects raw tags that are not simple HTML.

@@ -84,3 +84,55 @@ test('cli_fails_loudly_when_frameworks_missing', (t) => {
   assert.match(r.stdout, /FAIL day97-puz-status/);
   assert.doesNotMatch(r.stdout, /SKIP/);
 });
+
+const hasSql = (() => {
+  const r = spawnSync('sqlcmd', ['-S', '(localdb)\\MSSQLLocalDB', '-b', '-Q', 'SELECT 1'], { encoding: 'utf8', timeout: 90000 });
+  return r.status === 0;
+})();
+
+test('collect_snippets_carries_lang_default_csharp', () => {
+  const sql = collectSnippets(loadDay('tests/fixtures/day-sql.js'));
+  assert.deepEqual(sql.map(i => i.key), ['day96-sec-sql-0', 'day96-sec-sql-1', 'day96-puz-sum']);
+  assert.deepEqual(sql.map(i => i.lang), ['sql', 'sql', 'sql']);
+  const cs = collectSnippets(loadDay('tests/fixtures/day-code.js'));
+  assert.ok(cs.every(i => i.lang === 'csharp'));
+});
+
+test('csproj_unaffected_by_lang', () => {
+  assert.match(csproj([], []), /<TargetFramework>net9\.0<\/TargetFramework>/);
+});
+
+test('sql_db_name_sanitised_and_capped', async () => {
+  const { sqlDbName } = await import('../tools/check-code.mjs');
+  assert.equal(sqlDbName('day18-sec-a.b-0'), 'tlsnip_day18_sec_a_b_0');
+  assert.equal(sqlDbName('x'.repeat(300)).length, 100);
+});
+
+test('cli_sql_fixture_passes', (t) => {
+  if (!hasSql) return t.skip('LocalDB/sqlcmd unavailable');
+  const r = runCli('tests/fixtures/day-sql.js');
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /PASS day96-sec-sql-0/);
+  assert.match(r.stdout, /PASS day96-sec-sql-1/);
+  assert.match(r.stdout, /PASS day96-puz-sum/);
+});
+
+test('cli_sql_wrong_expected_and_bad_sql_fail', (t) => {
+  if (!hasSql) return t.skip('LocalDB/sqlcmd unavailable');
+  const r = runCli('tests/fixtures/day-sql-bad.js');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /FAIL day95-sec-sql-0: output mismatch/);
+  assert.match(r.stdout, /FAIL day95-sec-sql-1/);
+  assert.match(r.stdout, /FAIL day95-puz-sum/);
+});
+
+test('cli_sql_unavailable_skips_and_strict_fails', () => {
+  const env = { ...process.env, TL_SQLCMD: 'definitely-not-sqlcmd' };
+  const run = (...extra) => spawnSync(process.execPath, ['tools/check-code.mjs', '--file', 'tests/fixtures/day-sql.js', ...extra], { encoding: 'utf8', env, timeout: 60000 });
+  const a = run();
+  assert.equal(a.status, 0, a.stdout + a.stderr);
+  assert.match(a.stdout, /SKIP day96-puz-sum \(sql tooling unavailable\)/);
+  assert.doesNotMatch(a.stdout, /FAIL/);
+  const b = run('--strict');
+  assert.equal(b.status, 1, b.stdout + b.stderr);
+});

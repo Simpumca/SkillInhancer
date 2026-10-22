@@ -248,7 +248,7 @@
   function codeFigure(code) {
     return h('figure', { 'class': 'code' }, [
       code.caption ? h('figcaption', { html: '💻 ' + C.pick(code.caption, lang) }) : null,
-      h('pre', null, [h('code', { 'class': 'language-csharp', text: code.src })])
+      h('pre', null, [h('code', { 'class': C.langClass(code.lang), text: code.src })])
     ]);
   }
 
@@ -321,7 +321,7 @@
       out.push(block(t('puzzles'), puzzles.map(function (p, i) {
         return h('article', { 'class': 'card puzzle', id: 'p-' + p.id }, [
           h('h3', { text: t('puzzle') + ' ' + (i + 1) }),
-          h('pre', null, [h('code', { 'class': 'language-csharp', text: p.src })]),
+          h('pre', null, [h('code', { 'class': C.langClass(p.lang), text: p.src })]),
           h('p', { 'class': 'prompt', text: t('whatPrint') }),
           h('details', null, [
             h('summary', { text: t('showAnswer') }),

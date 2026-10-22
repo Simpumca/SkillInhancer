@@ -244,7 +244,7 @@ window.TL_DAY = {
 <li><code>UseAuthentication</code> <code>HttpContext.User</code> सेट करता है और next बुलाता है; authorization 401 या 403 देता है।</li>
 <li>Configuration: आख़िरी source जीतता है (appsettings, environment file, Development में user secrets, environment variables, command line)। Environment default Production है।</li>
 <li><code>ILogger&lt;T&gt;</code> message templates से log करो। Convention middleware एक बार बनता है, इसलिए scoped services <code>InvokeAsync</code> के parameters में लो।</li>
-<li>Filter क्रम: authorization, resource, action, result। Exception filters controller बनने, model binding, action filters और actions को cover करते हैं, resource या result filters को नहीं। Middleware हर request देखता है; filters सिर्फ़ MVC के अंदर चलते हैं।</li>
+<li>Filter क्रम: authorization, resource, action, result। Exception filters controller बनने, model binding, action filters और actions को cover करते हैं, resource या result filters को नहीं। Middleware हर request देखता है; filters सिर्फ़ MVC के अंदर चलते हैं (Minimal APIs में endpoint filters होते हैं)।</li>
 </ul>`,
         hg: `<p><b>Tasveer — railway station ke gates:</b> har yatri gates se kram mein guzarta hai, aur koi bhi gate aapko wapas bhej sakta hai (<b>middleware</b>).</p>
 <p><b>Zaroor bolna:</b></p>
@@ -255,7 +255,7 @@ window.TL_DAY = {
 <li><code>UseAuthentication</code> <code>HttpContext.User</code> set karta hai aur next bulata hai; authorization 401 ya 403 deta hai.</li>
 <li>Configuration: aakhri source jeetta hai (appsettings, environment file, Development mein user secrets, environment variables, command line). Environment default Production hai.</li>
 <li><code>ILogger&lt;T&gt;</code> message templates se log karo. Convention middleware ek baar banta hai, isliye scoped services <code>InvokeAsync</code> ke parameters mein lo.</li>
-<li>Filter kram: authorization, resource, action, result. Exception filters controller banne, model binding, action filters aur actions ko cover karte hain, resource ya result filters ko nahi. Middleware har request dekhta hai; filters sirf MVC ke andar chalte hain.</li>
+<li>Filter kram: authorization, resource, action, result. Exception filters controller banne, model binding, action filters aur actions ko cover karte hain, resource ya result filters ko nahi. Middleware har request dekhta hai; filters sirf MVC ke andar chalte hain (Minimal APIs mein endpoint filters hote hain).</li>
 </ul>`
       }
     },

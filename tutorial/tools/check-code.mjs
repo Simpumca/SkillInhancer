@@ -14,14 +14,14 @@ export function collectSnippets(day) {
   const out = [];
   const addCode = (prefix, list) => (list || []).forEach((c, k) => {
     if (c.check === 'none') return;
-    const item = { key: `${prefix}-${k}`, src: c.src, mode: c.check, packages: c.packages || [], frameworks: c.frameworks || [] };
+    const item = { key: `${prefix}-${k}`, lang: c.lang || 'csharp', src: c.src, mode: c.check, packages: c.packages || [], frameworks: c.frameworks || [] };
     if (c.check === 'run' && c.expected !== undefined) item.expected = c.expected;
     out.push(item);
   });
   for (const s of day.sections || []) addCode(`day${pad}-sec-${s.id}`, s.code);
   for (const q of day.qa || []) addCode(`day${pad}-qa-${q.id}`, q.code);
   for (const p of day.puzzles || []) {
-    out.push({ key: `day${pad}-puz-${p.id}`, src: p.src, mode: 'run', expected: p.answer, packages: p.packages || [], frameworks: p.frameworks || [] });
+    out.push({ key: `day${pad}-puz-${p.id}`, lang: p.lang || 'csharp', src: p.src, mode: 'run', expected: p.answer, packages: p.packages || [], frameworks: p.frameworks || [] });
   }
   return out;
 }
@@ -74,7 +74,68 @@ function firstError(out) {
 // Restore failure = an `error NU1xxx` line and no compiler error; NU warnings alone never mean SKIP.
 export const isRestoreFailure = (out) => /error NU1\d{3}/.test(out) && !/error CS\d+/.test(out);
 
+// ---- SQL snippets: run on SQL Server LocalDB, one throw-away database per snippet ----
+const SQL_SERVER = '(localdb)\\MSSQLLocalDB';
+const SQL_UNAVAILABLE = 'sql tooling unavailable';
+const sqlcmdExe = () => process.env.TL_SQLCMD || 'sqlcmd';
+
+export const sqlDbName = (key) => `tlsnip_${key}`.replace(/[^A-Za-z0-9]/g, '_').slice(0, 100);
+
+function sqlcmd(args, timeout = 60000) {
+  const r = spawnSync(sqlcmdExe(), ['-S', SQL_SERVER, ...args], { encoding: 'utf8', timeout });
+  const stdout = r.stdout || '', stderr = r.stderr || '';
+  return { status: r.status, stdout, stderr, out: stdout + stderr, timedOut: r.error?.code === 'ETIMEDOUT', missing: r.error?.code === 'ENOENT' };
+}
+
+let sqlAvailable;
+function sqlToolingAvailable() {
+  if (sqlAvailable === undefined) {
+    const p = sqlcmd(['-b', '-Q', 'SELECT 1'], 90000);
+    sqlAvailable = !p.missing && !p.timedOut && p.status === 0;
+  }
+  return sqlAvailable;
+}
+
+const sqlError = (out) => {
+  const lines = out.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const i = lines.findIndex(l => /^Msg \d+/.test(l));
+  if (i >= 0) return lines.slice(i, i + 2).join(' ').replace(/, Server .*?, Line/, ', Line');
+  return lines[0] || 'unknown error';
+};
+
+export function checkSqlSnippet(snip) {
+  if (!sqlToolingAvailable()) return { status: 'SKIP', detail: SQL_UNAVAILABLE };
+  const db = sqlDbName(snip.key);
+  const dir = path.join(SNIPPETS_DIR, snip.key);
+  mkdirSync(dir, { recursive: true });
+  const file = path.join(dir, 'snippet.sql');
+  writeFileSync(file, 'SET NOCOUNT ON;\n' + snip.src);
+  try {
+    // A leftover database from an interrupted run must not make this snippet fail or pass by accident.
+    dropSqlDb(db);
+    const c = sqlcmd(['-b', '-Q', `CREATE DATABASE [${db}]`]);
+    if (c.status !== 0) return { status: 'FAIL', detail: `create database failed: ${sqlError(c.out)}` };
+    const r = sqlcmd(['-d', db, '-b', '-h', '-1', '-W', '-I', '-i', file]);
+    if (r.timedOut) return { status: 'FAIL', detail: 'run timed out' };
+    if (r.status !== 0) return { status: 'FAIL', detail: `sqlcmd exit ${r.status}: ${sqlError(r.out)}` };
+    if (snip.mode !== 'run' || snip.expected === undefined) return { status: 'PASS' };
+    const actual = normalize(r.stdout);
+    const expected = normalize(snip.expected);
+    if (actual !== expected) {
+      return { status: 'FAIL', detail: `output mismatch\n    expected: ${JSON.stringify(expected)}\n    actual:   ${JSON.stringify(actual)}` };
+    }
+    return { status: 'PASS' };
+  } finally {
+    dropSqlDb(db);
+  }
+}
+
+function dropSqlDb(db) {
+  sqlcmd(['-b', '-Q', `IF DB_ID(N'${db}') IS NOT NULL BEGIN ALTER DATABASE [${db}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [${db}]; END`]);
+}
+
 export function checkSnippet(snip) {
+  if (snip.lang === 'sql') return checkSqlSnippet(snip);
   const dir = path.join(SNIPPETS_DIR, snip.key);
   mkdirSync(dir, { recursive: true });
   writeIfChanged(path.join(dir, 'Program.cs'), snip.src);
@@ -106,6 +167,7 @@ export function checkSnippet(snip) {
   return { status: 'PASS' };
 }
 
+  
 function resolveTargets(argv) {
   const files = [];
   for (let i = 0; i < argv.length; i++) {
@@ -118,8 +180,10 @@ function resolveTargets(argv) {
 }
 
 function main() {
+  const argv = process.argv.slice(2);
+  const strict = argv.includes('--strict');
   const counts = { PASS: 0, FAIL: 0, SKIP: 0 };
-  for (const file of resolveTargets(process.argv.slice(2))) {
+  for (const file of resolveTargets(argv.filter(a => a !== '--strict'))) {
     for (const snip of collectSnippets(loadDay(file))) {
       const t0 = Date.now();
       const res = checkSnippet(snip);
@@ -130,7 +194,7 @@ function main() {
     }
   }
   console.log(`${counts.PASS} passed, ${counts.FAIL} failed, ${counts.SKIP} skipped`);
-  process.exit(counts.FAIL ? 1 : 0);
+  process.exit(counts.FAIL || (strict && counts.SKIP) ? 1 : 0);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) main();
