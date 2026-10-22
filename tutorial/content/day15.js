@@ -12,7 +12,7 @@ window.TL_DAY = {
 <li><b>Layered (N-tier)</b>: Presentation → Business → Data. Simple, but the dependency points down to the database, so the business rules end up tied to data access.</li>
 <li><b>Clean / Onion / Hexagonal</b>: the <b>dependency rule</b> — source-code dependencies point <b>inward</b> to the domain. Inner layers own the interfaces (DIP, Day 8); Infrastructure (EF Core, HTTP clients) implements them.</li>
 <li><b>Vertical slice</b>: organise by feature, not by layer. Fewer abstractions per feature, but you need team discipline.</li>
-<li><b>Monolith → modular monolith → microservices</b>: more independence costs more operations. A common advice is "start with a modular monolith", but it is a trade-off, not a rule.</li>
+<li><b>Monolith → modular monolith → microservices</b>: more independence costs more operations. Common advice is "start with a modular monolith", but it is a trade-off, not a rule.</li>
 <li><b>DDD basics</b>: ubiquitous language, entity vs value object, aggregate (one consistency boundary), domain events, bounded context, rich vs anemic model.</li>
 <li><b>TL angle</b>: choose by team size, change speed and operational skill; write the choice down in an <b>ADR</b>; avoid over-engineering (Clean Architecture for a small CRUD app is usually too much).</li>
 </ul>
@@ -112,7 +112,7 @@ window.TL_DAY = {
 <ul>
 <li><b>Ubiquitous language</b>: the same words in conversations, tickets and code. If the business says "policy lapse", the class is not <code>InactiveRecord</code>.</li>
 <li><b>Entity</b>: has an identity (an Id) that stays the same while its data changes. Two entities are the same if their Ids match.</li>
-<li><b>Value object</b>: no identity, equal when all values are equal, best immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). A C# <code>record</code> is a natural fit. EF Core can map value objects as owned types or, from EF Core 8, complex types.</li>
+<li><b>Value object</b>: no identity, equal when all values are equal, best immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). A C# <code>record</code> is a natural fit. EF Core can map value objects as complex types (EF Core 8+; EF Core 10 added optional complex types, JSON mapping and struct support), which suit value objects because they have no identity of their own, unlike owned types, which are entity types.</li>
 <li><b>Aggregate</b> and <b>aggregate root</b>: a cluster of objects changed as one unit. Outsiders talk only to the root; the root enforces the <b>invariants</b> (rules that must always hold). One aggregate = one transaction boundary. Reference other aggregates by <b>Id</b>, not by object.</li>
 <li><b>Domain event</b>: a fact in the past tense (<code>OrderPlaced</code>) raised by an aggregate so other parts can react.</li>
 <li><b>Bounded context</b>: the area where one model and one language are valid. "Customer" in Sales and "Customer" in Support can be different classes; a <b>context map</b> shows how the contexts relate.</li>
@@ -124,10 +124,10 @@ window.TL_DAY = {
 <ul>
 <li><b>Ubiquitous language</b>: बातचीत, tickets और code में एक ही शब्द। Business "policy lapse" कहे तो class का नाम <code>InactiveRecord</code> नहीं होना चाहिए।</li>
 <li><b>Entity</b>: उसकी identity (Id) होती है जो data बदलने पर भी वही रहती है। दो entities तब एक हैं जब उनके Ids मिलें।</li>
-<li><b>Value object</b>: identity नहीं, सारी values बराबर तो बराबर, बेहतर है immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>)। C# <code>record</code> इसके लिए स्वाभाविक है। EF Core value objects को owned types या, EF Core 8 से, complex types के रूप में map कर सकता है।</li>
+<li><b>Value object</b>: identity नहीं, सारी values बराबर तो बराबर, बेहतर है immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>)। C# <code>record</code> इसके लिए स्वाभाविक है। EF Core value objects को complex types के रूप में map कर सकता है (EF Core 8+; EF Core 10 ने optional complex types, JSON mapping और struct support जोड़े), जो value objects के लिए ठीक हैं क्योंकि उनकी अपनी कोई identity नहीं होती, जबकि owned types असल में entity types हैं।</li>
 <li><b>Aggregate</b> और <b>aggregate root</b>: objects का समूह जो एक इकाई की तरह बदलता है। बाहर वाले सिर्फ़ root से बात करते हैं; root <b>invariants</b> (जो rules हमेशा सच रहने चाहिए) लागू करता है। एक aggregate = एक transaction boundary। दूसरे aggregates को <b>Id</b> से reference करो, object से नहीं।</li>
-<li><b>Domain event</b>: भूतकाल का एक तथ्य (<code>OrderPlaced</code>) जो aggregate उठाता है ताकि दूसरे हिस्से प्रतिक्रिया दे सकें।</li>
-<li><b>Bounded context</b>: वह क्षेत्र जहाँ एक model और एक भाषा मान्य है। Sales का "Customer" और Support का "Customer" अलग classes हो सकती हैं; <b>context map</b> दिखाता है कि contexts आपस में कैसे जुड़े हैं।</li>
+<li><b>Domain event</b>: past का एक fact (<code>OrderPlaced</code>) जो aggregate raise करता है ताकि दूसरे हिस्से react कर सकें।</li>
+<li><b>Bounded context</b>: वह दायरा जहाँ एक model और एक language चलती है। Sales का "Customer" और Support का "Customer" अलग classes हो सकती हैं; <b>context map</b> दिखाता है कि contexts आपस में कैसे जुड़े हैं।</li>
 <li><b>Anemic बनाम rich model</b>: anemic = सिर्फ़ get/set वाली classes और सारा logic services में। Rich = rules entity के methods में (<code>order.AddLine(...)</code>), इसलिए invalid state बन ही नहीं सकती।</li>
 </ul>
 <p><b>कब use करें:</b> जटिल, बदलते business rules (insurance, billing, logistics)। <b>कब नहीं:</b> ज़्यादातर forms-over-data CRUD, जहाँ anemic model और simple services सस्ते और बिल्कुल ठीक हैं। DDD के strategic विचार (भाषा, bounded contexts) tactical patterns छोड़ने पर भी काम आते हैं।</p>`,
@@ -136,10 +136,10 @@ window.TL_DAY = {
 <ul>
 <li><b>Ubiquitous language</b>: baatcheet, tickets aur code mein ek hi shabd. Business "policy lapse" kahe to class ka naam <code>InactiveRecord</code> nahi hona chahiye.</li>
 <li><b>Entity</b>: uski identity (Id) hoti hai jo data badalne par bhi wahi rehti hai. Do entities tab ek hain jab unke Ids milen.</li>
-<li><b>Value object</b>: identity nahi, saari values barabar to barabar, behtar hai immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). C# <code>record</code> iske liye swabhavik hai. EF Core value objects ko owned types ya, EF Core 8 se, complex types ke roop mein map kar sakta hai.</li>
+<li><b>Value object</b>: identity nahi, saari values barabar to barabar, behtar hai immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). C# <code>record</code> iske liye swabhavik hai. EF Core value objects ko complex types ke roop mein map kar sakta hai (EF Core 8+; EF Core 10 ne optional complex types, JSON mapping aur struct support jode), jo value objects ke liye theek hain kyunki unki apni koi identity nahi hoti, jabki owned types asal mein entity types hain.</li>
 <li><b>Aggregate</b> aur <b>aggregate root</b>: objects ka samuh jo ek ikai ki tarah badalta hai. Bahar wale sirf root se baat karte hain; root <b>invariants</b> (jo rules hamesha sach rehne chahiye) lagu karta hai. Ek aggregate = ek transaction boundary. Doosre aggregates ko <b>Id</b> se reference karo, object se nahi.</li>
-<li><b>Domain event</b>: bhootkaal ka ek tathya (<code>OrderPlaced</code>) jo aggregate uthata hai taaki doosre hisse pratikriya de saken.</li>
-<li><b>Bounded context</b>: woh kshetra jahan ek model aur ek bhasha maanya hai. Sales ka "Customer" aur Support ka "Customer" alag classes ho sakti hain; <b>context map</b> dikhata hai ki contexts aapas mein kaise jude hain.</li>
+<li><b>Domain event</b>: past ka ek fact (<code>OrderPlaced</code>) jo aggregate raise karta hai taaki doosre hisse react kar saken.</li>
+<li><b>Bounded context</b>: woh daayra jahan ek model aur ek language chalti hai. Sales ka "Customer" aur Support ka "Customer" alag classes ho sakti hain; <b>context map</b> dikhata hai ki contexts aapas mein kaise jude hain.</li>
 <li><b>Anemic vs rich model</b>: anemic = sirf get/set wali classes aur saara logic services mein. Rich = rules entity ke methods mein (<code>order.AddLine(...)</code>), isliye invalid state ban hi nahi sakti.</li>
 </ul>
 <p><b>Kab use karein:</b> jatil, badalte business rules (insurance, billing, logistics). <b>Kab nahi:</b> zyadatar forms-over-data CRUD, jahan anemic model aur simple services sasta aur bilkul theek hai. DDD ke strategic vichaar (bhasha, bounded contexts) tactical patterns chhodne par bhi kaam aate hain.</p>`
@@ -176,7 +176,7 @@ window.TL_DAY = {
 <li><b>Modular monolith</b>: अब भी एक deployable, पर साफ़ boundaries वाले modules में बँटा — हर module की छोटी public API है और अपनी tables हैं; modules एक-दूसरे के internals में हाथ नहीं डालते। सरलता बनी रहती है और ज़रूरत पड़ने पर बाद में बाँटा जा सकता है।</li>
 <li><b>Microservices</b>: कई छोटी services जो अलग-अलग deploy होती हैं, हर एक अपना data रखती है। फ़ायदा: हर team के लिए independent deployment और scaling; क़ीमत: network calls, partial failures, distributed data consistency, monitoring और बहुत सारे operations (Day 16)।</li>
 </ul>
-<p><b>फ़ैसले के कारक:</b></p>
+<p><b>फ़ैसला किन बातों पर टिका है:</b></p>
 <ul>
 <li><b>Team size और ढाँचा</b> — Conway's law: systems अक्सर organisation के communication ढाँचे की नक़ल करते हैं। कम developers के लिए कई services शायद ही जायज़ हैं।</li>
 <li><b>Deployment independence</b> — क्या teams को सच में अलग-अलग रफ़्तार से अलग release करना है?</li>
@@ -192,7 +192,7 @@ window.TL_DAY = {
 <li><b>Modular monolith</b>: ab bhi ek deployable, par saaf boundaries wale modules mein banta — har module ki chhoti public API hai aur apni tables hain; modules ek-doosre ke internals mein haath nahi daalte. Saralta bani rehti hai aur zaroorat padne par baad mein baanta ja sakta hai.</li>
 <li><b>Microservices</b>: kai chhoti services jo alag-alag deploy hoti hain, har ek apna data rakhti hai. Fayda: har team ke liye independent deployment aur scaling; keemat: network calls, partial failures, distributed data consistency, monitoring aur bahut saare operations (Day 16).</li>
 </ul>
-<p><b>Faisle ke kaarak:</b></p>
+<p><b>Faisla kin baaton par tika hai:</b></p>
 <ul>
 <li><b>Team size aur dhaancha</b> — Conway's law: systems aksar organisation ke communication dhaanche ki nakal karte hain. Kam developers ke liye kai services shaayad hi jaayaz hain.</li>
 <li><b>Deployment independence</b> — kya teams ko sach mein alag-alag raftaar se alag release karna hai?</li>
@@ -286,7 +286,7 @@ window.TL_DAY = {
 <li><code>Shop.Infrastructure</code> — references Application. The <b>EF Core <code>DbContext</code></b>, repositories, email, external HTTP clients.</li>
 <li><code>Shop.Api</code> — references Application and Infrastructure. Endpoints and the <b>composition root</b> (<code>AddInfrastructure()</code>).</li>
 </ul>
-<p>The compiler enforces the rule: Domain has no reference to EF Core, so nobody can use <code>DbContext</code> there by accident. Your handler is tested with a fake <code>IOrderRepository</code>, no database.</p>
+<p>The compiler enforces the rule: Domain has no reference to EF Core, so nobody can use <code>DbContext</code> there by accident. Your handler is tested with a fake <code>IOrderRepository</code>, no database. The handler commits once through an <code>IUnitOfWork</code> port; the repository only adds (Day 11).</p>
 <p><b>Where does the DbContext live?</b> The common answer is <b>Infrastructure</b>, behind a port. Some teams let the Application layer use <code>DbContext</code> (or an <code>IAppDbContext</code> interface that exposes <code>DbSet&lt;T&gt;</code>) directly, to avoid thin repositories (see Day 11). It is a trade-off: a pure Application layer is more portable and easier to test without EF; using EF directly is shorter and uses its full power. Pick one and write it in the team conventions. Mapping domain objects to EF is configured in Infrastructure (Fluent API), so the domain classes stay free of EF attributes.</p>
 <p><b>When to use:</b> rules that must outlive the framework, several adapters (database, queue, third-party API), or heavy unit testing of use cases. <b>When not:</b> a small CRUD service — four projects, interfaces and mapping would be more code than the logic itself.</p>`,
         hi: `<p><b>तस्वीर — mobile charger और socket:</b> phone (domain) तय करता है कि उसे क्या चाहिए (5 V, USB port)। जो भी charger (adapter) फ़िट हो, लग जाता है। दूसरे socket पर जाने से phone नहीं बदलता।</p>
@@ -297,7 +297,7 @@ window.TL_DAY = {
 <li><code>Shop.Infrastructure</code> — Application को reference करती है। <b>EF Core <code>DbContext</code></b>, repositories, email, बाहरी HTTP clients।</li>
 <li><code>Shop.Api</code> — Application और Infrastructure को reference करती है। Endpoints और <b>composition root</b> (<code>AddInfrastructure()</code>)।</li>
 </ul>
-<p>Compiler नियम लागू करता है: Domain में EF Core का reference नहीं है, इसलिए वहाँ ग़लती से भी <code>DbContext</code> use नहीं हो सकता। आपका handler fake <code>IOrderRepository</code> से test होता है, बिना database के।</p>
+<p>Compiler नियम लागू करता है: Domain में EF Core का reference नहीं है, इसलिए वहाँ ग़लती से भी <code>DbContext</code> use नहीं हो सकता। आपका handler fake <code>IOrderRepository</code> से test होता है, बिना database के। Handler एक बार <code>IUnitOfWork</code> port से commit करता है; repository सिर्फ़ add करती है (Day 11)।</p>
 <p><b>DbContext कहाँ रहता है?</b> आम जवाब है <b>Infrastructure</b>, एक port के पीछे। कुछ teams पतली repositories से बचने के लिए Application layer को सीधे <code>DbContext</code> (या <code>DbSet&lt;T&gt;</code> दिखाने वाला <code>IAppDbContext</code> interface) use करने देती हैं (Day 11 देखो)। यह trade-off है: शुद्ध Application layer ज़्यादा portable है और बिना EF के test करना आसान; सीधे EF use करना छोटा है और उसकी पूरी ताक़त देता है। एक चुनो और team conventions में लिखो। Domain objects का EF mapping Infrastructure में (Fluent API) होता है, इसलिए domain classes EF attributes से मुक्त रहती हैं।</p>
 <p><b>कब use करें:</b> ऐसे rules जो framework से ज़्यादा जिएँ, कई adapters (database, queue, third-party API), या use cases की भारी unit testing। <b>कब नहीं:</b> छोटी CRUD service — चार projects, interfaces और mapping logic से ज़्यादा code होंगे।</p>`,
         hg: `<p><b>Tasveer — mobile charger aur socket:</b> phone (domain) tay karta hai ki use kya chahiye (5 V, USB port). Jo bhi charger (adapter) fit ho, lag jaata hai. Doosre socket par jaane se phone nahi badalta.</p>
@@ -308,7 +308,7 @@ window.TL_DAY = {
 <li><code>Shop.Infrastructure</code> — Application ko reference karti hai. <b>EF Core <code>DbContext</code></b>, repositories, email, baahri HTTP clients.</li>
 <li><code>Shop.Api</code> — Application aur Infrastructure ko reference karti hai. Endpoints aur <b>composition root</b> (<code>AddInfrastructure()</code>).</li>
 </ul>
-<p>Compiler niyam laagu karta hai: Domain mein EF Core ka reference nahi hai, isliye wahan galti se bhi <code>DbContext</code> use nahi ho sakta. Aapka handler fake <code>IOrderRepository</code> se test hota hai, bina database ke.</p>
+<p>Compiler niyam laagu karta hai: Domain mein EF Core ka reference nahi hai, isliye wahan galti se bhi <code>DbContext</code> use nahi ho sakta. Aapka handler fake <code>IOrderRepository</code> se test hota hai, bina database ke. Handler ek baar <code>IUnitOfWork</code> port se commit karta hai; repository sirf add karti hai (Day 11).</p>
 <p><b>DbContext kahan rehta hai?</b> Aam jawaab hai <b>Infrastructure</b>, ek port ke peeche. Kuch teams patli repositories se bachne ke liye Application layer ko seedhe <code>DbContext</code> (ya <code>DbSet&lt;T&gt;</code> dikhane wala <code>IAppDbContext</code> interface) use karne deti hain (Day 11 dekho). Yeh trade-off hai: shuddh Application layer zyada portable hai aur bina EF ke test karna aasaan; seedhe EF use karna chhota hai aur uski poori taakat deta hai. Ek chuno aur team conventions mein likho. Domain objects ka EF mapping Infrastructure mein (Fluent API) hota hai, isliye domain classes EF attributes se mukt rehti hain.</p>
 <p><b>Kab use karein:</b> aise rules jo framework se zyada jiyen, kai adapters (database, queue, third-party API), ya use cases ki bhaari unit testing. <b>Kab nahi:</b> chhoti CRUD service — chaar projects, interfaces aur mapping logic se zyada code honge.</p>`
       },
@@ -363,16 +363,23 @@ namespace Shop.Application
     // The port: defined by the inner layer, in its own words.
     public interface IOrderRepository
     {
-        Task AddAsync(Order order, CancellationToken ct);
+        void Add(Order order);
     }
 
-    public class PlaceOrderHandler(IOrderRepository orders)
+    // Commit port: the handler saves once (Day 11), the repository only adds.
+    public interface IUnitOfWork
+    {
+        Task<int> SaveChangesAsync(CancellationToken ct = default);
+    }
+
+    public class PlaceOrderHandler(IOrderRepository orders, IUnitOfWork unitOfWork)
     {
         public async Task<Guid> HandleAsync(decimal price, CancellationToken ct)
         {
             var order = new Order();
             order.AddItem(price);
-            await orders.AddAsync(order, ct);
+            orders.Add(order);
+            await unitOfWork.SaveChangesAsync(ct);
             return order.Id;
         }
     }
@@ -383,7 +390,8 @@ namespace Shop.Infrastructure
     using Shop.Application;
     using Shop.Domain;
 
-    public class ShopDbContext(DbContextOptions<ShopDbContext> options) : DbContext(options)
+    // DbContext already has SaveChangesAsync(CancellationToken), so it can serve as the IUnitOfWork.
+    public class ShopDbContext(DbContextOptions<ShopDbContext> options) : DbContext(options), IUnitOfWork
     {
         public DbSet<Order> Orders => Set<Order>();
     }
@@ -391,11 +399,7 @@ namespace Shop.Infrastructure
     // The adapter: knows EF Core and the Application port. Nothing inward knows it.
     public class EfOrderRepository(ShopDbContext db) : IOrderRepository
     {
-        public async Task AddAsync(Order order, CancellationToken ct)
-        {
-            db.Orders.Add(order);
-            await db.SaveChangesAsync(ct);
-        }
+        public void Add(Order order) => db.Orders.Add(order);
     }
 
     public static class DependencyInjection
@@ -404,6 +408,7 @@ namespace Shop.Infrastructure
         {
             // AddDbContext(...) with a real provider goes here too.
             services.AddScoped<IOrderRepository, EfOrderRepository>();
+            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ShopDbContext>());
             return services;
         }
     }
@@ -426,7 +431,7 @@ namespace Shop.Infrastructure
 <li><b>Value object</b> <code>Money</code> as a <code>record</code>: equal by values, immutable, <code>with</code> makes a changed copy. Typed ids (<code>OrderId</code>, <code>CustomerId</code> as <code>readonly record struct</code>) stop you from passing the wrong Guid.</li>
 <li><b>Aggregate root</b> <code>Order</code>: lines are private and exposed read-only; <code>AddLine</code> and <code>Place</code> check the <b>invariants</b> (a placed order is frozen; a quantity is positive; you cannot place an empty order).</li>
 <li>The order refers to the customer by <code>CustomerId</code>, <b>not</b> by a <code>Customer</code> object, so each aggregate is loaded and saved on its own.</li>
-<li><b>Domain event</b>: <code>Place()</code> records <code>OrderPlaced</code>; the application layer dispatches it after saving (for example to send an email). Cross-aggregate work then happens in <b>another</b> transaction, so it is eventually consistent.</li>
+<li><b>Domain event</b>: <code>Place()</code> records <code>OrderPlaced</code>; the application layer dispatches it either just before <code>SaveChanges</code> (same transaction, side effects are atomic) or after it (separate transactions, eventually consistent; an outbox makes that reliable, Day 16). "After" also keeps one aggregate per transaction.</li>
 </ul>
 <p><b>Value object pitfalls:</b> a record's equality is member-wise, but a <code>List&lt;T&gt;</code> member is compared by <b>reference</b>; and <code>with</code> is a shallow copy that skips your constructor, so validate in an <code>init</code> accessor if the rule must always hold (see puzzles).</p>
 <p>The second snippet contrasts an <b>anemic</b> order (any code can set <code>Status</code> to anything) with a <b>rich</b> one.</p>
@@ -437,7 +442,7 @@ namespace Shop.Infrastructure
 <li><b>Value object</b> <code>Money</code> एक <code>record</code> के रूप में: values से बराबर, immutable, <code>with</code> बदली हुई copy बनाता है। Typed ids (<code>OrderId</code>, <code>CustomerId</code> को <code>readonly record struct</code> बनाकर) ग़लत Guid देने से रोकते हैं।</li>
 <li><b>Aggregate root</b> <code>Order</code>: lines private हैं और read-only दिखती हैं; <code>AddLine</code> और <code>Place</code> <b>invariants</b> जाँचते हैं (placed order जम जाता है; quantity positive है; ख़ाली order place नहीं हो सकता)।</li>
 <li>Order customer को <code>CustomerId</code> से refer करता है, <code>Customer</code> object से <b>नहीं</b>, इसलिए हर aggregate अलग load और save होता है।</li>
-<li><b>Domain event</b>: <code>Place()</code> <code>OrderPlaced</code> दर्ज करता है; application layer उसे save के बाद dispatch करती है (जैसे email भेजने के लिए)। Aggregates के बीच का काम <b>दूसरे</b> transaction में होता है, यानी eventually consistent।</li>
+<li><b>Domain event</b>: <code>Place()</code> <code>OrderPlaced</code> दर्ज करता है; application layer उसे या तो <code>SaveChanges</code> से ठीक पहले dispatch करती है (वही transaction, side effects atomic) या उसके बाद (अलग transactions, eventually consistent; outbox इसे reliable बनाता है, Day 16)। "बाद" में एक transaction में एक ही aggregate रहता है।</li>
 </ul>
 <p><b>Value object की गड़बड़ियाँ:</b> record की equality member-wise है, पर <code>List&lt;T&gt;</code> member <b>reference</b> से compare होता है; और <code>with</code> shallow copy है जो आपका constructor छोड़ देता है, इसलिए rule हमेशा लागू रखना हो तो <code>init</code> accessor में validate करो (puzzles देखो)।</p>
 <p>दूसरा snippet <b>anemic</b> order (कोई भी code <code>Status</code> कुछ भी set कर दे) और <b>rich</b> order की तुलना करता है।</p>
@@ -448,7 +453,7 @@ namespace Shop.Infrastructure
 <li><b>Value object</b> <code>Money</code> ek <code>record</code> ke roop mein: values se barabar, immutable, <code>with</code> badli hui copy banata hai. Typed ids (<code>OrderId</code>, <code>CustomerId</code> ko <code>readonly record struct</code> banakar) galat Guid dene se rokte hain.</li>
 <li><b>Aggregate root</b> <code>Order</code>: lines private hain aur read-only dikhti hain; <code>AddLine</code> aur <code>Place</code> <b>invariants</b> jaanchte hain (placed order jam jaata hai; quantity positive hai; khaali order place nahi ho sakta).</li>
 <li>Order customer ko <code>CustomerId</code> se refer karta hai, <code>Customer</code> object se <b>nahi</b>, isliye har aggregate alag load aur save hota hai.</li>
-<li><b>Domain event</b>: <code>Place()</code> <code>OrderPlaced</code> darj karta hai; application layer use save ke baad dispatch karti hai (jaise email bhejne ke liye). Aggregates ke beech ka kaam <b>doosre</b> transaction mein hota hai, yaani eventually consistent.</li>
+<li><b>Domain event</b>: <code>Place()</code> <code>OrderPlaced</code> darj karta hai; application layer use ya to <code>SaveChanges</code> se theek pehle dispatch karti hai (wahi transaction, side effects atomic) ya uske baad (alag transactions, eventually consistent; outbox ise reliable banata hai, Day 16). "Baad" mein ek transaction mein ek hi aggregate rehta hai.</li>
 </ul>
 <p><b>Value object ki gadbadiyan:</b> record ki equality member-wise hai, par <code>List&lt;T&gt;</code> member <b>reference</b> se compare hota hai; aur <code>with</code> shallow copy hai jo aapka constructor chhod deta hai, isliye rule hamesha laagu rakhna ho to <code>init</code> accessor mein validate karo (puzzles dekho).</p>
 <p>Doosra snippet <b>anemic</b> order (koi bhi code <code>Status</code> kuch bhi set kar de) aur <b>rich</b> order ki tulna karta hai.</p>
@@ -488,8 +493,8 @@ public class Order
     public OrderId Id { get; } = new(Guid.NewGuid());
     public CustomerId CustomerId { get; }            // another aggregate: by id, not by object
     public bool IsPlaced { get; private set; }
-    public IReadOnlyList<OrderLine> Lines => _lines;
-    public IReadOnlyList<IDomainEvent> Events => _events;
+    public IReadOnlyList<OrderLine> Lines => _lines.AsReadOnly();
+    public IReadOnlyList<IDomainEvent> Events => _events.AsReadOnly();
     public decimal Total => _lines.Sum(l => l.Quantity * l.UnitPrice.Amount);
 
     public void AddLine(string sku, int quantity, Money unitPrice)
@@ -848,19 +853,22 @@ different scaling.
         en: `<ul>
 <li><b>Monolith</b>: simplest to run; risk of a tangled "big ball of mud". <b>Modular monolith</b>: one deployable with enforced module borders. <b>Microservices</b>: independent deployment and scaling, paid for with network failures, distributed data and operations (Day 16).</li>
 <li>Ask: how many teams? Do they need separate release schedules? Can data be split cleanly? Do we have CI/CD, monitoring and on-call?</li>
-<li>"Start with a modular monolith" is a common advice because early boundaries are guesses and moving a boundary inside one codebase is cheaper than across services. The trade-off: it needs discipline, and one deployment means one release cadence.</li>
+<li>"Start with a modular monolith" is common advice because early boundaries are guesses and moving a boundary inside one codebase is cheaper than across services. The trade-off: it needs discipline, and one deployment means one release cadence.</li>
+<li>Day 17 (system design) reuses this reasoning: state the constraints, compare options, name the trade-off and the trigger to revisit.</li>
 <li>Follow-up: "When would you split?" — a clear trigger: a second team owns the module, it needs different scaling, or its release rhythm differs.</li>
 </ul>`,
         hi: `<ul>
 <li><b>Monolith</b>: चलाने में सबसे सरल; उलझे "big ball of mud" का जोखिम। <b>Modular monolith</b>: एक deployable, लागू की गई module सीमाओं के साथ। <b>Microservices</b>: independent deployment और scaling, जिसकी क़ीमत network failures, distributed data और operations (Day 16) हैं।</li>
 <li>पूछो: कितनी teams? क्या उन्हें अलग release schedules चाहिए? क्या data साफ़ बँट सकता है? क्या हमारे पास CI/CD, monitoring और on-call है?</li>
 <li>"modular monolith से शुरू करो" आम सलाह है क्योंकि शुरू की boundaries अंदाज़े होती हैं और एक codebase में boundary हिलाना services के पार से सस्ता है। Trade-off: discipline चाहिए, और एक deployment यानी एक release रफ़्तार।</li>
+<li>Day 17 (system design) में यही सोच काम आती है: constraints बताओ, options की तुलना करो, trade-off और दोबारा देखने का trigger बताओ।</li>
 <li>Follow-up: "कब बाँटोगे?" — साफ़ trigger: दूसरी team module की मालिक बने, उसे अलग scaling चाहिए, या उसकी release लय अलग हो।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Monolith</b>: chalane mein sabse saral; uljhe "big ball of mud" ka jokhim. <b>Modular monolith</b>: ek deployable, laagu ki gayi module seemaon ke saath. <b>Microservices</b>: independent deployment aur scaling, jiski keemat network failures, distributed data aur operations (Day 16) hain.</li>
 <li>Poochho: kitni teams? Kya unhe alag release schedules chahiye? Kya data saaf baant sakta hai? Kya hamare paas CI/CD, monitoring aur on-call hai?</li>
 <li>"Modular monolith se shuru karo" aam salaah hai kyunki shuru ki boundaries andaaze hoti hain aur ek codebase mein boundary hilana services ke paar se sasta hai. Trade-off: discipline chahiye, aur ek deployment yaani ek release raftaar.</li>
+<li>Day 17 (system design) mein yahi soch kaam aati hai: constraints batao, options ki tulna karo, trade-off aur dobara dekhne ka trigger batao.</li>
 <li>Follow-up: "Kab baantoge?" — saaf trigger: doosri team module ki maalik bane, use alag scaling chahiye, ya uski release lay alag ho.</li>
 </ul>`
       }
@@ -879,22 +887,22 @@ different scaling.
 <li>Entity examples: <code>Order</code>, <code>Customer</code> — compare by Id. Value object examples: <code>Money</code>, <code>Address</code>, <code>DateRange</code> — compare by all values.</li>
 <li>In C#, a <code>record</code> gives value equality for free (Day 3). Caution: a <code>List&lt;T&gt;</code> member inside a record is still compared by reference (puzzle below).</li>
 <li>Value objects are immutable: change means "make a new one" (<code>with</code>). They can hold rules, for example <code>Email</code> validates its format once.</li>
-<li>Entities override <code>Equals</code> by Id; with EF Core the change tracker already uses identity (Day 5).</li>
-<li>Follow-up: "How does EF Core store a value object?" — as owned types (<code>OwnsOne</code>) or, from EF Core 8, complex types, usually as columns in the same table.</li>
+<li>Entities often override <code>Equals</code> by Id. Pitfall: new, not-yet-saved entities all have the default Id (0), so two different transient entities compare equal; handle them separately. With EF Core the change tracker already uses identity (Day 5).</li>
+<li>Follow-up: "How does EF Core store a value object?" — as complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 added optional complex types, JSON mapping and struct support) or as owned types (<code>OwnsOne</code>); usually as columns in the same table. Complex types have value semantics and no identity of their own, which fits value objects; owned types are entity types.</li>
 </ul>`,
         hi: `<ul>
 <li>Entity के उदाहरण: <code>Order</code>, <code>Customer</code> — Id से compare। Value object के उदाहरण: <code>Money</code>, <code>Address</code>, <code>DateRange</code> — सारी values से compare।</li>
 <li>C# में <code>record</code> value equality मुफ़्त देता है (Day 3)। सावधानी: record के अंदर <code>List&lt;T&gt;</code> member अब भी reference से compare होता है (नीचे puzzle)।</li>
 <li>Value objects immutable होते हैं: बदलाव यानी "नया बनाओ" (<code>with</code>)। उनमें rules हो सकते हैं, जैसे <code>Email</code> अपना format एक बार validate करता है।</li>
-<li>Entities <code>Equals</code> को Id से override करती हैं; EF Core का change tracker पहले से identity use करता है (Day 5)।</li>
-<li>Follow-up: "EF Core value object कैसे store करता है?" — owned types (<code>OwnsOne</code>) या, EF Core 8 से, complex types के रूप में, आम तौर पर उसी table के columns में।</li>
+<li>Entities अक्सर <code>Equals</code> को Id से override करती हैं। Pitfall: नई, अभी save न हुई entities का default Id (0) होता है, इसलिए दो अलग transient entities बराबर निकलती हैं; उन्हें अलग से संभालो। EF Core का change tracker पहले से identity use करता है (Day 5)।</li>
+<li>Follow-up: "EF Core value object कैसे store करता है?" — complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 ने optional complex types, JSON mapping और struct support जोड़े) या owned types (<code>OwnsOne</code>) के रूप में; आम तौर पर उसी table के columns में। Complex types में value semantics होती हैं और अपनी identity नहीं, जो value objects को जमती है; owned types असल में entity types हैं।</li>
 </ul>`,
         hg: `<ul>
 <li>Entity ke udaharan: <code>Order</code>, <code>Customer</code> — Id se compare. Value object ke udaharan: <code>Money</code>, <code>Address</code>, <code>DateRange</code> — saari values se compare.</li>
 <li>C# mein <code>record</code> value equality muft deta hai (Day 3). Saavdhani: record ke andar <code>List&lt;T&gt;</code> member ab bhi reference se compare hota hai (neeche puzzle).</li>
 <li>Value objects immutable hote hain: badlaav yaani "naya banao" (<code>with</code>). Unmein rules ho sakte hain, jaise <code>Email</code> apna format ek baar validate karta hai.</li>
-<li>Entities <code>Equals</code> ko Id se override karti hain; EF Core ka change tracker pehle se identity use karta hai (Day 5).</li>
-<li>Follow-up: "EF Core value object kaise store karta hai?" — owned types (<code>OwnsOne</code>) ya, EF Core 8 se, complex types ke roop mein, aam taur par usi table ke columns mein.</li>
+<li>Entities aksar <code>Equals</code> ko Id se override karti hain. Pitfall: nayi, abhi save na hui entities ka default Id (0) hota hai, isliye do alag transient entities barabar nikalti hain; unhe alag se sambhalo. EF Core ka change tracker pehle se identity use karta hai (Day 5).</li>
+<li>Follow-up: "EF Core value object kaise store karta hai?" — complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 ne optional complex types, JSON mapping aur struct support jode) ya owned types (<code>OwnsOne</code>) ke roop mein; aam taur par usi table ke columns mein. Complex types mein value semantics hoti hain aur apni identity nahi, jo value objects ko jamti hai; owned types asal mein entity types hain.</li>
 </ul>`
       }
     },
@@ -918,14 +926,14 @@ different scaling.
         hi: `<ul>
 <li>उदाहरण: <code>Order</code> (root) और उसकी <code>OrderLine</code>s। बाहर का code <code>order.AddLine(...)</code> call करता है; lines की list सीधे edit नहीं करता।</li>
 <li><b>Invariant</b> = वह rule जो हमेशा सच रहना चाहिए, जैसे "placed order नहीं बदल सकता" या "total शून्य से नीचे नहीं जाता"।</li>
-<li>अंगूठे के नियम: aggregates छोटे रखो; एक transaction में एक aggregate load और save करो; दूसरे aggregates को Id से refer करो; बाक़ी के लिए domain events (eventual consistency)।</li>
+<li>Rules of thumb: aggregates छोटे रखो; एक transaction में एक aggregate load और save करो; दूसरे aggregates को Id से refer करो; बाक़ी के लिए domain events (eventual consistency)।</li>
 <li>Repository (Day 11) आम तौर पर aggregate root के लिए होती है, table के लिए नहीं।</li>
 <li>Follow-up: "अगर rule दो aggregates में फैला हो?" — events से eventual consistency मानो, या दोबारा सोचो कि क्या वे सच में एक aggregate हैं।</li>
 </ul>`,
         hg: `<ul>
 <li>Udaharan: <code>Order</code> (root) aur uski <code>OrderLine</code>s. Bahar ka code <code>order.AddLine(...)</code> call karta hai; lines ki list seedhe edit nahi karta.</li>
 <li><b>Invariant</b> = woh rule jo hamesha sach rehna chahiye, jaise "placed order nahi badal sakta" ya "total shunya se neeche nahi jaata".</li>
-<li>Angoothe ke niyam: aggregates chhote rakho; ek transaction mein ek aggregate load aur save karo; doosre aggregates ko Id se refer karo; baaki ke liye domain events (eventual consistency).</li>
+<li>Rules of thumb: aggregates chhote rakho; ek transaction mein ek aggregate load aur save karo; doosre aggregates ko Id se refer karo; baaki ke liye domain events (eventual consistency).</li>
 <li>Repository (Day 11) aam taur par aggregate root ke liye hoti hai, table ke liye nahi.</li>
 <li>Follow-up: "Agar rule do aggregates mein phaila ho?" — events se eventual consistency maano, ya dobara socho ki kya woh sach mein ek aggregate hain.</li>
 </ul>`
@@ -937,8 +945,8 @@ different scaling.
       q: "What is a bounded context?",
       answer: "A bounded context is the boundary inside which one domain model and its language are consistent. The same word, like Customer, can mean different things in Sales and in Support.",
       meaning: {
-        hi: "Bounded context वह सीमा है जिसके अंदर एक domain model और उसकी भाषा सुसंगत रहती है। एक ही शब्द, जैसे Customer, Sales और Support में अलग मतलब रख सकता है।",
-        hg: "Bounded context woh seema hai jiske andar ek domain model aur uski bhasha susangat rehti hai. Ek hi shabd, jaise Customer, Sales aur Support mein alag matlab rakh sakta hai."
+        hi: "Bounded context वह सीमा है जिसके अंदर एक domain model और उसकी language consistent रहती है। एक ही शब्द, जैसे Customer, Sales और Support में अलग मतलब रख सकता है।",
+        hg: "Bounded context woh seema hai jiske andar ek domain model aur uski language consistent rehti hai. Ek hi shabd, jaise Customer, Sales aur Support mein alag matlab rakh sakta hai."
       },
       explain: {
         en: `<ul>
@@ -1048,17 +1056,17 @@ different scaling.
 <li>Follow-up: "Does it apply inside a monolith?" — yes, module ownership by team helps keep module borders real.</li>
 </ul>`,
         hi: `<ul>
-<li>Melvin Conway का अवलोकन (1968 में प्रकाशित)। एक लोकप्रिय paraphrase: चार groups compiler बनाएँ तो चार-pass वाला compiler बनता है। जिन teams को एक feature बदलने में लगातार meetings चाहिए, वे कसकर जुड़े हिस्से बनाएँगी।</li>
+<li>Melvin Conway ने यह 1968 में लिखा था। एक लोकप्रिय paraphrase: चार groups compiler बनाएँ तो चार-pass वाला compiler बनता है। जिन teams को एक feature बदलने में लगातार meetings चाहिए, वे कसकर जुड़े हिस्से बनाएँगी।</li>
 <li>"Inverse Conway manoeuvre": teams ऐसी बनाओ (छोटी, एक capability की शुरू से अंत तक मालिक) कि जो architecture चाहिए वह उभरे।</li>
 <li>व्यावहारिक use: कोई पाँच developers के लिए दस services सुझाए तो पूछो कि हर एक की मालिक कौन है और on-call कौन है।</li>
-<li>यह एक प्रवृत्ति है, भौतिकी का नियम नहीं; अच्छे interfaces और communication इसे नरम कर सकते हैं।</li>
+<li>यह tendency है, physics का law नहीं; अच्छे interfaces और communication इसे नरम कर सकते हैं।</li>
 <li>Follow-up: "क्या यह monolith के अंदर भी लागू है?" — हाँ, team के हिसाब से module ownership module सीमाओं को असली रखने में मदद करती है।</li>
 </ul>`,
         hg: `<ul>
-<li>Melvin Conway ka avlokan (1968 mein prakashit). Ek lokpriya paraphrase: chaar groups compiler banayen to chaar-pass wala compiler banta hai. Jin teams ko ek feature badalne mein lagaataar meetings chahiye, woh kaskar jude hisse banayengi.</li>
+<li>Melvin Conway ne yeh 1968 mein likha tha. Ek lokpriya paraphrase: chaar groups compiler banayen to chaar-pass wala compiler banta hai. Jin teams ko ek feature badalne mein lagaataar meetings chahiye, woh kaskar jude hisse banayengi.</li>
 <li>"Inverse Conway manoeuvre": teams aisi banao (chhoti, ek capability ki shuru se ant tak maalik) ki jo architecture chahiye woh ubhare.</li>
 <li>Vyavaharik use: koi paanch developers ke liye das services sujhaye to poochho ki har ek ki maalik kaun hai aur on-call kaun hai.</li>
-<li>Yeh ek pravritti hai, bhautiki ka niyam nahi; achhe interfaces aur communication ise naram kar sakte hain.</li>
+<li>Yeh tendency hai, physics ka law nahi; achhe interfaces aur communication ise naram kar sakte hain.</li>
 <li>Follow-up: "Kya yeh monolith ke andar bhi laagu hai?" — haan, team ke hisaab se module ownership module seemaon ko asli rakhne mein madad karti hai.</li>
 </ul>`
       }
@@ -1100,29 +1108,29 @@ different scaling.
       id: "domain-events-dispatch",
       depth: "detailed",
       q: "What are domain events and when do you dispatch them?",
-      answer: "A domain event is a past-tense fact raised by an aggregate, like OrderPlaced. Many teams dispatch them after the changes are saved, so handlers run in separate transactions and are eventually consistent.",
+      answer: "A domain event is a past-tense fact raised by an aggregate, like OrderPlaced. Dispatch either just before SaveChanges (same transaction, atomic side effects) or after it (separate transactions, eventual consistency; use an outbox for reliability).",
       meaning: {
-        hi: "Domain event भूतकाल का तथ्य है जो aggregate उठाता है, जैसे OrderPlaced। कई teams उसे changes save होने के बाद dispatch करती हैं, इसलिए handlers अलग transactions में चलते हैं और eventually consistent होते हैं।",
-        hg: "Domain event bhootkaal ka tathya hai jo aggregate uthata hai, jaise OrderPlaced. Kai teams use changes save hone ke baad dispatch karti hain, isliye handlers alag transactions mein chalte hain aur eventually consistent hote hain."
+        hi: "Domain event past का fact है जो aggregate raise करता है, जैसे OrderPlaced। Dispatch या तो SaveChanges से ठीक पहले करो (वही transaction, side effects atomic) या उसके बाद (अलग transactions, eventual consistency; reliability के लिए outbox)।",
+        hg: "Domain event past ka fact hai jo aggregate raise karta hai, jaise OrderPlaced. Dispatch ya to SaveChanges se theek pehle karo (wahi transaction, side effects atomic) ya uske baad (alag transactions, eventual consistency; reliability ke liye outbox)."
       },
       explain: {
         en: `<ul>
 <li>The aggregate only <b>records</b> the event (in a list). It does not call handlers, so the domain stays free of infrastructure.</li>
-<li>Option A, <b>after</b> <code>SaveChanges</code>: the order is safely stored first; if a handler fails the main change is already committed, so handlers must be retry-safe (idempotent). Option B, <b>before</b> saving inside the same transaction: handlers see consistent state and fail together with the change, but they extend the transaction.</li>
+<li>Option A, <b>just before</b> <code>SaveChanges</code> (the eShopOnContainers style): the handlers' changes are saved in the same transaction, so side effects are atomic; but several aggregates change in one transaction, which breaks the one-aggregate-per-transaction rule and makes the transaction longer. Option B, <b>after</b> <code>SaveChanges</code>: one aggregate per transaction, eventually consistent; but if the process stops or a handler fails after the commit, the side effect can be <b>lost</b>, so use retry-safe (idempotent) handlers and an outbox.</li>
 <li>If events must reach other services reliably, the Outbox pattern (Day 16) stores them in the same transaction as the data.</li>
 <li>Domain events are inside one service; integration events cross service boundaries. Do not expose domain events directly as your public contract.</li>
 <li>Follow-up: "Why not just call the email service from <code>Place()</code>?" — the domain would depend on infrastructure and the order could not be tested alone.</li>
 </ul>`,
         hi: `<ul>
 <li>Aggregate event को सिर्फ़ <b>दर्ज</b> करता है (एक list में)। वह handlers को call नहीं करता, इसलिए domain infrastructure से मुक्त रहता है।</li>
-<li>विकल्प A, <code>SaveChanges</code> के <b>बाद</b>: order पहले सुरक्षित store होता है; handler fail हो तो मुख्य बदलाव commit हो चुका है, इसलिए handlers retry-safe (idempotent) होने चाहिए। विकल्प B, save से <b>पहले</b> उसी transaction में: handlers consistent state देखते हैं और बदलाव के साथ ही fail होते हैं, पर transaction लंबा हो जाता है।</li>
+<li>विकल्प A, <code>SaveChanges</code> से <b>ठीक पहले</b> (eShopOnContainers style): handlers के बदलाव उसी transaction में save होते हैं, इसलिए side effects atomic हैं; पर कई aggregates एक transaction में बदलते हैं, जो one-aggregate-per-transaction rule तोड़ता है और transaction लंबा करता है। विकल्प B, <code>SaveChanges</code> के <b>बाद</b>: एक transaction में एक aggregate, eventually consistent; पर commit के बाद process रुके या handler fail हो तो side effect <b>खो</b> सकता है, इसलिए retry-safe (idempotent) handlers और outbox use करो।</li>
 <li>अगर events को दूसरी services तक भरोसे से पहुँचना है, तो Outbox pattern (Day 16) उन्हें data वाले ही transaction में store करता है।</li>
 <li>Domain events एक service के अंदर होते हैं; integration events service की सीमाएँ पार करते हैं। Domain events को सीधे public contract मत बनाओ।</li>
 <li>Follow-up: "<code>Place()</code> से सीधे email service क्यों नहीं बुलाते?" — तब domain infrastructure पर निर्भर होगा और order अकेले test नहीं हो सकेगा।</li>
 </ul>`,
         hg: `<ul>
 <li>Aggregate event ko sirf <b>darj</b> karta hai (ek list mein). Woh handlers ko call nahi karta, isliye domain infrastructure se mukt rehta hai.</li>
-<li>Vikalp A, <code>SaveChanges</code> ke <b>baad</b>: order pehle surakshit store hota hai; handler fail ho to mukhya badlaav commit ho chuka hai, isliye handlers retry-safe (idempotent) hone chahiye. Vikalp B, save se <b>pehle</b> usi transaction mein: handlers consistent state dekhte hain aur badlaav ke saath hi fail hote hain, par transaction lamba ho jaata hai.</li>
+<li>Vikalp A, <code>SaveChanges</code> se <b>theek pehle</b> (eShopOnContainers style): handlers ke badlaav usi transaction mein save hote hain, isliye side effects atomic hain; par kai aggregates ek transaction mein badalte hain, jo one-aggregate-per-transaction rule todta hai aur transaction lamba karta hai. Vikalp B, <code>SaveChanges</code> ke <b>baad</b>: ek transaction mein ek aggregate, eventually consistent; par commit ke baad process ruke ya handler fail ho to side effect <b>kho</b> sakta hai, isliye retry-safe (idempotent) handlers aur outbox use karo.</li>
 <li>Agar events ko doosri services tak bharose se pahunchna hai, to Outbox pattern (Day 16) unhe data wale hi transaction mein store karta hai.</li>
 <li>Domain events ek service ke andar hote hain; integration events service ki seemayen paar karte hain. Domain events ko seedhe public contract mat banao.</li>
 <li>Follow-up: "<code>Place()</code> se seedhe email service kyun nahi bulate?" — tab domain infrastructure par nirbhar hoga aur order akele test nahi ho sakega.</li>
@@ -1242,6 +1250,7 @@ different scaling.
 <li><b>Hexagonal</b> (Alistair Cockburn, ports and adapters): the app core has ports; drivers (HTTP, tests) and driven things (database, email) plug in through adapters.</li>
 <li><b>Onion</b> (Jeffrey Palermo): concentric layers — domain model, domain services, application services, then infrastructure and UI outside.</li>
 <li><b>Clean</b> (Robert C. Martin): entities, use cases, interface adapters, frameworks &amp; drivers; the dependency rule is the headline.</li>
+<li>Ports and adapters is the Adapter pattern (Day 10) applied at architecture scale: an adapter makes EF Core or an email service fit the port.</li>
 <li>In a .NET solution they usually look the same: Domain, Application, Infrastructure, Web. Do not spend interview time on small naming differences; show you understand the inward arrow.</li>
 <li>Follow-up: "Which would you pick?" — the one the team already understands; the principle matters more than the label.</li>
 </ul>`,
@@ -1249,6 +1258,7 @@ different scaling.
 <li><b>Hexagonal</b> (Alistair Cockburn, ports and adapters): app core में ports होते हैं; drivers (HTTP, tests) और driven चीज़ें (database, email) adapters से जुड़ती हैं।</li>
 <li><b>Onion</b> (Jeffrey Palermo): concentric layers — domain model, domain services, application services, फिर बाहर infrastructure और UI।</li>
 <li><b>Clean</b> (Robert C. Martin): entities, use cases, interface adapters, frameworks &amp; drivers; dependency rule मुख्य बात है।</li>
+<li>Ports and adapters असल में Adapter pattern (Day 10) है जो architecture के स्तर पर लगा है: adapter EF Core या email service को port में फ़िट कराता है।</li>
 <li>.NET solution में ये आम तौर पर एक जैसे दिखते हैं: Domain, Application, Infrastructure, Web। Interview का समय नामों के छोटे फ़र्क़ पर मत लगाओ; अंदर की तरफ़ वाला तीर समझाओ।</li>
 <li>Follow-up: "आप कौन-सा चुनोगे?" — जो team पहले से समझती हो; label से ज़्यादा सिद्धांत मायने रखता है।</li>
 </ul>`,
@@ -1256,6 +1266,7 @@ different scaling.
 <li><b>Hexagonal</b> (Alistair Cockburn, ports and adapters): app core mein ports hote hain; drivers (HTTP, tests) aur driven cheezein (database, email) adapters se judti hain.</li>
 <li><b>Onion</b> (Jeffrey Palermo): concentric layers — domain model, domain services, application services, phir bahar infrastructure aur UI.</li>
 <li><b>Clean</b> (Robert C. Martin): entities, use cases, interface adapters, frameworks &amp; drivers; dependency rule mukhya baat hai.</li>
+<li>Ports and adapters asal mein Adapter pattern (Day 10) hai jo architecture ke star par laga hai: adapter EF Core ya email service ko port mein fit karata hai.</li>
 <li>.NET solution mein ye aam taur par ek jaise dikhte hain: Domain, Application, Infrastructure, Web. Interview ka samay naamon ke chhote farq par mat lagao; andar ki taraf wala teer samjhao.</li>
 <li>Follow-up: "Aap kaun-sa chunoge?" — jo team pehle se samajhti ho; label se zyada siddhant maayne rakhta hai.</li>
 </ul>`
@@ -1283,14 +1294,14 @@ different scaling.
 <li>गिनाओ कि microservices क्या जोड़ती हैं: fail होने वाली network calls, एक transaction नहीं, data की नक़ल, versioned contracts, tracing, हर service की deployment pipeline, on-call का बोझ (Day 16)।</li>
 <li>दर्द के मुताबिक़ विकल्प दो: साफ़ सीमाओं वाला modular monolith, तेज़ pipeline, या <b>एक</b> service निकालना जिसकी असली scaling या ownership वजह है।</li>
 <li>दोबारा देखने के triggers पर सहमति: दूसरी team, बहुत अलग scale वाला module, या असंगत release लय। ADR में दर्ज करो।</li>
-<li>निष्पक्ष रहो: असली वजहें हों (कई स्वायत्त teams, नियामक isolation, बहुत अलग scaling) तो microservices सही हो सकती हैं। जवाब fit का है।</li>
+<li>Fair रहो: असली वजहें हों (कई autonomous teams, regulatory isolation, बहुत अलग scaling) तो microservices सही हो सकती हैं। जवाब fit का है।</li>
 </ul>`,
         hg: `<ul>
 <li>"Nahi" se nahi, sawaal se shuru karo: dard kya hai — dheemi releases, ek hisse ki scaling, team ke takraav, ya "yeh modern hai"?</li>
 <li>Ginao ki microservices kya jodti hain: fail hone wali network calls, ek transaction nahi, data ki nakal, versioned contracts, tracing, har service ki deployment pipeline, on-call ka bojh (Day 16).</li>
 <li>Dard ke mutaabik vikalp do: saaf seemaon wala modular monolith, tez pipeline, ya <b>ek</b> service nikaalna jiski asli scaling ya ownership wajah hai.</li>
 <li>Dobara dekhne ke triggers par sahmati: doosri team, bahut alag scale wala module, ya asangat release lay. ADR mein darj karo.</li>
-<li>Nishpaksh raho: asli wajahein hon (kai swayatt teams, niyamak isolation, bahut alag scaling) to microservices sahi ho sakti hain. Jawaab fit ka hai.</li>
+<li>Fair raho: asli wajahein hon (kai autonomous teams, regulatory isolation, bahut alag scaling) to microservices sahi ho sakti hain. Jawaab fit ka hai.</li>
 </ul>`
       }
     }
@@ -1332,17 +1343,17 @@ same hash: True`,
         en: `<ul>
 <li>A record compares each member with the default comparer. For <code>List&lt;string&gt;</code> that is <b>reference</b> equality, so two lists with the same items are "different" → <b>False</b>. A record is a value object only as deep as its members are.</li>
 <li><code>with</code> makes a <b>shallow</b> copy: <code>d</code> points to the <b>same</b> list as <code>c</code>, so they are equal, and adding "milk" through <code>shared</code> shows up in <code>d</code> (2 items).</li>
-<li>Fix: hold an immutable collection, or override <code>Equals</code> (and <code>GetHashCode</code> consistently) to compare items in order, as <code>CheckedParcel</code> does → <b>True</b>, same hash.</li>
+<li>Fix: an immutable collection stops the shared-mutation problem of the shallow <code>with</code> copy, but it does <b>not</b> give value equality (immutable collections also compare by reference). For equality, override <code>Equals</code> (and <code>GetHashCode</code> consistently) to compare items in order, as <code>CheckedParcel</code> does → <b>True</b>, same hash, or wrap the items in a value-equal collection type.</li>
 </ul>`,
         hi: `<ul>
 <li>Record हर member को default comparer से compare करता है। <code>List&lt;string&gt;</code> के लिए यह <b>reference</b> equality है, इसलिए एक जैसे items वाली दो lists "अलग" हैं → <b>False</b>। Record उतना ही गहरा value object है जितने उसके members।</li>
 <li><code>with</code> <b>shallow</b> copy बनाता है: <code>d</code> उसी list को पकड़ता है जिसे <code>c</code>, इसलिए वे बराबर हैं, और <code>shared</code> से "milk" जोड़ना <code>d</code> में दिखता है (2 items)।</li>
-<li>Fix: immutable collection रखो, या <code>Equals</code> (और संगत <code>GetHashCode</code>) override करके items क्रम से compare करो, जैसे <code>CheckedParcel</code> करता है → <b>True</b>, वही hash।</li>
+<li>Fix: immutable collection shallow <code>with</code> copy की shared-mutation वाली दिक़्क़त रोकता है, पर value equality <b>नहीं</b> देता (immutable collections भी reference से compare होते हैं)। Equality के लिए <code>Equals</code> (और उसके साथ <code>GetHashCode</code>) override करके items क्रम से compare करो, जैसे <code>CheckedParcel</code> करता है → <b>True</b>, वही hash, या items को value-equal collection type में रखो।</li>
 </ul>`,
         hg: `<ul>
 <li>Record har member ko default comparer se compare karta hai. <code>List&lt;string&gt;</code> ke liye yeh <b>reference</b> equality hai, isliye ek jaise items wali do lists "alag" hain → <b>False</b>. Record utna hi gehra value object hai jitne uske members.</li>
 <li><code>with</code> <b>shallow</b> copy banata hai: <code>d</code> usi list ko pakadta hai jise <code>c</code>, isliye woh barabar hain, aur <code>shared</code> se "milk" jodna <code>d</code> mein dikhta hai (2 items).</li>
-<li>Fix: immutable collection rakho, ya <code>Equals</code> (aur sangat <code>GetHashCode</code>) override karke items kram se compare karo, jaise <code>CheckedParcel</code> karta hai → <b>True</b>, wahi hash.</li>
+<li>Fix: immutable collection shallow <code>with</code> copy ki shared-mutation wali dikkat rokta hai, par value equality <b>nahi</b> deta (immutable collections bhi reference se compare hote hain). Equality ke liye <code>Equals</code> (aur uske saath <code>GetHashCode</code>) override karke items kram se compare karo, jaise <code>CheckedParcel</code> karta hai → <b>True</b>, wahi hash, ya items ko value-equal collection type mein rakho.</li>
 </ul>`
       }
     },
@@ -1524,19 +1535,19 @@ left after dispatch: 0`,
 <li>The aggregate only <b>records</b> events, in the order things happened: <code>OrderPlaced</code>, then <code>OrderShipped</code>. Nothing is sent yet.</li>
 <li>A rejected command (<code>Ship</code> before <code>Place</code>) throws <b>before</b> an event is added, so A-2 has 0 events. Events describe facts that happened.</li>
 <li>After "saved", the dispatcher takes the events in order and calls the handlers: email gets both, stock only <code>OrderPlaced</code>. <code>TakeEvents</code> returns a copy and clears the list, so the same event is not dispatched twice.</li>
-<li>If saving fails, nothing was dispatched — that is the point of dispatching after the save.</li>
+<li>If saving fails, nothing was dispatched, so no email goes out for an order that was not stored. Trade-off: if the process stops right after the commit, these in-memory events are lost (an outbox fixes that); dispatching just before <code>SaveChanges</code> instead keeps the changes atomic but puts several aggregates in one transaction.</li>
 </ul>`,
         hi: `<ul>
 <li>Aggregate events को सिर्फ़ <b>दर्ज</b> करता है, उसी क्रम में जैसे चीज़ें हुईं: <code>OrderPlaced</code>, फिर <code>OrderShipped</code>। अभी कुछ भेजा नहीं गया।</li>
 <li>Reject हुआ command (<code>Place</code> से पहले <code>Ship</code>) event जुड़ने से <b>पहले</b> exception फेंकता है, इसलिए A-2 के 0 events हैं। Events हो चुके तथ्यों का वर्णन हैं।</li>
 <li>"saved" के बाद dispatcher events क्रम से लेता है और handlers बुलाता है: email को दोनों, stock को सिर्फ़ <code>OrderPlaced</code>। <code>TakeEvents</code> copy लौटाकर list साफ़ करता है, इसलिए एक ही event दो बार dispatch नहीं होता।</li>
-<li>Save fail हो तो कुछ dispatch नहीं हुआ — save के बाद dispatch करने का यही मक़सद है।</li>
+<li>Save fail हो तो कुछ dispatch नहीं हुआ, इसलिए जो order store नहीं हुआ उसका email नहीं जाता। Trade-off: commit के ठीक बाद process रुके तो ये in-memory events खो जाते हैं (outbox इसे ठीक करता है); <code>SaveChanges</code> से ठीक पहले dispatch करने पर बदलाव atomic रहते हैं पर कई aggregates एक transaction में आ जाते हैं।</li>
 </ul>`,
         hg: `<ul>
 <li>Aggregate events ko sirf <b>darj</b> karta hai, usi kram mein jaise cheezein huin: <code>OrderPlaced</code>, phir <code>OrderShipped</code>. Abhi kuch bheja nahi gaya.</li>
 <li>Reject hua command (<code>Place</code> se pehle <code>Ship</code>) event judne se <b>pehle</b> exception phenkta hai, isliye A-2 ke 0 events hain. Events ho chuke tathyon ka varnan hain.</li>
 <li>"saved" ke baad dispatcher events kram se leta hai aur handlers bulata hai: email ko dono, stock ko sirf <code>OrderPlaced</code>. <code>TakeEvents</code> copy lautakar list saaf karta hai, isliye ek hi event do baar dispatch nahi hota.</li>
-<li>Save fail ho to kuch dispatch nahi hua — save ke baad dispatch karne ka yahi maqsad hai.</li>
+<li>Save fail ho to kuch dispatch nahi hua, isliye jo order store nahi hua uska email nahi jaata. Trade-off: commit ke theek baad process ruke to ye in-memory events kho jaate hain (outbox ise theek karta hai); <code>SaveChanges</code> se theek pehle dispatch karne par badlaav atomic rehte hain par kai aggregates ek transaction mein aa jaate hain.</li>
 </ul>`
       }
     },
@@ -1661,19 +1672,19 @@ equal by value: True`,
 <li>The constructor of <code>Percent</code> rejects 140. But <code>with</code> does not call that constructor: it copies the object and then runs the <code>init</code> setter, which has no check. So <code>ok with { Value = 140 }</code> gives a <b>broken</b> value object: 140.</li>
 <li><code>SafePercent</code> puts the rule in the <code>init</code> accessor, which the constructor and <code>with</code> both use, so the invalid value is rejected in every path.</li>
 <li>The last line shows value equality still works: two <code>Percent(40)</code> are equal.</li>
-<li>Lesson: for a value object that must stay valid, validate where every path goes through (the init accessor), or use a plain class/struct with a private constructor and a factory. Test the <code>with</code> path too.</li>
+<li>Lesson: for a value object that must stay valid, validate where every path goes through (the init accessor), or use a class with a private constructor and a factory (a struct can always be created with <code>default</code>, skipping validation). Test the <code>with</code> path too.</li>
 </ul>`,
         hi: `<ul>
 <li><code>Percent</code> का constructor 140 reject करता है। पर <code>with</code> वह constructor नहीं बुलाता: वह object copy करके <code>init</code> setter चलाता है, जिसमें कोई check नहीं। इसलिए <code>ok with { Value = 140 }</code> एक <b>टूटा हुआ</b> value object देता है: 140।</li>
-<li><code>SafePercent</code> rule को <code>init</code> accessor में रखता है, जिसे constructor और <code>with</code> दोनों use करते हैं, इसलिए हर रास्ते पर अमान्य value reject होती है।</li>
+<li><code>SafePercent</code> rule को <code>init</code> accessor में रखता है, जिसे constructor और <code>with</code> दोनों use करते हैं, इसलिए हर रास्ते पर गलत (invalid) value reject होती है।</li>
 <li>आख़िरी line दिखाती है कि value equality अब भी चलती है: दो <code>Percent(40)</code> बराबर हैं।</li>
-<li>सबक: जिस value object को valid रहना है, उसे वहाँ validate करो जहाँ से हर रास्ता गुज़रे (init accessor), या private constructor और factory वाली plain class/struct use करो। <code>with</code> वाला रास्ता भी test करो।</li>
+<li>सबक: जिस value object को valid रहना है, उसे वहाँ validate करो जहाँ से हर रास्ता गुज़रे (init accessor), या private constructor और factory वाली class use करो (struct को <code>default</code> से हमेशा बनाया जा सकता है, validation छोड़कर)। <code>with</code> वाला रास्ता भी test करो।</li>
 </ul>`,
         hg: `<ul>
 <li><code>Percent</code> ka constructor 140 reject karta hai. Par <code>with</code> woh constructor nahi bulata: woh object copy karke <code>init</code> setter chalata hai, jismein koi check nahi. Isliye <code>ok with { Value = 140 }</code> ek <b>toota hua</b> value object deta hai: 140.</li>
-<li><code>SafePercent</code> rule ko <code>init</code> accessor mein rakhta hai, jise constructor aur <code>with</code> dono use karte hain, isliye har raaste par amaanya value reject hoti hai.</li>
+<li><code>SafePercent</code> rule ko <code>init</code> accessor mein rakhta hai, jise constructor aur <code>with</code> dono use karte hain, isliye har raaste par galat (invalid) value reject hoti hai.</li>
 <li>Aakhri line dikhati hai ki value equality ab bhi chalti hai: do <code>Percent(40)</code> barabar hain.</li>
-<li>Sabak: jis value object ko valid rehna hai, use wahan validate karo jahan se har raasta guzre (init accessor), ya private constructor aur factory wali plain class/struct use karo. <code>with</code> wala raasta bhi test karo.</li>
+<li>Sabak: jis value object ko valid rehna hai, use wahan validate karo jahan se har raasta guzre (init accessor), ya private constructor aur factory wali class use karo (struct ko <code>default</code> se hamesha banaya ja sakta hai, validation chhodkar). <code>with</code> wala raasta bhi test karo.</li>
 </ul>`
       }
     }
@@ -1682,13 +1693,13 @@ equal by value: True`,
     en: [
       "Classic layers depend downward on data access, so business rules get tied to the database.",
       "Dependency rule: source-code dependencies point inward; inner layers own the interfaces (DIP) and outer layers implement them.",
-      "A common layout is Domain, Application, Infrastructure and Web; the DbContext usually lives in Infrastructure behind a port.",
+      "The DbContext usually lives in Infrastructure, behind a port owned by the Application layer.",
       "Clean Architecture for a small CRUD app is usually over-engineering; a simple layout is often enough.",
       "An entity is equal by Id; a value object is equal by its values and best immutable.",
       "A record gives value equality, but a List member inside it is still compared by reference.",
-      "An aggregate root enforces invariants, marks one transaction boundary and references other aggregates by Id.",
-      "Domain events are past-tense facts raised by aggregates; many teams dispatch them after saving.",
-      "A bounded context is where one model and one language apply; it is a good candidate for a module.",
+      "An aggregate root enforces the invariants and is the boundary of one transaction.",
+      "Domain events are past-tense facts; dispatch just before SaveChanges (atomic) or after it (eventual, use an outbox).",
+      "A bounded context is where one model and one language apply.",
       "A modular monolith is a common first step before microservices; it is a trade-off, not a rule.",
       "Choose by team size, deployment independence, data ownership and operational skill (Conway's law).",
       "Record hard-to-reverse choices in an ADR: context, decision, consequences."
@@ -1697,13 +1708,13 @@ equal by value: True`,
       hi: [
         "Classic layers नीचे data access पर निर्भर हैं, इसलिए business rules database से बंध जाते हैं।",
         "Dependency rule: source-code dependencies अंदर की तरफ़; अंदर की layers interfaces की मालिक (DIP) और बाहर की layers उन्हें implement करती हैं।",
-        "आम layout: Domain, Application, Infrastructure और Web; DbContext आम तौर पर Infrastructure में port के पीछे रहता है।",
+        "DbContext आम तौर पर Infrastructure में रहता है, Application की मालिकी वाले port के पीछे।",
         "छोटे CRUD app के लिए Clean Architecture आम तौर पर over-engineering है; सरल layout अक्सर काफ़ी है।",
         "Entity Id से बराबर होती है; value object अपनी values से बराबर और बेहतर है immutable।",
         "Record value equality देता है, पर उसके अंदर का List member अब भी reference से compare होता है।",
-        "Aggregate root invariants लागू करता है, एक transaction सीमा बनाता है और दूसरे aggregates को Id से refer करता है।",
-        "Domain events aggregates के उठाए भूतकाल के तथ्य हैं; कई teams उन्हें save के बाद dispatch करती हैं।",
-        "Bounded context वह जगह है जहाँ एक model और एक भाषा लागू है; यह module का अच्छा उम्मीदवार है।",
+        "Aggregate root invariants लागू करता है और एक transaction की सीमा है।",
+        "Domain events past के facts हैं; SaveChanges से ठीक पहले (atomic) या उसके बाद (eventual, outbox use करो) dispatch करो।",
+        "Bounded context वह जगह है जहाँ एक model और एक language चलती है।",
         "Modular monolith microservices से पहले का आम पहला क़दम है; यह trade-off है, नियम नहीं।",
         "Team size, deployment independence, data ownership और operational skill से चुनो (Conway's law)।",
         "पलटने में कठिन चुनाव ADR में दर्ज करो: context, decision, consequences।"
@@ -1711,13 +1722,13 @@ equal by value: True`,
       hg: [
         "Classic layers neeche data access par nirbhar hain, isliye business rules database se bandh jaate hain.",
         "Dependency rule: source-code dependencies andar ki taraf; andar ki layers interfaces ki maalik (DIP) aur bahar ki layers unhe implement karti hain.",
-        "Aam layout: Domain, Application, Infrastructure aur Web; DbContext aam taur par Infrastructure mein port ke peeche rehta hai.",
+        "DbContext aam taur par Infrastructure mein rehta hai, Application ki maalikat wale port ke peeche.",
         "Chhote CRUD app ke liye Clean Architecture aam taur par over-engineering hai; saral layout aksar kaafi hai.",
         "Entity Id se barabar hoti hai; value object apni values se barabar aur behtar hai immutable.",
         "Record value equality deta hai, par uske andar ka List member ab bhi reference se compare hota hai.",
-        "Aggregate root invariants laagu karta hai, ek transaction seema banata hai aur doosre aggregates ko Id se refer karta hai.",
-        "Domain events aggregates ke uthaye bhootkaal ke tathya hain; kai teams unhe save ke baad dispatch karti hain.",
-        "Bounded context woh jagah hai jahan ek model aur ek bhasha laagu hai; yeh module ka achha ummeedwaar hai.",
+        "Aggregate root invariants laagu karta hai aur ek transaction ki seema hai.",
+        "Domain events past ke facts hain; SaveChanges se theek pehle (atomic) ya uske baad (eventual, outbox use karo) dispatch karo.",
+        "Bounded context woh jagah hai jahan ek model aur ek language chalti hai.",
         "Modular monolith microservices se pehle ka aam pehla kadam hai; yeh trade-off hai, niyam nahi.",
         "Team size, deployment independence, data ownership aur operational skill se chuno (Conway's law).",
         "Palatne mein kathin chunaav ADR mein darj karo: context, decision, consequences."
