@@ -73,7 +73,7 @@ window.TL_DAY = {
 <li><b>Adapter</b> — intent: <i>एक interface को वह बना दो जो client चाहता है।</i> Interface <b>बदलता</b> है।</li>
 <li><b>Decorator</b> — intent: <i>wrap करके behaviour जोड़ो, interface वही रखो।</i> Stack हो सकता है: caching के ऊपर logging, उसके नीचे असली object।</li>
 <li><b>Facade</b> — intent: <i>जटिल subsystem के ऊपर एक आसान interface।</i> <b>नया, सरल</b> interface; subsystem तक पहुँच बनी रहती है।</li>
-<li><b>Proxy</b> — intent: <i>उसी interface वाले stand-in से object का access control करो।</i> Proxy तय करता है कि असली object <b>कब और use होगा या नहीं</b>।</li>
+<li><b>Proxy</b> — intent: <i>उसी interface वाले stand-in से object का access control करो।</i> Proxy तय करता है कि <b>असली object use होगा या नहीं, और कब</b>।</li>
 <li><b>तीनों की शक्ल एक जैसी</b> है (reference पकड़े wrapper)। फ़र्क़ intent से करो: Adapter interface बदलता है, Decorator behaviour जोड़ता है, Proxy access control करता है।</li>
 <li><b>.NET में:</b> <code>BufferedStream</code>, <code>GZipStream</code>, <code>CryptoStream</code> दूसरे <code>Stream</code> को wrap करते हैं (Decorator); EF Core lazy-loading proxies और <code>DispatchProxy</code> (Proxy); vendor SDK को अपने interface के पीछे wrap करना (Adapter)।</li>
 <li><b>TL angle:</b> Adapter वह pattern है जो आपके domain को third-party बदलावों से बचाता है।</li>
@@ -84,7 +84,7 @@ window.TL_DAY = {
 <li><b>Adapter</b> — intent: <i>ek interface ko woh bana do jo client chahta hai.</i> Interface <b>badalta</b> hai.</li>
 <li><b>Decorator</b> — intent: <i>wrap karke behaviour jodo, interface wahi rakho.</i> Stack ho sakta hai: caching ke upar logging, uske neeche asli object.</li>
 <li><b>Facade</b> — intent: <i>jatil subsystem ke upar ek aasan interface.</i> <b>Naya, saral</b> interface; subsystem tak pahunch bani rehti hai.</li>
-<li><b>Proxy</b> — intent: <i>usi interface wale stand-in se object ka access control karo.</i> Proxy tay karta hai ki asli object <b>kab aur use hoga ya nahi</b>.</li>
+<li><b>Proxy</b> — intent: <i>usi interface wale stand-in se object ka access control karo.</i> Proxy tay karta hai ki <b>asli object use hoga ya nahi, aur kab</b>.</li>
 <li><b>Teeno ki shakl ek jaisi</b> hai (reference pakde wrapper). Farq intent se karo: Adapter interface badalta hai, Decorator behaviour jodta hai, Proxy access control karta hai.</li>
 <li><b>.NET mein:</b> <code>BufferedStream</code>, <code>GZipStream</code>, <code>CryptoStream</code> doosre <code>Stream</code> ko wrap karte hain (Decorator); EF Core lazy-loading proxies aur <code>DispatchProxy</code> (Proxy); vendor SDK ko apne interface ke peeche wrap karna (Adapter).</li>
 <li><b>TL angle:</b> Adapter woh pattern hai jo aapke domain ko third-party badlavon se bachata hai.</li>
@@ -107,7 +107,7 @@ window.TL_DAY = {
 <li><b>Observer</b> — <i>one subject, many subscribers, loosely coupled.</i> The subject does not know who listens. C#: <code>event</code> (Day 2) and <code>IObservable&lt;T&gt;</code>/<code>IObserver&lt;T&gt;</code>.</li>
 <li><b>Mediator</b> — <i>centralise how a set of objects interact</i> so they do not reference each other. Many-to-many becomes many-to-one-to-many.</li>
 <li><b>Chain of Responsibility</b> — <i>pass a request along handlers until one handles it (or all get a turn).</i> Each handler can stop the chain. ASP.NET Core middleware (Day 12) and <code>HttpClient</code> <code>DelegatingHandler</code>s are chains.</li>
-<li><b>Distinctions:</b> Strategy vs State — the <i>client</i> picks a strategy; a State object changes <i>itself</i> as the context moves through states. Observer vs Mediator — Observer is one-to-many broadcast; Mediator is a coordinating hub. Chain vs Decorator — a chain link may stop the request; a decorator normally always delegates and adds to it.</li>
+<li><b>Distinctions:</b> Strategy vs State — the <i>client</i> picks a strategy; the context swaps its State object, and the states often trigger the transitions. Observer vs Mediator — Observer is one-to-many broadcast; Mediator is a coordinating hub. Chain vs Decorator — a chain link may stop the request; a decorator normally always delegates and adds to it.</li>
 <li><b>TL angle:</b> many "if/else on type" smells are a Strategy waiting to happen, and much hand-rolled event wiring is an Observer — name it in the review.</li>
 </ul>
 <p><b>When to use / when not:</b> use Strategy when behaviour varies and keeps growing, Observer for one-to-many notification, Mediator when many components are tangled, Chain when the handler is decided at runtime. Do not use any of them for two stable branches of an <code>if</code>, one subscriber, or a handful of classes that talk simply.</p>`,
@@ -117,7 +117,7 @@ window.TL_DAY = {
 <li><b>Observer</b> — <i>एक subject, कई subscribers, ढीला coupling।</i> Subject को पता नहीं कौन सुन रहा है। C#: <code>event</code> (Day 2) और <code>IObservable&lt;T&gt;</code>/<code>IObserver&lt;T&gt;</code>।</li>
 <li><b>Mediator</b> — <i>objects की आपसी बातचीत का तरीक़ा एक जगह रखो</i> ताकि वे एक-दूसरे को reference न करें। many-to-many की जगह many-to-one-to-many।</li>
 <li><b>Chain of Responsibility</b> — <i>request को handlers में आगे बढ़ाओ जब तक कोई संभाल न ले (या सबको मौक़ा मिल जाए)।</i> हर handler chain रोक सकता है। ASP.NET Core middleware (Day 12) और <code>HttpClient</code> के <code>DelegatingHandler</code> chains हैं।</li>
-<li><b>फ़र्क़:</b> Strategy vs State — strategy <i>client</i> चुनता है; State object context के states बदलने के साथ <i>खुद</i> बदलता है। Observer vs Mediator — Observer one-to-many broadcast है; Mediator coordinating hub है। Chain vs Decorator — chain का link request रोक सकता है; decorator आम तौर पर हमेशा आगे देता है और उसमें जोड़ता है।</li>
+<li><b>फ़र्क़:</b> Strategy vs State — strategy <i>client</i> चुनता है; context अपना State object बदलता है, और transitions अक्सर states खुद trigger करती हैं। Observer vs Mediator — Observer one-to-many broadcast है; Mediator coordinating hub है। Chain vs Decorator — chain का link request रोक सकता है; decorator आम तौर पर हमेशा आगे देता है और उसमें जोड़ता है।</li>
 <li><b>TL angle:</b> type पर "if/else" वाली कई smells Strategy बनने का इंतज़ार कर रही हैं, और हाथ से जोड़ी बहुत सी event wiring Observer है — review में नाम बोलो।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> behaviour बदलता और बढ़ता हो तो Strategy, one-to-many notification के लिए Observer, कई components उलझे हों तो Mediator, handler runtime पर तय होना हो तो Chain। <code>if</code> की दो स्थिर branches, एक subscriber, या सीधी बात करने वाली मुट्ठी भर classes के लिए इनमें से कोई मत लो।</p>`,
@@ -127,7 +127,7 @@ window.TL_DAY = {
 <li><b>Observer</b> — <i>ek subject, kai subscribers, dhila coupling.</i> Subject ko pata nahi kaun sun raha hai. C#: <code>event</code> (Day 2) aur <code>IObservable&lt;T&gt;</code>/<code>IObserver&lt;T&gt;</code>.</li>
 <li><b>Mediator</b> — <i>objects ki aapsi baatchit ka tarika ek jagah rakho</i> taaki woh ek-doosre ko reference na karein. many-to-many ki jagah many-to-one-to-many.</li>
 <li><b>Chain of Responsibility</b> — <i>request ko handlers mein aage badhao jab tak koi sambhal na le (ya sabko mauka mil jaye).</i> Har handler chain rok sakta hai. ASP.NET Core middleware (Day 12) aur <code>HttpClient</code> ke <code>DelegatingHandler</code> chains hain.</li>
-<li><b>Farq:</b> Strategy vs State — strategy <i>client</i> chunta hai; State object context ke states badalne ke saath <i>khud</i> badalta hai. Observer vs Mediator — Observer one-to-many broadcast hai; Mediator coordinating hub hai. Chain vs Decorator — chain ka link request rok sakta hai; decorator aam taur par hamesha aage deta hai aur usme jodta hai.</li>
+<li><b>Farq:</b> Strategy vs State — strategy <i>client</i> chunta hai; context apna State object badalta hai, aur transitions aksar states khud trigger karti hain. Observer vs Mediator — Observer one-to-many broadcast hai; Mediator coordinating hub hai. Chain vs Decorator — chain ka link request rok sakta hai; decorator aam taur par hamesha aage deta hai aur usme jodta hai.</li>
 <li><b>TL angle:</b> type par "if/else" wali kai smells Strategy banne ka intezaar kar rahi hain, aur haath se jodi bahut si event wiring Observer hai — review mein naam bolo.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> behaviour badalta aur badhta ho to Strategy, one-to-many notification ke liye Observer, kai components uljhe hon to Mediator, handler runtime par tay hona ho to Chain. <code>if</code> ki do sthir branches, ek subscriber, ya seedhi baat karne wali mutthi bhar classes ke liye inmein se koi mat lo.</p>`
@@ -286,7 +286,7 @@ public sealed class CheckoutFacade
 <li><b>Decorator — intent:</b> add behaviour by wrapping an object that has the <b>same interface</b>, without editing it or subclassing. Layers stack, and <b>order matters</b> (the outermost runs first on the way in).</li>
 <li><b>Proxy — intent:</b> a stand-in with the <b>same interface</b> that controls access. Common kinds: <b>virtual/lazy</b> (create the real object only when needed), <b>protection</b> (check permission), <b>remote</b> (look local, call over the network), <b>caching/logging</b>.</li>
 <li><b>Same shape, different intent:</b> a Decorator is <i>given</i> its inner object and adds a feature; a Proxy usually <i>manages</i> the real object's lifetime and access. Adapter changes the interface; both of these keep it.</li>
-<li><b>Real .NET Decorators:</b> <code>BufferedStream</code>, <code>GZipStream</code> and <code>CryptoStream</code> each wrap a <code>Stream</code> and are a <code>Stream</code>. <code>StreamReader</code>/<code>StreamWriter</code> wrap a stream too, but expose a text API, so they lean to Adapter.</li>
+<li><b>Real .NET Decorators:</b> <code>BufferedStream</code>, <code>GZipStream</code> and <code>CryptoStream</code> each wrap a <code>Stream</code> and are a <code>Stream</code>. <code>StreamReader</code>/<code>StreamWriter</code> are Adapters: they adapt a <code>Stream</code> to a text API (<code>TextReader</code>/<code>TextWriter</code>).</li>
 <li><b>Real .NET Proxies:</b> EF Core lazy-loading proxies (Day 5) are generated subclasses of your entity — that is why navigation properties must be <code>virtual</code>. <code>DispatchProxy</code> generates a proxy for an interface at runtime (below). A typed <code>HttpClient</code> is a remote-proxy-style wrapper over an API: callers use a method, the HTTP call is hidden.</li>
 <li><b>TL angle:</b> Decorator is how you keep logging, caching, retry and metrics out of business classes (SRP + OCP from Day 8). With DI you register it by hand, or with a library such as Scrutor — optional, a few lines of code do the same. Prefer a Decorator over subclassing when behaviours must combine (Day 1: composition over inheritance).</li>
 </ul>
@@ -296,7 +296,7 @@ public sealed class CheckoutFacade
 <li><b>Decorator — intent:</b> <b>वही interface</b> वाले object को wrap करके behaviour जोड़ना, उसे बदले या subclass किए बिना। Layers stack होती हैं और <b>order मायने रखता है</b> (अंदर जाते समय सबसे बाहरी पहले चलता है)।</li>
 <li><b>Proxy — intent:</b> <b>वही interface</b> वाला stand-in जो access control करता है। आम kinds: <b>virtual/lazy</b> (असली object ज़रूरत पर बनाओ), <b>protection</b> (permission जाँचो), <b>remote</b> (local दिखे, network पर call जाए), <b>caching/logging</b>।</li>
 <li><b>शक्ल एक, intent अलग:</b> Decorator को उसका inner object <i>दिया</i> जाता है और वह एक feature जोड़ता है; Proxy आम तौर पर असली object की lifetime और access <i>संभालता</i> है। Adapter interface बदलता है; ये दोनों उसे वैसा ही रखते हैं।</li>
-<li><b>Real .NET Decorators:</b> <code>BufferedStream</code>, <code>GZipStream</code> और <code>CryptoStream</code> हर एक <code>Stream</code> को wrap करता है और खुद भी <code>Stream</code> है। <code>StreamReader</code>/<code>StreamWriter</code> भी stream wrap करते हैं पर text API देते हैं, इसलिए Adapter की तरफ़ झुकते हैं।</li>
+<li><b>Real .NET Decorators:</b> <code>BufferedStream</code>, <code>GZipStream</code> और <code>CryptoStream</code> हर एक <code>Stream</code> को wrap करता है और खुद भी <code>Stream</code> है। <code>StreamReader</code>/<code>StreamWriter</code> Adapters हैं: वे <code>Stream</code> को text API (<code>TextReader</code>/<code>TextWriter</code>) में adapt करते हैं।</li>
 <li><b>Real .NET Proxies:</b> EF Core lazy-loading proxies (Day 5) आपकी entity की generated subclasses हैं — इसीलिए navigation properties <code>virtual</code> चाहिए। <code>DispatchProxy</code> runtime पर interface का proxy बनाता है (नीचे)। Typed <code>HttpClient</code> API के ऊपर remote-proxy जैसा wrapper है: caller method बुलाता है, HTTP call छुपी रहती है।</li>
 <li><b>TL angle:</b> Decorator से logging, caching, retry और metrics business classes से बाहर रहते हैं (Day 8 के SRP + OCP)। DI में इसे हाथ से register करो, या Scrutor जैसी library से — optional है, कुछ lines का code वही करता है। जब behaviours मिलाने हों तो subclassing की जगह Decorator लो (Day 1: composition over inheritance)।</li>
 </ul>
@@ -306,7 +306,7 @@ public sealed class CheckoutFacade
 <li><b>Decorator — intent:</b> <b>wahi interface</b> wale object ko wrap karke behaviour jodna, use badle ya subclass kiye bina. Layers stack hoti hain aur <b>order mayne rakhta hai</b> (andar jate samay sabse bahari pehle chalta hai).</li>
 <li><b>Proxy — intent:</b> <b>wahi interface</b> wala stand-in jo access control karta hai. Aam kinds: <b>virtual/lazy</b> (asli object zarurat par banao), <b>protection</b> (permission jaancho), <b>remote</b> (local dikhe, network par call jaye), <b>caching/logging</b>.</li>
 <li><b>Shakl ek, intent alag:</b> Decorator ko uska inner object <i>diya</i> jata hai aur woh ek feature jodta hai; Proxy aam taur par asli object ki lifetime aur access <i>sambhalta</i> hai. Adapter interface badalta hai; ye dono use waisa hi rakhte hain.</li>
-<li><b>Real .NET Decorators:</b> <code>BufferedStream</code>, <code>GZipStream</code> aur <code>CryptoStream</code> har ek <code>Stream</code> ko wrap karta hai aur khud bhi <code>Stream</code> hai. <code>StreamReader</code>/<code>StreamWriter</code> bhi stream wrap karte hain par text API dete hain, isliye Adapter ki taraf jhukte hain.</li>
+<li><b>Real .NET Decorators:</b> <code>BufferedStream</code>, <code>GZipStream</code> aur <code>CryptoStream</code> har ek <code>Stream</code> ko wrap karta hai aur khud bhi <code>Stream</code> hai. <code>StreamReader</code>/<code>StreamWriter</code> Adapters hain: woh <code>Stream</code> ko text API (<code>TextReader</code>/<code>TextWriter</code>) mein adapt karte hain.</li>
 <li><b>Real .NET Proxies:</b> EF Core lazy-loading proxies (Day 5) aapki entity ki generated subclasses hain — isiliye navigation properties <code>virtual</code> chahiye. <code>DispatchProxy</code> runtime par interface ka proxy banata hai (neeche). Typed <code>HttpClient</code> API ke upar remote-proxy jaisa wrapper hai: caller method bulata hai, HTTP call chhupi rehti hai.</li>
 <li><b>TL angle:</b> Decorator se logging, caching, retry aur metrics business classes se bahar rehte hain (Day 8 ke SRP + OCP). DI mein ise haath se register karo, ya Scrutor jaisi library se — optional hai, kuch lines ka code wahi karta hai. Jab behaviours milane hon to subclassing ki jagah Decorator lo (Day 1: composition over inheritance).</li>
 </ul>
@@ -378,9 +378,9 @@ public sealed class LoggingPriceService : IPriceService
         },
         {
           caption: {
-            en: "Built-in Decorators: StreamReader/GZipStream wrapping a MemoryStream (runs)",
-            hi: "Built-in Decorators: MemoryStream को wrap करते StreamReader/GZipStream (run होता है)",
-            hg: "Built-in Decorators: MemoryStream ko wrap karte StreamReader/GZipStream (run hota hai)"
+            en: "Built-in Decorator (GZipStream) with a StreamReader/StreamWriter adapter on top (runs)",
+            hi: "Built-in Decorator (GZipStream) और ऊपर StreamReader/StreamWriter adapter (run होता है)",
+            hg: "Built-in Decorator (GZipStream) aur upar StreamReader/StreamWriter adapter (run hota hai)"
           },
           check: "run",
           expected: `Namaste, Tech Lead interview!`,
@@ -501,7 +501,7 @@ public class LoggingProxy<T> : DispatchProxy where T : class
 <li><b>Strategy in .NET:</b> <code>IComparer&lt;T&gt;</code> passed to <code>Sort</code>, a <code>Comparison&lt;T&gt;</code> lambda, a <code>Func</code> you inject, and DI itself. With <b>keyed services</b> (.NET 8+, Day 9) you register each strategy with a key and resolve by key. Keep the lookup in the composition root, not inside business code.</li>
 <li><b>Observer — intent:</b> a subject notifies subscribers about changes without knowing them. In C#: <code>event</code> (Day 2) for in-process notification, or <code>IObservable&lt;T&gt;</code>/<code>IObserver&lt;T&gt;</code> (in the BCL), where <code>Subscribe</code> returns an <code>IDisposable</code> to unsubscribe. The Reactive Extensions (Rx) library builds operators on top of those interfaces; it is a separate NuGet package.</li>
 <li><b>Observer traps:</b> handlers run <b>synchronously, in subscription order, on the raising thread</b>; an exception in one handler stops the later ones (see the puzzle). A long-lived publisher (for example a static event) keeps its subscribers alive, so <b>unsubscribe</b> (<code>-=</code> or <code>Dispose</code>) or you leak memory.</li>
-<li><b>Strategy vs State:</b> same class diagram, different intent. The <i>client</i> picks a Strategy and it usually stays; a State object swaps <i>itself</i> when the context moves (order: Placed → Paid → Shipped), so states know their successors.</li>
+<li><b>Strategy vs State:</b> same class diagram, different intent. The <i>client</i> picks a Strategy and it usually stays; the context swaps its State object as it moves (order: Placed → Paid → Shipped), and the states often trigger those transitions, so they know their successors.</li>
 <li><b>TL angle:</b> in review, "this switch on payment type grows every sprint" is a Strategy. For Observer, ask what happens on a slow or failing subscriber — if delivery must be reliable or cross-process, use a message broker (not an in-process event).</li>
 </ul>
 <p><b>When to use / when not:</b> use Strategy when behaviour varies by input or config and keeps growing; Observer for one-to-many, in-process notification. Do not build a Strategy for two stable branches, and do not use in-process events when you need guaranteed delivery, ordering across services, or retries.</p>`,
@@ -511,7 +511,7 @@ public class LoggingProxy<T> : DispatchProxy where T : class
 <li><b>.NET में Strategy:</b> <code>Sort</code> को दिया <code>IComparer&lt;T&gt;</code>, <code>Comparison&lt;T&gt;</code> lambda, inject किया <code>Func</code>, और DI खुद। <b>Keyed services</b> (.NET 8+, Day 9) में हर strategy key के साथ register करो और key से resolve करो। Lookup composition root में रखो, business code में नहीं।</li>
 <li><b>Observer — intent:</b> subject बदलावों की ख़बर subscribers को देता है, उन्हें जाने बिना। C# में: in-process के लिए <code>event</code> (Day 2), या <code>IObservable&lt;T&gt;</code>/<code>IObserver&lt;T&gt;</code> (BCL में), जहाँ <code>Subscribe</code> unsubscribe के लिए <code>IDisposable</code> लौटाता है। Reactive Extensions (Rx) library इन interfaces पर operators बनाती है; वह अलग NuGet package है।</li>
 <li><b>Observer के जाल:</b> handlers <b>synchronously, subscribe के क्रम में, raise करने वाले thread पर</b> चलते हैं; एक handler का exception बाद वालों को रोक देता है (puzzle देखो)। लंबी उम्र वाला publisher (जैसे static event) अपने subscribers को ज़िंदा रखता है, इसलिए <b>unsubscribe</b> करो (<code>-=</code> या <code>Dispose</code>), वरना memory leak।</li>
-<li><b>Strategy vs State:</b> class diagram एक जैसा, intent अलग। Strategy <i>client</i> चुनता है और वह आम तौर पर टिकी रहती है; State object context के आगे बढ़ने पर <i>खुद</i> बदलता है (Placed → Paid → Shipped), इसलिए states अपने अगले state जानती हैं।</li>
+<li><b>Strategy vs State:</b> class diagram एक जैसा, intent अलग। Strategy <i>client</i> चुनता है और वह आम तौर पर टिकी रहती है; context आगे बढ़ने पर अपना State object बदलता है (Placed → Paid → Shipped), और transitions अक्सर states खुद trigger करती हैं, इसलिए वे अपने अगले state जानती हैं।</li>
 <li><b>TL angle:</b> review में "payment type पर यह switch हर sprint बढ़ता है" = Strategy। Observer के लिए पूछो कि धीमा या fail होता subscriber हो तो क्या होगा — delivery भरोसेमंद या cross-process चाहिए तो message broker लो (in-process event नहीं)।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> behaviour input या config से बदलता और बढ़ता हो तो Strategy; one-to-many, in-process notification के लिए Observer। दो स्थिर branches के लिए Strategy मत बनाओ, और जब guaranteed delivery, services के पार ordering या retries चाहिए तो in-process events मत लो।</p>`,
@@ -521,7 +521,7 @@ public class LoggingProxy<T> : DispatchProxy where T : class
 <li><b>.NET mein Strategy:</b> <code>Sort</code> ko diya <code>IComparer&lt;T&gt;</code>, <code>Comparison&lt;T&gt;</code> lambda, inject kiya <code>Func</code>, aur DI khud. <b>Keyed services</b> (.NET 8+, Day 9) mein har strategy key ke saath register karo aur key se resolve karo. Lookup composition root mein rakho, business code mein nahi.</li>
 <li><b>Observer — intent:</b> subject badlavon ki khabar subscribers ko deta hai, unhe jane bina. C# mein: in-process ke liye <code>event</code> (Day 2), ya <code>IObservable&lt;T&gt;</code>/<code>IObserver&lt;T&gt;</code> (BCL mein), jahan <code>Subscribe</code> unsubscribe ke liye <code>IDisposable</code> lautata hai. Reactive Extensions (Rx) library in interfaces par operators banati hai; woh alag NuGet package hai.</li>
 <li><b>Observer ke jaal:</b> handlers <b>synchronously, subscribe ke kram mein, raise karne wale thread par</b> chalte hain; ek handler ka exception baad walon ko rok deta hai (puzzle dekho). Lambi umr wala publisher (jaise static event) apne subscribers ko zinda rakhta hai, isliye <b>unsubscribe</b> karo (<code>-=</code> ya <code>Dispose</code>), warna memory leak.</li>
-<li><b>Strategy vs State:</b> class diagram ek jaisa, intent alag. Strategy <i>client</i> chunta hai aur woh aam taur par tiki rehti hai; State object context ke aage badhne par <i>khud</i> badalta hai (Placed → Paid → Shipped), isliye states apne agle state jaanti hain.</li>
+<li><b>Strategy vs State:</b> class diagram ek jaisa, intent alag. Strategy <i>client</i> chunta hai aur woh aam taur par tiki rehti hai; context aage badhne par apna State object badalta hai (Placed → Paid → Shipped), aur transitions aksar states khud trigger karti hain, isliye woh apne agle state jaanti hain.</li>
 <li><b>TL angle:</b> review mein "payment type par yeh switch har sprint badhta hai" = Strategy. Observer ke liye poocho ki dheema ya fail hota subscriber ho to kya hoga — delivery bharosemand ya cross-process chahiye to message broker lo (in-process event nahi).</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> behaviour input ya config se badalta aur badhta ho to Strategy; one-to-many, in-process notification ke liye Observer. Do sthir branches ke liye Strategy mat banao, aur jab guaranteed delivery, services ke paar ordering ya retries chahiye to in-process events mat lo.</p>`
@@ -684,7 +684,7 @@ public sealed class Printer : IObserver<int>
 <li><b>Mediator vs Observer:</b> Observer broadcasts one-to-many and the subject does not care who listens. A Mediator <i>coordinates</i> specific participants and holds the interaction logic. Watch out: the mediator can become a <b>god object</b>.</li>
 <li><b>Chain of Responsibility — intent:</b> pass a request along a chain of handlers; each one handles it, modifies it, passes it on, or stops. The sender does not know which handler acts.</li>
 <li><b>Chain in .NET:</b> the <b>ASP.NET Core middleware pipeline</b> (Day 12): each middleware gets <code>next</code>, can run code before and after it, or short-circuit by not calling it. <code>HttpClient</code> <code>DelegatingHandler</code>s form the same kind of pipeline around the actual HTTP call (<code>AddHttpMessageHandler</code> with <code>IHttpClientFactory</code>; handlers run in registration order, the first one is outermost).</li>
-<li><b>Chain vs Decorator:</b> both wrap the next thing. A classic chain link <i>decides</i> whether to continue and may stop; a Decorator normally always delegates and adds behaviour. Middleware sits in between: it is a chain, built from delegates, and often used like a decorator.</li>
+<li><b>Chain vs Decorator:</b> a link may stop the request; a decorator normally always delegates (full comparison in the Q&amp;A).</li>
 <li><b>TL angle:</b> order is part of the design — authentication before authorization, exception handling outermost. Document the order, and test that a short-circuit really skips later links.</li>
 </ul>
 <p><b>When to use / when not:</b> use a Mediator when many components interact in tangled ways; use a Chain when the handler is picked at runtime or steps are optional and re-orderable. Do not add a Mediator for two or three classes, or a chain when one <code>if</code> will do — and avoid hidden magic that makes it hard to see who handles a request.</p>`,
@@ -695,7 +695,7 @@ public sealed class Printer : IObserver<int>
 <li><b>Mediator vs Observer:</b> Observer one-to-many broadcast करता है और subject को परवाह नहीं कि कौन सुन रहा है। Mediator तय participants को <i>coordinate</i> करता है और interaction logic रखता है। ध्यान: mediator <b>god object</b> बन सकता है।</li>
 <li><b>Chain of Responsibility — intent:</b> request को handlers की chain में आगे बढ़ाओ; हर handler उसे संभालता, बदलता, आगे देता या रोक देता है। भेजने वाले को नहीं पता कौन सा handler काम करेगा।</li>
 <li><b>.NET में Chain:</b> <b>ASP.NET Core middleware pipeline</b> (Day 12): हर middleware को <code>next</code> मिलता है, वह उसके पहले और बाद code चला सकता है, या <code>next</code> न बुलाकर short-circuit कर सकता है। <code>HttpClient</code> के <code>DelegatingHandler</code> असली HTTP call के चारों ओर वैसी ही pipeline बनाते हैं (<code>IHttpClientFactory</code> के साथ <code>AddHttpMessageHandler</code>; handlers register के क्रम में चलते हैं, पहला सबसे बाहर)।</li>
-<li><b>Chain vs Decorator:</b> दोनों अगली चीज़ को wrap करते हैं। Classic chain का link आगे बढ़ना <i>तय</i> करता है और रुक सकता है; Decorator आम तौर पर हमेशा आगे देता है और behaviour जोड़ता है। Middleware बीच में है: यह delegates से बनी chain है और अक्सर decorator की तरह use होती है।</li>
+<li><b>Chain vs Decorator:</b> chain का link request रोक सकता है; decorator आम तौर पर हमेशा आगे देता है (पूरी तुलना Q&amp;A में)।</li>
 <li><b>TL angle:</b> order भी design का हिस्सा है — authentication, authorization से पहले; exception handling सबसे बाहर। order document करो, और test करो कि short-circuit सच में बाद के links छोड़ता है।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> कई components उलझकर बात करें तो Mediator; handler runtime पर चुना जाए या steps optional और reorder होने लायक हों तो Chain। दो-तीन classes के लिए Mediator, या एक <code>if</code> से काम चले तो chain मत बनाओ — और ऐसा छुपा जादू मत रखो जिससे दिखे ही नहीं कि request कौन संभालता है।</p>`,
@@ -706,7 +706,7 @@ public sealed class Printer : IObserver<int>
 <li><b>Mediator vs Observer:</b> Observer one-to-many broadcast karta hai aur subject ko parwah nahi ki kaun sun raha hai. Mediator tay participants ko <i>coordinate</i> karta hai aur interaction logic rakhta hai. Dhyan: mediator <b>god object</b> ban sakta hai.</li>
 <li><b>Chain of Responsibility — intent:</b> request ko handlers ki chain mein aage badhao; har handler use sambhalta, badalta, aage deta ya rok deta hai. Bhejne wale ko nahi pata kaun sa handler kaam karega.</li>
 <li><b>.NET mein Chain:</b> <b>ASP.NET Core middleware pipeline</b> (Day 12): har middleware ko <code>next</code> milta hai, woh uske pehle aur baad code chala sakta hai, ya <code>next</code> na bulakar short-circuit kar sakta hai. <code>HttpClient</code> ke <code>DelegatingHandler</code> asli HTTP call ke charon or waisi hi pipeline banate hain (<code>IHttpClientFactory</code> ke saath <code>AddHttpMessageHandler</code>; handlers register ke kram mein chalte hain, pehla sabse bahar).</li>
-<li><b>Chain vs Decorator:</b> dono agli cheez ko wrap karte hain. Classic chain ka link aage badhna <i>tay</i> karta hai aur ruk sakta hai; Decorator aam taur par hamesha aage deta hai aur behaviour jodta hai. Middleware beech mein hai: yeh delegates se bani chain hai aur aksar decorator ki tarah use hoti hai.</li>
+<li><b>Chain vs Decorator:</b> chain ka link request rok sakta hai; decorator aam taur par hamesha aage deta hai (poori tulna Q&amp;A mein).</li>
 <li><b>TL angle:</b> order bhi design ka hissa hai — authentication, authorization se pehle; exception handling sabse bahar. Order document karo, aur test karo ki short-circuit sach mein baad ke links chhodta hai.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> kai components uljhkar baat karein to Mediator; handler runtime par chuna jaye ya steps optional aur reorder hone layak hon to Chain. Do-teen classes ke liye Mediator, ya ek <code>if</code> se kaam chale to chain mat banao — aur aisa chhupa jaadu mat rakho jisse dikhe hi nahi ki request kaun sambhalta hai.</p>`
@@ -843,12 +843,13 @@ Middleware logging = next => request =>
     return response;
 };
 
-Middleware auth = next => request =>
+// Like authorization middleware: it can end the request early.
+Middleware authz = next => request =>
     request.Contains("secret") ? "401 Unauthorized"   // short-circuit: next is never called
                                : next(request);
 
 // Build the pipeline from the end: first registered = outermost.
-Middleware[] registered = { logging, auth };
+Middleware[] registered = { logging, authz };
 var pipeline = endpoint;
 for (var i = registered.Length - 1; i >= 0; i--)
     pipeline = registered[i](pipeline);
@@ -872,8 +873,7 @@ delegate Handler Middleware(Handler next);`
       body: {
         en: `<p><b>Analogy:</b> a tool kit. A good mechanic does not use every spanner on every bike; he names the tool, says why, and puts it back. Patterns are the same: a vocabulary for the team, not a checklist.</p>
 <ul>
-<li><b>Same shape, different intent (say this aloud):</b> Adapter <i>changes</i> the interface; Decorator <i>adds</i> behaviour behind the same interface; Proxy <i>controls access</i> behind the same interface; Facade <i>simplifies</i> many interfaces into a new one.</li>
-<li><b>Behavioral quick map:</b> Strategy = swap the algorithm; Observer = broadcast a change; Mediator = hub between peers; Chain = ordered handlers that may stop.</li>
+<li><b>Distinctions:</b> the full Adapter/Decorator/Proxy and Chain/Decorator comparisons are in the Q&amp;A; the quick map is in the two short sections.</li>
 <li><b>Decorating with DI:</b> the built-in container has no decorator feature. Register the inner type, then register the interface with a factory that wraps it (below). A library such as Scrutor adds a <code>Decorate</code> helper — convenient but optional. Keyed services (Day 9) are for choosing between implementations, not for wrapping.</li>
 <li><b>Lifetimes:</b> a decorator should not outlive what it wraps — a singleton decorator around a scoped inner service captures a stale instance (a "captive dependency"). Match or shorten the lifetime.</li>
 <li><b>Where each shows up in a Web API:</b> middleware = Chain; <code>DelegatingHandler</code> = Chain/Decorator around <code>HttpClient</code>; logging/caching wrappers = Decorator; SDK wrappers in Infrastructure = Adapter; application service = Facade; payment/discount selection = Strategy; domain events or <code>event</code>s = Observer.</li>
@@ -882,8 +882,7 @@ delegate Handler Middleware(Handler next);`
 <p><b>When to use / when not:</b> reach for a pattern when you can name the pain it removes (duplicated cross-cutting code, a switch growing each sprint, vendor types leaking in). Do not pattern-match on day one: an interface plus a single implementation plus a wrapper plus a factory for one behaviour is over-engineering that slows the team.</p>`,
         hi: `<p><b>Analogy:</b> tool kit। अच्छा mechanic हर bike पर हर spanner नहीं लगाता; वह tool का नाम बोलता है, वजह बताता है और वापस रख देता है। Patterns भी ऐसे ही हैं: team की शब्दावली, checklist नहीं।</p>
 <ul>
-<li><b>शक्ल एक, intent अलग (यह बोलकर कहो):</b> Adapter interface <i>बदलता</i> है; Decorator उसी interface के पीछे behaviour <i>जोड़ता</i> है; Proxy उसी interface के पीछे <i>access control</i> करता है; Facade कई interfaces को एक नए interface में <i>सरल</i> करता है।</li>
-<li><b>Behavioral का quick map:</b> Strategy = algorithm बदलो; Observer = बदलाव broadcast करो; Mediator = peers के बीच hub; Chain = क्रम में handlers जो रुक सकते हैं।</li>
+<li><b>फ़र्क़:</b> Adapter/Decorator/Proxy और Chain/Decorator की पूरी तुलना Q&amp;A में है; quick map दोनों short sections में।</li>
 <li><b>DI से decorate करना:</b> built-in container में decorator feature नहीं है। inner type register करो, फिर interface को ऐसी factory से register करो जो उसे wrap करे (नीचे)। Scrutor जैसी library <code>Decorate</code> helper देती है — सुविधाजनक पर optional। Keyed services (Day 9) implementations में से चुनने के लिए हैं, wrap करने के लिए नहीं।</li>
 <li><b>Lifetimes:</b> decorator को उससे ज़्यादा नहीं जीना चाहिए जिसे वह wrap करता है — scoped inner service के ऊपर singleton decorator पुराना instance पकड़ लेता है ("captive dependency")। Lifetime बराबर या छोटी रखो।</li>
 <li><b>Web API में कहाँ दिखते हैं:</b> middleware = Chain; <code>DelegatingHandler</code> = <code>HttpClient</code> के चारों ओर Chain/Decorator; logging/caching wrappers = Decorator; Infrastructure में SDK wrappers = Adapter; application service = Facade; payment/discount चुनाव = Strategy; domain events या <code>event</code> = Observer।</li>
@@ -892,8 +891,7 @@ delegate Handler Middleware(Handler next);`
 <p><b>कब use करें / कब नहीं:</b> pattern तब लो जब उस दर्द का नाम ले सको जिसे वह हटाता है (दोहराया cross-cutting code, हर sprint बढ़ती switch, अंदर घुसते vendor types)। पहले दिन से pattern मत ठूँसो: एक behaviour के लिए interface + एक implementation + wrapper + factory over-engineering है जो team को धीमा करती है।</p>`,
         hg: `<p><b>Analogy:</b> tool kit. Achha mechanic har bike par har spanner nahi lagata; woh tool ka naam bolta hai, wajah batata hai aur wapas rakh deta hai. Patterns bhi aise hi hain: team ki shabdawali, checklist nahi.</p>
 <ul>
-<li><b>Shakl ek, intent alag (yeh bolkar kaho):</b> Adapter interface <i>badalta</i> hai; Decorator usi interface ke peeche behaviour <i>jodta</i> hai; Proxy usi interface ke peeche <i>access control</i> karta hai; Facade kai interfaces ko ek naye interface mein <i>saral</i> karta hai.</li>
-<li><b>Behavioral ka quick map:</b> Strategy = algorithm badlo; Observer = badlav broadcast karo; Mediator = peers ke beech hub; Chain = kram mein handlers jo ruk sakte hain.</li>
+<li><b>Farq:</b> Adapter/Decorator/Proxy aur Chain/Decorator ki poori tulna Q&amp;A mein hai; quick map dono short sections mein.</li>
 <li><b>DI se decorate karna:</b> built-in container mein decorator feature nahi hai. Inner type register karo, phir interface ko aisi factory se register karo jo use wrap kare (neeche). Scrutor jaisi library <code>Decorate</code> helper deti hai — suvidhajanak par optional. Keyed services (Day 9) implementations mein se chunne ke liye hain, wrap karne ke liye nahi.</li>
 <li><b>Lifetimes:</b> decorator ko usse zyada nahi jeena chahiye jise woh wrap karta hai — scoped inner service ke upar singleton decorator purana instance pakad leta hai ("captive dependency"). Lifetime barabar ya chhoti rakho.</li>
 <li><b>Web API mein kahan dikhte hain:</b> middleware = Chain; <code>DelegatingHandler</code> = <code>HttpClient</code> ke charon or Chain/Decorator; logging/caching wrappers = Decorator; Infrastructure mein SDK wrappers = Adapter; application service = Facade; payment/discount chunav = Strategy; domain events ya <code>event</code> = Observer.</li>
@@ -975,14 +973,14 @@ public sealed class CachedRepo : IRepo
         hi: `<ul>
 <li><b>Adapter:</b> client को <code>ISmsSender</code> चाहिए, vendor देता है <code>Dispatch(string[], string, int)</code>। Adapter translate करता है। अंदर और बाहर अलग interface।</li>
 <li><b>Decorator:</b> <code>IPriceService</code> अंदर, <code>IPriceService</code> बाहर, ऊपर से logging या caching। Stack caller बनाता है, layers मिलाई जा सकती हैं।</li>
-<li><b>Proxy:</b> वही interface, पर proxy तय करता है कि असली object <i>कब/बनेगा या नहीं</i> (lazy, permission, remote)।</li>
+<li><b>Proxy:</b> वही interface, पर proxy तय करता है कि <i>असली object use होगा या नहीं, और कब</i> (lazy, permission, remote)।</li>
 <li>Quick test: "क्या मैं interface बदल रहा हूँ? Feature जोड़ रहा हूँ? Access guard कर रहा हूँ?"</li>
 </ul>
 <p>Follow-up: "क्या एक class इनमें से दो हो सकती है?" — हाँ, caching proxy और caching decorator लगभग एक जैसे दिखते हैं; label मुख्य intent से तय होता है।</p>`,
         hg: `<ul>
 <li><b>Adapter:</b> client ko <code>ISmsSender</code> chahiye, vendor deta hai <code>Dispatch(string[], string, int)</code>. Adapter translate karta hai. Andar aur bahar alag interface.</li>
 <li><b>Decorator:</b> <code>IPriceService</code> andar, <code>IPriceService</code> bahar, upar se logging ya caching. Stack caller banata hai, layers milayi ja sakti hain.</li>
-<li><b>Proxy:</b> wahi interface, par proxy tay karta hai ki asli object <i>kab/banega ya nahi</i> (lazy, permission, remote).</li>
+<li><b>Proxy:</b> wahi interface, par proxy tay karta hai ki <i>asli object use hoga ya nahi, aur kab</i> (lazy, permission, remote).</li>
 <li>Quick test: "Kya main interface badal raha hoon? Feature jod raha hoon? Access guard kar raha hoon?"</li>
 </ul>
 <p>Follow-up: "Kya ek class inmein se do ho sakti hai?" — haan, caching proxy aur caching decorator lagbhag ek jaise dikhte hain; label mukhya intent se tay hota hai.</p>`
@@ -999,21 +997,21 @@ public sealed class CachedRepo : IRepo
       },
       explain: {
         en: `<ul>
-<li><code>new StreamWriter(new GZipStream(new FileStream(...), CompressionMode.Compress))</code> — text goes through compression to the file. Each layer only knows the <code>Stream</code> contract.</li>
+<li><code>new StreamWriter(new GZipStream(new FileStream(...), CompressionMode.Compress))</code> — <code>GZipStream</code> and <code>FileStream</code> share the <code>Stream</code> contract (Decorator), and <code>StreamWriter</code> adapts it to text (<code>TextWriter</code>, an Adapter).</li>
 <li>Because they share the base type, you can add <code>BufferedStream</code> or <code>CryptoStream</code> without changing the others.</li>
 <li>Remember to dispose the outer layer (it usually disposes the inner one unless <code>leaveOpen: true</code>).</li>
 <li>In your own code: a <code>CachingRepository</code> wrapping a <code>SqlRepository</code>, both <code>IRepository</code>.</li>
 </ul>
 <p>Follow-up: "Why not inheritance?" — with subclassing you need a class per combination (cached-and-logged, cached-only, logged-only...); decorators combine at composition time (Day 1: composition over inheritance).</p>`,
         hi: `<ul>
-<li><code>new StreamWriter(new GZipStream(new FileStream(...), CompressionMode.Compress))</code> — text compression से होकर file में जाता है। हर layer सिर्फ़ <code>Stream</code> contract जानती है।</li>
+<li><code>new StreamWriter(new GZipStream(new FileStream(...), CompressionMode.Compress))</code> — <code>GZipStream</code> और <code>FileStream</code> एक ही <code>Stream</code> contract साझा करते हैं (Decorator), और <code>StreamWriter</code> उसे text (<code>TextWriter</code>, Adapter) में adapt करता है।</li>
 <li>Base type एक है, इसलिए बाकी को बदले बिना <code>BufferedStream</code> या <code>CryptoStream</code> जोड़ सकते हो।</li>
 <li>सबसे बाहरी layer को dispose करना याद रखो (वह आम तौर पर inner को भी dispose करती है, जब तक <code>leaveOpen: true</code> न हो)।</li>
 <li>अपने code में: <code>SqlRepository</code> को wrap करती <code>CachingRepository</code>, दोनों <code>IRepository</code>।</li>
 </ul>
 <p>Follow-up: "Inheritance क्यों नहीं?" — subclassing में हर combination के लिए class चाहिए (cached-and-logged, सिर्फ़ cached, सिर्फ़ logged...); decorators composition के समय मिलते हैं (Day 1: composition over inheritance)।</p>`,
         hg: `<ul>
-<li><code>new StreamWriter(new GZipStream(new FileStream(...), CompressionMode.Compress))</code> — text compression se hokar file mein jata hai. Har layer sirf <code>Stream</code> contract jaanti hai.</li>
+<li><code>new StreamWriter(new GZipStream(new FileStream(...), CompressionMode.Compress))</code> — <code>GZipStream</code> aur <code>FileStream</code> ek hi <code>Stream</code> contract saajha karte hain (Decorator), aur <code>StreamWriter</code> use text (<code>TextWriter</code>, Adapter) mein adapt karta hai.</li>
 <li>Base type ek hai, isliye baaki ko badle bina <code>BufferedStream</code> ya <code>CryptoStream</code> jod sakte ho.</li>
 <li>Sabse bahari layer ko dispose karna yaad rakho (woh aam taur par inner ko bhi dispose karti hai, jab tak <code>leaveOpen: true</code> na ho).</li>
 <li>Apne code mein: <code>SqlRepository</code> ko wrap karti <code>CachingRepository</code>, dono <code>IRepository</code>.</li>
@@ -1058,10 +1056,10 @@ public sealed class CachedRepo : IRepo
       id: "strategy-vs-state",
       depth: "short",
       q: "Strategy vs State — the diagrams look identical. How do you tell them apart?",
-      answer: "Intent differs. The client picks a Strategy and it normally stays put. A State object changes itself as the context moves, so states know which state comes next.",
+      answer: "Intent differs. The client picks a Strategy and it normally stays put. The context swaps its State object, and states often trigger the transitions.",
       meaning: {
-        hi: "Intent अलग है। Strategy client चुनता है और वह आम तौर पर बनी रहती है। State object context के आगे बढ़ने पर खुद बदलता है, इसलिए states जानती हैं कि अगला state कौन सा है।",
-        hg: "Intent alag hai. Strategy client chunta hai aur woh aam taur par bani rehti hai. State object context ke aage badhne par khud badalta hai, isliye states jaanti hain ki agla state kaun sa hai."
+        hi: "Intent अलग है। Strategy client चुनता है और वह आम तौर पर बनी रहती है। Context अपना State object बदलता है, और transitions अक्सर states खुद trigger करती हैं।",
+        hg: "Intent alag hai. Strategy client chunta hai aur woh aam taur par bani rehti hai. Context apna State object badalta hai, aur transitions aksar states khud trigger karti hain."
       },
       explain: {
         en: `<ul>
@@ -1158,21 +1156,21 @@ public sealed class CachedRepo : IRepo
       },
       explain: {
         en: `<ul>
-<li>Authentication middleware can end the request with 401 without calling <code>next</code> — a link that stops the chain.</li>
+<li>Authorization middleware can end the request with 401/403, and the rate limiter with 429, without calling <code>next</code> — links that stop the chain. Authentication middleware only sets the user and calls <code>next</code>.</li>
 <li>Logging or exception middleware calls <code>next</code> inside a try/log block — it behaves like a decorator around the rest.</li>
 <li>Order matters: for example exception handling first (outermost), then authentication before authorization. Day 12 covers the pipeline in detail.</li>
 <li>The "Middleware-style pipeline" code in this day builds the same shape from plain delegates.</li>
 </ul>
 <p>Follow-up: "Is middleware a Decorator or a Chain?" — It is a chain built from delegates; individual middleware often acts like a decorator, but it may short-circuit.</p>`,
         hi: `<ul>
-<li>Authentication middleware <code>next</code> बुलाए बिना 401 से request ख़त्म कर सकता है — chain रोकने वाला link।</li>
+<li>Authorization middleware <code>next</code> बुलाए बिना 401/403 से request ख़त्म कर सकता है, और rate limiter 429 से — chain रोकने वाले links। Authentication middleware सिर्फ़ user set करता है और <code>next</code> बुलाता है।</li>
 <li>Logging या exception middleware try/log block के अंदर <code>next</code> बुलाता है — बाक़ी के चारों ओर decorator जैसा।</li>
 <li>Order मायने रखता है: जैसे exception handling पहले (सबसे बाहर), फिर authorization से पहले authentication। Day 12 में pipeline विस्तार से है।</li>
 <li>इस दिन का "Middleware-style pipeline" code साधारण delegates से वही shape बनाता है।</li>
 </ul>
 <p>Follow-up: "Middleware Decorator है या Chain?" — यह delegates से बनी chain है; अलग-अलग middleware अक्सर decorator जैसा चलता है, पर short-circuit भी कर सकता है।</p>`,
         hg: `<ul>
-<li>Authentication middleware <code>next</code> bulaye bina 401 se request khatam kar sakta hai — chain rokne wala link.</li>
+<li>Authorization middleware <code>next</code> bulaye bina 401/403 se request khatam kar sakta hai, aur rate limiter 429 se — chain rokne wale links. Authentication middleware sirf user set karta hai aur <code>next</code> bulata hai.</li>
 <li>Logging ya exception middleware try/log block ke andar <code>next</code> bulata hai — baaki ke charon or decorator jaisa.</li>
 <li>Order mayne rakhta hai: jaise exception handling pehle (sabse bahar), phir authorization se pehle authentication. Day 12 mein pipeline vistar se hai.</li>
 <li>Is din ka "Middleware-style pipeline" code saadharan delegates se wahi shape banata hai.</li>
@@ -1317,21 +1315,21 @@ public sealed class CachedRepo : IRepo
 <li><b>Manual:</b> <code>services.AddSingleton&lt;SqlRepo&gt;(); services.AddSingleton&lt;IRepo&gt;(sp =&gt; new CachedRepo(sp.GetRequiredService&lt;SqlRepo&gt;()));</code></li>
 <li><b>Library:</b> Scrutor's <code>services.Decorate&lt;IRepo, CachedRepo&gt;()</code> reduces boilerplate when you have many decorators. Weigh a new dependency against ~3 lines.</li>
 <li><b>Lifetimes:</b> the decorator should not outlive the inner service. A singleton decorator over a scoped inner service holds a stale or disposed instance.</li>
-<li><b>Order:</b> the last wrapper registered is the outermost one (for the manual approach, whatever you build last).</li>
+<li><b>Order:</b> with Scrutor the last <code>Decorate</code> call is the outermost — the opposite of middleware and <code>AddHttpMessageHandler</code>, where the first registered is outermost. In the manual approach, whatever you build last is outermost.</li>
 <li>Keyed services choose <i>between</i> implementations; they do not wrap.</li>
 </ul>`,
         hi: `<ul>
 <li><b>Manual:</b> <code>services.AddSingleton&lt;SqlRepo&gt;(); services.AddSingleton&lt;IRepo&gt;(sp =&gt; new CachedRepo(sp.GetRequiredService&lt;SqlRepo&gt;()));</code></li>
 <li><b>Library:</b> Scrutor का <code>services.Decorate&lt;IRepo, CachedRepo&gt;()</code> कई decorators होने पर boilerplate घटाता है। नई dependency को ~3 lines के सामने तौलो।</li>
 <li><b>Lifetimes:</b> decorator को inner service से ज़्यादा नहीं जीना चाहिए। scoped inner service के ऊपर singleton decorator पुराना या dispose हो चुका instance पकड़ता है।</li>
-<li><b>Order:</b> manual तरीक़े में जो wrapper आख़िर में बनाओ वही सबसे बाहरी होता है।</li>
+<li><b>Order:</b> Scrutor में आख़िरी <code>Decorate</code> call सबसे बाहरी होती है — middleware और <code>AddHttpMessageHandler</code> के उलट, जहाँ पहला registered सबसे बाहरी है। Manual तरीक़े में जो आख़िर में बनाओ वही सबसे बाहरी।</li>
 <li>Keyed services implementations के <i>बीच</i> चुनती हैं; wrap नहीं करतीं।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Manual:</b> <code>services.AddSingleton&lt;SqlRepo&gt;(); services.AddSingleton&lt;IRepo&gt;(sp =&gt; new CachedRepo(sp.GetRequiredService&lt;SqlRepo&gt;()));</code></li>
 <li><b>Library:</b> Scrutor ka <code>services.Decorate&lt;IRepo, CachedRepo&gt;()</code> kai decorators hone par boilerplate ghataata hai. Nayi dependency ko ~3 lines ke saamne taulo.</li>
 <li><b>Lifetimes:</b> decorator ko inner service se zyada nahi jeena chahiye. scoped inner service ke upar singleton decorator purana ya dispose ho chuka instance pakadta hai.</li>
-<li><b>Order:</b> manual tarike mein jo wrapper aakhir mein banao wahi sabse bahari hota hai.</li>
+<li><b>Order:</b> Scrutor mein aakhri <code>Decorate</code> call sabse bahari hoti hai — middleware aur <code>AddHttpMessageHandler</code> ke ulat, jahan pehla registered sabse bahar hai. Manual tarike mein jo aakhir mein banao wahi sabse bahari.</li>
 <li>Keyed services implementations ke <i>beech</i> chunti hain; wrap nahi karti.</li>
 </ul>`
       }
@@ -1933,10 +1931,10 @@ caught boom`,
       "Proxy has the same interface as the real object but controls access (lazy, protection, remote).",
       "Facade gives one simple entry point over several subsystems.",
       "Decorator vs Proxy vs Adapter: same wrapper shape; intent is add behaviour, control access, change interface.",
-      "Strategy swaps an algorithm behind an interface; with DI, keyed services pick one by key.",
-      "Strategy vs State: the client picks a Strategy; a State object moves the context to the next state itself.",
+      "Strategy swaps an algorithm behind an interface or delegate.",
+      "Strategy vs State: the client picks a Strategy; the context swaps its State object, often triggered by the states.",
       "Observer is one-to-many notification, via C# events or IObservable<T>.",
-      "Mediator is a hub so components do not reference each other; MediatR is optional.",
+      "Mediator is a hub so components do not reference each other.",
       "Chain of Responsibility passes a request along handlers that may stop it; ASP.NET Core middleware is a chain.",
       "Chain vs Decorator: a chain link may stop the request; a decorator normally always delegates.",
       "Add a pattern only when you can name the pain it removes."
@@ -1948,10 +1946,10 @@ caught boom`,
         "Proxy का interface असली object जैसा होता है पर वह access control करता है (lazy, protection, remote)।",
         "Facade कई subsystems के ऊपर एक आसान entry point देता है।",
         "Decorator vs Proxy vs Adapter: wrapper की shape एक; intent है behaviour जोड़ना, access control, interface बदलना।",
-        "Strategy algorithm को interface के पीछे बदलती है; DI में keyed services key से एक चुनती हैं।",
-        "Strategy vs State: Strategy client चुनता है; State object context को खुद अगले state पर ले जाता है।",
+        "Strategy algorithm को interface या delegate के पीछे बदलती है।",
+        "Strategy vs State: Strategy client चुनता है; context अपना State object बदलता है, अक्सर states के trigger से।",
         "Observer one-to-many notification है, C# events या IObservable<T> से।",
-        "Mediator एक hub है ताकि components एक-दूसरे को reference न करें; MediatR optional है।",
+        "Mediator एक hub है ताकि components एक-दूसरे को reference न करें।",
         "Chain of Responsibility request को handlers में आगे बढ़ाती है जो उसे रोक सकते हैं; ASP.NET Core middleware chain है।",
         "Chain vs Decorator: chain का link request रोक सकता है; decorator आम तौर पर हमेशा आगे देता है।",
         "Pattern तभी जोड़ो जब उस दर्द का नाम बता सको जो वह हटाता है।"
@@ -1962,10 +1960,10 @@ caught boom`,
         "Proxy ka interface asli object jaisa hota hai par woh access control karta hai (lazy, protection, remote).",
         "Facade kai subsystems ke upar ek aasan entry point deta hai.",
         "Decorator vs Proxy vs Adapter: wrapper ki shape ek; intent hai behaviour jodna, access control, interface badalna.",
-        "Strategy algorithm ko interface ke peeche badalti hai; DI mein keyed services key se ek chunti hain.",
-        "Strategy vs State: Strategy client chunta hai; State object context ko khud agle state par le jata hai.",
+        "Strategy algorithm ko interface ya delegate ke peeche badalti hai.",
+        "Strategy vs State: Strategy client chunta hai; context apna State object badalta hai, aksar states ke trigger se.",
         "Observer one-to-many notification hai, C# events ya IObservable<T> se.",
-        "Mediator ek hub hai taaki components ek-doosre ko reference na karein; MediatR optional hai.",
+        "Mediator ek hub hai taaki components ek-doosre ko reference na karein.",
         "Chain of Responsibility request ko handlers mein aage badhati hai jo use rok sakte hain; ASP.NET Core middleware chain hai.",
         "Chain vs Decorator: chain ka link request rok sakta hai; decorator aam taur par hamesha aage deta hai.",
         "Pattern tabhi jodo jab us dard ka naam bata sako jo woh hatata hai."
