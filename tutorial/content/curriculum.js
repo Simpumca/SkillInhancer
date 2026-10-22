@@ -19,7 +19,7 @@ window.TL_CURRICULUM = [
   { day: 17, week: 3, title: { en: "System Design for TL Rounds", hi: "TL राउंड्स के लिए सिस्टम डिज़ाइन", hg: "System Design for TL Rounds" }, ready: true },
   { day: 18, week: 3, title: { en: "SQL Server", hi: "SQL Server (एसक्यूएल सर्वर)", hg: "SQL Server" }, ready: true },
   { day: 19, week: 3, title: { en: "PostgreSQL + Data Comparisons", hi: "PostgreSQL + डेटा तुलना", hg: "PostgreSQL + Data comparisons" }, ready: true },
-  { day: 20, week: 3, title: { en: "Azure", hi: "एज़ूर (Azure)", hg: "Azure" }, ready: false },
+  { day: 20, week: 3, title: { en: "Azure", hi: "एज़ूर (Azure)", hg: "Azure" }, ready: true },
   { day: 21, week: 3, title: { en: "DevOps", hi: "डेवऑप्स (DevOps)", hg: "DevOps" }, ready: false },
   { day: 22, week: 4, title: { en: "Legacy Refresher", hi: "लेगेसी रिफ्रेशर", hg: "Legacy Refresher" }, ready: false },
   { day: 23, week: 4, title: { en: "JavaScript Essentials", hi: "JavaScript ज़रूरी बातें", hg: "JavaScript ki zaroori baatein" }, ready: false },
