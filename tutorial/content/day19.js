@@ -16,7 +16,7 @@ window.TL_DAY = {
 <li><b>.NET side:</b> Npgsql, <code>UseNpgsql</code>, snake_case naming, UTC-only <code>timestamptz</code>, connection pooling and PgBouncer (EF Core itself: Day 5 and 6).</li>
 <li><b>Data-store choice:</b> when Cosmos DB, MongoDB or Redis earns its place, and the cost of polyglot persistence (system-design view: Day 17, caching: Day 13).</li>
 </ul>
-<p>Plan (about 1 hour 15 minutes): Short mode, then Q&amp;A aloud, then the sections (the Postgres snippets are labelled and are not run here, there is no local Postgres), then the six puzzles, which all run on .NET or SQL Server.</p>`,
+<p>Plan (Short about 20 minutes; Detailed is reference, see the estimate on this page): Short mode, then Q&amp;A aloud, then the sections (the Postgres snippets are labelled and are not run here, there is no local Postgres), then the six puzzles, which all run on .NET or SQL Server.</p>`,
     hi: `<p>PostgreSQL तुम्हारी सबसे कमज़ोर database skill है (3/10), लेकिन Tech Lead से Postgres की trivia कम ही पूछी जाती है। सवाल होता है "<b>यह SQL Server से अलग कैसे है, और कब कुछ और चुनोगे?</b>" आज तुम Day 18 में जो जानते हो उसे Postgres पर map करोगे।</p>
 <ul>
 <li><b>MVCC:</b> UPDATE <b>table के अंदर ही नया row version</b> लिखता है; पुराने versions dead रहते हैं जब तक <b>VACUUM</b> (autovacuum) उन्हें साफ़ न करे। SQL Server में RCSI या SNAPSHOT on हो तो row versions by default tempdb के version store में रहते हैं (Accelerated Database Recovery, 2019+, में user database का persistent version store)।</li>
@@ -26,7 +26,7 @@ window.TL_DAY = {
 <li><b>.NET की तरफ़:</b> Npgsql, <code>UseNpgsql</code>, snake_case naming, सिर्फ़ UTC वाला <code>timestamptz</code>, connection pooling और PgBouncer (EF Core खुद: Day 5 और 6)।</li>
 <li><b>Data-store का चुनाव:</b> Cosmos DB, MongoDB या Redis कब जगह कमाता है, और polyglot persistence की कीमत (system-design view: Day 17, caching: Day 13)।</li>
 </ul>
-<p>Plan (लगभग 1 घंटा 15 मिनट): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर sections (Postgres वाले snippets पर label है और यहाँ चलते नहीं, क्योंकि local Postgres नहीं है), फिर छह puzzles जो सब .NET या SQL Server पर चलते हैं।</p>`,
+<p>Plan (Short लगभग 20 मिनट; Detailed reference है, इस page का estimate देखो): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर sections (Postgres वाले snippets पर label है और यहाँ चलते नहीं, क्योंकि local Postgres नहीं है), फिर छह puzzles जो सब .NET या SQL Server पर चलते हैं।</p>`,
     hg: `<p>PostgreSQL tumhari sabse kamzor database skill hai (3/10), lekin Tech Lead se Postgres ki trivia kam hi poochi jaati hai. Sawaal hota hai "<b>yeh SQL Server se alag kaise hai, aur kab kuch aur chunoge?</b>" Aaj tum Day 18 mein jo jaante ho use Postgres par map karoge.</p>
 <ul>
 <li><b>MVCC:</b> UPDATE <b>table ke andar hi naya row version</b> likhta hai; purane versions dead rehte hain jab tak <b>VACUUM</b> (autovacuum) unhe saaf na kare. SQL Server mein RCSI ya SNAPSHOT on ho to row versions by default tempdb ke version store mein rehte hain (Accelerated Database Recovery, 2019+, mein user database ka persistent version store).</li>
@@ -36,7 +36,7 @@ window.TL_DAY = {
 <li><b>.NET ki taraf:</b> Npgsql, <code>UseNpgsql</code>, snake_case naming, sirf UTC wala <code>timestamptz</code>, connection pooling aur PgBouncer (EF Core khud: Day 5 aur 6).</li>
 <li><b>Data-store ka chunav:</b> Cosmos DB, MongoDB ya Redis kab jagah kamata hai, aur polyglot persistence ki keemat (system-design view: Day 17, caching: Day 13).</li>
 </ul>
-<p>Plan (lagbhag 1 ghanta 15 minute): pehle Short mode, phir Q&amp;A zor se, phir sections (Postgres wale snippets par label hai aur yahan chalte nahi, kyunki local Postgres nahi hai), phir chhe puzzles jo sab .NET ya SQL Server par chalte hain.</p>`
+<p>Plan (Short lagbhag 20 minute; Detailed reference hai, is page ka estimate dekho): pehle Short mode, phir Q&amp;A zor se, phir sections (Postgres wale snippets par label hai aur yahan chalte nahi, kyunki local Postgres nahi hai), phir chhe puzzles jo sab .NET ya SQL Server par chalte hain.</p>`
   },
   sections: [
     {

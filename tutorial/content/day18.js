@@ -17,7 +17,7 @@ window.TL_DAY = {
 <li><b>Concurrency:</b> READ COMMITTED default, RCSI vs SNAPSHOT, blocking vs deadlocks, how to diagnose (system_health) and avoid them (Day 6 has the EF side).</li>
 <li><b>Tuning checklist:</b> the calm, ordered way to investigate a slow query in production.</li>
 </ul>
-<p>Plan (about 1 hour 20 minutes): Short mode, then Q&amp;A aloud, then the SQL sections (run them in SSMS or Azure Data Studio if you can), then the seven puzzles.</p>`,
+<p>Plan (Short about 20 minutes; Detailed is reference, see the estimate on this page): Short mode, then Q&amp;A aloud, then the SQL sections (run them in SSMS or VS Code with the MSSQL extension if you can), then the seven puzzles.</p>`,
     hi: `<p>SQL Server तुम्हारी सबसे strong skill है (6/10), इसलिए आज <b>Tech Lead depth</b> है: "index क्या है" नहीं, बल्कि "optimizer ने उसे ignore क्यों किया, और production में यह कैसे prove करूँ"।</p>
 <ul>
 <li><b>Indexes:</b> clustered (table खुद, हर table में एक) बनाम non-clustered (दूसरी sorted copy, जिसमें table तक वापस <b>key lookup</b> होता है); <code>INCLUDE</code> वाला covering, filtered, columnstore (brief), fill factor और fragmentation (brief)।</li>
@@ -28,7 +28,7 @@ window.TL_DAY = {
 <li><b>Concurrency:</b> READ COMMITTED default, RCSI बनाम SNAPSHOT, blocking बनाम deadlocks, diagnose कैसे करें (system_health) और बचें कैसे (EF वाला हिस्सा Day 6 में है)।</li>
 <li><b>Tuning checklist:</b> production में slow query investigate करने का शांत, क्रम वाला तरीका।</li>
 </ul>
-<p>Plan (लगभग 1 घंटा 20 मिनट): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर SQL sections (हो सके तो SSMS या Azure Data Studio में चलाओ), फिर सात puzzles।</p>`,
+<p>Plan (Short लगभग 20 मिनट; Detailed reference है, इस page का estimate देखो): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर SQL sections (हो सके तो SSMS या VS Code with the MSSQL extension में चलाओ), फिर सात puzzles।</p>`,
     hg: `<p>SQL Server tumhari sabse strong skill hai (6/10), isliye aaj <b>Tech Lead depth</b> hai: "index kya hai" nahi, balki "optimizer ne use ignore kyon kiya, aur production mein yeh kaise prove karun".</p>
 <ul>
 <li><b>Indexes:</b> clustered (table khud, har table mein ek) vs non-clustered (doosri sorted copy, jisme table tak wapas <b>key lookup</b> hota hai); <code>INCLUDE</code> wala covering, filtered, columnstore (brief), fill factor aur fragmentation (brief).</li>
@@ -39,7 +39,7 @@ window.TL_DAY = {
 <li><b>Concurrency:</b> READ COMMITTED default, RCSI vs SNAPSHOT, blocking vs deadlocks, diagnose kaise karein (system_health) aur bachein kaise (EF wala hissa Day 6 mein hai).</li>
 <li><b>Tuning checklist:</b> production mein slow query investigate karne ka shaant, kram wala tareeka.</li>
 </ul>
-<p>Plan (lagbhag 1 ghanta 20 minute): pehle Short mode, phir Q&amp;A zor se, phir SQL sections (ho sake to SSMS ya Azure Data Studio mein chalao), phir saat puzzles.</p>`
+<p>Plan (Short lagbhag 20 minute; Detailed reference hai, is page ka estimate dekho): pehle Short mode, phir Q&amp;A zor se, phir SQL sections (ho sake to SSMS ya VS Code with the MSSQL extension mein chalao), phir saat puzzles.</p>`
   },
   sections: [
     {
@@ -1531,6 +1531,7 @@ FROM dbo.Marks;`,
 <li><b>2017:</b> <code>STRING_AGG</code>, interleaved execution for multi-statement TVFs (compat 140).</li>
 <li><b>2019:</b> scalar UDF inlining and table-variable deferred compilation (compat 150).</li>
 <li><b>2022:</b> parameter sensitive plan (PSP) optimization (compat 160), <code>GREATEST/LEAST</code>, <code>IS [NOT] DISTINCT FROM</code>, <code>DATE_BUCKET</code>, <code>GENERATE_SERIES</code>. Check the release notes of the version you run; newer releases add more.</li>
+<li><b>2025:</b> SQL Server 2025 adds a native <code>json</code> data type and optimized locking, among other things; check the docs for the current feature list and your compatibility level.</li>
 </ul>
 <p>The snippets that ran on this machine used SQL Server 2019 LocalDB, so 2022-only syntax is shown but not executed.</p>`,
     hi: `<p><b>इन topics के लिए जो SQL Server versions मायने रखते हैं (हर एक database engine release है, कुछ features compatibility level से जुड़े हैं):</b></p>
@@ -1539,6 +1540,7 @@ FROM dbo.Marks;`,
 <li><b>2017:</b> <code>STRING_AGG</code>, multi-statement TVFs के लिए interleaved execution (compat 140)।</li>
 <li><b>2019:</b> scalar UDF inlining और table-variable deferred compilation (compat 150)।</li>
 <li><b>2022:</b> parameter sensitive plan (PSP) optimization (compat 160), <code>GREATEST/LEAST</code>, <code>IS [NOT] DISTINCT FROM</code>, <code>DATE_BUCKET</code>, <code>GENERATE_SERIES</code>। जो version चलाते हो उसके release notes देखो; नए releases और जोड़ते हैं।</li>
+<li><b>2025:</b> SQL Server 2025 में native <code>json</code> data type और optimized locking जैसी चीज़ें जुड़ी हैं; current feature list और अपने compatibility level के लिए docs देखो।</li>
 </ul>
 <p>इस machine पर जो snippets चले वे SQL Server 2019 LocalDB पर थे, इसलिए सिर्फ़ 2022 वाली syntax दिखाई गई है, चलाई नहीं गई।</p>`,
     hg: `<p><b>In topics ke liye jo SQL Server versions maayne rakhte hain (har ek database engine release hai, kuch features compatibility level se jude hain):</b></p>
@@ -1547,6 +1549,7 @@ FROM dbo.Marks;`,
 <li><b>2017:</b> <code>STRING_AGG</code>, multi-statement TVFs ke liye interleaved execution (compat 140).</li>
 <li><b>2019:</b> scalar UDF inlining aur table-variable deferred compilation (compat 150).</li>
 <li><b>2022:</b> parameter sensitive plan (PSP) optimization (compat 160), <code>GREATEST/LEAST</code>, <code>IS [NOT] DISTINCT FROM</code>, <code>DATE_BUCKET</code>, <code>GENERATE_SERIES</code>. Jo version chalate ho uske release notes dekho; naye releases aur jodte hain.</li>
+<li><b>2025:</b> SQL Server 2025 mein native <code>json</code> data type aur optimized locking jaisi cheezein judi hain; current feature list aur apne compatibility level ke liye docs dekho.</li>
 </ul>
 <p>Is machine par jo snippets chale woh SQL Server 2019 LocalDB par the, isliye sirf 2022 wali syntax dikhayi gayi hai, chalayi nahi gayi.</p>`
   }

@@ -18,7 +18,7 @@ window.TL_DAY = {
 <li><b>Observability</b>: logs + metrics + traces, linked by the W3C <code>traceparent</code> (OpenTelemetry in .NET: <code>ActivitySource</code>, <code>Activity</code>).</li>
 <li><b>TL angle</b>: one database per service, versioned contracts, observability <b>before</b> the first split, and the "distributed monolith" smell.</li>
 </ul>
-<p>Plan (about 1 hour 15 minutes): Short mode first, then Q&amp;A aloud, then the code sections, then the six puzzles. Azure Service Bus details wait for Day 20; system-design practice is Day 17.</p>`,
+<p>Plan (Short about 20 minutes; Detailed is reference, see the estimate on this page): Short mode first, then Q&amp;A aloud, then the code sections, then the six puzzles. Azure Service Bus details wait for Day 20; system-design practice is Day 17.</p>`,
     hi: `<p>Day 15 में सवाल था <b>"monolith या microservices?"</b>। आज का सवाल है <b>"microservices चुन लिए — अब नुकसान से कैसे बचें?"</b>। Interview का theme सीधा है: network call, method call नहीं होती, इसलिए आज के सारे patterns <b>failure, duplicates और बिना shared transaction</b> के जीने के तरीक़े हैं।</p>
 <ul>
 <li><b>API gateway</b>: एक सामने का दरवाज़ा (routing, auth, rate limits)। <b>YARP</b> .NET के लिए Microsoft की reverse-proxy library है। <b>BFF</b> हर client type (web, mobile) का अपना gateway है। Azure API Management Day 20 में है।</li>
@@ -30,7 +30,7 @@ window.TL_DAY = {
 <li><b>Observability</b>: logs + metrics + traces, जिन्हें W3C <code>traceparent</code> जोड़ता है (.NET में OpenTelemetry: <code>ActivitySource</code>, <code>Activity</code>)।</li>
 <li><b>TL angle</b>: हर service का अपना database, versioned contracts, पहले split से <b>पहले</b> observability, और "distributed monolith" की smell।</li>
 </ul>
-<p>Plan (लगभग 1 घंटा 15 मिनट): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर code sections, फिर छह puzzles। Azure Service Bus की details Day 20 में; system-design की practice Day 17 में।</p>`,
+<p>Plan (Short लगभग 20 मिनट; Detailed reference है, इस page का estimate देखो): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर code sections, फिर छह puzzles। Azure Service Bus की details Day 20 में; system-design की practice Day 17 में।</p>`,
     hg: `<p>Day 15 mein sawaal tha <b>"monolith ya microservices?"</b>. Aaj ka sawaal hai <b>"microservices chun liye — ab nuksaan se kaise bachein?"</b>. Interview ka theme seedha hai: network call, method call nahi hoti, isliye aaj ke saare patterns <b>failure, duplicates aur bina shared transaction</b> ke jeene ke tareeke hain.</p>
 <ul>
 <li><b>API gateway</b>: ek saamne ka darwaza (routing, auth, rate limits). <b>YARP</b> .NET ke liye Microsoft ki reverse-proxy library hai. <b>BFF</b> har client type (web, mobile) ka apna gateway hai. Azure API Management Day 20 mein hai.</li>
@@ -42,7 +42,7 @@ window.TL_DAY = {
 <li><b>Observability</b>: logs + metrics + traces, jinhe W3C <code>traceparent</code> jodta hai (.NET mein OpenTelemetry: <code>ActivitySource</code>, <code>Activity</code>).</li>
 <li><b>TL angle</b>: har service ka apna database, versioned contracts, pehle split se <b>pehle</b> observability, aur "distributed monolith" ki smell.</li>
 </ul>
-<p>Plan (lagbhag 1 ghanta 15 minute): pehle Short mode, phir Q&amp;A zor se, phir code sections, phir chhah puzzles. Azure Service Bus ki details Day 20 mein; system-design ki practice Day 17 mein.</p>`
+<p>Plan (Short lagbhag 20 minute; Detailed reference hai, is page ka estimate dekho): pehle Short mode, phir Q&amp;A zor se, phir code sections, phir chhah puzzles. Azure Service Bus ki details Day 20 mein; system-design ki practice Day 17 mein.</p>`
   },
   sections: [
     {
@@ -1187,10 +1187,10 @@ public class OrderConsumer
       id: "dead-letter-queue",
       depth: "detailed",
       q: "What is a dead-letter queue and how do you operate it?",
-      answer: "A dead-letter queue holds messages that failed too many times or expired, so a poison message stops blocking the rest. Monitor it, alert on it, then fix and replay.",
+      answer: "A dead-letter queue holds messages that failed too many times or expired (if configured), so a poison message stops blocking the rest. Monitor it, alert on it, then fix and replay.",
       meaning: {
-        hi: "Dead-letter queue उन messages को रखती है जो बहुत बार fail हुए या expire हो गए, ताकि poison message बाकी को न रोके। उसे monitor करो, उस पर alert लगाओ, फिर fix करके replay करो।",
-        hg: "Dead-letter queue un messages ko rakhti hai jo bahut baar fail hue ya expire ho gaye, taaki poison message baaki ko na roke. Use monitor karo, us par alert lagao, phir fix karke replay karo."
+        hi: "Dead-letter queue उन messages को रखती है जो बहुत बार fail हुए या expire हो गए (अगर configured हो), ताकि poison message बाकी को न रोके। उसे monitor करो, उस पर alert लगाओ, फिर fix करके replay करो।",
+        hg: "Dead-letter queue un messages ko rakhti hai jo bahut baar fail hue ya expire ho gaye (agar configured ho), taaki poison message baaki ko na roke. Use monitor karo, us par alert lagao, phir fix karke replay karo."
       },
       explain: {
         en: `<ul>

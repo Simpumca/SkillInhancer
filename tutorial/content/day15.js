@@ -16,7 +16,7 @@ window.TL_DAY = {
 <li><b>DDD basics</b>: ubiquitous language, entity vs value object, aggregate (one consistency boundary), domain events, bounded context, rich vs anemic model.</li>
 <li><b>TL angle</b>: choose by team size, change speed and operational skill; write the choice down in an <b>ADR</b>; avoid over-engineering (Clean Architecture for a small CRUD app is usually too much).</li>
 </ul>
-<p>Plan (about 1 hour 15 minutes): Short mode first (the picture), then Q&amp;A aloud, then the detailed sections with code, then the puzzles. Repository, Unit of Work and CQRS were Day 11, so we only point to them.</p>`,
+<p>Plan (Short about 20 minutes; Detailed is reference, see the estimate on this page): Short mode first (the picture), then Q&amp;A aloud, then the detailed sections with code, then the puzzles. Repository, Unit of Work and CQRS were Day 11, so we only point to them.</p>`,
     hi: `<p>आज का विषय है <b>solution को कैसे organise करें</b>, और वह फ़ैसला जो Tech Lead से सबसे ज़्यादा पूछा जाता है: <b>"कौन-सा architecture, और क्यों?"</b> कोई एक सही जवाब नहीं है, इसलिए interviewers <b>trade-offs</b> सुनते हैं।</p>
 <ul>
 <li><b>Layered (N-tier)</b>: Presentation → Business → Data। सरल है, पर dependency नीचे database की तरफ़ जाती है, इसलिए business rules data access से बंध जाते हैं।</li>
@@ -26,7 +26,7 @@ window.TL_DAY = {
 <li><b>DDD basics</b>: ubiquitous language, entity बनाम value object, aggregate (एक consistency boundary), domain events, bounded context, rich बनाम anemic model।</li>
 <li><b>TL angle</b>: team size, बदलाव की रफ़्तार और operations की skill से चुनो; फ़ैसला <b>ADR</b> में लिखो; over-engineering से बचो (छोटे CRUD app के लिए Clean Architecture अक्सर ज़्यादा है)।</li>
 </ul>
-<p>Plan (लगभग 1 घंटा 15 मिनट): पहले Short mode (तस्वीर), फिर Q&amp;A ज़ोर से, फिर code वाले detailed sections, फिर puzzles। Repository, Unit of Work और CQRS Day 11 में थे, इसलिए यहाँ सिर्फ़ इशारा है।</p>`,
+<p>Plan (Short लगभग 20 मिनट; Detailed reference है, इस page का estimate देखो): पहले Short mode (तस्वीर), फिर Q&amp;A ज़ोर से, फिर code वाले detailed sections, फिर puzzles। Repository, Unit of Work और CQRS Day 11 में थे, इसलिए यहाँ सिर्फ़ इशारा है।</p>`,
     hg: `<p>Aaj ka vishay hai <b>solution ko kaise organise karein</b>, aur woh faisla jo Tech Lead se sabse zyada poochha jaata hai: <b>"kaun-sa architecture, aur kyun?"</b> Koi ek sahi jawaab nahi hai, isliye interviewers <b>trade-offs</b> sunte hain.</p>
 <ul>
 <li><b>Layered (N-tier)</b>: Presentation → Business → Data. Saral hai, par dependency neeche database ki taraf jaati hai, isliye business rules data access se bandh jaate hain.</li>
@@ -36,7 +36,7 @@ window.TL_DAY = {
 <li><b>DDD basics</b>: ubiquitous language, entity vs value object, aggregate (ek consistency boundary), domain events, bounded context, rich vs anemic model.</li>
 <li><b>TL angle</b>: team size, badlaav ki raftaar aur operations ki skill se chuno; faisla <b>ADR</b> mein likho; over-engineering se bacho (chhote CRUD app ke liye Clean Architecture aksar zyada hai).</li>
 </ul>
-<p>Plan (lagbhag 1 ghanta 15 minute): pehle Short mode (tasveer), phir Q&amp;A zor se, phir code wale detailed sections, phir puzzles. Repository, Unit of Work aur CQRS Day 11 mein the, isliye yahan sirf ishaara hai.</p>`
+<p>Plan (Short lagbhag 20 minute; Detailed reference hai, is page ka estimate dekho): pehle Short mode (tasveer), phir Q&amp;A zor se, phir code wale detailed sections, phir puzzles. Repository, Unit of Work aur CQRS Day 11 mein the, isliye yahan sirf ishaara hai.</p>`
   },
   sections: [
     {
@@ -112,7 +112,7 @@ window.TL_DAY = {
 <ul>
 <li><b>Ubiquitous language</b>: the same words in conversations, tickets and code. If the business says "policy lapse", the class is not <code>InactiveRecord</code>.</li>
 <li><b>Entity</b>: has an identity (an Id) that stays the same while its data changes. Two entities are the same if their Ids match.</li>
-<li><b>Value object</b>: no identity, equal when all values are equal, best immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). A C# <code>record</code> is a natural fit. EF Core can map value objects as complex types (EF Core 8+; EF Core 10 added optional complex types, JSON mapping and struct support), which suit value objects because they have no identity of their own, unlike owned types, which are entity types.</li>
+<li><b>Value object</b>: no identity, equal when all values are equal, best immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). A C# <code>record</code> is a natural fit. EF Core can map value objects as complex types (EF Core 8+; EF Core 10 added optional complex types and JSON mapping), which suit value objects because they have no identity of their own, unlike owned types, which are entity types.</li>
 <li><b>Aggregate</b> and <b>aggregate root</b>: a cluster of objects changed as one unit. Outsiders talk only to the root; the root enforces the <b>invariants</b> (rules that must always hold). One aggregate = one transaction boundary. Reference other aggregates by <b>Id</b>, not by object.</li>
 <li><b>Domain event</b>: a fact in the past tense (<code>OrderPlaced</code>) raised by an aggregate so other parts can react.</li>
 <li><b>Bounded context</b>: the area where one model and one language are valid. "Customer" in Sales and "Customer" in Support can be different classes; a <b>context map</b> shows how the contexts relate.</li>
@@ -124,7 +124,7 @@ window.TL_DAY = {
 <ul>
 <li><b>Ubiquitous language</b>: बातचीत, tickets और code में एक ही शब्द। Business "policy lapse" कहे तो class का नाम <code>InactiveRecord</code> नहीं होना चाहिए।</li>
 <li><b>Entity</b>: उसकी identity (Id) होती है जो data बदलने पर भी वही रहती है। दो entities तब एक हैं जब उनके Ids मिलें।</li>
-<li><b>Value object</b>: identity नहीं, सारी values बराबर तो बराबर, बेहतर है immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>)। C# <code>record</code> इसके लिए स्वाभाविक है। EF Core value objects को complex types के रूप में map कर सकता है (EF Core 8+; EF Core 10 ने optional complex types, JSON mapping और struct support जोड़े), जो value objects के लिए ठीक हैं क्योंकि उनकी अपनी कोई identity नहीं होती, जबकि owned types असल में entity types हैं।</li>
+<li><b>Value object</b>: identity नहीं, सारी values बराबर तो बराबर, बेहतर है immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>)। C# <code>record</code> इसके लिए स्वाभाविक है। EF Core value objects को complex types के रूप में map कर सकता है (EF Core 8+; EF Core 10 ने optional complex types और JSON mapping जोड़े), जो value objects के लिए ठीक हैं क्योंकि उनकी अपनी कोई identity नहीं होती, जबकि owned types असल में entity types हैं।</li>
 <li><b>Aggregate</b> और <b>aggregate root</b>: objects का समूह जो एक इकाई की तरह बदलता है। बाहर वाले सिर्फ़ root से बात करते हैं; root <b>invariants</b> (जो rules हमेशा सच रहने चाहिए) लागू करता है। एक aggregate = एक transaction boundary। दूसरे aggregates को <b>Id</b> से reference करो, object से नहीं।</li>
 <li><b>Domain event</b>: past का एक fact (<code>OrderPlaced</code>) जो aggregate raise करता है ताकि दूसरे हिस्से react कर सकें।</li>
 <li><b>Bounded context</b>: वह दायरा जहाँ एक model और एक language चलती है। Sales का "Customer" और Support का "Customer" अलग classes हो सकती हैं; <b>context map</b> दिखाता है कि contexts आपस में कैसे जुड़े हैं।</li>
@@ -136,7 +136,7 @@ window.TL_DAY = {
 <ul>
 <li><b>Ubiquitous language</b>: baatcheet, tickets aur code mein ek hi shabd. Business "policy lapse" kahe to class ka naam <code>InactiveRecord</code> nahi hona chahiye.</li>
 <li><b>Entity</b>: uski identity (Id) hoti hai jo data badalne par bhi wahi rehti hai. Do entities tab ek hain jab unke Ids milen.</li>
-<li><b>Value object</b>: identity nahi, saari values barabar to barabar, behtar hai immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). C# <code>record</code> iske liye swabhavik hai. EF Core value objects ko complex types ke roop mein map kar sakta hai (EF Core 8+; EF Core 10 ne optional complex types, JSON mapping aur struct support jode), jo value objects ke liye theek hain kyunki unki apni koi identity nahi hoti, jabki owned types asal mein entity types hain.</li>
+<li><b>Value object</b>: identity nahi, saari values barabar to barabar, behtar hai immutable (<code>Money</code>, <code>Address</code>, <code>DateRange</code>). C# <code>record</code> iske liye swabhavik hai. EF Core value objects ko complex types ke roop mein map kar sakta hai (EF Core 8+; EF Core 10 ne optional complex types aur JSON mapping jode), jo value objects ke liye theek hain kyunki unki apni koi identity nahi hoti, jabki owned types asal mein entity types hain.</li>
 <li><b>Aggregate</b> aur <b>aggregate root</b>: objects ka samuh jo ek ikai ki tarah badalta hai. Bahar wale sirf root se baat karte hain; root <b>invariants</b> (jo rules hamesha sach rehne chahiye) lagu karta hai. Ek aggregate = ek transaction boundary. Doosre aggregates ko <b>Id</b> se reference karo, object se nahi.</li>
 <li><b>Domain event</b>: past ka ek fact (<code>OrderPlaced</code>) jo aggregate raise karta hai taaki doosre hisse react kar saken.</li>
 <li><b>Bounded context</b>: woh daayra jahan ek model aur ek language chalti hai. Sales ka "Customer" aur Support ka "Customer" alag classes ho sakti hain; <b>context map</b> dikhata hai ki contexts aapas mein kaise jude hain.</li>
@@ -888,21 +888,21 @@ different scaling.
 <li>In C#, a <code>record</code> gives value equality for free (Day 3). Caution: a <code>List&lt;T&gt;</code> member inside a record is still compared by reference (puzzle below).</li>
 <li>Value objects are immutable: change means "make a new one" (<code>with</code>). They can hold rules, for example <code>Email</code> validates its format once.</li>
 <li>Entities often override <code>Equals</code> by Id. Pitfall: new, not-yet-saved entities all have the default Id (0), so two different transient entities compare equal; handle them separately. With EF Core the change tracker already uses identity (Day 5).</li>
-<li>Follow-up: "How does EF Core store a value object?" — as complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 added optional complex types, JSON mapping and struct support) or as owned types (<code>OwnsOne</code>); usually as columns in the same table. Complex types have value semantics and no identity of their own, which fits value objects; owned types are entity types.</li>
+<li>Follow-up: "How does EF Core store a value object?" — as complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 added optional complex types and JSON mapping) or as owned types (<code>OwnsOne</code>); usually as columns in the same table. Complex types have value semantics and no identity of their own, which fits value objects; owned types are entity types.</li>
 </ul>`,
         hi: `<ul>
 <li>Entity के उदाहरण: <code>Order</code>, <code>Customer</code> — Id से compare। Value object के उदाहरण: <code>Money</code>, <code>Address</code>, <code>DateRange</code> — सारी values से compare।</li>
 <li>C# में <code>record</code> value equality मुफ़्त देता है (Day 3)। सावधानी: record के अंदर <code>List&lt;T&gt;</code> member अब भी reference से compare होता है (नीचे puzzle)।</li>
 <li>Value objects immutable होते हैं: बदलाव यानी "नया बनाओ" (<code>with</code>)। उनमें rules हो सकते हैं, जैसे <code>Email</code> अपना format एक बार validate करता है।</li>
 <li>Entities अक्सर <code>Equals</code> को Id से override करती हैं। Pitfall: नई, अभी save न हुई entities का default Id (0) होता है, इसलिए दो अलग transient entities बराबर निकलती हैं; उन्हें अलग से संभालो। EF Core का change tracker पहले से identity use करता है (Day 5)।</li>
-<li>Follow-up: "EF Core value object कैसे store करता है?" — complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 ने optional complex types, JSON mapping और struct support जोड़े) या owned types (<code>OwnsOne</code>) के रूप में; आम तौर पर उसी table के columns में। Complex types में value semantics होती हैं और अपनी identity नहीं, जो value objects को जमती है; owned types असल में entity types हैं।</li>
+<li>Follow-up: "EF Core value object कैसे store करता है?" — complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 ने optional complex types और JSON mapping जोड़े) या owned types (<code>OwnsOne</code>) के रूप में; आम तौर पर उसी table के columns में। Complex types में value semantics होती हैं और अपनी identity नहीं, जो value objects को जमती है; owned types असल में entity types हैं।</li>
 </ul>`,
         hg: `<ul>
 <li>Entity ke udaharan: <code>Order</code>, <code>Customer</code> — Id se compare. Value object ke udaharan: <code>Money</code>, <code>Address</code>, <code>DateRange</code> — saari values se compare.</li>
 <li>C# mein <code>record</code> value equality muft deta hai (Day 3). Saavdhani: record ke andar <code>List&lt;T&gt;</code> member ab bhi reference se compare hota hai (neeche puzzle).</li>
 <li>Value objects immutable hote hain: badlaav yaani "naya banao" (<code>with</code>). Unmein rules ho sakte hain, jaise <code>Email</code> apna format ek baar validate karta hai.</li>
 <li>Entities aksar <code>Equals</code> ko Id se override karti hain. Pitfall: nayi, abhi save na hui entities ka default Id (0) hota hai, isliye do alag transient entities barabar nikalti hain; unhe alag se sambhalo. EF Core ka change tracker pehle se identity use karta hai (Day 5).</li>
-<li>Follow-up: "EF Core value object kaise store karta hai?" — complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 ne optional complex types, JSON mapping aur struct support jode) ya owned types (<code>OwnsOne</code>) ke roop mein; aam taur par usi table ke columns mein. Complex types mein value semantics hoti hain aur apni identity nahi, jo value objects ko jamti hai; owned types asal mein entity types hain.</li>
+<li>Follow-up: "EF Core value object kaise store karta hai?" — complex types (<code>ComplexProperty</code>, EF Core 8+; EF Core 10 ne optional complex types aur JSON mapping jode) ya owned types (<code>OwnsOne</code>) ke roop mein; aam taur par usi table ke columns mein. Complex types mein value semantics hoti hain aur apni identity nahi, jo value objects ko jamti hai; owned types asal mein entity types hain.</li>
 </ul>`
       }
     },

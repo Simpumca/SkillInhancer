@@ -17,7 +17,7 @@ window.TL_DAY = {
 <li><b>Design 3, order management:</b> reuse Day 15 and 16: separate databases, outbox, saga with compensations, idempotent consumers, a read model for "my orders".</li>
 <li><b>Your story:</b> a STAR fill-in template and a clearly labelled sample. The sample is a shape, not your history: fill it with your own real project.</li>
 </ul>
-<p>Plan (about 1 hour 20 minutes): Short mode first, then Q&amp;A aloud, then the code sections, then the six puzzles, then write your own story from the template.</p>`,
+<p>Plan (Short about 20 minutes; Detailed is reference, see the estimate on this page): Short mode first, then Q&amp;A aloud, then the code sections, then the six puzzles, then write your own story from the template.</p>`,
     hi: `<p>Days 15 और 16 में architecture और microservices थे। आज तुम उन्हें <b>ज़ोर से बोलकर use</b> करते हो: system design round, जहाँ कोई एक सही जवाब नहीं होता और तुम्हें <b>trade-offs, structure और communication</b> पर judge किया जाता है।</p>
 <ul>
 <li><b>Framework (लगभग 45 मिनट):</b> requirements clarify (functional और non-functional) → estimates (QPS, storage, bandwidth) → API → data model और storage → high-level design → deep dives → trade-offs, failure modes, next steps।</li>
@@ -28,7 +28,7 @@ window.TL_DAY = {
 <li><b>Design 3, order management:</b> Day 15 और 16 reuse करो: अलग databases, outbox, compensations वाला saga, idempotent consumers, "my orders" के लिए read model।</li>
 <li><b>तुम्हारी story:</b> STAR का fill-in template और एक साफ़ labelled sample। Sample एक shape है, तुम्हारी history नहीं: उसे अपने असली project से भरो।</li>
 </ul>
-<p>Plan (लगभग 1 घंटा 20 मिनट): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर code sections, फिर छह puzzles, फिर template से अपनी story लिखो।</p>`,
+<p>Plan (Short लगभग 20 मिनट; Detailed reference है, इस page का estimate देखो): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर code sections, फिर छह puzzles, फिर template से अपनी story लिखो।</p>`,
     hg: `<p>Days 15 aur 16 mein architecture aur microservices the. Aaj tum unhe <b>zor se bolkar use</b> karte ho: system design round, jahan koi ek sahi jawab nahi hota aur tumhe <b>trade-offs, structure aur communication</b> par judge kiya jaata hai.</p>
 <ul>
 <li><b>Framework (lagbhag 45 minute):</b> requirements clarify (functional aur non-functional) → estimates (QPS, storage, bandwidth) → API → data model aur storage → high-level design → deep dives → trade-offs, failure modes, next steps.</li>
@@ -39,7 +39,7 @@ window.TL_DAY = {
 <li><b>Design 3, order management:</b> Day 15 aur 16 reuse karo: alag databases, outbox, compensations wala saga, idempotent consumers, "my orders" ke liye read model.</li>
 <li><b>Tumhari story:</b> STAR ka fill-in template aur ek saaf labelled sample. Sample ek shape hai, tumhari history nahi: use apne asli project se bharo.</li>
 </ul>
-<p>Plan (lagbhag 1 ghanta 20 minute): pehle Short mode, phir Q&amp;A zor se, phir code sections, phir chhah puzzles, phir template se apni story likho.</p>`
+<p>Plan (Short lagbhag 20 minute; Detailed reference hai, is page ka estimate dekho): pehle Short mode, phir Q&amp;A zor se, phir code sections, phir chhah puzzles, phir template se apni story likho.</p>`
   },
   sections: [
     {
