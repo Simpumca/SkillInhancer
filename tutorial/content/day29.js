@@ -120,27 +120,27 @@ window.TL_DAY = {
       body: {
         en: `<p><b>Analogy:</b> a railway timetable. You do not need every train; you need to know which platform leads where. If a question goes wrong, this map tells you which day to reopen.</p>
 <ul>
-<li><b>Round 1 — C#, .NET runtime, LINQ, EF Core</b> (6 questions): Days 1 to 7. Request journey, iterators, bulk work, soft delete, hash keys, async void.</li>
-<li><b>Round 2 — design, SOLID, ASP.NET Core, Web API</b> (6 questions): Days 8 to 14. Open/Closed, Strategy, health checks, paging, long-running calls, configuration.</li>
-<li><b>Round 3 — data, architecture, microservices</b> (5 questions): Days 15 to 19. Top-N SQL, parameter sniffing, latency, reporting across services, PostgreSQL versus SQL Server.</li>
+<li><b>Round 1 — C#, .NET runtime, LINQ, EF Core</b> (6 questions): Days 1 to 7. Request journey, iterators, bulk work, time handling, hash keys, limiting concurrency.</li>
+<li><b>Round 2 — design, SOLID, ASP.NET Core, Web API</b> (6 questions): mainly Days 8 to 14. Open/Closed, Strategy, health checks, paging, long-running calls, configuration.</li>
+<li><b>Round 3 — data, architecture, microservices</b> (5 questions): Days 15 to 19. Top-N SQL, parameter sniffing, latency, sargable filters, PostgreSQL versus SQL Server.</li>
 <li><b>Round 4 — Azure, DevOps, testing, security, JavaScript</b> (5 questions): Days 20 to 26. Secrets in Git, CI/CD, mocks versus real databases, package vulnerabilities, <code>forEach</code> with async.</li>
 </ul>
 <p>The seven puzzles at the end cross all rounds. Every explanation ends with "Revise: Day N".</p>
 <p><b>When to use:</b> after scoring, to find your weak round. <b>When not:</b> do not skip a round because it feels easy; the easy round is where a quick 2 builds confidence.</p>`,
         hi: `<p><b>Analogy:</b> railway timetable। हर train याद नहीं रखनी; बस यह पता होना चाहिए कि कौन-सा platform कहाँ जाता है। कोई सवाल बिगड़े तो यह map बताता है कि कौन-सा दिन दोबारा खोलना है।</p>
 <ul>
-<li><b>Round 1 — C#, .NET runtime, LINQ, EF Core</b> (6 सवाल): Day 1 से 7। Request journey, iterators, bulk काम, soft delete, hash keys, async void।</li>
-<li><b>Round 2 — design, SOLID, ASP.NET Core, Web API</b> (6 सवाल): Day 8 से 14। Open/Closed, Strategy, health checks, paging, long-running calls, configuration।</li>
-<li><b>Round 3 — data, architecture, microservices</b> (5 सवाल): Day 15 से 19। Top-N SQL, parameter sniffing, latency, services के पार reporting, PostgreSQL बनाम SQL Server।</li>
+<li><b>Round 1 — C#, .NET runtime, LINQ, EF Core</b> (6 सवाल): Day 1 से 7। Request journey, iterators, bulk काम, time handling, hash keys, concurrency सीमित करना।</li>
+<li><b>Round 2 — design, SOLID, ASP.NET Core, Web API</b> (6 सवाल): मुख्य रूप से Day 8 से 14। Open/Closed, Strategy, health checks, paging, long-running calls, configuration।</li>
+<li><b>Round 3 — data, architecture, microservices</b> (5 सवाल): Day 15 से 19। Top-N SQL, parameter sniffing, latency, sargable filters, PostgreSQL बनाम SQL Server।</li>
 <li><b>Round 4 — Azure, DevOps, testing, security, JavaScript</b> (5 सवाल): Day 20 से 26। Git में secrets, CI/CD, mocks बनाम real databases, package vulnerabilities, async के साथ <code>forEach</code>।</li>
 </ul>
 <p>आख़िर के सात puzzles सभी rounds को cross करते हैं। हर explanation "Revise: Day N" पर ख़त्म होता है।</p>
 <p><b>कब use करें:</b> score करने के बाद, अपना weak round ढूँढने के लिए। <b>कब नहीं:</b> कोई round आसान लगे तो उसे skip मत करो; आसान round में जल्दी मिला 2 confidence बनाता है।</p>`,
         hg: `<p><b>Analogy:</b> railway timetable. Har train yaad nahi rakhni; bas yeh pata hona chahiye ki kaun-sa platform kahan jaata hai. Koi sawaal bigde to yeh map batata hai ki kaun-sa din dobara kholna hai.</p>
 <ul>
-<li><b>Round 1 — C#, .NET runtime, LINQ, EF Core</b> (6 sawaal): Day 1 se 7. Request journey, iterators, bulk kaam, soft delete, hash keys, async void.</li>
-<li><b>Round 2 — design, SOLID, ASP.NET Core, Web API</b> (6 sawaal): Day 8 se 14. Open/Closed, Strategy, health checks, paging, long-running calls, configuration.</li>
-<li><b>Round 3 — data, architecture, microservices</b> (5 sawaal): Day 15 se 19. Top-N SQL, parameter sniffing, latency, services ke paar reporting, PostgreSQL vs SQL Server.</li>
+<li><b>Round 1 — C#, .NET runtime, LINQ, EF Core</b> (6 sawaal): Day 1 se 7. Request journey, iterators, bulk kaam, time handling, hash keys, concurrency seemit karna.</li>
+<li><b>Round 2 — design, SOLID, ASP.NET Core, Web API</b> (6 sawaal): mainly Day 8 se 14. Open/Closed, Strategy, health checks, paging, long-running calls, configuration.</li>
+<li><b>Round 3 — data, architecture, microservices</b> (5 sawaal): Day 15 se 19. Top-N SQL, parameter sniffing, latency, sargable filters, PostgreSQL vs SQL Server.</li>
 <li><b>Round 4 — Azure, DevOps, testing, security, JavaScript</b> (5 sawaal): Day 20 se 26. Git mein secrets, CI/CD, mocks vs real databases, package vulnerabilities, async ke saath <code>forEach</code>.</li>
 </ul>
 <p>Aakhir ke saat puzzles sabhi rounds ko cross karte hain. Har explanation "Revise: Day N" par khatam hota hai.</p>
@@ -228,14 +228,14 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
 <li><b>On the way back:</b> the response passes through the same middleware in reverse order; headers are locked once the body starts.</li>
 <li>Follow-up: "Where would you add logging, and where would a slow request hide?" (middleware for logging; the query, serialisation or a blocked thread).</li>
 </ul>
-<p>Revise: Day 12 (pipeline), Day 5 (EF Core queries).</p>`,
+<p>Revise: Day 12 (pipeline), Day 5 (EF Core queries), Day 14 (Week 2 quiz).</p>`,
         hi: `<ul>
 <li><b>Order मायने रखता है:</b> server (Kestrel) → middleware pipeline → endpoint routing → filters → action। Short-circuit करने वाला middleware journey जल्दी ख़त्म कर देता है।</li>
 <li><b>Action के अंदर:</b> scoped <code>DbContext</code> हर request पर बनता है, query translate होती है, connection pool से आता है, और rows बनती हैं (tracked, जब तक <code>AsNoTracking</code> न हो)।</li>
 <li><b>वापसी में:</b> response उसी middleware से उल्टे order में गुज़रता है; body शुरू होते ही headers lock हो जाते हैं।</li>
 <li>Follow-up: "Logging कहाँ लगाओगे, और slow request कहाँ छुपेगी?" (logging middleware में; slow हिस्सा query, serialisation या blocked thread।)</li>
 </ul>
-<p>Revise: Day 12 (pipeline), Day 5 (EF Core queries)।</p>`,
+<p>Revise: Day 12 (pipeline), Day 5 (EF Core queries), Day 14 (Week 2 quiz)।</p>`,
         hg: `<ul>
 <li><b>Order matter karta hai:</b> server (Kestrel) → middleware pipeline → endpoint routing → filters → action. Short-circuit karne wala middleware journey jaldi khatam kar deta hai.</li>
 <li><b>Action ke andar:</b> scoped <code>DbContext</code> har request par banta hai, query translate hoti hai, connection pool se aata hai, aur rows banti hain (tracked, jab tak <code>AsNoTracking</code> na ho).</li>
@@ -315,39 +315,39 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
       }
     },
     {
-      id: "r1-soft-delete-filter",
+      id: "r1-time-handling",
       depth: "detailed",
-      q: "Your team adds soft delete with an IsDeleted column. How do you make sure normal queries never return deleted rows, and what are the traps?",
-      answer: "Add a global query filter on the entity so every query gets the IsDeleted check. Traps: IgnoreQueryFilters bypasses it, raw SQL does not use it, and unique indexes still count deleted rows.",
+      q: "Your users are in several countries and a scheduled job runs around midnight. How do you handle dates and times in .NET?",
+      answer: "Store and compare times in UTC, preferably as DateTimeOffset, and convert to the user time zone only for display. Inject TimeProvider so tests can control the clock.",
       meaning: {
-        hi: "Entity पर global query filter लगाओ ताकि हर query में IsDeleted check जुड़ जाए। Traps: IgnoreQueryFilters इसे bypass करता है, raw SQL इसे use नहीं करती, और unique indexes deleted rows भी गिनते हैं।",
-        hg: "Entity par global query filter lagao taki har query mein IsDeleted check jud jaye. Traps: IgnoreQueryFilters ise bypass karta hai, raw SQL ise use nahi karti, aur unique indexes deleted rows bhi ginte hain."
+        hi: "Times को UTC में store और compare करो, बेहतर है DateTimeOffset में, और user के time zone में सिर्फ़ दिखाने के लिए बदलो। TimeProvider inject करो ताकि tests clock control कर सकें।",
+        hg: "Times ko UTC mein store aur compare karo, behtar hai DateTimeOffset mein, aur user ke time zone mein sirf dikhane ke liye badlo. TimeProvider inject karo taki tests clock control kar sakein."
       },
       explain: {
         en: `<ul>
-<li><b>Filter:</b> <code>modelBuilder.Entity&lt;Order&gt;().HasQueryFilter(o =&gt; !o.IsDeleted)</code> is added to every LINQ query on that entity, including through <code>Include</code>.</li>
-<li><b>Trap 1:</b> <code>IgnoreQueryFilters()</code> (admin screens, restore) removes it; review where it is used. Raw SQL and stored procedures are not filtered.</li>
-<li><b>Trap 2:</b> a unique index on <code>Email</code> still sees deleted rows; use a filtered unique index (<code>WHERE IsDeleted = 0</code>) on SQL Server.</li>
-<li><b>Trap 3:</b> <code>Remove</code> deletes for real; convert it to <code>IsDeleted = true</code> in <code>SaveChanges</code> (an interceptor) so nobody forgets.</li>
-<li>Follow-up: "Is soft delete enough for GDPR?" (no; data still exists, so plan real purge too).</li>
+<li><b>UTC inside, local at the edge:</b> a <code>DateTime</code> has a <code>Kind</code> that is easy to leave as <code>Unspecified</code>, and then nobody knows what it means. <code>DateTimeOffset</code> carries the offset, so comparing two values is safe.</li>
+<li><b>An offset is not a time zone:</b> +05:30 does not know about daylight saving rules elsewhere. For "9 a.m. in the user's city" store the time-zone id (<code>TimeZoneInfo</code>) and convert at the time you need it.</li>
+<li><b>Testable clock:</b> inject <code>TimeProvider</code> (.NET 8) instead of calling <code>DateTime.Now</code>; tests use <code>FakeTimeProvider</code> to move time forward. <code>DateTime.Now</code> in business logic also depends on the server's zone.</li>
+<li><b>Midnight jobs:</b> on a daylight-saving change a local day can have 23 or 25 hours, so schedule in UTC or use a zone-aware scheduler and test that day.</li>
+<li>Follow-up: "What do you store in the database?" (UTC, or <code>datetimeoffset</code> in SQL Server).</li>
 </ul>
-<p>Revise: Day 6 (query filters), Day 5.</p>`,
+<p>Revise: Day 25 (TimeProvider in tests).</p>`,
         hi: `<ul>
-<li><b>Filter:</b> <code>modelBuilder.Entity&lt;Order&gt;().HasQueryFilter(o =&gt; !o.IsDeleted)</code> उस entity की हर LINQ query में जुड़ता है, <code>Include</code> के ज़रिए भी।</li>
-<li><b>Trap 1:</b> <code>IgnoreQueryFilters()</code> (admin screens, restore) इसे हटा देता है; देखो कहाँ use हुआ है। Raw SQL और stored procedures filter नहीं होतीं।</li>
-<li><b>Trap 2:</b> <code>Email</code> पर unique index अब भी deleted rows देखता है; SQL Server पर filtered unique index (<code>WHERE IsDeleted = 0</code>) use करो।</li>
-<li><b>Trap 3:</b> <code>Remove</code> सच में delete करता है; उसे <code>SaveChanges</code> (interceptor) में <code>IsDeleted = true</code> में बदल दो ताकि कोई भूले नहीं।</li>
-<li>Follow-up: "GDPR के लिए soft delete काफ़ी है?" (नहीं; data अब भी मौजूद है, इसलिए real purge भी plan करो।)</li>
+<li><b>अंदर UTC, किनारे पर local:</b> <code>DateTime</code> की <code>Kind</code> को <code>Unspecified</code> छोड़ देना आसान है, फिर किसी को मतलब पता नहीं रहता। <code>DateTimeOffset</code> offset साथ रखता है, इसलिए दो values compare करना safe है।</li>
+<li><b>Offset time zone नहीं है:</b> +05:30 को दूसरी जगह की daylight saving rules पता नहीं होतीं। "User के शहर में सुबह 9 बजे" के लिए time-zone id (<code>TimeZoneInfo</code>) store करो और ज़रूरत के समय convert करो।</li>
+<li><b>Testable clock:</b> <code>DateTime.Now</code> की जगह <code>TimeProvider</code> (.NET 8) inject करो; tests समय आगे बढ़ाने के लिए <code>FakeTimeProvider</code> use करते हैं। Business logic में <code>DateTime.Now</code> server के zone पर भी निर्भर है।</li>
+<li><b>Midnight jobs:</b> daylight saving बदलने पर local दिन 23 या 25 घंटे का हो सकता है, इसलिए UTC में schedule करो या zone-aware scheduler लो और उस दिन को test करो।</li>
+<li>Follow-up: "Database में क्या store करते हो?" (UTC, या SQL Server में <code>datetimeoffset</code>।)</li>
 </ul>
-<p>Revise: Day 6 (query filters), Day 5।</p>`,
+<p>Revise: Day 25 (tests में TimeProvider)।</p>`,
         hg: `<ul>
-<li><b>Filter:</b> <code>modelBuilder.Entity&lt;Order&gt;().HasQueryFilter(o =&gt; !o.IsDeleted)</code> us entity ki har LINQ query mein judta hai, <code>Include</code> ke zariye bhi.</li>
-<li><b>Trap 1:</b> <code>IgnoreQueryFilters()</code> (admin screens, restore) ise hata deta hai; dekho kahan use hua hai. Raw SQL aur stored procedures filter nahi hoti.</li>
-<li><b>Trap 2:</b> <code>Email</code> par unique index ab bhi deleted rows dekhta hai; SQL Server par filtered unique index (<code>WHERE IsDeleted = 0</code>) use karo.</li>
-<li><b>Trap 3:</b> <code>Remove</code> sach mein delete karta hai; use <code>SaveChanges</code> (interceptor) mein <code>IsDeleted = true</code> mein badal do taki koi bhule nahi.</li>
-<li>Follow-up: "GDPR ke liye soft delete kaafi hai?" (nahi; data ab bhi maujood hai, isliye real purge bhi plan karo.)</li>
+<li><b>Andar UTC, kinare par local:</b> <code>DateTime</code> ki <code>Kind</code> ko <code>Unspecified</code> chhod dena aasaan hai, phir kisi ko matlab pata nahi rehta. <code>DateTimeOffset</code> offset saath rakhta hai, isliye do values compare karna safe hai.</li>
+<li><b>Offset time zone nahi hai:</b> +05:30 ko doosri jagah ki daylight saving rules pata nahi hoti. "User ke shehar mein subah 9 baje" ke liye time-zone id (<code>TimeZoneInfo</code>) store karo aur zaroorat ke samay convert karo.</li>
+<li><b>Testable clock:</b> <code>DateTime.Now</code> ki jagah <code>TimeProvider</code> (.NET 8) inject karo; tests samay aage badhane ke liye <code>FakeTimeProvider</code> use karte hain. Business logic mein <code>DateTime.Now</code> server ke zone par bhi nirbhar hai.</li>
+<li><b>Midnight jobs:</b> daylight saving badalne par local din 23 ya 25 ghante ka ho sakta hai, isliye UTC mein schedule karo ya zone-aware scheduler lo aur us din ko test karo.</li>
+<li>Follow-up: "Database mein kya store karte ho?" (UTC, ya SQL Server mein <code>datetimeoffset</code>.)</li>
 </ul>
-<p>Revise: Day 6 (query filters), Day 5.</p>`
+<p>Revise: Day 25 (tests mein TimeProvider).</p>`
       }
     },
     {
@@ -384,37 +384,37 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
       }
     },
     {
-      id: "r1-async-void",
+      id: "r1-limit-concurrency",
       depth: "detailed",
-      q: "A developer wrote an async void method in a service class. What is wrong, and where is async void acceptable?",
-      answer: "Callers cannot await it or catch its exceptions, and an unhandled exception can crash the process. Use async void only for event handlers; otherwise return Task.",
+      q: "A job calls a partner API for 5,000 ids, and Task.WhenAll on all of them overloaded the partner. How do you fix it?",
+      answer: "Limit concurrency instead of starting everything at once. Use Parallel.ForEachAsync with MaxDegreeOfParallelism, or a SemaphoreSlim, and add retries with backoff.",
       meaning: {
-        hi: "Callers इसे await नहीं कर सकते और इसके exceptions catch नहीं कर सकते, और unhandled exception process crash कर सकता है। Async void सिर्फ़ event handlers के लिए; बाक़ी जगह Task return करो।",
-        hg: "Callers ise await nahi kar sakte aur iske exceptions catch nahi kar sakte, aur unhandled exception process crash kar sakta hai. Async void sirf event handlers ke liye; baaki jagah Task return karo."
+        hi: "सब कुछ एक साथ शुरू करने की जगह concurrency सीमित करो। MaxDegreeOfParallelism के साथ Parallel.ForEachAsync या SemaphoreSlim use करो, और backoff वाले retries जोड़ो।",
+        hg: "Sab kuch ek saath shuru karne ki jagah concurrency seemit karo. MaxDegreeOfParallelism ke saath Parallel.ForEachAsync ya SemaphoreSlim use karo, aur backoff wale retries jodo."
       },
       explain: {
         en: `<ul>
-<li><b>No handle:</b> <code>async Task</code> gives the caller a <code>Task</code> to await, observe and wrap in <code>try/catch</code>. <code>async void</code> gives nothing, so the caller cannot know when it finished.</li>
-<li><b>Exceptions:</b> they are raised on the synchronization context or thread pool, outside the caller's <code>try/catch</code>, and can take the process down.</li>
-<li><b>Testing:</b> a test cannot await it, so it finishes before the work does.</li>
-<li><b>Acceptable:</b> UI or event handlers, where the signature must be <code>void</code>. Keep the body in a <code>try/catch</code> that logs.</li>
-<li>Follow-up: "How do you fire-and-forget safely in ASP.NET Core?" (a queue and a hosted service, not an unobserved task).</li>
+<li><b>Why it hurts:</b> <code>Task.WhenAll(ids.Select(CallAsync))</code> starts all 5,000 calls at once. That can exhaust sockets, trigger the partner's rate limit (HTTP 429) and make everything slower.</li>
+<li><b>Bounded parallelism:</b> <code>Parallel.ForEachAsync(ids, new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = ct }, async (id, token) =&gt; ...)</code> (.NET 6+). A <code>SemaphoreSlim</code> around each call gives the same limit; batching is a third option.</li>
+<li><b>Be a good client:</b> honour <code>Retry-After</code> on 429, retry with backoff and jitter, and pass the <code>CancellationToken</code> through.</li>
+<li><b>Pick the number by measuring:</b> start at the partner's documented limit or lower and raise it while error rates stay flat. Do not share one <code>DbContext</code> between the parallel workers.</li>
+<li>Follow-up: "Order of results?" (not guaranteed; collect into a thread-safe structure or use the id as the key).</li>
 </ul>
 <p>Revise: Day 3.</p>`,
         hi: `<ul>
-<li><b>कोई handle नहीं:</b> <code>async Task</code> caller को <code>Task</code> देता है जिसे await, observe और <code>try/catch</code> में लपेटा जा सकता है। <code>async void</code> कुछ नहीं देता, इसलिए caller को पता नहीं चलता कि काम कब ख़त्म हुआ।</li>
-<li><b>Exceptions:</b> ये synchronization context या thread pool पर उठते हैं, caller के <code>try/catch</code> के बाहर, और process गिरा सकते हैं।</li>
-<li><b>Testing:</b> test इसे await नहीं कर सकता, इसलिए काम से पहले test ख़त्म हो जाता है।</li>
-<li><b>Acceptable:</b> UI या event handlers, जहाँ signature <code>void</code> ही होना चाहिए। Body को ऐसे <code>try/catch</code> में रखो जो log करे।</li>
-<li>Follow-up: "ASP.NET Core में fire-and-forget safely कैसे करते हैं?" (queue और hosted service, unobserved task नहीं।)</li>
+<li><b>क्यों नुकसान:</b> <code>Task.WhenAll(ids.Select(CallAsync))</code> सारी 5,000 calls एक साथ शुरू करता है। इससे sockets ख़त्म हो सकते हैं, partner की rate limit (HTTP 429) लग सकती है और सब कुछ धीमा हो जाता है।</li>
+<li><b>सीमित parallelism:</b> <code>Parallel.ForEachAsync(ids, new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = ct }, async (id, token) =&gt; ...)</code> (.NET 6+)। हर call के आसपास <code>SemaphoreSlim</code> वही limit देता है; batching तीसरा option है।</li>
+<li><b>अच्छे client बनो:</b> 429 पर <code>Retry-After</code> मानो, backoff और jitter के साथ retry करो, और <code>CancellationToken</code> आगे pass करो।</li>
+<li><b>Number measure करके चुनो:</b> partner की documented limit या उससे कम से शुरू करो और error rate flat रहे तब तक बढ़ाओ। Parallel workers के बीच एक <code>DbContext</code> share मत करो।</li>
+<li>Follow-up: "Results का order?" (guaranteed नहीं; thread-safe structure में collect करो या id को key बनाओ।)</li>
 </ul>
 <p>Revise: Day 3।</p>`,
         hg: `<ul>
-<li><b>Koi handle nahi:</b> <code>async Task</code> caller ko <code>Task</code> deta hai jise await, observe aur <code>try/catch</code> mein lapeta ja sakta hai. <code>async void</code> kuch nahi deta, isliye caller ko pata nahi chalta ki kaam kab khatam hua.</li>
-<li><b>Exceptions:</b> yeh synchronization context ya thread pool par uthte hain, caller ke <code>try/catch</code> ke bahar, aur process gira sakte hain.</li>
-<li><b>Testing:</b> test ise await nahi kar sakta, isliye kaam se pehle test khatam ho jaata hai.</li>
-<li><b>Acceptable:</b> UI ya event handlers, jahan signature <code>void</code> hi hona chahiye. Body ko aise <code>try/catch</code> mein rakho jo log kare.</li>
-<li>Follow-up: "ASP.NET Core mein fire-and-forget safely kaise karte hain?" (queue aur hosted service, unobserved task nahi.)</li>
+<li><b>Kyon nuksaan:</b> <code>Task.WhenAll(ids.Select(CallAsync))</code> saari 5,000 calls ek saath shuru karta hai. Isse sockets khatam ho sakte hain, partner ki rate limit (HTTP 429) lag sakti hai aur sab kuch dheema ho jaata hai.</li>
+<li><b>Seemit parallelism:</b> <code>Parallel.ForEachAsync(ids, new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = ct }, async (id, token) =&gt; ...)</code> (.NET 6+). Har call ke aaspaas <code>SemaphoreSlim</code> wahi limit deta hai; batching teesra option hai.</li>
+<li><b>Achhe client bano:</b> 429 par <code>Retry-After</code> mano, backoff aur jitter ke saath retry karo, aur <code>CancellationToken</code> aage pass karo.</li>
+<li><b>Number measure karke chuno:</b> partner ki documented limit ya usse kam se shuru karo aur error rate flat rahe tab tak badhao. Parallel workers ke beech ek <code>DbContext</code> share mat karo.</li>
+<li>Follow-up: "Results ka order?" (guaranteed nahi; thread-safe structure mein collect karo ya id ko key banao.)</li>
 </ul>
 <p>Revise: Day 3.</p>`
       }
@@ -503,7 +503,7 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
 <li>In ASP.NET Core you add checks with <code>AddHealthChecks()</code> and expose endpoints with <code>MapHealthChecks</code>; tag checks so each endpoint runs only its own.</li>
 <li>Follow-up: "Should health endpoints be public?" (usually internal only; they leak details).</li>
 </ul>
-<p>Revise: Day 21 (readiness in deployment), Day 16.</p>`,
+<p>Revise: Day 21 (only the readiness endpoint is covered there; the liveness/readiness split is standard Kubernetes practice).</p>`,
         hi: `<ul>
 <li><b>Liveness:</b> "यह fail हो तो मुझे restart करो"। यह तभी fail होना चाहिए जब process अटका हो, इसलिए लगभग कुछ check नहीं करता।</li>
 <li><b>Readiness:</b> "यह fail हो तो मुझे traffic मत भेजो"। यह database या queue check कर सकता है, और dependency लौटते ही अपने-आप ठीक हो जाता है। Deploy step traffic swap से पहले इसे poll भी कर सकता है।</li>
@@ -511,7 +511,7 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
 <li>ASP.NET Core में checks <code>AddHealthChecks()</code> से जोड़ते हैं और endpoints <code>MapHealthChecks</code> से खोलते हैं; checks को tag करो ताकि हर endpoint सिर्फ़ अपने checks चलाए।</li>
 <li>Follow-up: "Health endpoints public होने चाहिए?" (आमतौर पर सिर्फ़ internal; ये details leak करते हैं।)</li>
 </ul>
-<p>Revise: Day 21 (deployment में readiness), Day 16।</p>`,
+<p>Revise: Day 21 (वहाँ सिर्फ़ readiness endpoint है; liveness/readiness का फ़र्क़ standard Kubernetes practice है)।</p>`,
         hg: `<ul>
 <li><b>Liveness:</b> "yeh fail ho to mujhe restart karo". Yeh tabhi fail hona chahiye jab process atka ho, isliye lagbhag kuch check nahi karta.</li>
 <li><b>Readiness:</b> "yeh fail ho to mujhe traffic mat bhejo". Yeh database ya queue check kar sakta hai, aur dependency lautte hi apne-aap theek ho jaata hai. Deploy step traffic swap se pehle ise poll bhi kar sakta hai.</li>
@@ -519,7 +519,7 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
 <li>ASP.NET Core mein checks <code>AddHealthChecks()</code> se jodte hain aur endpoints <code>MapHealthChecks</code> se kholte hain; checks ko tag karo taki har endpoint sirf apne checks chalaye.</li>
 <li>Follow-up: "Health endpoints public hone chahiye?" (aamtaur par sirf internal; yeh details leak karte hain.)</li>
 </ul>
-<p>Revise: Day 21 (deployment mein readiness), Day 16.</p>`
+<p>Revise: Day 21 (wahan sirf readiness endpoint hai; liveness/readiness ka farq standard Kubernetes practice hai).</p>`
       }
     },
     {
@@ -571,7 +571,7 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
         en: `<ul>
 <li><b>Flow:</b> <code>POST /reports</code> stores a job row, puts a message on a queue and returns <code>202</code> with a <code>Location</code> header like <code>/reports/77</code>. A worker does the heavy work.</li>
 <li><b>Status:</b> <code>GET /reports/77</code> returns <code>pending</code>, <code>running</code>, <code>done</code> (with a download link) or <code>failed</code> with a reason. A webhook or push message is an alternative to polling.</li>
-<li><b>Why not wait:</b> proxies, gateways and browsers time out, a dropped connection loses the work, and a held request ties up a server thread.</li>
+<li><b>Why not wait:</b> proxies, gateways and browsers time out, a dropped connection loses the work, and a held request keeps a connection and request resources busy.</li>
 <li><b>Make it safe:</b> an idempotency key so a double click does not start two reports, a retention period for old files, and authorisation on the status URL.</li>
 <li>Follow-up: "When is waiting fine?" (a few hundred milliseconds, no queue needed).</li>
 </ul>
@@ -579,7 +579,7 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
         hi: `<ul>
 <li><b>Flow:</b> <code>POST /reports</code> एक job row रखता है, queue में message डालता है और <code>Location</code> header (जैसे <code>/reports/77</code>) के साथ <code>202</code> लौटाता है। Worker भारी काम करता है।</li>
 <li><b>Status:</b> <code>GET /reports/77</code> <code>pending</code>, <code>running</code>, <code>done</code> (download link के साथ) या कारण के साथ <code>failed</code> लौटाता है। Polling का विकल्प webhook या push message है।</li>
-<li><b>इंतज़ार क्यों नहीं:</b> proxies, gateways और browsers timeout करते हैं, connection टूटे तो काम खो जाता है, और खुली request एक server thread रोके रखती है।</li>
+<li><b>इंतज़ार क्यों नहीं:</b> proxies, gateways और browsers timeout करते हैं, connection टूटे तो काम खो जाता है, और खुली request एक connection और request resources रोके रखती है।</li>
 <li><b>Safe बनाओ:</b> idempotency key ताकि double click से दो reports न बनें, पुरानी files की retention period, और status URL पर authorisation।</li>
 <li>Follow-up: "इंतज़ार कब ठीक है?" (कुछ सौ milliseconds, queue की ज़रूरत नहीं।)</li>
 </ul>
@@ -587,7 +587,7 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
         hg: `<ul>
 <li><b>Flow:</b> <code>POST /reports</code> ek job row rakhta hai, queue mein message daalta hai aur <code>Location</code> header (jaise <code>/reports/77</code>) ke saath <code>202</code> lautata hai. Worker bhaari kaam karta hai.</li>
 <li><b>Status:</b> <code>GET /reports/77</code> <code>pending</code>, <code>running</code>, <code>done</code> (download link ke saath) ya kaaran ke saath <code>failed</code> lautata hai. Polling ka vikalp webhook ya push message hai.</li>
-<li><b>Intezaar kyon nahi:</b> proxies, gateways aur browsers timeout karte hain, connection toote to kaam kho jaata hai, aur khuli request ek server thread roke rakhti hai.</li>
+<li><b>Intezaar kyon nahi:</b> proxies, gateways aur browsers timeout karte hain, connection toote to kaam kho jaata hai, aur khuli request ek connection aur request resources roke rakhti hai.</li>
 <li><b>Safe banao:</b> idempotency key taki double click se do reports na bane, purani files ki retention period, aur status URL par authorisation.</li>
 <li>Follow-up: "Intezaar kab theek hai?" (kuch sau milliseconds, queue ki zaroorat nahi.)</li>
 </ul>
@@ -598,31 +598,34 @@ Patterns and ASP.NET Core: 83% -> skim (Day 8)`
       id: "r2-config-per-environment",
       depth: "detailed",
       q: "How do you manage configuration and secrets across Dev, Test and Prod in an ASP.NET Core app?",
-      answer: "Use layered configuration: appsettings.json, an environment file, environment variables, then secrets. Dev uses user-secrets; production uses environment variables or Key Vault, and no passwords live in the repo.",
+      answer: "Layered configuration where the last source wins: appsettings.json, the environment file, user secrets in Development, environment variables, command line. Production adds Key Vault; no passwords in the repo.",
       meaning: {
-        hi: "Layered configuration use करो: appsettings.json, environment file, environment variables, फिर secrets। Dev में user-secrets; production में environment variables या Key Vault, और repo में कोई password नहीं।",
-        hg: "Layered configuration use karo: appsettings.json, environment file, environment variables, phir secrets. Dev mein user-secrets; production mein environment variables ya Key Vault, aur repo mein koi password nahi."
+        hi: "Layered configuration जिसमें आख़िरी source जीतता है: appsettings.json, environment file, Development में user secrets, environment variables, command line। Production में Key Vault जुड़ता है; repo में कोई password नहीं।",
+        hg: "Layered configuration jisme aakhri source jeetta hai: appsettings.json, environment file, Development mein user secrets, environment variables, command line. Production mein Key Vault judta hai; repo mein koi password nahi."
       },
       explain: {
         en: `<ul>
-<li><b>Layers:</b> later sources override earlier ones (the last source wins), so a base <code>appsettings.json</code> holds defaults and each environment overrides only what differs.</li>
-<li><b>Secrets:</b> <code>dotnet user-secrets</code> in development; in Azure, Key Vault references or a vault provider, with a Managed Identity so the app holds no credential at all.</li>
+<li><b>Default order (the last source wins):</b> <code>appsettings.json</code> → <code>appsettings.{Environment}.json</code> → user secrets (Development only) → environment variables → command-line arguments. Key Vault is added on top as an extra provider.</li>
+<li><b>Use it like this:</b> the base file holds defaults, each environment file overrides only what differs, and the pipeline or platform sets environment variables for the rest.</li>
+<li><b>Secrets:</b> <code>dotnet user-secrets</code> on a developer machine; in Azure use Key Vault (references or the vault provider) with a Managed Identity so the app holds no credential at all.</li>
 <li><b>Typed access:</b> bind sections to classes with the options pattern and validate on startup, so a missing value fails at deploy time, not at 2 a.m.</li>
 <li><b>Same artifact everywhere:</b> config stays outside the build, as the CI/CD principle says.</li>
 <li>Follow-up: "How does a changed setting reach a running app?" (restart, or <code>IOptionsMonitor</code> for reloadable sources).</li>
 </ul>
 <p>Revise: Day 12 (configuration), Day 20.</p>`,
         hi: `<ul>
-<li><b>Layers:</b> बाद वाले sources पहले वालों को override करते हैं (आख़िरी source जीतता है), इसलिए base <code>appsettings.json</code> में defaults रहते हैं और हर environment सिर्फ़ वही override करता है जो अलग है।</li>
-<li><b>Secrets:</b> development में <code>dotnet user-secrets</code>; Azure में Key Vault references या vault provider, Managed Identity के साथ ताकि app के पास कोई credential हो ही नहीं।</li>
+<li><b>Default order (आख़िरी source जीतता है):</b> <code>appsettings.json</code> → <code>appsettings.{Environment}.json</code> → user secrets (सिर्फ़ Development में) → environment variables → command-line arguments। Key Vault ऊपर से एक extra provider के रूप में जुड़ता है।</li>
+<li><b>ऐसे use करो:</b> base file में defaults, हर environment file सिर्फ़ वही override करती है जो अलग है, और बाक़ी के लिए pipeline या platform environment variables सेट करता है।</li>
+<li><b>Secrets:</b> developer machine पर <code>dotnet user-secrets</code>; Azure में Key Vault (references या vault provider) Managed Identity के साथ ताकि app के पास कोई credential हो ही नहीं।</li>
 <li><b>Typed access:</b> options pattern से sections को classes में bind करो और startup पर validate करो, ताकि missing value deploy के समय fail हो, रात 2 बजे नहीं।</li>
 <li><b>हर जगह वही artifact:</b> config build के बाहर रहता है, जैसा CI/CD principle कहता है।</li>
 <li>Follow-up: "बदली हुई setting चल रहे app तक कैसे पहुँचती है?" (restart, या reloadable sources के लिए <code>IOptionsMonitor</code>।)</li>
 </ul>
 <p>Revise: Day 12 (configuration), Day 20।</p>`,
         hg: `<ul>
-<li><b>Layers:</b> baad wale sources pehle walon ko override karte hain (aakhri source jeetta hai), isliye base <code>appsettings.json</code> mein defaults rehte hain aur har environment sirf wahi override karta hai jo alag hai.</li>
-<li><b>Secrets:</b> development mein <code>dotnet user-secrets</code>; Azure mein Key Vault references ya vault provider, Managed Identity ke saath taki app ke paas koi credential ho hi nahi.</li>
+<li><b>Default order (aakhri source jeetta hai):</b> <code>appsettings.json</code> → <code>appsettings.{Environment}.json</code> → user secrets (sirf Development mein) → environment variables → command-line arguments. Key Vault upar se ek extra provider ke roop mein judta hai.</li>
+<li><b>Aise use karo:</b> base file mein defaults, har environment file sirf wahi override karti hai jo alag hai, aur baaki ke liye pipeline ya platform environment variables set karta hai.</li>
+<li><b>Secrets:</b> developer machine par <code>dotnet user-secrets</code>; Azure mein Key Vault (references ya vault provider) Managed Identity ke saath taki app ke paas koi credential ho hi nahi.</li>
 <li><b>Typed access:</b> options pattern se sections ko classes mein bind karo aur startup par validate karo, taki missing value deploy ke samay fail ho, raat 2 baje nahi.</li>
 <li><b>Har jagah wahi artifact:</b> config build ke bahar rehta hai, jaisa CI/CD principle kehta hai.</li>
 <li>Follow-up: "Badli hui setting chalte app tak kaise pahunchti hai?" (restart, ya reloadable sources ke liye <code>IOptionsMonitor</code>.)</li>
@@ -764,39 +767,39 @@ ORDER BY CustomerId, rn;`,
       }
     },
     {
-      id: "r3-report-across-services",
+      id: "r3-sargable-year-filter",
       depth: "detailed",
-      q: "With a database per service, how do you build a management report that needs data from four services?",
-      answer: "Do not join across service databases. Publish events into a read model or reporting store built for queries, or call an aggregator API, and accept that the report is eventually consistent.",
+      q: "A report filters with WHERE YEAR(OrderDate) = 2025 and ignores the index on OrderDate. Why, and how do you rewrite it?",
+      answer: "A function on the column makes the predicate non-sargable, so SQL Server cannot seek the index. Rewrite it as a range: OrderDate &gt;= 2025-01-01 and OrderDate &lt; 2026-01-01.",
       meaning: {
-        hi: "Service databases के पार join मत करो। Events को query के लिए बने read model या reporting store में publish करो, या aggregator API बुलाओ, और मानो कि report eventually consistent है।",
-        hg: "Service databases ke paar join mat karo. Events ko query ke liye bane read model ya reporting store mein publish karo, ya aggregator API bulao, aur mano ki report eventually consistent hai."
+        hi: "Column पर function लगाने से predicate non-sargable हो जाता है, इसलिए SQL Server index seek नहीं कर पाता। इसे range बनाओ: OrderDate &gt;= 2025-01-01 और OrderDate &lt; 2026-01-01।",
+        hg: "Column par function lagane se predicate non-sargable ho jaata hai, isliye SQL Server index seek nahi kar paata. Ise range banao: OrderDate &gt;= 2025-01-01 aur OrderDate &lt; 2026-01-01."
       },
       explain: {
         en: `<ul>
-<li><b>Why no cross-database join:</b> it couples services through each other's schemas and brings back the distributed monolith (Day 16).</li>
-<li><b>Option 1, read model:</b> each service publishes events; a reporting service builds a denormalised store (SQL, a warehouse or a search index) shaped for the report. Fast to query, slightly stale.</li>
-<li><b>Option 2, aggregator:</b> an API composes the answer by calling the four services in parallel. Simple for small reports, but slow and fragile if one service is down.</li>
-<li><b>Trade-off:</b> read models add pipelines to run and monitor; aggregation adds latency. Choose by report size and freshness need.</li>
-<li>Follow-up: "What if the finance team needs exact numbers?" (define the cut-off time and reconcile against the source).</li>
+<li><b>Why:</b> an index is sorted by the raw <code>OrderDate</code> values. <code>YEAR(OrderDate)</code> must be computed for every row, so the engine scans instead of seeking.</li>
+<li><b>Rewrite:</b> <code>WHERE OrderDate &gt;= '2025-01-01' AND OrderDate &lt; '2026-01-01'</code>. The half-open range also avoids the end-of-day bug of <code>BETWEEN</code> with <code>datetime</code> values.</li>
+<li><b>Same trap:</b> <code>LEFT(Name, 3)</code>, <code>ISNULL(col, 0)</code>, <code>CONVERT</code> on the column, a leading wildcard <code>LIKE '%abc'</code>, and a parameter whose type differs from the column (implicit conversion).</li>
+<li><b>EF Core:</b> a filter such as <code>o.OrderDate.Year == 2025</code> can translate to a function on the column; write the range yourself and read the generated SQL.</li>
+<li>Follow-up: "How do you prove it?" (compare the actual plan: Index Scan versus Index Seek, and the logical reads).</li>
 </ul>
-<p>Revise: Day 16 (database per service), Day 11 (read side).</p>`,
+<p>Revise: Day 18.</p>`,
         hi: `<ul>
-<li><b>Cross-database join क्यों नहीं:</b> यह services को एक-दूसरे के schemas से बाँध देता है और distributed monolith वापस ले आता है (Day 16)।</li>
-<li><b>Option 1, read model:</b> हर service events publish करती है; reporting service report के हिसाब से बना denormalised store (SQL, warehouse या search index) तैयार करती है। Query तेज़, data थोड़ा पुराना।</li>
-<li><b>Option 2, aggregator:</b> एक API चारों services को parallel बुलाकर जवाब बनाती है। छोटी reports के लिए सरल, पर एक service down हो तो धीमी और नाज़ुक।</li>
-<li><b>Trade-off:</b> read models में चलाने और monitor करने के लिए pipelines जुड़ती हैं; aggregation में latency जुड़ती है। Report के size और freshness की ज़रूरत से चुनो।</li>
-<li>Follow-up: "Finance team को exact numbers चाहिए तो?" (cut-off time तय करो और source से reconcile करो।)</li>
+<li><b>क्यों:</b> index कच्ची <code>OrderDate</code> values के हिसाब से sorted है। <code>YEAR(OrderDate)</code> हर row के लिए निकालना पड़ता है, इसलिए engine seek की जगह scan करता है।</li>
+<li><b>Rewrite:</b> <code>WHERE OrderDate &gt;= '2025-01-01' AND OrderDate &lt; '2026-01-01'</code>। यह half-open range <code>datetime</code> values वाले <code>BETWEEN</code> के end-of-day bug से भी बचाती है।</li>
+<li><b>वही trap:</b> <code>LEFT(Name, 3)</code>, <code>ISNULL(col, 0)</code>, column पर <code>CONVERT</code>, शुरू में wildcard वाला <code>LIKE '%abc'</code>, और ऐसा parameter जिसका type column से अलग हो (implicit conversion)।</li>
+<li><b>EF Core:</b> <code>o.OrderDate.Year == 2025</code> जैसा filter column पर function में translate हो सकता है; range खुद लिखो और generated SQL पढ़ो।</li>
+<li>Follow-up: "साबित कैसे करोगे?" (actual plan compare करो: Index Scan बनाम Index Seek, और logical reads।)</li>
 </ul>
-<p>Revise: Day 16 (database per service), Day 11 (read side)।</p>`,
+<p>Revise: Day 18।</p>`,
         hg: `<ul>
-<li><b>Cross-database join kyon nahi:</b> yeh services ko ek-doosre ke schemas se baandh deta hai aur distributed monolith wapas le aata hai (Day 16).</li>
-<li><b>Option 1, read model:</b> har service events publish karti hai; reporting service report ke hisaab se bana denormalised store (SQL, warehouse ya search index) taiyaar karti hai. Query tez, data thoda purana.</li>
-<li><b>Option 2, aggregator:</b> ek API chaaron services ko parallel bulakar jawab banati hai. Chhoti reports ke liye saral, par ek service down ho to dheemi aur nazuk.</li>
-<li><b>Trade-off:</b> read models mein chalane aur monitor karne ke liye pipelines judti hain; aggregation mein latency judti hai. Report ke size aur freshness ki zaroorat se chuno.</li>
-<li>Follow-up: "Finance team ko exact numbers chahiye to?" (cut-off time tay karo aur source se reconcile karo.)</li>
+<li><b>Kyon:</b> index kachchi <code>OrderDate</code> values ke hisaab se sorted hai. <code>YEAR(OrderDate)</code> har row ke liye nikaalna padta hai, isliye engine seek ki jagah scan karta hai.</li>
+<li><b>Rewrite:</b> <code>WHERE OrderDate &gt;= '2025-01-01' AND OrderDate &lt; '2026-01-01'</code>. Yeh half-open range <code>datetime</code> values wale <code>BETWEEN</code> ke end-of-day bug se bhi bachati hai.</li>
+<li><b>Wahi trap:</b> <code>LEFT(Name, 3)</code>, <code>ISNULL(col, 0)</code>, column par <code>CONVERT</code>, shuru mein wildcard wala <code>LIKE '%abc'</code>, aur aisa parameter jiska type column se alag ho (implicit conversion).</li>
+<li><b>EF Core:</b> <code>o.OrderDate.Year == 2025</code> jaisa filter column par function mein translate ho sakta hai; range khud likho aur generated SQL padho.</li>
+<li>Follow-up: "Saabit kaise karoge?" (actual plan compare karo: Index Scan vs Index Seek, aur logical reads.)</li>
 </ul>
-<p>Revise: Day 16 (database per service), Day 11 (read side).</p>`
+<p>Revise: Day 18.</p>`
       }
     },
     {
@@ -1158,47 +1161,51 @@ not equal`,
       }
     },
     {
-      id: "foreach-async-not-awaited",
+      id: "optional-chaining-short-circuit",
       lang: "javascript",
-      src: `const log = [];
+      src: `const user = {
+  name: "Asha",
+  greet() {
+    return \`hi \${this.name}\`;
+  },
+};
 
-async function save(n) {
-  await null;
-  log.push(\`saved \${n}\`);
-}
-
-[1, 2].forEach(async (n) => {
-  await save(n);
-});
-log.push("after forEach");
-console.log("sync:", log.join("|"));
-
-await Promise.all([1, 2].map(save));
-console.log("final:", log.join("|"));`,
-      answer: `sync: after forEach
-final: after forEach|saved 1|saved 2|saved 1|saved 2`,
+let n = 0;
+console.log(user.missing?.(n++));
+console.log(user.greet?.());
+console.log(n);
+console.log(user.profile?.address.city);`,
+      answer: `undefined
+hi Asha
+0
+undefined`,
       explain: {
-        en: `<p><code>forEach</code> starts both async callbacks and throws away their promises. Each callback pauses at <code>await</code>, so "after forEach" is logged first and the first line shows only that. Then <code>Promise.all(...map(save))</code> waits for its own two saves; by then the two earlier saves have also run (microtasks run in the order they were queued), so the final log has four "saved" entries. The fix for waiting: <code>await Promise.all(items.map(...))</code> or <code>for...of</code> with <code>await</code>. Interview line: "<code>forEach</code> does not understand promises."</p>`,
-        hi: `<p><code>forEach</code> दोनों async callbacks शुरू करता है और उनके promises फेंक देता है। हर callback <code>await</code> पर रुकता है, इसलिए "after forEach" पहले log होता है और पहली line में सिर्फ़ वही दिखता है। फिर <code>Promise.all(...map(save))</code> अपने दो saves का इंतज़ार करता है; तब तक पहले वाले दो saves भी चल चुके होते हैं (microtasks queue में आने के order में चलते हैं), इसलिए final log में चार "saved" entries हैं। इंतज़ार का fix: <code>await Promise.all(items.map(...))</code> या <code>await</code> के साथ <code>for...of</code>। Interview line: "<code>forEach</code> promises को नहीं समझता।"</p>`,
-        hg: `<p><code>forEach</code> dono async callbacks shuru karta hai aur unke promises phenk deta hai. Har callback <code>await</code> par rukta hai, isliye "after forEach" pehle log hota hai aur pehli line mein sirf wahi dikhta hai. Phir <code>Promise.all(...map(save))</code> apne do saves ka intezaar karta hai; tab tak pehle wale do saves bhi chal chuke hote hain (microtasks queue mein aane ke order mein chalte hain), isliye final log mein chaar "saved" entries hain. Intezaar ka fix: <code>await Promise.all(items.map(...))</code> ya <code>await</code> ke saath <code>for...of</code>. Interview line: "<code>forEach</code> promises ko nahi samajhta."</p>`
+        en: `<p>Optional chaining <b>short-circuits</b>: when the part before <code>?.</code> is <code>null</code> or <code>undefined</code>, the rest of the expression is skipped and the result is <code>undefined</code>. For <code>user.missing?.(n++)</code> the call never happens, so even the argument <code>n++</code> is not evaluated and <code>n</code> stays 0. <code>user.greet?.()</code> exists, so it runs normally, and <code>this</code> is still <code>user</code> (hi Asha). In <code>user.profile?.address.city</code> the whole chain stops at <code>profile</code>, so <code>.city</code> does not throw. Interview line: "<code>?.</code> skips the whole remaining chain when its left side is null or undefined."</p>`,
+        hi: `<p>Optional chaining <b>short-circuit</b> करता है: <code>?.</code> से पहले वाला हिस्सा <code>null</code> या <code>undefined</code> हो तो बाक़ी expression छोड़ दिया जाता है और result <code>undefined</code> होता है। <code>user.missing?.(n++)</code> में call होती ही नहीं, इसलिए argument <code>n++</code> भी evaluate नहीं होता और <code>n</code> 0 रहता है। <code>user.greet?.()</code> मौजूद है, इसलिए normal चलता है, और <code>this</code> अब भी <code>user</code> है (hi Asha)। <code>user.profile?.address.city</code> में पूरी chain <code>profile</code> पर रुक जाती है, इसलिए <code>.city</code> throw नहीं करता। Interview line: "<code>?.</code> का left side null या undefined हो तो वह बाक़ी पूरी chain skip कर देता है।"</p>`,
+        hg: `<p>Optional chaining <b>short-circuit</b> karta hai: <code>?.</code> se pehle wala hissa <code>null</code> ya <code>undefined</code> ho to baaki expression chhod diya jaata hai aur result <code>undefined</code> hota hai. <code>user.missing?.(n++)</code> mein call hoti hi nahi, isliye argument <code>n++</code> bhi evaluate nahi hota aur <code>n</code> 0 rehta hai. <code>user.greet?.()</code> maujood hai, isliye normal chalta hai, aur <code>this</code> ab bhi <code>user</code> hai (hi Asha). <code>user.profile?.address.city</code> mein poori chain <code>profile</code> par ruk jaati hai, isliye <code>.city</code> throw nahi karta. Interview line: "<code>?.</code> ka left side null ya undefined ho to woh baaki poori chain skip kar deta hai."</p>`
       }
     },
     {
-      id: "default-sort-is-text",
+      id: "json-stringify-edge-cases",
       lang: "javascript",
-      src: `const nums = [10, 9, 1, 100];
-console.log([...nums].sort().join());
-console.log([...nums].sort((a, b) => a - b).join());
-console.log(["b", "a", "C"].sort().join());
-console.log(nums.sort() === nums);`,
-      answer: `1,10,100,9
-1,9,10,100
-C,a,b
-true`,
+      src: `const data = {
+  a: undefined,
+  b: () => 1,
+  c: NaN,
+  d: new Date(0),
+  e: [undefined],
+  f: { toJSON: () => "custom" },
+};
+console.log(JSON.stringify(data));
+console.log(JSON.stringify(undefined));
+console.log(JSON.stringify("x"));`,
+      answer: `{"c":null,"d":"1970-01-01T00:00:00.000Z","e":[null],"f":"custom"}
+undefined
+"x"`,
       explain: {
-        en: `<p>Without a compare function, <code>Array.prototype.sort</code> converts items to <b>strings</b> and compares UTF-16 code units, so numbers sort as text: "1", "10", "100", "9". <code>(a, b) =&gt; a - b</code> sorts numerically. Uppercase letters come before lowercase ones in that text order, so <code>C</code> comes before <code>a</code>. <code>sort</code> also sorts <b>in place</b> and returns the same array, so the last line is <code>true</code>; copy first (<code>[...nums]</code>, or <code>toSorted</code> in recent runtimes). Interview line: "always pass a comparer when sorting numbers."</p>`,
-        hi: `<p>Compare function के बिना <code>Array.prototype.sort</code> items को <b>strings</b> में बदलकर UTF-16 code units से compare करता है, इसलिए numbers text की तरह sort होते हैं: "1", "10", "100", "9"। <code>(a, b) =&gt; a - b</code> numerically sort करता है। उस text order में uppercase letters lowercase से पहले आते हैं, इसलिए <code>C</code>, <code>a</code> से पहले है। <code>sort</code> <b>in place</b> भी sort करता है और वही array लौटाता है, इसलिए आख़िरी line <code>true</code> है; पहले copy लो (<code>[...nums]</code>, या नए runtimes में <code>toSorted</code>)। Interview line: "numbers sort करते समय हमेशा comparer दो।"</p>`,
-        hg: `<p>Compare function ke bina <code>Array.prototype.sort</code> items ko <b>strings</b> mein badalkar UTF-16 code units se compare karta hai, isliye numbers text ki tarah sort hote hain: "1", "10", "100", "9". <code>(a, b) =&gt; a - b</code> numerically sort karta hai. Us text order mein uppercase letters lowercase se pehle aate hain, isliye <code>C</code>, <code>a</code> se pehle hai. <code>sort</code> <b>in place</b> bhi sort karta hai aur wahi array lautata hai, isliye aakhri line <code>true</code> hai; pehle copy lo (<code>[...nums]</code>, ya naye runtimes mein <code>toSorted</code>). Interview line: "numbers sort karte samay hamesha comparer do."</p>`
+        en: `<p><code>JSON.stringify</code> silently <b>drops</b> object properties whose value is <code>undefined</code> or a function (<code>a</code> and <code>b</code> vanish), but turns them into <code>null</code> inside arrays (<code>e</code>). <code>NaN</code> becomes <code>null</code> because JSON has no NaN. A <code>Date</code> becomes its ISO string through its own <code>toJSON</code>, and any object with a <code>toJSON</code> method is replaced by what it returns (<code>f</code>). Stringifying <code>undefined</code> itself returns <code>undefined</code> (not a string), which <code>console.log</code> prints as <code>undefined</code>; a string gets quotes. Interview line: "JSON round trips lose undefined, functions and NaN; check what your API really sends."</p>`,
+        hi: `<p><code>JSON.stringify</code> ऐसी object properties को चुपचाप <b>छोड़</b> देता है जिनकी value <code>undefined</code> या function है (<code>a</code> और <code>b</code> ग़ायब), पर arrays के अंदर उन्हें <code>null</code> बना देता है (<code>e</code>)। <code>NaN</code> <code>null</code> बन जाता है क्योंकि JSON में NaN नहीं होता। <code>Date</code> अपने <code>toJSON</code> से ISO string बन जाता है, और जिस object में <code>toJSON</code> method हो वह उसकी लौटाई value से बदल जाता है (<code>f</code>)। <code>undefined</code> को खुद stringify करो तो <code>undefined</code> लौटता है (string नहीं), जिसे <code>console.log</code> <code>undefined</code> print करता है; string में quotes लगते हैं। Interview line: "JSON round trip में undefined, functions और NaN खो जाते हैं; देखो आपकी API सच में क्या भेजती है।"</p>`,
+        hg: `<p><code>JSON.stringify</code> aisi object properties ko chupchaap <b>chhod</b> deta hai jinki value <code>undefined</code> ya function hai (<code>a</code> aur <code>b</code> ghaayab), par arrays ke andar unhe <code>null</code> bana deta hai (<code>e</code>). <code>NaN</code> <code>null</code> ban jaata hai kyonki JSON mein NaN nahi hota. <code>Date</code> apne <code>toJSON</code> se ISO string ban jaata hai, aur jis object mein <code>toJSON</code> method ho woh uski lautai value se badal jaata hai (<code>f</code>). <code>undefined</code> ko khud stringify karo to <code>undefined</code> lautta hai (string nahi), jise <code>console.log</code> <code>undefined</code> print karta hai; string mein quotes lagte hain. Interview line: "JSON round trip mein undefined, functions aur NaN kho jaate hain; dekho aapki API sach mein kya bhejti hai."</p>`
       }
     }
   ],
