@@ -22,7 +22,7 @@ window.TL_CURRICULUM = [
   { day: 20, week: 3, title: { en: "Azure", hi: "एज़ूर (Azure)", hg: "Azure" }, ready: true },
   { day: 21, week: 3, title: { en: "DevOps", hi: "डेवऑप्स (DevOps)", hg: "DevOps" }, ready: true },
   { day: 22, week: 4, title: { en: "Legacy Refresher", hi: "लेगेसी रिफ्रेशर", hg: "Legacy Refresher" }, ready: true },
-  { day: 23, week: 4, title: { en: "JavaScript Essentials", hi: "JavaScript ज़रूरी बातें", hg: "JavaScript ki zaroori baatein" }, ready: false },
+  { day: 23, week: 4, title: { en: "JavaScript Essentials", hi: "JavaScript ज़रूरी बातें", hg: "JavaScript ki zaroori baatein" }, ready: true },
   { day: 24, week: 4, title: { en: "React/Next.js Basics", hi: "React/Next.js बेसिक्स", hg: "React/Next.js Basics" }, ready: false },
   { day: 25, week: 4, title: { en: "Testing", hi: "टेस्टिंग", hg: "Testing" }, ready: false },
   { day: 26, week: 4, title: { en: "Security + Performance", hi: "सिक्योरिटी + परफॉर्मेंस", hg: "Security + Performance" }, ready: false },
