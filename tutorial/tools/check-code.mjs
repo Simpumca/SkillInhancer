@@ -146,7 +146,7 @@ export function checkSqlSnippet(snip) {
     return { status: 'PASS' };
   } finally {
     dropSqlDb(db);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
   }
 }
 
@@ -190,7 +190,7 @@ export function checkJsSnippet(snip) {
     }
     return { status: 'PASS' };
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
   }
 }
 

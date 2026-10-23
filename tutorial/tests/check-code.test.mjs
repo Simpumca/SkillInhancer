@@ -208,10 +208,14 @@ test('cli_javascript_timeout_fails', () => {
 
 test('javascript_temp_dir_cleaned_up', async () => {
   const { existsSync, readdirSync } = await import('node:fs');
-  runJs('tests/fixtures/day-js.js');
   const dir = 'tools/.snippets';
-  const left = existsSync(dir) ? readdirSync(dir).filter(d => d.includes('-js-')) : [];
-  assert.deepEqual(left, []);
+  const leftover = () => (existsSync(dir) ? readdirSync(dir).filter(d => d.includes('-js-')) : []);
+  runJs('tests/fixtures/day-js.js');
+  assert.deepEqual(leftover(), [], 'after passing fixture');
+  runJs('tests/fixtures/day-js-bad.js');
+  assert.deepEqual(leftover(), [], 'after failing fixture');
+  runJs('tests/fixtures/day-js-timeout.js', { TL_JS_TIMEOUT_MS: '1500' });
+  assert.deepEqual(leftover(), [], 'after timeout fixture');
 });
 
 // Needs NuGet access; SKIP (restore failed) skips the test instead of failing it.

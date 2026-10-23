@@ -12,8 +12,6 @@ window.TL_DAY = {
     ]
   }],
   qa: [],
-  puzzles: [
-
-  ],
+  puzzles: [],
   revision: { en: ["r"], meaning: { hi: ["र"], hg: ["r"] } }
 };
