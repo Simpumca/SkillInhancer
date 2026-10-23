@@ -199,7 +199,7 @@ window.TL_DAY = {
 <ul>
 <li>अपने 11 सालों से <b>चार असली moments</b> चुनो: एक incident, एक conflict, एक mentoring case, एक mistake। छोटा भी चलेगा। Mid-size असली story, dramatic पर vague story से बेहतर है।</li>
 <li>Template की lines <b>अपने</b> facts से भरो। Number बनाने से बेहतर है line खाली छोड़ दो।</li>
-<li>2 मिनट ज़ोर से बोलो और छोटा करो। फिर उसके बगल में question tags लिखो (जैसे: conflict story "influence without authority" का भी answer देती है)।</li>
+<li>2 मिनट ज़ोर से बोलो और छोटा करो। फिर उसके साथ question tags लिखो (जैसे: conflict story "influence without authority" का भी answer देती है)।</li>
 <li>Confidentiality check करो: client names नहीं, secrets नहीं, कुछ भी जो NDA मना करे नहीं। "एक telecom billing system" काफ़ी है।</li>
 </ul>
 <p>आम गलतियाँ: Situation लंबी और Action छोटी; सिर्फ़ "we" बोलना; teammates के बिना hero story; blame करना; और learning के बिना failure story। Interviewers को <b>honest, specific, modest</b> पसंद आता है।</p>
@@ -209,7 +209,7 @@ window.TL_DAY = {
 <ul>
 <li>Apne 11 saalon se <b>chaar asli moments</b> chuno: ek incident, ek conflict, ek mentoring case, ek mistake. Chhota bhi chalega. Mid-size asli story, dramatic par vague story se behtar hai.</li>
 <li>Template ki lines <b>apne</b> facts se bharo. Number banane se behtar hai line khaali chhod do.</li>
-<li>2 minute zor se bolo aur chhota karo. Phir uske baju question tags likho (jaise: conflict story "influence without authority" ka bhi answer deti hai).</li>
+<li>2 minute zor se bolo aur chhota karo. Phir uske bagal mein question tags likho (jaise: conflict story "influence without authority" ka bhi answer deti hai).</li>
 <li>Confidentiality check karo: client names nahi, secrets nahi, kuch bhi jo NDA mana kare nahi. "Ek telecom billing system" kaafi hai.</li>
 </ul>
 <p>Aam galtiyan: Situation lambi aur Action chhoti; sirf "we" bolna; teammates ke bina hero story; blame karna; aur learning ke bina failure story. Interviewers ko <b>honest, specific, modest</b> pasand aata hai.</p>
@@ -239,9 +239,9 @@ CONFIDENTIALITY CHECK:     [no client names, no secrets, NDA okay]`,
         {
           lang: "text",
           caption: {
-            en: "Sample, incident — Sample — replace with your own (invented demonstration; not the learner's history)",
-            hi: "Sample, incident — Sample — replace with your own (बनाई हुई demonstration; learner की history नहीं)",
-            hg: "Sample, incident — Sample — replace with your own (banayi hui demonstration; learner ki history nahi)"
+            en: "Sample (invented), incident — replace with your own",
+            hi: "Sample (invented), incident — अपने असली example से replace करो",
+            hg: "Sample (invented), incident — replace with your own"
           },
           src: `SAMPLE - REPLACE WITH YOUR OWN. Invented for demonstration only.
 
@@ -252,15 +252,15 @@ ACTION:    1. I posted in the incident channel: "I am IC. Priya checks the datab
            3. I sent a short update to support every 30 minutes, even when the update was "no change yet".
            4. When errors dropped, I stayed on for another 30 minutes to watch before closing.
 RESULT:    Service recovered; support had one clear message to send customers.
-LEARNING:  We added a missing alert and a rule that large migrations ship with a rollback note.`,
+LEARNING:  We added a missing alert and a rule that every release ships with a rollback note.`,
           check: "none"
         },
         {
           lang: "text",
           caption: {
-            en: "Sample, conflict — Sample — replace with your own (invented demonstration; not the learner's history)",
-            hi: "Sample, conflict — Sample — replace with your own (बनाई हुई demonstration; learner की history नहीं)",
-            hg: "Sample, conflict — Sample — replace with your own (banayi hui demonstration; learner ki history nahi)"
+            en: "Sample (invented), conflict — replace with your own",
+            hi: "Sample (invented), conflict — अपने असली example से replace करो",
+            hg: "Sample (invented), conflict — replace with your own"
           },
           src: `SAMPLE - REPLACE WITH YOUR OWN. Invented for demonstration only.
 
@@ -277,9 +277,9 @@ LEARNING:  I now ask for the goal behind the opinion first.`,
         {
           lang: "text",
           caption: {
-            en: "Sample, mentoring — Sample — replace with your own (invented demonstration; not the learner's history)",
-            hi: "Sample, mentoring — Sample — replace with your own (बनाई हुई demonstration; learner की history नहीं)",
-            hg: "Sample, mentoring — Sample — replace with your own (banayi hui demonstration; learner ki history nahi)"
+            en: "Sample (invented), mentoring — replace with your own",
+            hi: "Sample (invented), mentoring — अपने असली example से replace करो",
+            hg: "Sample (invented), mentoring — replace with your own"
           },
           src: `SAMPLE - REPLACE WITH YOUR OWN. Invented for demonstration only.
 
@@ -296,9 +296,9 @@ LEARNING:  Asking questions first works better than giving the answer.`,
         {
           lang: "text",
           caption: {
-            en: "Sample, failure — Sample — replace with your own (invented demonstration; not the learner's history)",
-            hi: "Sample, failure — Sample — replace with your own (बनाई हुई demonstration; learner की history नहीं)",
-            hg: "Sample, failure — Sample — replace with your own (banayi hui demonstration; learner ki history nahi)"
+            en: "Sample (invented), failure — replace with your own",
+            hi: "Sample (invented), failure — अपने असली example से replace करो",
+            hg: "Sample (invented), failure — replace with your own"
           },
           src: `SAMPLE - REPLACE WITH YOUR OWN. Invented for demonstration only.
 
@@ -352,7 +352,7 @@ LEARNING:  I now give ranges, name assumptions, and check data ownership before 
 <ul>
 <li><b>Story points:</b> relative size (aksar 1, 2, 3, 5, 8, 13) jis par team agree karti hai. Kaam compare karne aur velocity ke liye achhe; kamzor tab jab managers unhe hours mein badlein ya teams ki tulna karein.</li>
 <li><b>Hours ya days:</b> samajhne mein aasaan aur chhote, jaane-pehchaane tasks ke liye theek; log inhe commitment maan lete hain aur galat hone par hairaan hote hain.</li>
-<li><b>No-estimates style:</b> kaam ko ek jaise chhote items mein kaato aur ginte (throughput, cycle time). Tab chalta hai jab items chhote aur steady hon; forecast phir bhi chahiye, bas kisi doosre measure se.</li>
+<li><b>No-estimates style:</b> kaam ko ek jaise chhote items mein kaato aur gino (throughput, cycle time). Tab chalta hai jab items chhote aur steady hon; forecast phir bhi chahiye, bas kisi doosre measure se.</li>
 <li>Koi winner nahi hai. Woh chuno jise team <b>honestly</b> use kare, aur batao ki company ke tareeke mein kaise adapt karoge.</li>
 </ul>
 <p><b>Three-point (PERT) estimate:</b> teen numbers maango: <b>O</b> (optimistic), <b>M</b> (most likely), <b>P</b> (pessimistic). Expected value hai <b>(O + 4M + P) / 6</b>, aur mota spread hai <b>(P - O) / 6</b>. PERT 1950 ke dashak ke ek US Navy project se aaya; aaj ise uncertainty <i>dikhane</i> ka simple, honest tareeka mano, exact maths nahi. Tasks ki list ke liye expected values jodo; spreads ko milane ke liye unke <i>squares</i> (variances) jodo aur square root lo, jo maanta hai ki tasks independent hain (aksar poori tarah sach nahi).</p>
@@ -466,7 +466,7 @@ fast (12/sprint): 5 sprints`
 <li><b>Agree on the criteria</b> (latency, cost, team skill, time) before comparing options.</li>
 <li><b>Use data</b>: a measurement, a small <b>prototype or spike</b>, or an example from production logs.</li>
 <li><b>Write the decision down</b> as an <b>ADR</b> (Day 15): context, options, decision, consequences, and when to revisit.</li>
-<li><b>Disagree and commit:</b> once decided, everyone backs it, including the person who lost. The phrase is popularised by Amazon, and it works only if people were truly heard first.</li>
+<li><b>Disagree and commit:</b> once decided, everyone backs it, including the person who lost. The idea goes back to Intel (Andy Grove) and Amazon popularised it, and it works only if people were truly heard first.</li>
 <li>If it stays stuck, escalate <b>the decision, not the person</b>, with both options and a recommendation.</li>
 </ul>
 <p><b>Personal conflict:</b> talk privately and early, describe the behaviour and its effect ("in the last two reviews the comments felt personal to me"), ask for their view, and agree on one small change. Do not talk about someone to others before talking to them.</p>
@@ -475,7 +475,7 @@ fast (12/sprint): 5 sprints`
 <li><b>Tone:</b> comment on the code, not the person; ask questions ("what happens if the list is empty?"); give a reason; praise good work too.</li>
 <li><b>Blocking vs non-blocking:</b> mark what must change before merge (bug, security, data loss, broken contract) and label the rest as suggestions or nitpicks ("nit:", "optional:"). Do not block a merge on style a linter can enforce.</li>
 <li><b>Response time:</b> agree a team norm, for example a first response within one working day, so work does not wait. Small PRs make this possible.</li>
-<li><b>Models the behaviour:</b> as TL, your own PRs get reviewed too, and you accept comments gracefully.</li>
+<li><b>Model the behaviour:</b> as TL, your own PRs get reviewed too, and you accept comments gracefully.</li>
 <li>Handle a long review thread by <b>moving to a quick call</b> and writing the outcome back in the PR.</li>
 </ul>
 <p><b>When to use / when not:</b> prototype and measure when the decision is costly to reverse; for small, easily reversed choices decide quickly and move on, otherwise you waste the team's time. Do not use "disagree and commit" to silence concerns about safety or ethics; those need to be escalated properly.</p>`,
@@ -486,7 +486,7 @@ fast (12/sprint): 5 sprints`
 <li>Options compare करने से पहले <b>criteria agree करो</b> (latency, cost, team skill, time)।</li>
 <li><b>Data use करो</b>: measurement, छोटा <b>prototype या spike</b>, या production logs का example।</li>
 <li><b>फ़ैसला लिखो</b> <b>ADR</b> में (Day 15): context, options, decision, consequences, और कब दोबारा देखना है।</li>
-<li><b>Disagree and commit:</b> फ़ैसला होने के बाद सब उसका साथ देते हैं, हारने वाला भी। ये phrase Amazon की वजह से popular हुआ, और तभी चलता है जब लोगों की बात पहले सच में सुनी गई हो।</li>
+<li><b>Disagree and commit:</b> फ़ैसला होने के बाद सब उसका साथ देते हैं, हारने वाला भी। ये idea Intel (Andy Grove) से आया और Amazon ने इसे popular किया, और तभी चलता है जब लोगों की बात पहले सच में सुनी गई हो।</li>
 <li>अटका रहे तो <b>decision को escalate करो, person को नहीं</b>, दोनों options और एक recommendation के साथ।</li>
 </ul>
 <p><b>Personal conflict:</b> अकेले में और जल्दी बात करो, behaviour और उसका असर बताओ ("पिछले दो reviews में comments मुझे personal लगे"), उनका view पूछो, और एक छोटे बदलाव पर agree करो। किसी से बात करने से पहले दूसरों से उसके बारे में बात मत करो।</p>
@@ -506,7 +506,7 @@ fast (12/sprint): 5 sprints`
 <li>Options compare karne se pehle <b>criteria agree karo</b> (latency, cost, team skill, time).</li>
 <li><b>Data use karo</b>: measurement, chhota <b>prototype ya spike</b>, ya production logs ka example.</li>
 <li><b>Faisla likho</b> <b>ADR</b> mein (Day 15): context, options, decision, consequences, aur kab dobara dekhna hai.</li>
-<li><b>Disagree and commit:</b> faisla hone ke baad sab uska saath dete hain, harne wala bhi. Yeh phrase Amazon ki wajah se popular hua, aur tabhi chalta hai jab logon ki baat pehle sach mein suni gayi ho.</li>
+<li><b>Disagree and commit:</b> faisla hone ke baad sab uska saath dete hain, harne wala bhi. Yeh idea Intel (Andy Grove) se aaya aur Amazon ne ise popular kiya, aur tabhi chalta hai jab logon ki baat pehle sach mein suni gayi ho.</li>
 <li>Atka rahe to <b>decision ko escalate karo, person ko nahi</b>, dono options aur ek recommendation ke saath.</li>
 </ul>
 <p><b>Personal conflict:</b> akele mein aur jaldi baat karo, behaviour aur uska asar batao ("pichhle do reviews mein comments mujhe personal lage"), unka view poochho, aur ek chhote badlaav par agree karo. Kisi se baat karne se pehle doosron se uske baare mein baat mat karo.</p>
@@ -582,7 +582,7 @@ praise: Nice test names, they read like a spec.`,
         hi: `<p><b>Analogy:</b> बच्चे को cycle सिखाना। पहले तुम seat पकड़कर साथ दौड़ते हो; फिर कुछ मीटर छोड़ देते हो; फिर gate से बस देखते हो। अगर seat पकड़े रहो तो <b>बच्चा कभी सीखता नहीं</b>, और बहुत जल्दी छोड़ दो तो वो गिरता है। Mentoring इस person के लिए, इस task पर, सही मात्रा की पकड़ चुनना है।</p>
 <p><b>Situational leadership</b> (Hersey और Blanchard) एक simple map देती है। अपना style person की <b>उस task के लिए skill और confidence</b> से match करो:</p>
 <ul>
-<li><b>नया और उत्साही (कम skill):</b> <b>directing</b>: साफ़ steps, close check-ins।</li>
+<li><b>नया और keen (कम skill):</b> <b>directing</b>: साफ़ steps, close check-ins।</li>
 <li><b>सीख रहा है पर डगमगा रहा है:</b> <b>coaching</b>: why समझाओ, सवाल बुलाओ, feedback अक्सर दो।</li>
 <li><b>Skilled पर unsure:</b> <b>supporting</b>: पूछो वो क्या सोचते हैं, encourage करो, decide करने दो।</li>
 <li><b>Skilled और confident:</b> <b>delegating</b>: outcome पर agree करो और पीछे हटो।</li>
@@ -596,7 +596,7 @@ praise: Nice test names, they read like a spec.`,
         hg: `<p><b>Analogy:</b> bachche ko cycle sikhana. Pehle tum seat pakadkar saath daudte ho; phir kuch meter chhod dete ho; phir gate se bas dekhte ho. Agar seat pakde raho to <b>bachcha kabhi seekhta nahi</b>, aur bahut jaldi chhod do to woh girta hai. Mentoring is person ke liye, is task par, sahi maatra ki pakad chunna hai.</p>
 <p><b>Situational leadership</b> (Hersey aur Blanchard) ek simple map deti hai. Apna style person ki <b>us task ke liye skill aur confidence</b> se match karo:</p>
 <ul>
-<li><b>Naya aur utsaahi (kam skill):</b> <b>directing</b>: saaf steps, close check-ins.</li>
+<li><b>Naya aur keen (kam skill):</b> <b>directing</b>: saaf steps, close check-ins.</li>
 <li><b>Seekh raha hai par dagmaga raha hai:</b> <b>coaching</b>: why samjhao, sawaal bulao, feedback aksar do.</li>
 <li><b>Skilled par unsure:</b> <b>supporting</b>: poochho woh kya sochte hain, encourage karo, decide karne do.</li>
 <li><b>Skilled aur confident:</b> <b>delegating</b>: outcome par agree karo aur peechhe hato.</li>
@@ -816,37 +816,37 @@ Action items:                   [action - owner - date - how we check it is done
       body: {
         en: `<p><b>Analogy:</b> a leaking tap in the kitchen. Fixing it today takes ten minutes and a washer. Ignoring it for a year wastes water, rots the cabinet and costs a plumber and a carpenter. Tech debt is the same: <b>a shortcut that gives speed now and charges interest later</b>. Some debt is a smart loan (a deliberate shortcut to hit a launch, with a plan to repay); some is just a mess.</p>
 <p><b>Step 1, make it visible.</b> Keep a <b>tech-debt list</b> in the backlog: what it is, where, what it costs (incidents, slow releases, onboarding pain), and a rough size. Debt nobody can see cannot be prioritised. Attach evidence: bugs, DORA numbers (Day 21), time lost.</p>
-<p><b>Step 2, prioritise by cost of delay and risk.</b> Ask: what does it cost <b>each month we wait</b>, how risky is it (security, data loss, outage), and how big is the fix? A simple method is <b>WSJF, Weighted Shortest Job First</b>, from the SAFe framework: <b>score = cost of delay / job size</b>. Cost of delay is often scored as value plus time criticality plus risk reduction. Higher score first. It is a conversation tool, not an oracle: the numbers are rough team judgements.</p>
+<p><b>Step 2, prioritise by cost of delay and risk.</b> Ask: what does it cost <b>each month we wait</b>, how risky is it (security, data loss, outage), and how big is the fix? A simple method is <b>WSJF, Weighted Shortest Job First</b>, from Don Reinertsen's cost-of-delay work, popularised by the SAFe framework: <b>score = cost of delay / job size</b>. Cost of delay is often scored as value plus time criticality plus risk reduction. Higher score first. It is a conversation tool, not an oracle: the numbers are rough team judgements.</p>
 <p><b>Step 3, pay it down in a sustainable way.</b></p>
 <ul>
 <li><b>Boy-scout rule:</b> leave the code a little better when you touch it.</li>
 <li><b>Attach to features:</b> do the refactor that makes the next feature easy, and tell the product owner why.</li>
 <li><b>Reserve capacity:</b> a fixed share such as <b>20% of the sprint</b> is one popular option. It is a heuristic, not a law; a team drowning in debt may need more for a while, a healthy team less.</li>
-<li><b>Dedicated project:</b> for big items (migrating off an old framework, Day 24), with a clear business case.</li>
+<li><b>Dedicated project:</b> for big items (migrating off an old framework, Day 22), with a clear business case.</li>
 </ul>
 <p><b>Selling it to the business:</b> use their language: "<b>This module causes about two incidents a quarter and slows every feature there by a week.</b>" Do not say "the code is ugly". And be honest about trade-offs: sometimes the right decision is to <b>not</b> fix it.</p>
 <p><b>When to use / when not:</b> pay down debt that is on the path of upcoming work, risky, or causing real pain. Leave stable, rarely changed code alone even if it is ugly; rewriting it has a cost and a risk with no payoff. Avoid giant "big rewrite" plans without incremental steps.</p>`,
         hi: `<p><b>Analogy:</b> kitchen में टपकता नल। आज fix करने में दस मिनट और एक washer लगता है। साल भर ignore करो तो पानी बर्बाद होता है, cabinet सड़ता है और plumber और carpenter का खर्चा आता है। Tech debt ऐसा ही है: <b>एक shortcut जो अभी speed देता है और बाद में interest वसूलता है</b>। कुछ debt समझदारी का loan है (launch पकड़ने के लिए सोचा-समझा shortcut, चुकाने के plan के साथ); कुछ सिर्फ़ गंदगी है।</p>
 <p><b>Step 1, visible बनाओ।</b> Backlog में <b>tech-debt list</b> रखो: क्या है, कहाँ है, कितना महँगा है (incidents, slow releases, onboarding की तकलीफ़), और मोटा size। जो debt कोई देख नहीं सकता उसे prioritise नहीं कर सकते। Evidence जोड़ो: bugs, DORA numbers (Day 21), खोया हुआ time।</p>
-<p><b>Step 2, cost of delay और risk से prioritise करो।</b> पूछो: <b>हर महीने इंतज़ार का</b> क्या खर्चा है, कितना risky है (security, data loss, outage), और fix कितना बड़ा है? एक simple तरीका <b>WSJF, Weighted Shortest Job First</b> है, SAFe framework से: <b>score = cost of delay / job size</b>। Cost of delay को अक्सर value + time criticality + risk reduction से score करते हैं। ऊँचा score पहले। ये बातचीत का tool है, oracle नहीं: numbers team के मोटे judgements हैं।</p>
+<p><b>Step 2, cost of delay और risk से prioritise करो।</b> पूछो: <b>हर महीने इंतज़ार का</b> क्या खर्चा है, कितना risky है (security, data loss, outage), और fix कितना बड़ा है? एक simple तरीका <b>WSJF, Weighted Shortest Job First</b> है, Don Reinertsen के cost-of-delay काम से, जिसे SAFe framework ने popular किया: <b>score = cost of delay / job size</b>। Cost of delay को अक्सर value + time criticality + risk reduction से score करते हैं। ऊँचा score पहले। ये बातचीत का tool है, oracle नहीं: numbers team के मोटे judgements हैं।</p>
 <p><b>Step 3, sustainable तरीके से चुकाओ।</b></p>
 <ul>
 <li><b>Boy-scout rule:</b> code छुओ तो उसे थोड़ा बेहतर छोड़ो।</li>
 <li><b>Features से जोड़ो:</b> वो refactor करो जो अगला feature आसान बनाए, और product owner को बताओ क्यों।</li>
 <li><b>Capacity reserve करो:</b> <b>sprint का 20%</b> जैसा fixed हिस्सा एक popular option है। ये heuristic है, कानून नहीं; debt में डूबी team को कुछ समय के लिए ज़्यादा चाहिए, healthy team को कम।</li>
-<li><b>Dedicated project:</b> बड़े items के लिए (पुराने framework से migrate करना, Day 24), साफ़ business case के साथ।</li>
+<li><b>Dedicated project:</b> बड़े items के लिए (पुराने framework से migrate करना, Day 22), साफ़ business case के साथ।</li>
 </ul>
 <p><b>Business को बेचना:</b> उनकी भाषा में बोलो: "<b>ये module quarter में लगभग दो incidents करता है और वहाँ हर feature को एक हफ़्ता slow करता है।</b>" "code ugly है" मत कहो। और trade-offs के बारे में honest रहो: कभी सही फ़ैसला उसे <b>न</b> सुधारना होता है।</p>
 <p><b>When to use / when not:</b> वो debt चुकाओ जो आने वाले काम के रास्ते में हो, risky हो, या असली तकलीफ़ दे रहा हो। Stable, कम बदलने वाले code को ugly होने पर भी छोड़ दो; उसे rewrite करने में cost और risk है और फ़ायदा नहीं। Incremental steps के बिना बड़े "big rewrite" plans से बचो।</p>`,
         hg: `<p><b>Analogy:</b> kitchen mein tapakta nal. Aaj fix karne mein das minute aur ek washer lagta hai. Saal bhar ignore karo to paani barbaad hota hai, cabinet sadta hai aur plumber aur carpenter ka kharcha aata hai. Tech debt aisa hi hai: <b>ek shortcut jo abhi speed deta hai aur baad mein interest vasoolta hai</b>. Kuch debt samajhdaari ka loan hai (launch pakadne ke liye socha-samjha shortcut, chukane ke plan ke saath); kuch sirf gandagi hai.</p>
 <p><b>Step 1, visible banao.</b> Backlog mein <b>tech-debt list</b> rakho: kya hai, kahan hai, kitna mehnga hai (incidents, slow releases, onboarding ki taklif), aur mota size. Jo debt koi dekh nahi sakta use prioritise nahi kar sakte. Evidence jodo: bugs, DORA numbers (Day 21), khoya hua time.</p>
-<p><b>Step 2, cost of delay aur risk se prioritise karo.</b> Poochho: <b>har mahine intezaar ka</b> kya kharcha hai, kitna risky hai (security, data loss, outage), aur fix kitna bada hai? Ek simple tareeka <b>WSJF, Weighted Shortest Job First</b> hai, SAFe framework se: <b>score = cost of delay / job size</b>. Cost of delay ko aksar value + time criticality + risk reduction se score karte hain. Ooncha score pehle. Yeh baatcheet ka tool hai, oracle nahi: numbers team ke mote judgements hain.</p>
+<p><b>Step 2, cost of delay aur risk se prioritise karo.</b> Poochho: <b>har mahine intezaar ka</b> kya kharcha hai, kitna risky hai (security, data loss, outage), aur fix kitna bada hai? Ek simple tareeka <b>WSJF, Weighted Shortest Job First</b> hai, Don Reinertsen ke cost-of-delay kaam se, jise SAFe framework ne popular kiya: <b>score = cost of delay / job size</b>. Cost of delay ko aksar value + time criticality + risk reduction se score karte hain. Ooncha score pehle. Yeh baatcheet ka tool hai, oracle nahi: numbers team ke mote judgements hain.</p>
 <p><b>Step 3, sustainable tareeke se chukao.</b></p>
 <ul>
 <li><b>Boy-scout rule:</b> code chhuo to use thoda behtar chhodo.</li>
 <li><b>Features se jodo:</b> woh refactor karo jo agla feature aasaan banaye, aur product owner ko batao kyon.</li>
 <li><b>Capacity reserve karo:</b> <b>sprint ka 20%</b> jaisa fixed hissa ek popular option hai. Yeh heuristic hai, kanoon nahi; debt mein doobi team ko kuch time ke liye zyada chahiye, healthy team ko kam.</li>
-<li><b>Dedicated project:</b> bade items ke liye (purane framework se migrate karna, Day 24), saaf business case ke saath.</li>
+<li><b>Dedicated project:</b> bade items ke liye (purane framework se migrate karna, Day 22), saaf business case ke saath.</li>
 </ul>
 <p><b>Business ko bechna:</b> unki bhasha mein bolo: "<b>Yeh module quarter mein lagbhag do incidents karta hai aur wahan har feature ko ek hafta slow karta hai.</b>" "code ugly hai" mat kaho. Aur trade-offs ke baare mein honest raho: kabhi sahi faisla use <b>na</b> sudharna hota hai.</p>
 <p><b>When to use / when not:</b> woh debt chukao jo aane waale kaam ke raaste mein ho, risky ho, ya asli taklif de raha ho. Stable, kam badalne waale code ko ugly hone par bhi chhod do; use rewrite karne mein cost aur risk hai aur faayda nahi. Incremental steps ke bina bade "big rewrite" plans se bacho.</p>`
@@ -922,14 +922,16 @@ RECOMMENDATION: [one line]`,
 <p><b>Salary and notice period (no numbers here, keep it professional):</b></p>
 <ul>
 <li>Do your <b>market research</b> beforehand (similar roles in your city, level and domain) and decide your range and your minimum.</li>
+<li>In India, recruiters usually ask your <b>current CTC, expected CTC and notice period</b> in the first call, and sometimes ask for payslips later. Prepare your answers before that call.</li>
+<li>If they insist on a number: state your current CTC honestly and give your expected CTC as a <b>researched range for TL roles</b>, not just a percentage hike on your current pay.</li>
 <li>If asked early, you can say: "I would like to understand the role and scope first; I expect a package in line with TL roles in this market. What range have you budgeted?" Let them name a range first when you can.</li>
 <li>Think about the <b>whole package</b>: fixed pay, variable, benefits, learning budget, role scope, growth path, not only one number.</li>
-<li><b>Notice period:</b> state it honestly, including whether it is negotiable (for example buyout or early release) only if you have checked your own contract. Do not promise what you cannot deliver.</li>
+<li><b>Notice period:</b> state it honestly. 60 to 90 days is a common norm in India, and a <b>buyout</b> (early release by agreement) is sometimes an option; mention it only after you have checked your own contract. Do not promise what you cannot deliver.</li>
 <li>Be polite and consistent; never lie about your current pay or about other offers. Companies can and do verify.</li>
 </ul>
 <p><b>When to use / when not:</b> ask your questions at the end, and make them specific to the company. Do not ask about salary in the first minutes of a technical round; wait for the HR or offer stage unless they ask. Avoid questions you could answer from the website.</p>`,
         hi: `<p><b>Analogy:</b> अपने restaurant के लिए नया cook चुनना। तुम सिर्फ़ "cook कर सकते हो?" नहीं पूछते; <b>एक dish बनवाते हो</b>, देखते हो कि busy kitchen कैसे संभालते हैं, और कि team के साथ निभेगी या नहीं। TL के तौर पर दूसरों को interview करना भी ऐसा ही है: structured, fair और असली काम के बारे में।</p>
-<p><b>दूसरों को interview करना (संक्षेप में):</b></p>
+<p><b>दूसरों को interview करना (short में):</b></p>
 <ul>
 <li><b>पहले role और signals agree करो:</b> यहाँ सफल होने के लिए क्या दिखाना ज़रूरी है? हर candidate के लिए वही सवाल और scoring guide use करो, ताकि fair तुलना हो।</li>
 <li><b>असली काम को prefer करो:</b> साथ में कुछ code पढ़ो, design discuss करो, 30 मिनट pair करो। Puzzle tricks और trivia से कम पता चलता है।</li>
@@ -949,14 +951,16 @@ RECOMMENDATION: [one line]`,
 <p><b>Salary और notice period (यहाँ numbers नहीं, professional रखो):</b></p>
 <ul>
 <li>पहले <b>market research</b> करो (अपने शहर, level और domain में similar roles) और अपनी range और minimum तय करो।</li>
+<li>India में recruiters आम तौर पर पहली call में तुम्हारा <b>current CTC, expected CTC और notice period</b> पूछते हैं, और कभी-कभी बाद में payslips भी माँगते हैं। उस call से पहले अपने answers तैयार रखो।</li>
+<li>वो number पर अड़ जाएँ तो: current CTC honestly बताओ और expected CTC को <b>TL roles की researched range</b> की तरह दो, सिर्फ़ current pay पर कुछ percent hike की तरह नहीं।</li>
 <li>जल्दी पूछा जाए तो कह सकते हो: "मैं पहले role और scope समझना चाहूँगा; मैं इस market में TL roles के हिसाब का package expect करता हूँ। आपने कौन सी range budget की है?" जब हो सके, range पहले उन्हें बोलने दो।</li>
 <li><b>पूरे package</b> के बारे में सोचो: fixed pay, variable, benefits, learning budget, role scope, growth path, सिर्फ़ एक number नहीं।</li>
-<li><b>Notice period:</b> honestly बताओ, और negotiable है या नहीं (जैसे buyout या early release) ये तभी बताओ जब अपना contract check किया हो। जो deliver नहीं कर सकते उसका promise मत करो।</li>
+<li><b>Notice period:</b> honestly बताओ। India में 60 से 90 दिन आम norm है, और <b>buyout</b> (agreement से early release) कभी-कभी option होता है; इसे तभी बोलो जब अपना contract check कर लिया हो। जो deliver नहीं कर सकते उसका promise मत करो।</li>
 <li>Polite और consistent रहो; अपनी current pay या दूसरे offers के बारे में कभी झूठ मत बोलो। Companies verify कर सकती हैं और करती हैं।</li>
 </ul>
 <p><b>When to use / when not:</b> अपने सवाल end में पूछो, और उन्हें company के लिए specific रखो। Technical round के पहले मिनटों में salary मत पूछो; HR या offer stage का इंतज़ार करो जब तक वो खुद न पूछें। ऐसे सवाल मत पूछो जिनका जवाब website से मिल जाए।</p>`,
         hg: `<p><b>Analogy:</b> apne restaurant ke liye naya cook chunna. Tum sirf "cook kar sakte ho?" nahi poochhte; <b>ek dish banwate ho</b>, dekhte ho ki busy kitchen kaise sambhalte hain, aur ki team ke saath nibhegi ya nahi. TL ke taur par doosron ko interview karna bhi aisa hi hai: structured, fair aur asli kaam ke baare mein.</p>
-<p><b>Doosron ko interview karna (sankshep mein):</b></p>
+<p><b>Doosron ko interview karna (short mein):</b></p>
 <ul>
 <li><b>Pehle role aur signals agree karo:</b> yahan safal hone ke liye kya dikhana zaroori hai? Har candidate ke liye wahi sawaal aur scoring guide use karo, taaki fair tulna ho.</li>
 <li><b>Asli kaam ko prefer karo:</b> saath mein kuch code padho, design discuss karo, 30 minute pair karo. Puzzle tricks aur trivia se kam pata chalta hai.</li>
@@ -976,9 +980,11 @@ RECOMMENDATION: [one line]`,
 <p><b>Salary aur notice period (yahan numbers nahi, professional rakho):</b></p>
 <ul>
 <li>Pehle <b>market research</b> karo (apne shehar, level aur domain mein similar roles) aur apni range aur minimum tay karo.</li>
+<li>India mein recruiters aam taur par pehli call mein tumhara <b>current CTC, expected CTC aur notice period</b> poochhte hain, aur kabhi-kabhi baad mein payslips bhi maangte hain. Us call se pehle apne answers tayyar rakho.</li>
+<li>Woh number par ad jaayein to: current CTC honestly batao aur expected CTC ko <b>TL roles ki researched range</b> ki tarah do, sirf current pay par kuch percent hike ki tarah nahi.</li>
 <li>Jaldi poochha jaaye to keh sakte ho: "Main pehle role aur scope samajhna chahunga; main is market mein TL roles ke hisaab ka package expect karta hoon. Aapne kaun si range budget ki hai?" Jab ho sake, range pehle unhe bolne do.</li>
 <li><b>Poore package</b> ke baare mein socho: fixed pay, variable, benefits, learning budget, role scope, growth path, sirf ek number nahi.</li>
-<li><b>Notice period:</b> honestly batao, aur negotiable hai ya nahi (jaise buyout ya early release) yeh tabhi batao jab apna contract check kiya ho. Jo deliver nahi kar sakte uska promise mat karo.</li>
+<li><b>Notice period:</b> honestly batao. India mein 60 se 90 din aam norm hai, aur <b>buyout</b> (agreement se early release) kabhi-kabhi option hota hai; ise tabhi bolo jab apna contract check kar liya ho. Jo deliver nahi kar sakte uska promise mat karo.</li>
 <li>Polite aur consistent raho; apni current pay ya doosre offers ke baare mein kabhi jhooth mat bolo. Companies verify kar sakti hain aur karti hain.</li>
 </ul>
 <p><b>When to use / when not:</b> apne sawaal end mein poochho, aur unhe company ke liye specific rakho. Technical round ke pehle minuton mein salary mat poochho; HR ya offer stage ka intezaar karo jab tak woh khud na poochhein. Aise sawaal mat poochho jinka jawab website se mil jaaye.</p>`
@@ -1092,9 +1098,9 @@ Growth (honest):     [one area I am still developing and what I am doing about i
         {
           lang: "text",
           caption: {
-            en: "Sample — replace with your own (a shape with placeholders, not the learner's history)",
-            hi: "Sample — replace with your own (placeholders वाला shape, learner की history नहीं)",
-            hg: "Sample — replace with your own (placeholders wala shape, learner ki history nahi)"
+            en: "Sample (invented) — replace with your own",
+            hi: "Sample (invented) — अपने असली example से replace करो",
+            hg: "Sample (invented) — replace with your own"
           },
           src: `SAMPLE - REPLACE WITH YOUR OWN. Placeholders in brackets must become your real facts.
 
@@ -1309,10 +1315,10 @@ and I am working on it by [real step]."`,
       id: "why-hire-me-as-tl",
       depth: "short",
       q: "Why should we hire you as our Tech Lead?",
-      answer: "I bring eleven years of .NET depth and I already lead through reviews, mentoring and incidents. I will help your team ship reliably, and I am open about the skills I am still growing.",
+      answer: "I bring eleven years of .NET depth and I already lead through [reviews / mentoring / incidents: pick what is true]. I will help your team ship reliably, and I am open about skills I am still growing.",
       meaning: {
-        hi: "मेरे पास .NET की ग्यारह साल की depth है और मैं reviews, mentoring और incidents के ज़रिए पहले से lead करता हूँ। मैं आपकी team को reliably ship कराने में मदद करूँगा, और जो skills अभी सीख रहा हूँ उनके बारे में open हूँ।",
-        hg: "Mere paas .NET ki gyarah saal ki depth hai aur main reviews, mentoring aur incidents ke zariye pehle se lead karta hoon. Main aapki team ko reliably ship karane mein madad karunga, aur jo skills abhi seekh raha hoon unke baare mein open hoon."
+        hi: "मेरे पास .NET की ग्यारह साल की depth है और मैं [reviews / mentoring / incidents: जो सच है वही चुनो] के ज़रिए पहले से lead करता हूँ। मैं आपकी team को reliably ship कराने में मदद करूँगा, और जो skills अभी सीख रहा हूँ उनके बारे में open हूँ।",
+        hg: "Mere paas .NET ki gyarah saal ki depth hai aur main [reviews / mentoring / incidents: jo sach hai wahi chuno] ke zariye pehle se lead karta hoon. Main aapki team ko reliably ship karane mein madad karunga, aur jo skills abhi seekh raha hoon unke baare mein open hoon."
       },
       explain: {
         en: `<ul>
@@ -1474,11 +1480,11 @@ and I am working on it by [real step]."`,
 </ul>`,
         hi: `<ul>
 <li>Business की भाषा: incidents per quarter, release delay, onboarding time। हो सके तो refactors को आने वाले features से जोड़ो।</li>
-<li>Follow-up: "Management debt के लिए कोई time नहीं देता।" सबसे दर्दनाक item से शुरू करो, before और after numbers दिखाओ, और तब तक boy-scout rule use करो।</li>
+<li>Follow-up: "Management debt के लिए कोई time नहीं देता।" सबसे ज़्यादा pain देने वाले item से शुरू करो, before और after numbers दिखाओ, और तब तक boy-scout rule use करो।</li>
 </ul>`,
         hg: `<ul>
 <li>Business ki bhasha: incidents per quarter, release delay, onboarding time. Ho sake to refactors ko aane waale features se jodo.</li>
-<li>Follow-up: "Management debt ke liye koi time nahi deta." Sabse dardnaak item se shuru karo, before aur after numbers dikhao, aur tab tak boy-scout rule use karo.</li>
+<li>Follow-up: "Management debt ke liye koi time nahi deta." Sabse zyada pain dene wale item se shuru karo, before aur after numbers dikhao, aur tab tak boy-scout rule use karo.</li>
 </ul>`
       }
     },
@@ -1486,10 +1492,10 @@ and I am working on it by [real step]."`,
       id: "disagree-with-manager",
       depth: "detailed",
       q: "Tell me about a time you disagreed with your manager.",
-      answer: "I raise it privately with data and an alternative, listen to their constraints, and accept the decision if it is made. I escalate only for safety or ethics.",
+      answer: "On [project] I disagreed with my manager about [topic]. I raised it privately with data and an alternative, listened to their constraints, and [result]. I escalate mainly for safety or ethics.",
       meaning: {
-        hi: "मैं अकेले में data और एक alternative के साथ बात उठाता हूँ, उनकी constraints सुनता हूँ, और decision हो जाए तो मान लेता हूँ। Escalate सिर्फ़ safety या ethics पर करता हूँ।",
-        hg: "Main akele mein data aur ek alternative ke saath baat uthata hoon, unki constraints sunta hoon, aur decision ho jaaye to maan leta hoon. Escalate sirf safety ya ethics par karta hoon."
+        hi: "[Project] पर [topic] को लेकर मैं manager से सहमत नहीं था। मैंने अकेले में data और alternative के साथ बात उठाई, उनकी constraints सुनीं, और [result]। Escalate मुख्य रूप से safety या ethics पर करता हूँ।",
+        hg: "[Project] par [topic] ko lekar main manager se sehmat nahi tha. Maine akele mein data aur alternative ke saath baat uthayi, unki constraints sunin, aur [result]. Escalate mukhya roop se safety ya ethics par karta hoon."
       },
       explain: {
         en: `<ul>
@@ -1534,10 +1540,10 @@ and I am working on it by [real step]."`,
       id: "first-time-tl",
       depth: "detailed",
       q: "You have not been an official Tech Lead before. Why will you succeed?",
-      answer: "I have already led without the title: reviews, mentoring, releases and incidents. I am clear about what I am still learning, and I will ask for feedback early.",
+      answer: "I have led without the title through [your real examples: reviews / mentoring / releases / incidents]. I am clear about what I am still learning, and I will ask for feedback early.",
       meaning: {
-        hi: "मैं title के बिना पहले से lead कर चुका हूँ: reviews, mentoring, releases और incidents। मुझे साफ़ पता है कि मैं क्या सीख रहा हूँ, और मैं feedback जल्दी माँगूँगा।",
-        hg: "Main title ke bina pehle se lead kar chuka hoon: reviews, mentoring, releases aur incidents. Mujhe saaf pata hai ki main kya seekh raha hoon, aur main feedback jaldi maangunga."
+        hi: "मैं title के बिना [तुम्हारे असली examples: reviews / mentoring / releases / incidents] के ज़रिए lead कर चुका हूँ। मुझे साफ़ पता है कि मैं क्या सीख रहा हूँ, और मैं feedback जल्दी माँगूँगा।",
+        hg: "Main title ke bina [tumhare asli examples: reviews / mentoring / releases / incidents] ke zariye lead kar chuka hoon. Mujhe saaf pata hai ki main kya seekh raha hoon, aur main feedback jaldi maangunga."
       },
       explain: {
         en: `<ul>
@@ -1589,19 +1595,22 @@ and I am working on it by [real step]."`,
       },
       explain: {
         en: `<ul>
-<li>Research the market first and decide your range and minimum. Think of the whole package, not one number. Let them name a range first when possible.</li>
+<li>In India, recruiters usually ask current CTC, expected CTC and notice period in the first call, sometimes payslips later. Research the market first and decide your range and minimum; think of the whole package.</li>
 <li>Be honest about current pay and other offers; companies verify. Check your contract before promising an early release.</li>
-<li>Follow-up: "Can you join sooner?" Say only what you have confirmed.</li>
+<li>Follow-up: "We need a number." State your current CTC honestly and give your expected CTC as a researched range for TL roles, not just a percentage hike.</li>
+<li>Follow-up: "Can you join sooner?" 60 to 90 days is a common notice norm; a buyout is sometimes possible. Say only what you have confirmed.</li>
 </ul>`,
         hi: `<ul>
-<li>पहले market research करो और अपनी range और minimum तय करो। पूरे package के बारे में सोचो, एक number नहीं। हो सके तो range पहले उन्हें बोलने दो।</li>
+<li>India में recruiters आम तौर पर पहली call में current CTC, expected CTC और notice period पूछते हैं, कभी-कभी payslips भी। पहले market research करो और अपनी range और minimum तय करो; पूरे package के बारे में सोचो।</li>
 <li>Current pay और दूसरे offers के बारे में honest रहो; companies verify करती हैं। Early release का promise करने से पहले अपना contract check करो।</li>
-<li>Follow-up: "क्या जल्दी join कर सकते हो?" सिर्फ़ वही बोलो जो तुमने confirm किया हो।</li>
+<li>Follow-up: "हमें number चाहिए।" Current CTC honestly बताओ और expected CTC को TL roles की researched range की तरह दो, सिर्फ़ percent hike नहीं।</li>
+<li>Follow-up: "क्या जल्दी join कर सकते हो?" 60 से 90 दिन notice आम norm है; buyout कभी-कभी possible है। सिर्फ़ वही बोलो जो तुमने confirm किया हो।</li>
 </ul>`,
         hg: `<ul>
-<li>Pehle market research karo aur apni range aur minimum tay karo. Poore package ke baare mein socho, ek number nahi. Ho sake to range pehle unhe bolne do.</li>
+<li>India mein recruiters aam taur par pehli call mein current CTC, expected CTC aur notice period poochhte hain, kabhi-kabhi payslips bhi. Pehle market research karo aur apni range aur minimum tay karo; poore package ke baare mein socho.</li>
 <li>Current pay aur doosre offers ke baare mein honest raho; companies verify karti hain. Early release ka promise karne se pehle apna contract check karo.</li>
-<li>Follow-up: "Kya jaldi join kar sakte ho?" Sirf wahi bolo jo tumne confirm kiya ho.</li>
+<li>Follow-up: "Hamein number chahiye." Current CTC honestly batao aur expected CTC ko TL roles ki researched range ki tarah do, sirf percent hike nahi.</li>
+<li>Follow-up: "Kya jaldi join kar sakte ho?" 60 se 90 din notice aam norm hai; buyout kabhi-kabhi possible hai. Sirf wahi bolo jo tumne confirm kiya ho.</li>
 </ul>`
       }
     },
@@ -1678,7 +1687,9 @@ max: plain 4, with +2 scope per sprint 5`,
     },
     {
       id: "wsjf-ties",
-      src: `var items = new (string Name, int Value, int Time, int Risk, int Size)[]
+      src: `using System.Globalization;
+
+var items = new (string Name, int Value, int Time, int Risk, int Size)[]
 {
     ("Upgrade library", 5, 3, 2, 5),
     ("Fix flaky tests", 3, 1, 2, 3),
@@ -1695,7 +1706,7 @@ var ranked = items
     .ToList();
 
 for (int k = 0; k < ranked.Count; k++)
-    Console.WriteLine($"{k + 1}. {ranked[k].Name} {ranked[k].Score:0.00}");`,
+    Console.WriteLine($"{k + 1}. {ranked[k].Name} {ranked[k].Score.ToString("0.00", CultureInfo.InvariantCulture)}");`,
       answer: `1. Rotate secrets 4.00
 2. Split big class 3.25
 3. Add alert 2.00
