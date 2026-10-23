@@ -35,6 +35,7 @@ node tools/check-code.mjs        # all days (slow: one small project per snippet
 node tools/check-code.mjs --strict day14  # any SKIP (for example no SQL tooling) becomes exit code 1
 ```
 
+- The full `node --test` suite compiles real projects, so it takes about 10–15 minutes (per-test timeouts are 15 minutes for the dotnet and SQL integration tests). Run it alone: do not run it at the same time as `check-code.mjs`, because concurrent dotnet builds and LocalDB use slow each other down and can cause timeouts or "sql tooling unavailable" SKIPs.
 - `validate.mjs` checks the required fields in all three languages, the script of each language (Devanagari must appear in Hindi and must not appear in Hinglish), the Q&A counts (at least 8 short questions, 15–25 in total) and the minimum number of puzzles.
 - `check-code.mjs` builds every snippet marked `check: "compile"` or `"run"` and every puzzle (target `net9.0`). It compares the real output with the `expected` or `answer` text and prints PASS, FAIL or SKIP (SKIP means a NuGet restore failed). Build folders go to `tools/.snippets/`, which git ignores.
 

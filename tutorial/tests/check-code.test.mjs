@@ -6,7 +6,7 @@ import { collectSnippets, isRestoreFailure, normalize, csproj, makeLocalDbStarte
 
 const hasDotnet = spawnSync('dotnet', ['--version'], { encoding: 'utf8' }).status === 0;
 const runCli = (file) =>
-  spawnSync(process.execPath, ['tools/check-code.mjs', '--file', file], { encoding: 'utf8', timeout: 280000 });
+  spawnSync(process.execPath, ['tools/check-code.mjs', '--file', file], { encoding: 'utf8', timeout: 900000 });
 
 test('collect_snippets_keys_modes_and_skips_none', () => {
   const items = collectSnippets(loadDay('tests/fixtures/day-code.js'));
@@ -88,7 +88,7 @@ test('cli_fails_loudly_when_frameworks_missing', (t) => {
 // Start LocalDB first (a cold instance can time out the first probe); report why SQL tests are skipped.
 const sqlProbe = (() => {
   makeLocalDbStarter()();
-  const r = spawnSync('sqlcmd', ['-S', '(localdb)\\MSSQLLocalDB', '-b', '-Q', 'SELECT 1'], { encoding: 'utf8', timeout: 90000 });
+  const r = spawnSync('sqlcmd', ['-S', '(localdb)\\MSSQLLocalDB', '-b', '-Q', 'SELECT 1'], { encoding: 'utf8', timeout: 180000 });
   if (r.error?.code === 'ENOENT') return { ok: false, reason: 'sqlcmd not found' };
   if (r.error?.code === 'ETIMEDOUT') return { ok: false, reason: 'timeout' };
   if (r.status === 0) return { ok: true, reason: '' };
@@ -144,7 +144,7 @@ test('cli_sql_wrong_expected_and_bad_sql_fail', (t) => {
 
 test('cli_sql_unavailable_skips_and_strict_fails', () => {
   const env = { ...process.env, TL_SQLCMD: 'definitely-not-sqlcmd' };
-  const run = (...extra) => spawnSync(process.execPath, ['tools/check-code.mjs', '--file', 'tests/fixtures/day-sql.js', ...extra], { encoding: 'utf8', env, timeout: 60000 });
+  const run = (...extra) => spawnSync(process.execPath, ['tools/check-code.mjs', '--file', 'tests/fixtures/day-sql.js', ...extra], { encoding: 'utf8', env, timeout: 300000 });
   const a = run();
   assert.equal(a.status, 0, a.stdout + a.stderr);
   assert.match(a.stdout, /SKIP day96-puz-sum \(sql tooling unavailable\)/);
@@ -173,7 +173,7 @@ test('localdb_start_attempted_once_and_failure_ignored', async () => {
 
 // ---- JavaScript snippets ----
 const runJs = (file, env = {}) =>
-  spawnSync(process.execPath, ['tools/check-code.mjs', '--file', file], { encoding: 'utf8', timeout: 120000, env: { ...process.env, ...env } });
+  spawnSync(process.execPath, ['tools/check-code.mjs', '--file', file], { encoding: 'utf8', timeout: 900000, env: { ...process.env, ...env } });
 
 test('collect_snippets_javascript_lang', () => {
   const items = collectSnippets(loadDay('tests/fixtures/day-js.js'));
