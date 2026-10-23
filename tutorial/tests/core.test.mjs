@@ -9,7 +9,9 @@ const { parseDay, pick, filterDepth, nextUndoneDay, makeStore, contentPath, esti
 const cur = loadCurriculum('content/curriculum.js');
 const readyDays = cur.filter(c => c.ready).map(c => c.day);
 const lastReady = readyDays[readyDays.length - 1];
-const firstNotReady = cur.find(c => !c.ready).day;
+// All 30 days are ready, so the not-ready case uses a copy of the curriculum with the last day switched off.
+const notReadyCur = cur.map(c => (c.day === 30 ? { ...c, ready: false } : c));
+const firstNotReady = notReadyCur.find(c => !c.ready).day;
 
 test('parseDay_valid', () => {
   assert.deepEqual(parseDay('?d=3', cur), { ok: true, day: 3 });
@@ -24,7 +26,7 @@ test('parseDay_invalid', () => {
 });
 
 test('parseDay_not_ready', () => {
-  assert.deepEqual(parseDay('?d=' + firstNotReady, cur), { ok: false, reason: 'not-ready' });
+  assert.deepEqual(parseDay('?d=' + firstNotReady, notReadyCur), { ok: false, reason: 'not-ready' });
 });
 
 test('pick_language_and_fallback', () => {
