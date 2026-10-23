@@ -28,6 +28,6 @@ window.TL_CURRICULUM = [
   { day: 26, week: 4, title: { en: "Security + Performance", hi: "सिक्योरिटी + परफॉर्मेंस", hg: "Security + Performance" }, ready: true },
   { day: 27, week: 4, title: { en: "AI for .NET Developers", hi: "AI for .NET डेवलपर्स", hg: "AI for .NET Developers" }, ready: true },
   { day: 28, week: 4, title: { en: "TL Leadership & Behavioral", hi: "TL लीडरशिप और बिहेवियरल", hg: "TL Leadership & Behavioral" }, ready: true },
-  { day: 29, week: 4, title: { en: "Mock Interview 1", hi: "मॉक इंटरव्यू 1", hg: "Mock Interview 1" }, ready: false },
+  { day: 29, week: 4, title: { en: "Mock Interview 1", hi: "मॉक इंटरव्यू 1", hg: "Mock Interview 1" }, ready: true },
   { day: 30, week: 4, title: { en: "Mock Interview 2 + Final Cheat Sheet", hi: "मॉक इंटरव्यू 2 + फ़ाइनल चीट शीट", hg: "Mock Interview 2 + Final Cheat Sheet" }, ready: false }
 ];
