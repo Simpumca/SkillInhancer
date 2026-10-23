@@ -14,7 +14,7 @@ window.TL_DAY = {
 <li><b>System.Web pipeline:</b> <code>HttpModule</code>, <code>HttpHandler</code> and <code>Global.asax</code> events become middleware and endpoints. Modules run in the same order on the way in and out (per event); middleware unwinds in reverse.</li>
 <li><b>Config and state:</b> <code>web.config</code> becomes <code>appsettings.json</code> plus environment variables; <code>HttpContext.Current</code> has no direct equivalent (pass values explicitly; <code>IHttpContextAccessor</code> is a last resort); Session needs a deliberate choice.</li>
 <li><b>Support status:</b> .NET Framework 4.8 and 4.8.1 follow the lifecycle of the Windows version they run on (supported as a Windows component). Modern .NET 10 is LTS until November 2028. "Supported" is not the same as "getting new features".</li>
-<li><b>Migration:</b> assess first. Microsoft's docs now deprecate the .NET Upgrade Assistant in favour of GitHub Copilot app modernization. For big apps they recommend <b>incremental</b> migration (strangler fig): a new ASP.NET Core app in front, <b>YARP</b> proxying unmigrated routes to the old app, <b>System.Web adapters</b> sharing HttpContext, session and auth, libraries moved to .NET Standard 2.0 or multi-targeted.</li>
+<li><b>Migration:</b> assess first. Microsoft's docs now deprecate the .NET Upgrade Assistant in favour of GitHub Copilot upgrade agent. For big apps they recommend <b>incremental</b> migration (strangler fig): a new ASP.NET Core app in front, <b>YARP</b> proxying unmigrated routes to the old app, <b>System.Web adapters</b> sharing HttpContext, session and auth, libraries moved to .NET Standard 2.0 or multi-targeted.</li>
 <li><b>TL angle:</b> a migration is a business case plus a risk plan, not a technology wish. Show value early, keep the old app shippable, measure progress per route.</li>
 </ul>
 <p>Plan (about 20 minutes for Short plus about 2 hours for Detailed): Short mode, then Q&amp;A aloud, then the code sections (Web Forms, web.config, csproj and JSON are display-only; the modern C# compiles), then the six puzzles, which run offline.</p>`,
@@ -25,7 +25,7 @@ window.TL_DAY = {
 <li><b>System.Web pipeline:</b> <code>HttpModule</code>, <code>HttpHandler</code> और <code>Global.asax</code> events अब middleware और endpoints बन जाते हैं। Modules (हर event के लिए) आते और जाते वक़्त एक ही order में चलते हैं; middleware उल्टे order में वापस आता है।</li>
 <li><b>Config और state:</b> <code>web.config</code> की जगह <code>appsettings.json</code> और environment variables; <code>HttpContext.Current</code> का सीधा बदला नहीं है (values को explicitly pass करो; <code>IHttpContextAccessor</code> आख़िरी option है); Session के लिए सोच-समझकर choice करनी पड़ती है।</li>
 <li><b>Support status:</b> .NET Framework 4.8 और 4.8.1 उस Windows version के lifecycle को follow करते हैं जिस पर चल रहे हैं (Windows component की तरह supported)। Modern .NET 10 नवंबर 2028 तक LTS है। "Supported" का मतलब "नए features मिल रहे हैं" नहीं है।</li>
-<li><b>Migration:</b> पहले assess करो। Microsoft के docs में अब .NET Upgrade Assistant deprecated है और GitHub Copilot app modernization recommend होता है। बड़े apps के लिए वे <b>incremental</b> migration (strangler fig) बताते हैं: आगे नया ASP.NET Core app, <b>YARP</b> जो unmigrated routes को पुराने app पर भेजता है, <b>System.Web adapters</b> जो HttpContext, session और auth share कराते हैं, और libraries .NET Standard 2.0 पर या multi-target।</li>
+<li><b>Migration:</b> पहले assess करो। Microsoft के docs में अब .NET Upgrade Assistant deprecated है और GitHub Copilot upgrade agent recommend होता है। बड़े apps के लिए वे <b>incremental</b> migration (strangler fig) बताते हैं: आगे नया ASP.NET Core app, <b>YARP</b> जो unmigrated routes को पुराने app पर भेजता है, <b>System.Web adapters</b> जो HttpContext, session और auth share कराते हैं, और libraries .NET Standard 2.0 पर या multi-target।</li>
 <li><b>TL angle:</b> migration एक business case और risk plan है, सिर्फ़ technology की चाह नहीं। value जल्दी दिखाओ, पुराना app shippable रखो, progress route-by-route नापो।</li>
 </ul>
 <p>Plan (Short लगभग 20 मिनट, Detailed लगभग 2 घंटे अलग से): पहले Short mode, फिर Q&amp;A ज़ोर से, फिर code sections (Web Forms, web.config, csproj और JSON सिर्फ़ दिखाने के लिए हैं; modern C# compile होता है), फिर छह puzzles जो offline चलते हैं।</p>`,
@@ -36,7 +36,7 @@ window.TL_DAY = {
 <li><b>System.Web pipeline:</b> <code>HttpModule</code>, <code>HttpHandler</code> aur <code>Global.asax</code> events ab middleware aur endpoints ban jaate hain. Modules (har event ke liye) aate aur jaate waqt ek hi order mein chalte hain; middleware ulte order mein wapas aata hai.</li>
 <li><b>Config aur state:</b> <code>web.config</code> ki jagah <code>appsettings.json</code> aur environment variables; <code>HttpContext.Current</code> ka seedha badla nahi hai (values ko explicitly pass karo; <code>IHttpContextAccessor</code> aakhri option hai); Session ke liye soch-samajhkar choice karni padti hai.</li>
 <li><b>Support status:</b> .NET Framework 4.8 aur 4.8.1 us Windows version ke lifecycle ko follow karte hain jis par chal rahe hain (Windows component ki tarah supported). Modern .NET 10 November 2028 tak LTS hai. "Supported" ka matlab "naye features mil rahe hain" nahi hai.</li>
-<li><b>Migration:</b> pehle assess karo. Microsoft ke docs mein ab .NET Upgrade Assistant deprecated hai aur GitHub Copilot app modernization recommend hota hai. Bade apps ke liye woh <b>incremental</b> migration (strangler fig) batate hain: aage naya ASP.NET Core app, <b>YARP</b> jo unmigrated routes ko purane app par bhejta hai, <b>System.Web adapters</b> jo HttpContext, session aur auth share karate hain, aur libraries .NET Standard 2.0 par ya multi-target.</li>
+<li><b>Migration:</b> pehle assess karo. Microsoft ke docs mein ab .NET Upgrade Assistant deprecated hai aur GitHub Copilot upgrade agent recommend hota hai. Bade apps ke liye woh <b>incremental</b> migration (strangler fig) batate hain: aage naya ASP.NET Core app, <b>YARP</b> jo unmigrated routes ko purane app par bhejta hai, <b>System.Web adapters</b> jo HttpContext, session aur auth share karate hain, aur libraries .NET Standard 2.0 par ya multi-target.</li>
 <li><b>TL angle:</b> migration ek business case aur risk plan hai, sirf technology ki chaah nahi. Value jaldi dikhao, purana app shippable rakho, progress route-by-route naapo.</li>
 </ul>
 <p>Plan (Short lagbhag 20 minute, Detailed lagbhag 2 ghante alag se): pehle Short mode, phir Q&amp;A zor se, phir code sections (Web Forms, web.config, csproj aur JSON sirf dikhane ke liye hain; modern C# compile hota hai), phir chhe puzzles jo offline chalte hain.</p>`
@@ -92,9 +92,9 @@ window.TL_DAY = {
         en: `<p><b>Analogy:</b> a tiffin delivery chain. The old system (System.Web) had fixed <b>checkpoints</b> (events) on the route: "pickup", "check address", "deliver", "close". Each helper (module) signs up for the checkpoints it cares about. ASP.NET Core instead hands the tiffin through a <b>line of people</b> (middleware): each one acts, passes it on, and gets it back on the return trip.</p>
 <ul>
 <li><b>Web Forms page lifecycle:</b> PreInit, Init, (postback only: load ViewState), Load, control events (Button.Click), PreRender, Render, Unload. <b>Init and Unload run child-first; Load and PreRender run parent-first.</b> Pitfall: wrong place for code (for example data-binding on every Load, not only <code>!IsPostBack</code>).</li>
-<li><b>MVC 5 request lifecycle:</b> <code>UrlRoutingModule</code> (routing) picks a route, <code>MvcHandler</code> runs, the <b>controller factory</b> creates the controller, the <b>action invoker</b> runs filters (authentication, authorization, action, result, exception) around the action, the <code>ActionResult</code> executes, and the <b>view engine</b> renders the view.</li>
-<li><b>In ASP.NET Core:</b> routing selects an <b>endpoint</b>; middleware before it (HTTPS redirection, authentication, authorization) wraps it. The controller is created through DI, filters wrap the action, results execute (Razor view or JSON). Same ideas, different plumbing (Day 12).</li>
-<li><b>HttpModule/HttpHandler/Global.asax:</b> modules hook <code>HttpApplication</code> events (BeginRequest, AuthenticateRequest, EndRequest ...); for one event they run in the order listed in <code>web.config</code>, and <code>Global.asax</code> handlers run after the modules'. Handlers are the endpoint that finally produces the response. In Core, modules become <b>middleware</b> and handlers become <b>endpoints</b>.</li>
+<li><b>MVC 5 request lifecycle:</b> <code>UrlRoutingModule</code> (routing) picks a route and its <code>MvcRouteHandler</code> creates <code>MvcHandler</code>; the <b>controller factory</b> creates the controller; <code>ControllerActionInvoker</code> runs authentication and authorization filters, then <b>model binding</b>, then action filters around the action; the <code>ActionResult</code> executes (result filters around it, exception filters catch errors), and the <b>view engine</b> renders the view.</li>
+<li><b>In ASP.NET Core:</b> routing selects an <b>endpoint</b>; middleware before it (HTTPS redirection, authentication, authorization) wraps it. The <b>controller activator</b> creates the controller and resolves its constructor dependencies from DI (the controller class itself is not registered in DI unless you call <code>AddControllersAsServices</code>), filters wrap the action, results execute (Razor view or JSON). Same ideas, different plumbing (Day 12).</li>
+<li><b>HttpModule/HttpHandler/Global.asax:</b> modules hook <code>HttpApplication</code> events in this order: BeginRequest, AuthenticateRequest, AuthorizeRequest, ResolveRequestCache, AcquireRequestState, PreRequestHandlerExecute, (handler), PostRequestHandlerExecute, ReleaseRequestState, UpdateRequestCache, EndRequest. For one event they run in the order listed in <code>web.config</code>, and <code>Global.asax</code> handlers run after the modules'. Gotcha: Session is not available before AcquireRequestState. Handlers are the endpoint that finally produces the response. In Core, modules become <b>middleware</b> and handlers become <b>endpoints</b>.</li>
 <li><b>Big difference:</b> modules run in the same order on request and response (per event); middleware runs in <b>reverse</b> on the way back, so ordering rules are different (Puzzle 3).</li>
 <li><b>Config and state:</b> <code>web.config</code> + transforms become <code>appsettings.json</code>, <code>appsettings.{Environment}.json</code>, environment variables and secrets (Day 12, Day 20). <code>Application_Start</code> becomes <code>Program.cs</code>. <code>HttpContext.Current</code> is gone: pass what you need as parameters.</li>
 </ul>
@@ -102,9 +102,9 @@ window.TL_DAY = {
         hi: `<p><b>Analogy:</b> tiffin delivery chain। पुराने system (System.Web) में route पर fixed <b>checkpoints</b> (events) थे: "pickup", "address check", "deliver", "close"। हर helper (module) उन checkpoints के लिए sign up करता है जिनमें उसे दिलचस्पी है। ASP.NET Core इसके बजाय tiffin को <b>लोगों की line</b> (middleware) से गुज़ारता है: हर कोई अपना काम करता है, आगे बढ़ाता है, और वापसी में उसे फिर पाता है।</p>
 <ul>
 <li><b>Web Forms page lifecycle:</b> PreInit, Init, (सिर्फ़ postback में: ViewState load), Load, control events (Button.Click), PreRender, Render, Unload। <b>Init और Unload child-first चलते हैं; Load और PreRender parent-first।</b> गलती: code गलत जगह लगाना (जैसे data-binding हर Load पर, सिर्फ़ <code>!IsPostBack</code> में नहीं)।</li>
-<li><b>MVC 5 request lifecycle:</b> <code>UrlRoutingModule</code> (routing) route चुनता है, <code>MvcHandler</code> चलता है, <b>controller factory</b> controller बनाती है, <b>action invoker</b> action के आसपास filters चलाता है (authentication, authorization, action, result, exception), <code>ActionResult</code> execute होता है, और <b>view engine</b> view render करता है।</li>
-<li><b>ASP.NET Core में:</b> routing एक <b>endpoint</b> चुनता है; उससे पहले के middleware (HTTPS redirection, authentication, authorization) उसे घेरते हैं। Controller DI से बनता है, filters action को घेरते हैं, results execute होते हैं (Razor view या JSON)। वही ideas, अलग plumbing (Day 12)।</li>
-<li><b>HttpModule/HttpHandler/Global.asax:</b> modules <code>HttpApplication</code> events पर hook करते हैं (BeginRequest, AuthenticateRequest, EndRequest ...); एक event के लिए वे <code>web.config</code> में लिखे order में चलते हैं, और <code>Global.asax</code> के handlers modules के बाद चलते हैं। Handler वह endpoint है जो आख़िर में response बनाता है। Core में modules <b>middleware</b> बनते हैं और handlers <b>endpoints</b>।</li>
+<li><b>MVC 5 request lifecycle:</b> <code>UrlRoutingModule</code> (routing) route चुनता है और उसका <code>MvcRouteHandler</code> <code>MvcHandler</code> बनाता है; <b>controller factory</b> controller बनाती है; <code>ControllerActionInvoker</code> authentication और authorization filters चलाता है, फिर <b>model binding</b>, फिर action के आसपास action filters; <code>ActionResult</code> execute होता है (उसके आसपास result filters, errors को exception filters पकड़ते हैं), और <b>view engine</b> view render करता है।</li>
+<li><b>ASP.NET Core में:</b> routing एक <b>endpoint</b> चुनता है; उससे पहले के middleware (HTTPS redirection, authentication, authorization) उसे घेरते हैं। <b>Controller activator</b> controller बनाता है और उसकी constructor dependencies DI से resolve करता है (controller class खुद DI में register नहीं होती जब तक <code>AddControllersAsServices</code> न बुलाओ), filters action को घेरते हैं, results execute होते हैं (Razor view या JSON)। वही ideas, अलग plumbing (Day 12)।</li>
+<li><b>HttpModule/HttpHandler/Global.asax:</b> modules <code>HttpApplication</code> events पर इस order में hook करते हैं: BeginRequest, AuthenticateRequest, AuthorizeRequest, ResolveRequestCache, AcquireRequestState, PreRequestHandlerExecute, (handler), PostRequestHandlerExecute, ReleaseRequestState, UpdateRequestCache, EndRequest। एक event के लिए वे <code>web.config</code> में लिखे order में चलते हैं, और <code>Global.asax</code> के handlers modules के बाद चलते हैं। Gotcha: AcquireRequestState से पहले Session available नहीं होता। Handler वह endpoint है जो आख़िर में response बनाता है। Core में modules <b>middleware</b> बनते हैं और handlers <b>endpoints</b>।</li>
 <li><b>बड़ा फ़र्क:</b> modules request और response पर (हर event के लिए) एक ही order में चलते हैं; middleware वापसी में <b>उल्टा</b> चलता है, इसलिए ordering के rules अलग हैं (Puzzle 3)।</li>
 <li><b>Config और state:</b> <code>web.config</code> + transforms की जगह <code>appsettings.json</code>, <code>appsettings.{Environment}.json</code>, environment variables और secrets (Day 12, Day 20)। <code>Application_Start</code> की जगह <code>Program.cs</code>। <code>HttpContext.Current</code> गया: जो चाहिए उसे parameters से pass करो।</li>
 </ul>
@@ -112,9 +112,9 @@ window.TL_DAY = {
         hg: `<p><b>Analogy:</b> tiffin delivery chain. Purane system (System.Web) mein route par fixed <b>checkpoints</b> (events) the: "pickup", "address check", "deliver", "close". Har helper (module) un checkpoints ke liye sign up karta hai jinmein use dilchaspi hai. ASP.NET Core iske bajaye tiffin ko <b>logon ki line</b> (middleware) se guzaarta hai: har koi apna kaam karta hai, aage badhata hai, aur wapsi mein use phir paata hai.</p>
 <ul>
 <li><b>Web Forms page lifecycle:</b> PreInit, Init, (sirf postback mein: ViewState load), Load, control events (Button.Click), PreRender, Render, Unload. <b>Init aur Unload child-first chalte hain; Load aur PreRender parent-first.</b> Galti: code galat jagah lagana (jaise data-binding har Load par, sirf <code>!IsPostBack</code> mein nahi).</li>
-<li><b>MVC 5 request lifecycle:</b> <code>UrlRoutingModule</code> (routing) route chunta hai, <code>MvcHandler</code> chalta hai, <b>controller factory</b> controller banati hai, <b>action invoker</b> action ke aaspaas filters chalata hai (authentication, authorization, action, result, exception), <code>ActionResult</code> execute hota hai, aur <b>view engine</b> view render karta hai.</li>
-<li><b>ASP.NET Core mein:</b> routing ek <b>endpoint</b> chunta hai; usse pehle ke middleware (HTTPS redirection, authentication, authorization) use gherte hain. Controller DI se banta hai, filters action ko gherte hain, results execute hote hain (Razor view ya JSON). Wahi ideas, alag plumbing (Day 12).</li>
-<li><b>HttpModule/HttpHandler/Global.asax:</b> modules <code>HttpApplication</code> events par hook karte hain (BeginRequest, AuthenticateRequest, EndRequest ...); ek event ke liye woh <code>web.config</code> mein likhe order mein chalte hain, aur <code>Global.asax</code> ke handlers modules ke baad chalte hain. Handler woh endpoint hai jo aakhir mein response banata hai. Core mein modules <b>middleware</b> bante hain aur handlers <b>endpoints</b>.</li>
+<li><b>MVC 5 request lifecycle:</b> <code>UrlRoutingModule</code> (routing) route chunta hai aur uska <code>MvcRouteHandler</code> <code>MvcHandler</code> banata hai; <b>controller factory</b> controller banati hai; <code>ControllerActionInvoker</code> authentication aur authorization filters chalata hai, phir <b>model binding</b>, phir action ke aaspaas action filters; <code>ActionResult</code> execute hota hai (uske aaspaas result filters, errors ko exception filters pakadte hain), aur <b>view engine</b> view render karta hai.</li>
+<li><b>ASP.NET Core mein:</b> routing ek <b>endpoint</b> chunta hai; usse pehle ke middleware (HTTPS redirection, authentication, authorization) use gherte hain. <b>Controller activator</b> controller banata hai aur uski constructor dependencies DI se resolve karta hai (controller class khud DI mein register nahi hoti jab tak <code>AddControllersAsServices</code> na bulao), filters action ko gherte hain, results execute hote hain (Razor view ya JSON). Wahi ideas, alag plumbing (Day 12).</li>
+<li><b>HttpModule/HttpHandler/Global.asax:</b> modules <code>HttpApplication</code> events par is order mein hook karte hain: BeginRequest, AuthenticateRequest, AuthorizeRequest, ResolveRequestCache, AcquireRequestState, PreRequestHandlerExecute, (handler), PostRequestHandlerExecute, ReleaseRequestState, UpdateRequestCache, EndRequest. Ek event ke liye woh <code>web.config</code> mein likhe order mein chalte hain, aur <code>Global.asax</code> ke handlers modules ke baad chalte hain. Gotcha: AcquireRequestState se pehle Session available nahi hota. Handler woh endpoint hai jo aakhir mein response banata hai. Core mein modules <b>middleware</b> bante hain aur handlers <b>endpoints</b>.</li>
 <li><b>Bada farq:</b> modules request aur response par (har event ke liye) ek hi order mein chalte hain; middleware wapsi mein <b>ulta</b> chalta hai, isliye ordering ke rules alag hain (Puzzle 3).</li>
 <li><b>Config aur state:</b> <code>web.config</code> + transforms ki jagah <code>appsettings.json</code>, <code>appsettings.{Environment}.json</code>, environment variables aur secrets (Day 12, Day 20). <code>Application_Start</code> ki jagah <code>Program.cs</code>. <code>HttpContext.Current</code> gaya: jo chahiye use parameters se pass karo.</li>
 </ul>
@@ -134,7 +134,7 @@ window.TL_DAY = {
 <ul>
 <li><b>Support status (verify before quoting):</b> .NET Framework 4.8 and 4.8.1 follow the lifecycle of the Windows version they are installed on (a Windows component). Its lifecycle page lists no separate end date for 4.8.1: support follows the Windows version. Modern .NET 10 is <b>LTS</b> (released November 2025, supported until November 2028). Older .NET Framework 4.6.2 is listed as ending in January 2027.</li>
 <li><b>Why migrate anyway:</b> new features, performance, containers and Linux hosting, cloud cost, hiring, and security fixes in a platform that is actively developed. Not because "4.8 is dead": it is supported, just not where new work happens.</li>
-<li><b>Tooling now:</b> Microsoft's docs state that <b>.NET Upgrade Assistant is officially deprecated</b> and recommend the <b>GitHub Copilot app modernization</b> agent (Visual Studio). The tool names and features change quickly, so re-check the docs before an interview or a plan.</li>
+<li><b>Tooling now:</b> Microsoft's docs state that <b>.NET Upgrade Assistant is officially deprecated</b> and recommend the <b>GitHub Copilot upgrade</b> agent (earlier called app modernization; it works in Visual Studio, VS Code, Copilot CLI and GitHub.com). The tool names and features change quickly, so re-check the docs before an interview or a plan.</li>
 <li><b>Incremental path (Microsoft's recommendation for large apps):</b> put a new ASP.NET Core app in front, proxy unmigrated routes to the old app with <b>YARP</b>, share HttpContext, session and authentication using the <b>System.Web adapters</b> (<code>Microsoft.AspNetCore.SystemWebAdapters</code>), migrate libraries to <b>.NET Standard 2.0</b> or multi-target, then move routes one by one.</li>
 <li><b>Blockers to check first:</b> Web Forms, WCF server, Windows-only APIs (registry, WMI, COM), packages without .NET support, <code>System.Web</code> everywhere, EF6 edge features, heavy Session use, AppDomain/Remoting.</li>
 <li><b>TL view:</b> assessment, a risk-ranked route list, a rollback plan, a business case, and measurable milestones (percentage of traffic on the new app).</li>
@@ -144,7 +144,7 @@ window.TL_DAY = {
 <ul>
 <li><b>Support status (बोलने से पहले verify करो):</b> .NET Framework 4.8 और 4.8.1 उस Windows version के lifecycle को follow करते हैं जिस पर install हैं (Windows component)। Lifecycle page में 4.8.1 की अलग end date नहीं है: support Windows version के साथ चलता है। Modern .NET 10 <b>LTS</b> है (नवंबर 2025 में release, नवंबर 2028 तक supported)। पुराना .NET Framework 4.6.2 जनवरी 2027 में ख़त्म होने वाला listed है।</li>
 <li><b>फिर भी migrate क्यों:</b> नए features, performance, containers और Linux hosting, cloud cost, hiring, और ऐसे platform में security fixes जो actively develop हो रहा है। इसलिए नहीं कि "4.8 मर चुका है": वह supported है, बस नया काम वहाँ नहीं होता।</li>
-<li><b>अभी का tooling:</b> Microsoft के docs कहते हैं कि <b>.NET Upgrade Assistant officially deprecated है</b> और <b>GitHub Copilot app modernization</b> agent (Visual Studio) recommend करते हैं। Tool names और features जल्दी बदलते हैं, इसलिए interview या plan से पहले docs दोबारा देखो।</li>
+<li><b>अभी का tooling:</b> Microsoft के docs कहते हैं कि <b>.NET Upgrade Assistant officially deprecated है</b> और <b>GitHub Copilot upgrade</b> agent (पहले app modernization कहलाता था; Visual Studio, VS Code, Copilot CLI और GitHub.com में चलता है) recommend करते हैं। Tool names और features जल्दी बदलते हैं, इसलिए interview या plan से पहले docs दोबारा देखो।</li>
 <li><b>Incremental रास्ता (बड़े apps के लिए Microsoft की recommendation):</b> आगे नया ASP.NET Core app रखो, unmigrated routes को <b>YARP</b> से पुराने app पर proxy करो, <b>System.Web adapters</b> (<code>Microsoft.AspNetCore.SystemWebAdapters</code>) से HttpContext, session और authentication share करो, libraries को <b>.NET Standard 2.0</b> पर ले जाओ या multi-target करो, फिर routes एक-एक करके शिफ़्ट करो।</li>
 <li><b>पहले blockers देखो:</b> Web Forms, WCF server, Windows-only APIs (registry, WMI, COM), बिना .NET support वाले packages, हर जगह <code>System.Web</code>, EF6 के edge features, भारी Session use, AppDomain/Remoting।</li>
 <li><b>TL view:</b> assessment, risk के हिसाब से route list, rollback plan, business case, और नापने लायक milestones (नए app पर traffic का percentage)।</li>
@@ -154,7 +154,7 @@ window.TL_DAY = {
 <ul>
 <li><b>Support status (bolne se pehle verify karo):</b> .NET Framework 4.8 aur 4.8.1 us Windows version ke lifecycle ko follow karte hain jis par install hain (Windows component). Lifecycle page mein 4.8.1 ki alag end date nahi hai: support Windows version ke saath chalta hai. Modern .NET 10 <b>LTS</b> hai (November 2025 mein release, November 2028 tak supported). Purana .NET Framework 4.6.2 January 2027 mein khatam hone wala listed hai.</li>
 <li><b>Phir bhi migrate kyun:</b> naye features, performance, containers aur Linux hosting, cloud cost, hiring, aur aise platform mein security fixes jo actively develop ho raha hai. Isliye nahi ki "4.8 mar chuka hai": woh supported hai, bas naya kaam wahan nahi hota.</li>
-<li><b>Abhi ka tooling:</b> Microsoft ke docs kehte hain ki <b>.NET Upgrade Assistant officially deprecated hai</b> aur <b>GitHub Copilot app modernization</b> agent (Visual Studio) recommend karte hain. Tool names aur features jaldi badalte hain, isliye interview ya plan se pehle docs dobara dekho.</li>
+<li><b>Abhi ka tooling:</b> Microsoft ke docs kehte hain ki <b>.NET Upgrade Assistant officially deprecated hai</b> aur <b>GitHub Copilot upgrade</b> agent (pehle app modernization kehlata tha; Visual Studio, VS Code, Copilot CLI aur GitHub.com mein chalta hai) recommend karte hain. Tool names aur features jaldi badalte hain, isliye interview ya plan se pehle docs dobara dekho.</li>
 <li><b>Incremental raasta (bade apps ke liye Microsoft ki recommendation):</b> aage naya ASP.NET Core app rakho, unmigrated routes ko <b>YARP</b> se purane app par proxy karo, <b>System.Web adapters</b> (<code>Microsoft.AspNetCore.SystemWebAdapters</code>) se HttpContext, session aur authentication share karo, libraries ko <b>.NET Standard 2.0</b> par le jao ya multi-target karo, phir routes ek-ek karke shift karo.</li>
 <li><b>Pehle blockers dekho:</b> Web Forms, WCF server, Windows-only APIs (registry, WMI, COM), bina .NET support wale packages, har jagah <code>System.Web</code>, EF6 ke edge features, bhaari Session use, AppDomain/Remoting.</li>
 <li><b>TL view:</b> assessment, risk ke hisaab se route list, rollback plan, business case, aur naapne layak milestones (naye app par traffic ka percentage).</li>
@@ -171,29 +171,29 @@ window.TL_DAY = {
         hg: "Web Forms lifecycle, ViewState aur postback code mein, aur modern replacement"
       },
       body: {
-        en: `<p><b>Analogy:</b> a school attendance register that is photocopied and sent home with every student. <b>ViewState</b> is that copy: the server puts the page's control values into a hidden field <code>__VIEWSTATE</code> (encoded and usually protected), the browser carries it, and the next <b>postback</b> brings it back so the server can rebuild the page as it was. It works, but the copy grows with the page.</p>
+        en: `<p><b>Analogy:</b> a school attendance register that is photocopied and sent home with every student. <b>ViewState</b> is that copy: the server puts the page's control values into a hidden field <code>__VIEWSTATE</code> (Base64-encoded and MAC-signed, optionally encrypted), the browser carries it, and the next <b>postback</b> brings it back so the server can rebuild the page as it was. It works, but the copy grows with the page.</p>
 <ul>
 <li><b>Order to remember:</b> <code>PreInit</code> (dynamic controls, themes), <code>Init</code> (child-first), then on a postback ViewState and form data are loaded, <code>Load</code> (parent-first), <b>control events</b> such as <code>Button.Click</code>, <code>PreRender</code>, ViewState is saved, <code>Render</code>, <code>Unload</code>.</li>
 <li><b>Postback:</b> the page posts back to itself. <code>IsPostBack</code> is false on the first GET and true afterwards. Typical bug: binding a grid on every <code>Page_Load</code> and wiping the user's edits before the click event runs.</li>
-<li><b>ViewState cost:</b> it travels down in every response and up in every postback. Turn it off where you do not need it (<code>EnableViewState="false"</code>), keep big objects out of it, and bind in the right event. Treat it as a size-tax, not a security feature.</li>
+<li><b>ViewState cost:</b> it travels down in every response and up in every postback. Turn it off where you do not need it (<code>EnableViewState="false"</code>), but then that control must be bound again on every request (in <code>Init</code>, or in <code>Page_Load</code> without the <code>!IsPostBack</code> guard); keep big objects out of it. Treat it as a size-tax, not a security feature.</li>
 <li><b>Why it does not exist in ASP.NET Core:</b> the framework dropped the server-control model. State now lives in the database, a cache, a cookie or the client. A Razor Page handler or an endpoint reads the request, loads fresh data and renders. Blazor has components with their own state and is the nearest "stateful UI" option.</li>
 <li><b>Trade-off:</b> stateless handlers are simpler to scale and test, but you now write the "remember what the user typed" logic yourself (model binding and validation).</li>
 </ul>
 <p><b>When to use the modern shape:</b> every new page or API. <b>When not to touch:</b> a working Web Forms page that nobody changes; wrap it behind the proxy and leave it until its turn.</p>`,
-        hi: `<p><b>Analogy:</b> school की attendance register जिसकी photocopy हर student के साथ घर भेजी जाती है। <b>ViewState</b> वही copy है: server page के control values को hidden field <code>__VIEWSTATE</code> में रखता है (encoded और आम तौर पर protected), browser उसे ले जाता है, और अगला <b>postback</b> उसे वापस लाता है ताकि server page को वैसा ही बना सके। चलता है, पर page के साथ वह copy बढ़ती जाती है।</p>
+        hi: `<p><b>Analogy:</b> school की attendance register जिसकी photocopy हर student के साथ घर भेजी जाती है। <b>ViewState</b> वही copy है: server page के control values को hidden field <code>__VIEWSTATE</code> में रखता है (Base64-encoded और MAC से signed, चाहो तो encrypted), browser उसे ले जाता है, और अगला <b>postback</b> उसे वापस लाता है ताकि server page को वैसा ही बना सके। चलता है, पर page के साथ वह copy बढ़ती जाती है।</p>
 <ul>
 <li><b>याद रखने का order:</b> <code>PreInit</code> (dynamic controls, themes), <code>Init</code> (child-first), फिर postback में ViewState और form data load होते हैं, <code>Load</code> (parent-first), <b>control events</b> जैसे <code>Button.Click</code>, <code>PreRender</code>, ViewState save होता है, <code>Render</code>, <code>Unload</code>।</li>
 <li><b>Postback:</b> page अपने आप पर ही post करता है। पहले GET पर <code>IsPostBack</code> false और उसके बाद true। आम bug: हर <code>Page_Load</code> पर grid bind करना और click event चलने से पहले user के edits मिटा देना।</li>
-<li><b>ViewState का cost:</b> वह हर response में नीचे आता है और हर postback में ऊपर जाता है। जहाँ ज़रूरत नहीं वहाँ बंद करो (<code>EnableViewState="false"</code>), बड़े objects उसमें मत रखो, और सही event में bind करो। इसे size-tax समझो, security feature नहीं।</li>
+<li><b>ViewState का cost:</b> वह हर response में नीचे आता है और हर postback में ऊपर जाता है। जहाँ ज़रूरत नहीं वहाँ बंद करो (<code>EnableViewState="false"</code>), पर तब उस control को हर request पर दोबारा bind करना पड़ता है (<code>Init</code> में, या बिना <code>!IsPostBack</code> guard वाले <code>Page_Load</code> में); बड़े objects उसमें मत रखो। इसे size-tax समझो, security feature नहीं।</li>
 <li><b>ASP.NET Core में क्यों नहीं है:</b> framework ने server-control model छोड़ दिया। State अब database, cache, cookie या client में रहती है। Razor Page handler या endpoint request पढ़ता है, ताज़ा data load करता है और render करता है। Blazor में components अपनी state रखते हैं और वह "stateful UI" के सबसे पास का option है।</li>
 <li><b>Trade-off:</b> stateless handlers scale और test करने में simple हैं, पर "user ने क्या type किया था" याद रखने वाला logic अब तुम खुद लिखते हो (model binding और validation)।</li>
 </ul>
 <p><b>Modern shape कब use करें:</b> हर नया page या API। <b>कब न छेड़ें:</b> चलता हुआ Web Forms page जिसे कोई नहीं बदलता; उसे proxy के पीछे रखो और उसकी बारी आने तक छोड़ दो।</p>`,
-        hg: `<p><b>Analogy:</b> school ki attendance register jiski photocopy har student ke saath ghar bheji jaati hai. <b>ViewState</b> wahi copy hai: server page ke control values ko hidden field <code>__VIEWSTATE</code> mein rakhta hai (encoded aur aam taur par protected), browser use le jaata hai, aur agla <b>postback</b> use wapas laata hai taaki server page ko waisa hi bana sake. Chalta hai, par page ke saath woh copy badhti jaati hai.</p>
+        hg: `<p><b>Analogy:</b> school ki attendance register jiski photocopy har student ke saath ghar bheji jaati hai. <b>ViewState</b> wahi copy hai: server page ke control values ko hidden field <code>__VIEWSTATE</code> mein rakhta hai (Base64-encoded aur MAC se signed, chaho to encrypted), browser use le jaata hai, aur agla <b>postback</b> use wapas laata hai taaki server page ko waisa hi bana sake. Chalta hai, par page ke saath woh copy badhti jaati hai.</p>
 <ul>
 <li><b>Yaad rakhne ka order:</b> <code>PreInit</code> (dynamic controls, themes), <code>Init</code> (child-first), phir postback mein ViewState aur form data load hote hain, <code>Load</code> (parent-first), <b>control events</b> jaise <code>Button.Click</code>, <code>PreRender</code>, ViewState save hota hai, <code>Render</code>, <code>Unload</code>.</li>
 <li><b>Postback:</b> page apne aap par hi post karta hai. Pehle GET par <code>IsPostBack</code> false aur uske baad true. Aam bug: har <code>Page_Load</code> par grid bind karna aur click event chalne se pehle user ke edits mita dena.</li>
-<li><b>ViewState ka cost:</b> woh har response mein neeche aata hai aur har postback mein upar jaata hai. Jahan zaroorat nahi wahan band karo (<code>EnableViewState="false"</code>), bade objects usmein mat rakho, aur sahi event mein bind karo. Ise size-tax samjho, security feature nahi.</li>
+<li><b>ViewState ka cost:</b> woh har response mein neeche aata hai aur har postback mein upar jaata hai. Jahan zaroorat nahi wahan band karo (<code>EnableViewState="false"</code>), par tab us control ko har request par dobara bind karna padta hai (<code>Init</code> mein, ya bina <code>!IsPostBack</code> guard wale <code>Page_Load</code> mein); bade objects usmein mat rakho. Ise size-tax samjho, security feature nahi.</li>
 <li><b>ASP.NET Core mein kyun nahi hai:</b> framework ne server-control model chhod diya. State ab database, cache, cookie ya client mein rehti hai. Razor Page handler ya endpoint request padhta hai, taaza data load karta hai aur render karta hai. Blazor mein components apni state rakhte hain aur woh "stateful UI" ke sabse paas ka option hai.</li>
 <li><b>Trade-off:</b> stateless handlers scale aur test karne mein simple hain, par "user ne kya type kiya tha" yaad rakhne wala logic ab tum khud likhte ho (model binding aur validation).</li>
 </ul>
@@ -203,29 +203,37 @@ window.TL_DAY = {
         {
           lang: "csharp",
           caption: {
-            en: "Web Forms code-behind (.NET Framework, System.Web; display-only): bind once, keep ViewState small",
-            hi: "Web Forms code-behind (.NET Framework, System.Web; सिर्फ़ दिखाने के लिए): एक बार bind, ViewState छोटा",
-            hg: "Web Forms code-behind (.NET Framework, System.Web; sirf dikhane ke liye): ek baar bind, ViewState chhota"
+            en: "Web Forms code-behind (.NET Framework, System.Web; display-only): ViewState on, bind once on the first GET",
+            hi: "Web Forms code-behind (.NET Framework, System.Web; सिर्फ़ दिखाने के लिए): ViewState on, पहले GET पर एक बार bind",
+            hg: "Web Forms code-behind (.NET Framework, System.Web; sirf dikhane ke liye): ViewState on, pehle GET par ek baar bind"
           },
           check: "none",
           src: `// Orders.aspx.cs — classic Web Forms (System.Web). Not compilable on modern .NET.
-// Orders.aspx: <asp:GridView ID="Grid" runat="server" EnableViewState="false" />
-//              <asp:Button ID="ShipButton" runat="server" Text="Ship" OnClick="ShipButton_Click" />
+// Orders.aspx: <asp:GridView ID="Grid" runat="server" DataKeyNames="Id" AutoGenerateColumns="False"
+//                            OnRowCommand="Grid_RowCommand">
+//                <Columns>
+//                  <asp:BoundField DataField="Id" HeaderText="Order" />
+//                  <asp:ButtonField CommandName="Ship" Text="Ship" ButtonType="Button" />
+//                </Columns>
+//              </asp:GridView>
+// ViewState stays ON for the grid (the default), so it restores itself on a postback.
 public partial class Orders : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)               // first GET only; a postback restores state itself
+        if (!IsPostBack)               // first GET only: ViewState brings the grid back on a postback
         {
             BindGrid();
         }
     }
 
-    protected void ShipButton_Click(object sender, EventArgs e)   // control event: after Load
+    protected void Grid_RowCommand(object sender, GridViewCommandEventArgs e)   // control event: after Load
     {
-        var id = int.Parse(Request.Form["orderId"]);
+        if (e.CommandName != "Ship") return;
+        var rowIndex = int.Parse((string)e.CommandArgument);   // a ButtonField sends the row index
+        var id = (int)Grid.DataKeys[rowIndex].Value;           // the key comes from DataKeyNames
         new OrderService().MarkShipped(id);
-        BindGrid();                    // rebind because the grid has ViewState turned off
+        BindGrid();                    // rebind so the user sees the new data
     }
 
     private void BindGrid()
@@ -678,7 +686,7 @@ public sealed class PriceService : IPriceService
       body: {
         en: `<p><b>Analogy:</b> a strangler fig tree grows around an old tree, takes over branch by branch, and one day the old tree is gone. In software, the <b>new app stands in front</b>; each route that is ready is served by the new app, everything else is forwarded to the old one.</p>
 <ul>
-<li><b>Step 0 - assess:</b> list projects, target frameworks, NuGet packages without .NET support, <code>System.Web</code> use, Windows-only APIs, WCF, Web Forms pages, EF6 usage, traffic per route, test coverage. Tools (Visual Studio's GitHub Copilot app modernization, analyzers such as the platform-compatibility analyzer) help, but a human still ranks risk.</li>
+<li><b>Step 0 - assess:</b> list projects, target frameworks, NuGet packages without .NET support, <code>System.Web</code> use, Windows-only APIs, WCF, Web Forms pages, EF6 usage, traffic per route, test coverage. Tools (the GitHub Copilot upgrade agent, analyzers such as the platform-compatibility analyzer) help, but a human still ranks risk.</li>
 <li><b>Step 1 - tidy:</b> update packages, move to SDK-style project files and <code>PackageReference</code>, fix warnings. Microsoft's guide asks for this before upgrading libraries.</li>
 <li><b>Step 2 - libraries:</b> move shared class libraries to <b>.NET Standard 2.0</b> if possible, otherwise <b>multi-target</b> (for example <code>net48;net10.0</code>). Upgrade in <b>post-order</b>: leaf libraries first, the web app last. Use <code>#if NETFRAMEWORK</code> only for the small differences.</li>
 <li><b>Step 3 - proxy:</b> create the ASP.NET Core app, forward everything to the old app with <b>YARP</b> as a catch-all with the lowest priority, then add real routes in the new app. Add the System.Web adapters to both apps (separate packages for the Framework side and the Core side) to share session and authentication; shared libraries use <code>Microsoft.AspNetCore.SystemWebAdapters</code> to keep using <code>HttpContext</code>.</li>
@@ -688,21 +696,21 @@ public sealed class PriceService : IPriceService
 <p><b>When to use the proxy approach:</b> big or live apps. <b>When not:</b> a small app with few dependencies may be faster to migrate in place; the extra proxy and adapters are overhead you do not need.</p>`,
         hi: `<p><b>Analogy:</b> strangler fig पेड़ पुराने पेड़ के चारों ओर बढ़ता है, डाली-डाली कब्ज़ा करता है, और एक दिन पुराना पेड़ ख़त्म हो जाता है। Software में <b>नया app आगे खड़ा होता है</b>; जो route तैयार है उसे नया app serve करता है, बाकी सब पुराने को forward होता है।</p>
 <ul>
-<li><b>Step 0 - assess:</b> projects, target frameworks, बिना .NET support वाले NuGet packages, <code>System.Web</code> use, Windows-only APIs, WCF, Web Forms pages, EF6 use, route-wise traffic और test coverage की list बनाओ। Tools (Visual Studio का GitHub Copilot app modernization, platform-compatibility analyzer जैसे analyzers) मदद करते हैं, पर risk को rank इंसान ही करता है।</li>
+<li><b>Step 0 - assess:</b> projects, target frameworks, बिना .NET support वाले NuGet packages, <code>System.Web</code> use, Windows-only APIs, WCF, Web Forms pages, EF6 use, route-wise traffic और test coverage की list बनाओ। Tools (GitHub Copilot upgrade agent, platform-compatibility analyzer जैसे analyzers) मदद करते हैं, पर risk को rank इंसान ही करता है।</li>
 <li><b>Step 1 - tidy:</b> packages update करो, SDK-style project files और <code>PackageReference</code> पर जाओ, warnings ठीक करो। Microsoft की guide libraries upgrade करने से पहले यह माँगती है।</li>
 <li><b>Step 2 - libraries:</b> shared class libraries को हो सके तो <b>.NET Standard 2.0</b> पर ले जाओ, वरना <b>multi-target</b> करो (जैसे <code>net48;net10.0</code>)। <b>Post-order</b> में upgrade करो: पहले leaf libraries, web app आख़िर में। <code>#if NETFRAMEWORK</code> सिर्फ़ छोटे फ़र्क़ों के लिए।</li>
 <li><b>Step 3 - proxy:</b> ASP.NET Core app बनाओ, <b>YARP</b> से सब कुछ सबसे कम priority वाले catch-all से पुराने app को forward करो, फिर नए app में असली routes जोड़ो। Session और authentication share करने के लिए दोनों apps में System.Web adapters जोड़ो (Framework side और Core side के अलग packages); shared libraries <code>HttpContext</code> use करते रहने के लिए <code>Microsoft.AspNetCore.SystemWebAdapters</code> use करती हैं।</li>
-<li><b>Windows-only APIs:</b> <b>Windows Compatibility Pack</b> (<code>Microsoft.Windows.Compatibility</code>) कई APIs (registry, WMI, event log) modern .NET में लाता है, पर सिर्फ़ Windows पर। Linux चाहिए तो विकल्प खोजो या platform checks लगाओ।</li>
+<li><b>Windows-only APIs:</b> <b>Windows Compatibility Pack</b> (<code>Microsoft.Windows.Compatibility</code>) कई APIs (registry, WMI, event log) modern .NET में लाता है, पर सिर्फ़ Windows पर। Linux चाहिए तो alternatives खोजो या platform checks लगाओ।</li>
 <li><b>Done का मतलब:</b> पुराने app पर कोई traffic नहीं आता और उसे बंद किया जा सकता है। Proxy की routing table से नापो।</li>
 </ul>
 <p><b>Proxy approach कब:</b> बड़े या live apps। <b>कब नहीं:</b> कम dependencies वाला छोटा app in place migrate करना तेज़ हो सकता है; अलग proxy और adapters ऐसा overhead है जिसकी ज़रूरत नहीं।</p>`,
         hg: `<p><b>Analogy:</b> strangler fig ped purane ped ke chaaron or badhta hai, daali-daali kabza karta hai, aur ek din purana ped khatam ho jaata hai. Software mein <b>naya app aage khada hota hai</b>; jo route taiyaar hai use naya app serve karta hai, baaki sab purane ko forward hota hai.</p>
 <ul>
-<li><b>Step 0 - assess:</b> projects, target frameworks, bina .NET support wale NuGet packages, <code>System.Web</code> use, Windows-only APIs, WCF, Web Forms pages, EF6 use, route-wise traffic aur test coverage ki list banao. Tools (Visual Studio ka GitHub Copilot app modernization, platform-compatibility analyzer jaise analyzers) madad karte hain, par risk ko rank insaan hi karta hai.</li>
+<li><b>Step 0 - assess:</b> projects, target frameworks, bina .NET support wale NuGet packages, <code>System.Web</code> use, Windows-only APIs, WCF, Web Forms pages, EF6 use, route-wise traffic aur test coverage ki list banao. Tools (GitHub Copilot upgrade agent, platform-compatibility analyzer jaise analyzers) madad karte hain, par risk ko rank insaan hi karta hai.</li>
 <li><b>Step 1 - tidy:</b> packages update karo, SDK-style project files aur <code>PackageReference</code> par jao, warnings theek karo. Microsoft ki guide libraries upgrade karne se pehle yeh maangti hai.</li>
 <li><b>Step 2 - libraries:</b> shared class libraries ko ho sake to <b>.NET Standard 2.0</b> par le jao, warna <b>multi-target</b> karo (jaise <code>net48;net10.0</code>). <b>Post-order</b> mein upgrade karo: pehle leaf libraries, web app aakhir mein. <code>#if NETFRAMEWORK</code> sirf chhote farqon ke liye.</li>
 <li><b>Step 3 - proxy:</b> ASP.NET Core app banao, <b>YARP</b> se sab kuch sabse kam priority wale catch-all se purane app ko forward karo, phir naye app mein asli routes jodo. Session aur authentication share karne ke liye dono apps mein System.Web adapters jodo (Framework side aur Core side ke alag packages); shared libraries <code>HttpContext</code> use karte rehne ke liye <code>Microsoft.AspNetCore.SystemWebAdapters</code> use karti hain.</li>
-<li><b>Windows-only APIs:</b> <b>Windows Compatibility Pack</b> (<code>Microsoft.Windows.Compatibility</code>) kai APIs (registry, WMI, event log) modern .NET mein laata hai, par sirf Windows par. Linux chahiye to vikalp khojo ya platform checks lagao.</li>
+<li><b>Windows-only APIs:</b> <b>Windows Compatibility Pack</b> (<code>Microsoft.Windows.Compatibility</code>) kai APIs (registry, WMI, event log) modern .NET mein laata hai, par sirf Windows par. Linux chahiye to alternatives khojo ya platform checks lagao.</li>
 <li><b>Done ka matlab:</b> purane app par koi traffic nahi aata aur use band kiya ja sakta hai. Proxy ki routing table se naapo.</li>
 </ul>
 <p><b>Proxy approach kab:</b> bade ya live apps. <b>Kab nahi:</b> kam dependencies wala chhota app in place migrate karna tez ho sakta hai; alag proxy aur adapters aisa overhead hain jiski zaroorat nahi.</p>`
@@ -724,13 +732,13 @@ public sealed class PriceService : IPriceService
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <!-- no System.Web reference: use the adapters so HttpContext code still compiles -->
+  <ItemGroup>
+    <!-- Do not reference System.Web directly. The adapters package supplies the System.Web types
+         (on net48 it forwards to the real System.Web), so HttpContext code compiles for both targets. -->
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.*" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.*" />
   </ItemGroup>
 </Project>`
         },
@@ -758,8 +766,10 @@ builder.Services.AddReverseProxy();                         // YARP forwarder se
 builder.Services.AddSystemWebAdapters()
     .AddRemoteAppClient(options =>
     {
-        options.RemoteAppUrl = new Uri(builder.Configuration["RemoteAppUri"] ?? "https://legacy.internal");
-        options.ApiKey = builder.Configuration["RemoteAppApiKey"] ?? "";   // a GUID string from user-secrets / Key Vault
+        options.RemoteAppUrl = new Uri(builder.Configuration["RemoteAppUri"]
+            ?? throw new InvalidOperationException("RemoteAppUri is not configured"));
+        options.ApiKey = builder.Configuration["RemoteAppApiKey"]    // must be a GUID string: user-secrets / Key Vault
+            ?? throw new InvalidOperationException("RemoteAppApiKey is not configured");   // fail fast
     });
 // Remote session and remote authentication are added with further extension methods when you need them.
 
@@ -794,16 +804,19 @@ app.Run();`
       explain: {
         en: `<ul>
 <li>Typical use: <code>PreInit</code> for dynamic controls and master pages, <code>Init</code> to set up controls, <code>Load</code> for data (guarded by <code>!IsPostBack</code>), <code>PreRender</code> for final changes, <code>Unload</code> for cleanup.</li>
+<li>Other events you can name: <code>InitComplete</code> (after Init), <code>PreLoad</code> (after ViewState and postback data are loaded, before Load), <code>LoadComplete</code> (after control events), <code>PreRenderComplete</code> and <code>SaveStateComplete</code> (just before Render). ViewState is loaded before <code>PreLoad</code>, so values you set in <code>PreInit</code> may be overwritten.</li>
 <li>Classic bug: rebinding data in <code>Page_Load</code> on every request wipes the user's input before the button's click event runs.</li>
 <li>Follow-up: "Where do you add controls dynamically?" In <code>PreInit</code> or <code>Init</code>, and re-create them on every request so their ViewState and events line up.</li>
 </ul>`,
         hi: `<ul>
 <li>आम use: <code>PreInit</code> dynamic controls और master pages के लिए, <code>Init</code> controls set up करने के लिए, <code>Load</code> data के लिए (<code>!IsPostBack</code> से guarded), <code>PreRender</code> आख़िरी बदलावों के लिए, <code>Unload</code> cleanup के लिए।</li>
+<li>और events जो नाम से बोल सको: <code>InitComplete</code> (Init के बाद), <code>PreLoad</code> (ViewState और postback data load होने के बाद, Load से पहले), <code>LoadComplete</code> (control events के बाद), <code>PreRenderComplete</code> और <code>SaveStateComplete</code> (Render से ठीक पहले)। ViewState <code>PreLoad</code> से पहले load होता है, इसलिए <code>PreInit</code> में set की values overwrite हो सकती हैं।</li>
 <li>Classic bug: हर request पर <code>Page_Load</code> में data rebind करने से button का click event चलने से पहले user का input मिट जाता है।</li>
 <li>Follow-up: "Dynamic controls कहाँ add करते हो?" <code>PreInit</code> या <code>Init</code> में, और हर request पर दोबारा बनाओ ताकि उनका ViewState और events ठीक बैठें।</li>
 </ul>`,
         hg: `<ul>
 <li>Aam use: <code>PreInit</code> dynamic controls aur master pages ke liye, <code>Init</code> controls set up karne ke liye, <code>Load</code> data ke liye (<code>!IsPostBack</code> se guarded), <code>PreRender</code> aakhri badlaavon ke liye, <code>Unload</code> cleanup ke liye.</li>
+<li>Aur events jo naam se bol sako: <code>InitComplete</code> (Init ke baad), <code>PreLoad</code> (ViewState aur postback data load hone ke baad, Load se pehle), <code>LoadComplete</code> (control events ke baad), <code>PreRenderComplete</code> aur <code>SaveStateComplete</code> (Render se theek pehle). ViewState <code>PreLoad</code> se pehle load hota hai, isliye <code>PreInit</code> mein set ki values overwrite ho sakti hain.</li>
 <li>Classic bug: har request par <code>Page_Load</code> mein data rebind karne se button ka click event chalne se pehle user ka input mit jaata hai.</li>
 <li>Follow-up: "Dynamic controls kahan add karte ho?" <code>PreInit</code> ya <code>Init</code> mein, aur har request par dobara banao taaki unka ViewState aur events theek baithein.</li>
 </ul>`
@@ -820,19 +833,25 @@ app.Run();`
       },
       explain: {
         en: `<ul>
-<li>ViewState grows with the page and travels in both directions on every postback (Puzzle 2). It is encoded and can be protected with a MAC, but it is not a place for secrets.</li>
+<li>ViewState grows with the page and travels in both directions on every postback (Puzzle 2). It is Base64-encoded, not encrypted by default (encryption is optional), and the MAC check has been mandatory since .NET Framework 4.5.2, so it is not a place for secrets.</li>
 <li>Replacement: handlers load fresh data per request (Razor Pages, controllers, minimal APIs). For stateful UI, Blazor components keep their own state.</li>
 <li>Follow-up: "How would you migrate a ViewState-heavy page?" Move the state to a model or a cache, rebuild the page as a Razor Page or Blazor component, and leave the old page behind the proxy until then.</li>
+<li>Follow-up: "ViewState versus ControlState versus Session?" ViewState is per page and lives in the hidden field (it can be disabled per control); ControlState is the small state a control needs to work at all and is kept even when ViewState is off; Session is kept on the server per user across pages.</li>
+<li>TL security point: ViewState is signed (and optionally encrypted) with the <code>machineKey</code>. If that key leaks, for example from a public repository or a copied sample config, attackers can craft ViewState that the server deserializes, which can lead to remote code execution. Keep the key out of source control, rotate it if exposed, and treat ViewState-heavy pages as one more reason to migrate.</li>
 </ul>`,
         hi: `<ul>
-<li>ViewState page के साथ बढ़ता है और हर postback में दोनों दिशाओं में जाता है (Puzzle 2)। वह encoded होता है और MAC से protected हो सकता है, पर secrets रखने की जगह नहीं है।</li>
+<li>ViewState page के साथ बढ़ता है और हर postback में दोनों दिशाओं में जाता है (Puzzle 2)। वह Base64-encoded होता है, default में encrypted नहीं (encryption optional है), और MAC check .NET Framework 4.5.2 से mandatory है, इसलिए secrets रखने की जगह नहीं है।</li>
 <li>Replacement: handlers हर request पर ताज़ा data load करते हैं (Razor Pages, controllers, minimal APIs)। Stateful UI के लिए Blazor components अपनी state रखते हैं।</li>
 <li>Follow-up: "ViewState-heavy page कैसे migrate करोगे?" State को model या cache में ले जाओ, page को Razor Page या Blazor component में दोबारा बनाओ, और तब तक पुराने page को proxy के पीछे रहने दो।</li>
+<li>Follow-up: "ViewState बनाम ControlState बनाम Session?" ViewState per page है और hidden field में रहता है (control-wise बंद किया जा सकता है); ControlState वह छोटी state है जो control को चलने के लिए चाहिए और ViewState बंद होने पर भी रहती है; Session server पर per user, pages के पार रहता है।</li>
+<li>TL security point: ViewState <code>machineKey</code> से signed (और चाहो तो encrypted) होता है। अगर वह key leak हो जाए, जैसे public repository या copy किए sample config से, तो attackers ऐसा ViewState बना सकते हैं जिसे server deserialize करे, जिससे remote code execution तक हो सकता है। Key को source control से बाहर रखो, exposed हो तो rotate करो, और ViewState-heavy pages को migrate करने की एक और वजह समझो।</li>
 </ul>`,
         hg: `<ul>
-<li>ViewState page ke saath badhta hai aur har postback mein dono dishaon mein jaata hai (Puzzle 2). Woh encoded hota hai aur MAC se protected ho sakta hai, par secrets rakhne ki jagah nahi hai.</li>
+<li>ViewState page ke saath badhta hai aur har postback mein dono dishaon mein jaata hai (Puzzle 2). Woh Base64-encoded hota hai, default mein encrypted nahi (encryption optional hai), aur MAC check .NET Framework 4.5.2 se mandatory hai, isliye secrets rakhne ki jagah nahi hai.</li>
 <li>Replacement: handlers har request par taaza data load karte hain (Razor Pages, controllers, minimal APIs). Stateful UI ke liye Blazor components apni state rakhte hain.</li>
 <li>Follow-up: "ViewState-heavy page kaise migrate karoge?" State ko model ya cache mein le jao, page ko Razor Page ya Blazor component mein dobara banao, aur tab tak purane page ko proxy ke peechhe rehne do.</li>
+<li>Follow-up: "ViewState vs ControlState vs Session?" ViewState per page hai aur hidden field mein rehta hai (control-wise band kiya ja sakta hai); ControlState woh chhoti state hai jo control ko chalne ke liye chahiye aur ViewState band hone par bhi rehti hai; Session server par per user, pages ke paar rehta hai.</li>
+<li>TL security point: ViewState <code>machineKey</code> se signed (aur chaho to encrypted) hota hai. Agar woh key leak ho jaye, jaise public repository ya copy kiye sample config se, to attackers aisa ViewState bana sakte hain jise server deserialize kare, jisse remote code execution tak ho sakta hai. Key ko source control se bahar rakho, exposed ho to rotate karo, aur ViewState-heavy pages ko migrate karne ki ek aur wajah samjho.</li>
 </ul>`
       }
     },
@@ -840,24 +859,24 @@ app.Run();`
       id: "mvc5-lifecycle",
       depth: "short",
       q: "Walk me through the ASP.NET MVC 5 request lifecycle.",
-      answer: "Routing picks the route, MvcHandler runs, the controller factory creates the controller, the action invoker runs filters and the action, then the result executes and the view engine renders the view.",
+      answer: "Routing picks the route, MvcRouteHandler creates MvcHandler, the controller factory creates the controller, the action invoker runs filters, model binding and the action, then the result executes and the view engine renders.",
       meaning: {
-        hi: "Routing route चुनती है, MvcHandler चलता है, controller factory controller बनाती है, action invoker filters और action चलाता है, फिर result execute होता है और view engine view render करता है।",
-        hg: "Routing route chunti hai, MvcHandler chalta hai, controller factory controller banati hai, action invoker filters aur action chalata hai, phir result execute hota hai aur view engine view render karta hai."
+        hi: "Routing route चुनती है, MvcRouteHandler MvcHandler बनाता है, controller factory controller बनाती है, action invoker filters, model binding और action चलाता है, फिर result execute होता है और view engine render करता है।",
+        hg: "Routing route chunti hai, MvcRouteHandler MvcHandler banata hai, controller factory controller banati hai, action invoker filters, model binding aur action chalata hai, phir result execute hota hai aur view engine render karta hai."
       },
       explain: {
         en: `<ul>
-<li>Filter order in MVC 5: authentication, authorization, action filters (before and after the action), result filters, with exception filters catching errors.</li>
+<li>Order in MVC 5: authentication filters, authorization filters, model binding, action filters (before and after the action), result filters; exception filters catch errors.</li>
 <li>In ASP.NET Core the same ideas run as an <b>endpoint</b> after the middleware before it; the controller comes from DI and filters can be async and injected (Day 12).</li>
 <li>Follow-up: "Where would you put cross-cutting logging?" Middleware if it must see every request; an action filter if it needs action arguments or the model state.</li>
 </ul>`,
         hi: `<ul>
-<li>MVC 5 में filter order: authentication, authorization, action filters (action से पहले और बाद), result filters, और exception filters errors पकड़ते हैं।</li>
+<li>MVC 5 में order: authentication filters, authorization filters, model binding, action filters (action से पहले और बाद), result filters; exception filters errors पकड़ते हैं।</li>
 <li>ASP.NET Core में वही ideas उससे पहले के middleware के बाद एक <b>endpoint</b> की तरह चलते हैं; controller DI से आता है और filters async और injected हो सकते हैं (Day 12)।</li>
 <li>Follow-up: "Cross-cutting logging कहाँ रखोगे?" हर request देखनी हो तो middleware में; action arguments या model state चाहिए तो action filter में।</li>
 </ul>`,
         hg: `<ul>
-<li>MVC 5 mein filter order: authentication, authorization, action filters (action se pehle aur baad), result filters, aur exception filters errors pakadte hain.</li>
+<li>MVC 5 mein order: authentication filters, authorization filters, model binding, action filters (action se pehle aur baad), result filters; exception filters errors pakadte hain.</li>
 <li>ASP.NET Core mein wahi ideas usse pehle ke middleware ke baad ek <b>endpoint</b> ki tarah chalte hain; controller DI se aata hai aur filters async aur injected ho sakte hain (Day 12).</li>
 <li>Follow-up: "Cross-cutting logging kahan rakhoge?" Har request dekhni ho to middleware mein; action arguments ya model state chahiye to action filter mein.</li>
 </ul>`
@@ -934,12 +953,12 @@ app.Run();`
 </ul>`,
         hi: `<ul>
 <li>Microsoft की migration guide incremental migration को Strangler Fig pattern का implementation कहती है और बड़े apps और production में रहने वाले apps के लिए उसे पसंद करती है।</li>
-<li>Big-bang के risks: नए features पर लंबा freeze, देर से आने वाला डरावना cut-over, और ऐसा rewrite जो छुपा हुआ behaviour छोड़ दे। Incremental यह अस्थायी complexity से बदलता है (दो apps, एक proxy, shared session और auth)।</li>
+<li>Big-bang के risks: नए features पर लंबा freeze, देर से आने वाला डरावना cut-over, और ऐसा rewrite जो छुपा हुआ behaviour छोड़ दे। Incremental यह temporary complexity से बदलता है (दो apps, एक proxy, shared session और auth)।</li>
 <li>Follow-up: "अगर app छोटा है?" तो in-place upgrade सस्ता है; ऐसा proxy मत बनाओ जिसे दो हफ़्ते में फेंकना है।</li>
 </ul>`,
         hg: `<ul>
 <li>Microsoft ki migration guide incremental migration ko Strangler Fig pattern ka implementation kehti hai aur bade apps aur production mein rehne wale apps ke liye use pasand karti hai.</li>
-<li>Big-bang ke risks: naye features par lamba freeze, der se aane wala daravna cut-over, aur aisa rewrite jo chhupa hua behaviour chhod de. Incremental yeh asthaayi complexity se badalta hai (do apps, ek proxy, shared session aur auth).</li>
+<li>Big-bang ke risks: naye features par lamba freeze, der se aane wala daravna cut-over, aur aisa rewrite jo chhupa hua behaviour chhod de. Incremental yeh temporary complexity se badalta hai (do apps, ek proxy, shared session aur auth).</li>
 <li>Follow-up: "Agar app chhota hai?" To in-place upgrade sasta hai; aisa proxy mat banao jise do hafte mein phenkna hai.</li>
 </ul>`
       }
@@ -983,17 +1002,17 @@ app.Run();`
       explain: {
         en: `<ul>
 <li>Order: assessment, tidy-up (packages, SDK-style projects), libraries in post-order, then proxy and route-by-route migration, and finally switching off the old app.</li>
-<li>Tooling: Microsoft now points to GitHub Copilot app modernization (the .NET Upgrade Assistant is officially deprecated). Use it to assess and automate steps; review its output like any other pull request (Day 21).</li>
+<li>Tooling: Microsoft now points to GitHub Copilot upgrade agent (the .NET Upgrade Assistant is officially deprecated). Use it to assess and automate steps; review its output like any other pull request (Day 21).</li>
 <li>Follow-up: "How do you show progress?" Percentage of traffic and number of routes on the new app, defect rate, and deploy frequency (Puzzle 5).</li>
 </ul>`,
         hi: `<ul>
 <li>Order: assessment, tidy-up (packages, SDK-style projects), libraries post-order में, फिर proxy और route-by-route migration, और आख़िर में पुराने app को बंद करना।</li>
-<li>Tooling: Microsoft अब GitHub Copilot app modernization की तरफ़ इशारा करता है (.NET Upgrade Assistant officially deprecated है)। उसे assess करने और steps automate करने के लिए use करो; उसका output किसी भी दूसरे pull request की तरह review करो (Day 21)।</li>
+<li>Tooling: Microsoft अब GitHub Copilot upgrade agent की तरफ़ इशारा करता है (.NET Upgrade Assistant officially deprecated है)। उसे assess करने और steps automate करने के लिए use करो; उसका output किसी भी दूसरे pull request की तरह review करो (Day 21)।</li>
 <li>Follow-up: "Progress कैसे दिखाते हो?" नए app पर traffic का percentage और routes की गिनती, defect rate, और deploy frequency (Puzzle 5)।</li>
 </ul>`,
         hg: `<ul>
 <li>Order: assessment, tidy-up (packages, SDK-style projects), libraries post-order mein, phir proxy aur route-by-route migration, aur aakhir mein purane app ko band karna.</li>
-<li>Tooling: Microsoft ab GitHub Copilot app modernization ki taraf ishara karta hai (.NET Upgrade Assistant officially deprecated hai). Use assess karne aur steps automate karne ke liye use karo; uska output kisi bhi dusre pull request ki tarah review karo (Day 21).</li>
+<li>Tooling: Microsoft ab GitHub Copilot upgrade agent ki taraf ishara karta hai (.NET Upgrade Assistant officially deprecated hai). Use assess karne aur steps automate karne ke liye use karo; uska output kisi bhi dusre pull request ki tarah review karo (Day 21).</li>
 <li>Follow-up: "Progress kaise dikhate ho?" Naye app par traffic ka percentage aur routes ki ginti, defect rate, aur deploy frequency (Puzzle 5).</li>
 </ul>`
       }
@@ -1016,12 +1035,12 @@ app.Run();`
         hi: `<ul>
 <li>Config transforms (<code>web.Release.config</code>) अब <code>appsettings.{Environment}.json</code> या pipeline द्वारा set किए environment variables बनते हैं (Day 21)। Providers layered होते हैं और आख़िरी वाला जीतता है (Day 12)।</li>
 <li>Secrets: development में user-secrets, Azure में Key Vault या managed identity (Day 20), source control में नहीं।</li>
-<li>Follow-up: "Migration के दौरान दोनों apps को वही setting चाहिए।" सच का एक ही source रखो (shared store या environment variable) और दोनों से पढ़ो, values copy मत करो।</li>
+<li>Follow-up: "Migration के दौरान दोनों apps को वही setting चाहिए।" single source of truth रखो (shared store या environment variable) और दोनों से पढ़ो, values copy मत करो।</li>
 </ul>`,
         hg: `<ul>
 <li>Config transforms (<code>web.Release.config</code>) ab <code>appsettings.{Environment}.json</code> ya pipeline dwara set kiye environment variables bante hain (Day 21). Providers layered hote hain aur aakhri wala jeetta hai (Day 12).</li>
 <li>Secrets: development mein user-secrets, Azure mein Key Vault ya managed identity (Day 20), source control mein nahi.</li>
-<li>Follow-up: "Migration ke dauraan dono apps ko wahi setting chahiye." Sach ka ek hi source rakho (shared store ya environment variable) aur dono se padho, values copy mat karo.</li>
+<li>Follow-up: "Migration ke dauraan dono apps ko wahi setting chahiye." Single source of truth rakho (shared store ya environment variable) aur dono se padho, values copy mat karo.</li>
 </ul>`
       }
     },
@@ -1137,10 +1156,10 @@ app.Run();`
       id: "upgrade-assistant-status",
       depth: "detailed",
       q: "What tools would you use to migrate, and what is the status of .NET Upgrade Assistant?",
-      answer: "Microsoft's docs say .NET Upgrade Assistant is officially deprecated and point to GitHub Copilot app modernization. I would use that to assess and automate steps, with analyzers and human review.",
+      answer: "Microsoft's docs say .NET Upgrade Assistant is officially deprecated and point to GitHub Copilot upgrade agent. I would use that to assess and automate steps, with analyzers and human review.",
       meaning: {
-        hi: "Microsoft के docs कहते हैं .NET Upgrade Assistant officially deprecated है और GitHub Copilot app modernization की तरफ़ इशारा करते हैं। मैं उसे assess करने और steps automate करने में use करूँगा, analyzers और human review के साथ।",
-        hg: "Microsoft ke docs kehte hain .NET Upgrade Assistant officially deprecated hai aur GitHub Copilot app modernization ki taraf ishara karte hain. Main use assess karne aur steps automate karne mein use karunga, analyzers aur human review ke saath."
+        hi: "Microsoft के docs कहते हैं .NET Upgrade Assistant officially deprecated है और GitHub Copilot upgrade agent की तरफ़ इशारा करते हैं। मैं उसे assess करने और steps automate करने में use करूँगा, analyzers और human review के साथ।",
+        hg: "Microsoft ke docs kehte hain .NET Upgrade Assistant officially deprecated hai aur GitHub Copilot upgrade agent ki taraf ishara karte hain. Main use assess karne aur steps automate karne mein use karunga, analyzers aur human review ke saath."
       },
       explain: {
         en: `<ul>
@@ -1172,17 +1191,17 @@ app.Run();`
       explain: {
         en: `<ul>
 <li>Microsoft's incremental migration guide asks to upgrade supporting libraries to .NET Standard 2.0 if possible; otherwise target .NET 8 or later alongside the .NET Framework target. Upgrade in post-order: leaf libraries first.</li>
-<li>.NET Standard is a frozen API set (2.0 is the practical level for .NET Framework 4.6.1+), so new libraries on modern .NET usually target a current .NET version instead. For migration bridges it is still useful.</li>
+<li>.NET Standard is a frozen API set (.NET Framework never supports .NET Standard 2.1; 2.0 is the practical level, and Microsoft recommends .NET Framework 4.7.2 or later for it), so new libraries on modern .NET usually target a current .NET version instead. For migration bridges it is still useful.</li>
 <li>Follow-up: "What about packages without .NET Standard support?" Look for updated versions or replacements early in the assessment; they are a common blocker.</li>
 </ul>`,
         hi: `<ul>
 <li>Microsoft की incremental migration guide कहती है कि supporting libraries को हो सके तो .NET Standard 2.0 पर upgrade करो; वरना .NET Framework target के साथ .NET 8 या उसके बाद target करो। Post-order में upgrade करो: पहले leaf libraries।</li>
-<li>.NET Standard एक frozen API set है (.NET Framework 4.6.1+ के लिए 2.0 practical level है), इसलिए modern .NET पर नई libraries आम तौर पर current .NET version को target करती हैं। Migration bridges के लिए वह अब भी काम का है।</li>
+<li>.NET Standard एक frozen API set है (.NET Framework कभी .NET Standard 2.1 support नहीं करता; 2.0 practical level है, और Microsoft उसके लिए .NET Framework 4.7.2 या उसके बाद recommend करता है), इसलिए modern .NET पर नई libraries आम तौर पर current .NET version को target करती हैं। Migration bridges के लिए वह अब भी काम का है।</li>
 <li>Follow-up: "जिन packages में .NET Standard support नहीं है?" Assessment में ही updated versions या replacements खोजो; यह आम blocker है।</li>
 </ul>`,
         hg: `<ul>
 <li>Microsoft ki incremental migration guide kehti hai ki supporting libraries ko ho sake to .NET Standard 2.0 par upgrade karo; warna .NET Framework target ke saath .NET 8 ya uske baad target karo. Post-order mein upgrade karo: pehle leaf libraries.</li>
-<li>.NET Standard ek frozen API set hai (.NET Framework 4.6.1+ ke liye 2.0 practical level hai), isliye modern .NET par nayi libraries aam taur par current .NET version ko target karti hain. Migration bridges ke liye woh ab bhi kaam ka hai.</li>
+<li>.NET Standard ek frozen API set hai (.NET Framework kabhi .NET Standard 2.1 support nahi karta; 2.0 practical level hai, aur Microsoft uske liye .NET Framework 4.7.2 ya uske baad recommend karta hai), isliye modern .NET par nayi libraries aam taur par current .NET version ko target karti hain. Migration bridges ke liye woh ab bhi kaam ka hai.</li>
 <li>Follow-up: "Jin packages mein .NET Standard support nahi hai?" Assessment mein hi updated versions ya replacements khojo; yeh aam blocker hai.</li>
 </ul>`
       }
@@ -1285,12 +1304,12 @@ app.Run();`
 </ul>`,
         hi: `<ul>
 <li>Microsoft का migration overview System.Web dependencies, पुराने packages, legacy build tools, session, auth, logging, caching और configuration को मुश्किल हिस्से बताता है।</li>
-<li>इन पर भी नज़र रखो: AppDomain और .NET Remoting, <code>BinaryFormatter</code> का use (security कारणों से modern .NET पर supported नहीं है और .NET 9 से exception फेंकता है), GAC पर निर्भर assemblies, और custom build scripts।</li>
+<li>इन पर भी नज़र रखो: AppDomain और .NET Remoting, <code>BinaryFormatter</code> का use (security कारणों से modern .NET पर supported नहीं है और .NET 9 से exception फेंकता है), GAC पर depend करने वाली assemblies, और custom build scripts।</li>
 <li>Follow-up: "इन्हें जल्दी कैसे ढूँढते हो?" Assessment tool चलाओ, <code>System.Web</code> और <code>HttpContext.Current</code> के लिए grep करो, NuGet packages की .NET support के साथ list बनाओ, और एक low-risk route end to end spike करो।</li>
 </ul>`,
         hg: `<ul>
 <li>Microsoft ka migration overview System.Web dependencies, purane packages, legacy build tools, session, auth, logging, caching aur configuration ko mushkil hisse batata hai.</li>
-<li>In par bhi nazar rakho: AppDomain aur .NET Remoting, <code>BinaryFormatter</code> ka use (security kaarano se modern .NET par supported nahi hai aur .NET 9 se exception phenkta hai), GAC par nirbhar assemblies, aur custom build scripts.</li>
+<li>In par bhi nazar rakho: AppDomain aur .NET Remoting, <code>BinaryFormatter</code> ka use (security kaarano se modern .NET par supported nahi hai aur .NET 9 se exception phenkta hai), GAC par depend karne wali assemblies, aur custom build scripts.</li>
 <li>Follow-up: "Inhe jaldi kaise dhoondte ho?" Assessment tool chalao, <code>System.Web</code> aur <code>HttpContext.Current</code> ke liye grep karo, NuGet packages ki .NET support ke saath list banao, aur ek low-risk route end to end spike karo.</li>
 </ul>`
       }
@@ -1308,17 +1327,17 @@ app.Run();`
         en: `<ul>
 <li>Razor Pages feel closest to <code>.aspx</code> plus code-behind: one page, one model, handlers like <code>OnGet</code> and <code>OnPost</code>, but no ViewState and no control tree.</li>
 <li>Blazor has components, events and state, so it is familiar to Web Forms developers, but the programming model is different (component lifecycle, rendering modes). Choose by team skills and UI needs; a React/Next.js front end with an API is another valid choice (Day 24).</li>
-<li>Follow-up: "Can we migrate Web Forms automatically?" Tools can help with parts, but plan a rebuild of each page; keep Web Forms pages running in the old app until they are replaced.</li>
+<li>Follow-up: "Can we migrate Web Forms automatically?" The GitHub Copilot upgrade agent now lists a Web Forms-to-Blazor scenario; treat its output as a starting point and review it like any pull request. Plan a rebuild of each page, and keep Web Forms pages running in the old app until they are replaced.</li>
 </ul>`,
         hi: `<ul>
 <li>Razor Pages <code>.aspx</code> और code-behind के सबसे पास लगते हैं: एक page, एक model, <code>OnGet</code> और <code>OnPost</code> जैसे handlers, पर ViewState और control tree नहीं।</li>
 <li>Blazor में components, events और state हैं, इसलिए Web Forms developers को familiar लगता है, पर programming model अलग है (component lifecycle, rendering modes)। Team skills और UI ज़रूरतों से चुनो; API के साथ React/Next.js front end भी एक सही choice है (Day 24)।</li>
-<li>Follow-up: "क्या Web Forms अपने आप migrate हो सकता है?" Tools कुछ हिस्सों में मदद कर सकते हैं, पर हर page का rebuild plan करो; Web Forms pages को बदले जाने तक पुराने app में चलने दो।</li>
+<li>Follow-up: "क्या Web Forms अपने आप migrate हो सकता है?" GitHub Copilot upgrade agent अब Web Forms-to-Blazor scenario देता है; उसके output को starting point समझो और किसी भी pull request की तरह review करो। हर page का rebuild plan करो, और Web Forms pages को बदले जाने तक पुराने app में चलने दो।</li>
 </ul>`,
         hg: `<ul>
 <li>Razor Pages <code>.aspx</code> aur code-behind ke sabse paas lagte hain: ek page, ek model, <code>OnGet</code> aur <code>OnPost</code> jaise handlers, par ViewState aur control tree nahi.</li>
 <li>Blazor mein components, events aur state hain, isliye Web Forms developers ko familiar lagta hai, par programming model alag hai (component lifecycle, rendering modes). Team skills aur UI zaroorton se chuno; API ke saath React/Next.js front end bhi ek sahi choice hai (Day 24).</li>
-<li>Follow-up: "Kya Web Forms apne aap migrate ho sakta hai?" Tools kuch hisson mein madad kar sakte hain, par har page ka rebuild plan karo; Web Forms pages ko badle jaane tak purane app mein chalne do.</li>
+<li>Follow-up: "Kya Web Forms apne aap migrate ho sakta hai?" GitHub Copilot upgrade agent ab Web Forms-to-Blazor scenario deta hai; uske output ko starting point samjho aur kisi bhi pull request ki tarah review karo. Har page ka rebuild plan karo, aur Web Forms pages ko badle jaane tak purane app mein chalne do.</li>
 </ul>`
       }
     }
@@ -1454,7 +1473,8 @@ middleware: Timer in > Logger in > Endpoint > Logger out > Timer out`,
     },
     {
       id: "multi-target-branch",
-      src: `// A library multi-targeted as net48;netstandard2.0;net10.0 is compiled once per target.
+      src: `// Maintainer note: this puzzle is pinned to net9.0 (the checker's SDK). Update the answer if the checker moves to net10.0.
+// A library multi-targeted as net48;netstandard2.0;net10.0 is compiled once per target.
 // This file is compiled for net9.0 only. Which branches survive?
 var defined = new List<string>();
 #if NETFRAMEWORK
@@ -1595,24 +1615,24 @@ child sets:  asyncLocal=changed-in-child
 after await: asyncLocal=asha`,
       explain: {
         en: `<p><code>[ThreadStatic]</code> data belongs to one thread. The thread-pool thread started by <code>Task.Run</code> never saw the value, so it prints <code>null</code>. <code>AsyncLocal&lt;T&gt;</code> flows with the logical async call chain, so the child sees <code>asha</code>. A change made inside the child (<code>changed-in-child</code>) does not flow back to the caller after <code>await</code>.</p>
-<p>Why it matters: ASP.NET Core's <code>IHttpContextAccessor</code> is built on <code>AsyncLocal</code>, which is why it works across <code>await</code> but returns <code>null</code> in code that is not part of a request (background jobs). Still, a hidden ambient value is hard to test, so prefer passing the user or tenant as a parameter (Day 3 covers async flow).</p>`,
+<p>Why it matters: ASP.NET Core's <code>IHttpContextAccessor</code> is built on <code>AsyncLocal</code>, which is why it works across <code>await</code> but returns <code>null</code> in code that is not part of a request (background jobs). Still, a hidden ambient value is hard to test, so prefer passing the user or tenant as a parameter (Day 16 shows <code>Activity.Current</code>, which also flows through <code>AsyncLocal</code>).</p>`,
         hi: `<p><code>[ThreadStatic]</code> data एक thread का होता है। <code>Task.Run</code> से शुरू हुए thread-pool thread ने value कभी देखी ही नहीं, इसलिए वह <code>null</code> print करता है। <code>AsyncLocal&lt;T&gt;</code> logical async call chain के साथ चलता है, इसलिए child को <code>asha</code> दिखता है। Child के अंदर किया गया बदलाव (<code>changed-in-child</code>) <code>await</code> के बाद caller तक वापस नहीं आता।</p>
-<p>क्यों ज़रूरी: ASP.NET Core का <code>IHttpContextAccessor</code> <code>AsyncLocal</code> पर बना है, इसीलिए वह <code>await</code> के पार काम करता है पर ऐसे code में <code>null</code> देता है जो किसी request का हिस्सा नहीं (background jobs)। फिर भी छुपी हुई ambient value को test करना मुश्किल है, इसलिए user या tenant को parameter से pass करना बेहतर है (async flow Day 3 में है)।</p>`,
+<p>क्यों ज़रूरी: ASP.NET Core का <code>IHttpContextAccessor</code> <code>AsyncLocal</code> पर बना है, इसीलिए वह <code>await</code> के पार काम करता है पर ऐसे code में <code>null</code> देता है जो किसी request का हिस्सा नहीं (background jobs)। फिर भी छुपी हुई ambient value को test करना मुश्किल है, इसलिए user या tenant को parameter से pass करना बेहतर है (Day 16 में <code>Activity.Current</code> दिखता है, जो भी <code>AsyncLocal</code> से flow होता है)।</p>`,
         hg: `<p><code>[ThreadStatic]</code> data ek thread ka hota hai. <code>Task.Run</code> se shuru hue thread-pool thread ne value kabhi dekhi hi nahi, isliye woh <code>null</code> print karta hai. <code>AsyncLocal&lt;T&gt;</code> logical async call chain ke saath chalta hai, isliye child ko <code>asha</code> dikhta hai. Child ke andar kiya gaya badlaav (<code>changed-in-child</code>) <code>await</code> ke baad caller tak wapas nahi aata.</p>
-<p>Kyun zaroori: ASP.NET Core ka <code>IHttpContextAccessor</code> <code>AsyncLocal</code> par bana hai, isiliye woh <code>await</code> ke paar kaam karta hai par aise code mein <code>null</code> deta hai jo kisi request ka hissa nahi (background jobs). Phir bhi chhupi hui ambient value ko test karna mushkil hai, isliye user ya tenant ko parameter se pass karna behtar hai (async flow Day 3 mein hai).</p>`
+<p>Kyun zaroori: ASP.NET Core ka <code>IHttpContextAccessor</code> <code>AsyncLocal</code> par bana hai, isiliye woh <code>await</code> ke paar kaam karta hai par aise code mein <code>null</code> deta hai jo kisi request ka hissa nahi (background jobs). Phir bhi chhupi hui ambient value ko test karna mushkil hai, isliye user ya tenant ko parameter se pass karna behtar hai (Day 16 mein <code>Activity.Current</code> dikhta hai, jo bhi <code>AsyncLocal</code> se flow hota hai).</p>`
       }
     },
   ],
   revision: {
     en: [
-      "Web Forms lifecycle: Init and Unload run child-first, Load and PreRender run parent-first, and control events run after Load.",
+      "Web Forms lifecycle: Init and Unload run child-first, Load and PreRender run parent-first.",
       "ViewState is a hidden field sent both ways on every postback; ASP.NET Core has no Web Forms and no ViewState.",
-      "MVC 5 lifecycle: routing, MvcHandler, controller factory, action invoker with filters, action, result, view engine.",
+      "MVC 5 lifecycle: routing, MvcRouteHandler, MvcHandler, controller factory, action invoker (filters, model binding), action, result, view engine.",
       "Modules run per event in web.config order both ways; middleware wraps the next one and unwinds in reverse.",
       "web.config app settings become appsettings.json, environment variables and a secret store, bound to typed options.",
       "HttpContext.Current has no equivalent: pass values as parameters, and treat IHttpContextAccessor as a last-resort bridge.",
-      ".NET Framework 4.8.1 follows the lifecycle of the Windows version it runs on; .NET 10 is LTS until November 2028.",
-      "The docs say .NET Upgrade Assistant is officially deprecated and recommend GitHub Copilot app modernization instead.",
+      ".NET Framework 4.8.1 follows the lifecycle of the Windows version it runs on.",
+      "The docs say .NET Upgrade Assistant is officially deprecated and recommend GitHub Copilot upgrade agent instead.",
       "For large live apps use incremental migration: ASP.NET Core in front, YARP to the old app, System.Web adapters for shared state.",
       "Shared libraries go to .NET Standard 2.0 or multi-target, upgraded in post-order with leaf libraries first.",
       "WCF server is not in modern .NET: CoreWCF for existing SOAP clients, gRPC or HTTP when you control the clients.",
@@ -1620,28 +1640,28 @@ after await: asyncLocal=asha`,
     ],
     meaning: {
       hi: [
-        "Web Forms lifecycle: Init और Unload child-first, Load और PreRender parent-first, और control events Load के बाद चलते हैं।",
+        "Web Forms lifecycle: Init और Unload child-first, Load और PreRender parent-first।",
         "ViewState एक hidden field है जो हर postback में दोनों तरफ़ जाता है; ASP.NET Core में Web Forms और ViewState नहीं हैं।",
-        "MVC 5 lifecycle: routing, MvcHandler, controller factory, filters के साथ action invoker, action, result, view engine।",
+        "MVC 5 lifecycle: routing, MvcRouteHandler, MvcHandler, controller factory, action invoker (filters, model binding), action, result, view engine।",
         "Modules हर event के लिए web.config order में दोनों तरफ़ चलते हैं; middleware अगले को घेरता है और उल्टा unwind होता है।",
         "web.config के app settings appsettings.json, environment variables और secret store में जाते हैं, typed options से bind।",
         "HttpContext.Current का equivalent नहीं है: values parameters से pass करो, और IHttpContextAccessor को आख़िरी option वाला bridge समझो।",
-        ".NET Framework 4.8.1 उस Windows version के lifecycle को follow करता है जिस पर चलता है; .NET 10 नवंबर 2028 तक LTS है।",
-        "Docs के अनुसार .NET Upgrade Assistant officially deprecated है और GitHub Copilot app modernization recommend होता है।",
+        ".NET Framework 4.8.1 उस Windows version के lifecycle को follow करता है जिस पर चलता है।",
+        "Docs के अनुसार .NET Upgrade Assistant officially deprecated है और GitHub Copilot upgrade agent recommend होता है।",
         "बड़े live apps के लिए incremental migration: आगे ASP.NET Core, पुराने app को YARP, shared state के लिए System.Web adapters।",
         "Shared libraries .NET Standard 2.0 पर या multi-target, post-order में upgrade, पहले leaf libraries।",
         "WCF server modern .NET में नहीं है: मौजूदा SOAP clients के लिए CoreWCF, clients अपने control में हों तो gRPC या HTTP।",
         "TL के तौर पर migration progress traffic और routes दोनों से बताओ, और rollback plan रखो।"
       ],
       hg: [
-        "Web Forms lifecycle: Init aur Unload child-first, Load aur PreRender parent-first, aur control events Load ke baad chalte hain.",
+        "Web Forms lifecycle: Init aur Unload child-first, Load aur PreRender parent-first.",
         "ViewState ek hidden field hai jo har postback mein dono taraf jaata hai; ASP.NET Core mein Web Forms aur ViewState nahi hain.",
-        "MVC 5 lifecycle: routing, MvcHandler, controller factory, filters ke saath action invoker, action, result, view engine.",
+        "MVC 5 lifecycle: routing, MvcRouteHandler, MvcHandler, controller factory, action invoker (filters, model binding), action, result, view engine.",
         "Modules har event ke liye web.config order mein dono taraf chalte hain; middleware agle ko gherta hai aur ulta unwind hota hai.",
         "web.config ke app settings appsettings.json, environment variables aur secret store mein jaate hain, typed options se bind.",
         "HttpContext.Current ka equivalent nahi hai: values parameters se pass karo, aur IHttpContextAccessor ko aakhri option wala bridge samjho.",
-        ".NET Framework 4.8.1 us Windows version ke lifecycle ko follow karta hai jis par chalta hai; .NET 10 November 2028 tak LTS hai.",
-        "Docs ke anusaar .NET Upgrade Assistant officially deprecated hai aur GitHub Copilot app modernization recommend hota hai.",
+        ".NET Framework 4.8.1 us Windows version ke lifecycle ko follow karta hai jis par chalta hai.",
+        "Docs ke anusaar .NET Upgrade Assistant officially deprecated hai aur GitHub Copilot upgrade agent recommend hota hai.",
         "Bade live apps ke liye incremental migration: aage ASP.NET Core, purane app ko YARP, shared state ke liye System.Web adapters.",
         "Shared libraries .NET Standard 2.0 par ya multi-target, post-order mein upgrade, pehle leaf libraries.",
         "WCF server modern .NET mein nahi hai: maujooda SOAP clients ke liye CoreWCF, clients apne control mein hon to gRPC ya HTTP.",
@@ -1651,20 +1671,20 @@ after await: asyncLocal=asha`,
   },
   whatsNew: {
     en: `<ul>
-<li><b>Tooling change (verify before quoting):</b> Microsoft Learn now says <b>.NET Upgrade Assistant is officially deprecated</b> and recommends the GitHub Copilot app modernization agent (Visual Studio). Older blog posts and courses that teach the Upgrade Assistant as the main tool are out of date.</li>
+<li><b>Tooling change (verify before quoting):</b> Microsoft Learn now says <b>.NET Upgrade Assistant is officially deprecated</b> and recommends the GitHub Copilot upgrade agent (earlier called app modernization; it works in Visual Studio, VS Code, Copilot CLI and GitHub.com). Older blog posts and courses that teach the Upgrade Assistant as the main tool are out of date.</li>
 <li><b>Migration guidance:</b> the current ASP.NET Core migration docs centre on <b>incremental migration</b> (strangler fig): YARP in front, System.Web adapters (<code>Microsoft.AspNetCore.SystemWebAdapters</code>) for shared session, authentication and even hosting <code>IHttpModule</code> and <code>Global.asax</code> logic. This is a library and tooling story, not a C# language feature.</li>
 <li><b>Support dates (from Microsoft's .NET support policy page):</b> .NET 10 is LTS, supported until 14 November 2028. .NET 8 (LTS) and .NET 9 (STS) are both listed as ending on 10 November 2026, so a migration that targets .NET 8 today has a short runway; target .NET 10.</li>
 <li><b>Unchanged:</b> .NET Framework 4.x is still a Windows component with the lifecycle of its Windows version, and Web Forms still has no ASP.NET Core version.</li>
 </ul>`,
     hi: `<ul>
-<li><b>Tooling बदलाव (बोलने से पहले verify करो):</b> Microsoft Learn अब कहता है कि <b>.NET Upgrade Assistant officially deprecated है</b> और GitHub Copilot app modernization agent (Visual Studio) recommend करता है। जो पुराने blog posts और courses Upgrade Assistant को मुख्य tool सिखाते हैं वे पुराने हो चुके हैं।</li>
-<li><b>Migration guidance:</b> मौजूदा ASP.NET Core migration docs <b>incremental migration</b> (strangler fig) पर केंद्रित हैं: आगे YARP, shared session, authentication और यहाँ तक कि <code>IHttpModule</code> और <code>Global.asax</code> logic host करने के लिए System.Web adapters (<code>Microsoft.AspNetCore.SystemWebAdapters</code>)। यह library और tooling की बात है, C# language feature नहीं।</li>
+<li><b>Tooling बदलाव (बोलने से पहले verify करो):</b> Microsoft Learn अब कहता है कि <b>.NET Upgrade Assistant officially deprecated है</b> और GitHub Copilot upgrade agent (पहले app modernization कहलाता था; Visual Studio, VS Code, Copilot CLI और GitHub.com में चलता है) recommend करता है। जो पुराने blog posts और courses Upgrade Assistant को मुख्य tool सिखाते हैं वे पुराने हो चुके हैं।</li>
+<li><b>Migration guidance:</b> मौजूदा ASP.NET Core migration docs <b>incremental migration</b> (strangler fig) पर focus करते हैं: आगे YARP, shared session, authentication और यहाँ तक कि <code>IHttpModule</code> और <code>Global.asax</code> logic host करने के लिए System.Web adapters (<code>Microsoft.AspNetCore.SystemWebAdapters</code>)। यह library और tooling की बात है, C# language feature नहीं।</li>
 <li><b>Support dates (Microsoft की .NET support policy page से):</b> .NET 10 LTS है, 14 नवंबर 2028 तक supported। .NET 8 (LTS) और .NET 9 (STS) दोनों 10 नवंबर 2026 को ख़त्म होने वाले listed हैं, इसलिए आज .NET 8 target करने वाले migration के पास runway छोटा है; .NET 10 target करो।</li>
 <li><b>जो नहीं बदला:</b> .NET Framework 4.x अब भी Windows component है और अपने Windows version का lifecycle follow करता है, और Web Forms का अब भी कोई ASP.NET Core version नहीं है।</li>
 </ul>`,
     hg: `<ul>
-<li><b>Tooling badlaav (bolne se pehle verify karo):</b> Microsoft Learn ab kehta hai ki <b>.NET Upgrade Assistant officially deprecated hai</b> aur GitHub Copilot app modernization agent (Visual Studio) recommend karta hai. Jo purane blog posts aur courses Upgrade Assistant ko mukhya tool sikhate hain woh purane ho chuke hain.</li>
-<li><b>Migration guidance:</b> maujooda ASP.NET Core migration docs <b>incremental migration</b> (strangler fig) par kendrit hain: aage YARP, shared session, authentication aur yahan tak ki <code>IHttpModule</code> aur <code>Global.asax</code> logic host karne ke liye System.Web adapters (<code>Microsoft.AspNetCore.SystemWebAdapters</code>). Yeh library aur tooling ki baat hai, C# language feature nahi.</li>
+<li><b>Tooling badlaav (bolne se pehle verify karo):</b> Microsoft Learn ab kehta hai ki <b>.NET Upgrade Assistant officially deprecated hai</b> aur GitHub Copilot upgrade agent (pehle app modernization kehlata tha; Visual Studio, VS Code, Copilot CLI aur GitHub.com mein chalta hai) recommend karta hai. Jo purane blog posts aur courses Upgrade Assistant ko mukhya tool sikhate hain woh purane ho chuke hain.</li>
+<li><b>Migration guidance:</b> maujooda ASP.NET Core migration docs <b>incremental migration</b> (strangler fig) par focus karte hain: aage YARP, shared session, authentication aur yahan tak ki <code>IHttpModule</code> aur <code>Global.asax</code> logic host karne ke liye System.Web adapters (<code>Microsoft.AspNetCore.SystemWebAdapters</code>). Yeh library aur tooling ki baat hai, C# language feature nahi.</li>
 <li><b>Support dates (Microsoft ki .NET support policy page se):</b> .NET 10 LTS hai, 14 November 2028 tak supported. .NET 8 (LTS) aur .NET 9 (STS) dono 10 November 2026 ko khatam hone wale listed hain, isliye aaj .NET 8 target karne wale migration ke paas runway chhota hai; .NET 10 target karo.</li>
 <li><b>Jo nahi badla:</b> .NET Framework 4.x ab bhi Windows component hai aur apne Windows version ka lifecycle follow karta hai, aur Web Forms ka ab bhi koi ASP.NET Core version nahi hai.</li>
 </ul>`
