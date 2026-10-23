@@ -7,14 +7,14 @@ window.TL_DAY = {
     hg: "JavaScript essentials — var/let/const, closures, this, prototypes, event loop, promises, modules, fetch, jQuery se modern DOM"
   },
   summary: {
-    en: `<p>JavaScript is your <b>weakest skill (2/10)</b>, so today starts from the ground up and compares with C# wherever that helps. A Tech Lead is not asked to write clever one-liners; he is asked "<b>why did this button handler print the wrong value?</b>" or "<b>how does async work without threads?</b>" Eight ideas answer most of those questions.</p>
+    en: `<p>JavaScript is your <b>weakest skill (2/10)</b>, so today starts from the ground up and compares with C# wherever that helps. A Tech Lead is not asked to write clever one-liners; they are asked "<b>why did this button handler print the wrong value?</b>" or "<b>how does async work without threads?</b>" Eight ideas answer most of those questions.</p>
 <ul>
 <li><b>Variables and scope:</b> prefer <code>const</code>, then <code>let</code>; avoid <code>var</code> (function-scoped, hoisted as <code>undefined</code>). <code>let</code> and <code>const</code> are block-scoped and sit in the <b>temporal dead zone</b> until their line runs.</li>
 <li><b>Closures:</b> a function remembers the variables around where it was created, not copies of their values. That is why a <code>var</code> loop with callbacks prints the last value three times.</li>
 <li><b><code>this</code>:</b> decided by <b>how a function is called</b>, not where it is written: plain call, method call, <code>call/apply/bind</code>, or <code>new</code>. Arrow functions have no own <code>this</code>; they use the one from the surrounding code.</li>
 <li><b>Prototypes and classes:</b> objects inherit from other objects through a prototype chain. <code>class</code> is clean syntax over the same mechanism, with <code>#private</code> fields that are truly private.</li>
 <li><b>Values:</b> use <code>===</code>. <code>??</code> falls back only for <code>null</code>/<code>undefined</code>, while <code>||</code> also replaces <code>0</code>, <code>""</code> and <code>false</code>. <code>?.</code> stops safely at a missing value.</li>
-<li><b>Event loop:</b> one thread runs your JavaScript. Order is: synchronous code, then all <b>microtasks</b> (promise callbacks), then the next <b>macrotask</b> (<code>setTimeout</code>). <code>async/await</code> is promises with nicer syntax; no thread pool is involved.</li>
+<li><b>Event loop:</b> one thread runs your JavaScript. Order is: synchronous code, then all <b>microtasks</b> (promise callbacks), then the next <b>macrotask</b> (<code>setTimeout</code>). <code>async/await</code> is promises with nicer syntax; no thread pool runs your callbacks.</li>
 <li><b>Modules and network:</b> ES modules (<code>import/export</code>) are the standard. <code>fetch</code> does <b>not</b> reject on HTTP 404/500; check <code>res.ok</code>.</li>
 <li><b>jQuery to modern DOM:</b> <code>querySelector</code>, <code>addEventListener</code>, <code>classList</code> and <code>fetch</code> cover most of what you used jQuery for. TL angle: TypeScript and ESLint as team guard-rails (React on Day 24 is often written in TypeScript).</li>
 </ul>
@@ -26,7 +26,7 @@ window.TL_DAY = {
 <li><b><code>this</code>:</b> यह इससे तय होता है कि function <b>call कैसे हुआ</b>, इससे नहीं कि वह कहाँ लिखा है: plain call, method call, <code>call/apply/bind</code>, या <code>new</code>। Arrow functions का अपना <code>this</code> नहीं होता; वे आसपास के code वाला <code>this</code> लेते हैं।</li>
 <li><b>Prototypes और classes:</b> objects दूसरे objects से prototype chain के ज़रिए inherit करते हैं। <code>class</code> उसी mechanism पर साफ़ syntax है, और <code>#private</code> fields सच में private होते हैं।</li>
 <li><b>Values:</b> <code>===</code> use करो। <code>??</code> सिर्फ़ <code>null</code>/<code>undefined</code> पर fallback देता है, जबकि <code>||</code> <code>0</code>, <code>""</code> और <code>false</code> को भी बदल देता है। <code>?.</code> missing value पर safely रुक जाता है।</li>
-<li><b>Event loop:</b> तुम्हारा JavaScript एक ही thread चलाता है। Order यह है: synchronous code, फिर सारे <b>microtasks</b> (promise callbacks), फिर अगला <b>macrotask</b> (<code>setTimeout</code>)। <code>async/await</code> promises ही हैं, बस बेहतर syntax में; कोई thread pool involved नहीं है।</li>
+<li><b>Event loop:</b> तुम्हारा JavaScript एक ही thread चलाता है। Order यह है: synchronous code, फिर सारे <b>microtasks</b> (promise callbacks), फिर अगला <b>macrotask</b> (<code>setTimeout</code>)। <code>async/await</code> promises ही हैं, बस बेहतर syntax में; तुम्हारे callbacks को कोई thread pool नहीं चलाता।</li>
 <li><b>Modules और network:</b> ES modules (<code>import/export</code>) standard हैं। <code>fetch</code> HTTP 404/500 पर reject <b>नहीं</b> करता; <code>res.ok</code> check करो।</li>
 <li><b>jQuery से modern DOM:</b> जिसके लिए तुम jQuery use करते थे, उसका ज़्यादातर हिस्सा <code>querySelector</code>, <code>addEventListener</code>, <code>classList</code> और <code>fetch</code> से हो जाता है। TL angle: TypeScript और ESLint team के guard-rails की तरह (Day 24 की React अक्सर TypeScript में लिखी जाती है)।</li>
 </ul>
@@ -38,7 +38,7 @@ window.TL_DAY = {
 <li><b><code>this</code>:</b> yeh is baat se tay hota hai ki function <b>call kaise hua</b>, is baat se nahi ki woh kahan likha hai: plain call, method call, <code>call/apply/bind</code>, ya <code>new</code>. Arrow functions ka apna <code>this</code> nahi hota; woh aaspaas ke code wala <code>this</code> lete hain.</li>
 <li><b>Prototypes aur classes:</b> objects doosre objects se prototype chain ke zariye inherit karte hain. <code>class</code> usi mechanism par saaf syntax hai, aur <code>#private</code> fields sach mein private hote hain.</li>
 <li><b>Values:</b> <code>===</code> use karo. <code>??</code> sirf <code>null</code>/<code>undefined</code> par fallback deta hai, jabki <code>||</code> <code>0</code>, <code>""</code> aur <code>false</code> ko bhi badal deta hai. <code>?.</code> missing value par safely ruk jaata hai.</li>
-<li><b>Event loop:</b> tumhara JavaScript ek hi thread chalata hai. Order yeh hai: synchronous code, phir saare <b>microtasks</b> (promise callbacks), phir agla <b>macrotask</b> (<code>setTimeout</code>). <code>async/await</code> promises hi hain, bas behtar syntax mein; koi thread pool involved nahi hai.</li>
+<li><b>Event loop:</b> tumhara JavaScript ek hi thread chalata hai. Order yeh hai: synchronous code, phir saare <b>microtasks</b> (promise callbacks), phir agla <b>macrotask</b> (<code>setTimeout</code>). <code>async/await</code> promises hi hain, bas behtar syntax mein; tumhare callbacks ko koi thread pool nahi chalata.</li>
 <li><b>Modules aur network:</b> ES modules (<code>import/export</code>) standard hain. <code>fetch</code> HTTP 404/500 par reject <b>nahi</b> karta; <code>res.ok</code> check karo.</li>
 <li><b>jQuery se modern DOM:</b> jiske liye tum jQuery use karte the, uska zyaadatar hissa <code>querySelector</code>, <code>addEventListener</code>, <code>classList</code> aur <code>fetch</code> se ho jaata hai. TL angle: TypeScript aur ESLint team ke guard-rails ki tarah (Day 24 ki React aksar TypeScript mein likhi jaati hai).</li>
 </ul>
@@ -809,14 +809,14 @@ SyntaxError`
             hg: "jQuery se modern DOM, saath-saath (sirf dikhane ke liye: browser page chahiye)"
           },
           check: "none",
-          src: `// jQuery                                      // Modern DOM
-$(function () { init(); });                      // document.addEventListener("DOMContentLoaded", init);
+          src: `// jQuery                                      // Roughly the modern DOM equivalent
+$(function () { init(); });                      // document.addEventListener("DOMContentLoaded", init);  (roughly: jQuery also runs at once if the DOM is ready; a late DOMContentLoaded listener never fires)
 $("#save").on("click", onSave);                  // document.querySelector("#save").addEventListener("click", onSave);
 $(".row").addClass("active");                    // document.querySelectorAll(".row").forEach((el) => el.classList.add("active"));
 $("#box").toggleClass("open");                   // document.querySelector("#box").classList.toggle("open");
 $("#name").val();                                // document.querySelector("#name").value
 $("#msg").text(message);                         // document.querySelector("#msg").textContent = message;
-$("#panel").hide();                              // document.querySelector("#panel").hidden = true;
+$("#panel").hide();                              // document.querySelector("#panel").hidden = true;  (roughly: jQuery sets inline display:none; CSS can override hidden)
 
 // Event delegation (rows added later also work)
 $("#list").on("click", ".item", onItem);
@@ -1001,22 +1001,22 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
       explain: {
         en: `<ul>
 <li>Parts: the <b>call stack</b> (what runs now), <b>Web APIs / Node runtime</b> (timers, network, files wait there), the <b>microtask queue</b> (promise reactions, <code>queueMicrotask</code>, <code>await</code> continuations) and the <b>macrotask queue</b> (timers, I/O callbacks, UI events).</li>
-<li>Nuance: <code>setTimeout(fn, 0)</code> means "no sooner than 0 ms, as a macrotask", not "now". In Node, <code>process.nextTick</code> callbacks run even before promise microtasks, and <code>setImmediate</code> is a separate phase.</li>
+<li>Nuance: <code>setTimeout(fn, 0)</code> means "no sooner than 0 ms, as a macrotask", not "now". In Node, <code>process.nextTick</code> has its own queue: in CommonJS and inside timer or I/O callbacks it runs before promise callbacks, but at ES-module top level promise callbacks run first. <code>setImmediate</code> is a separate phase.</li>
 <li>Danger: an endless chain of microtasks can starve rendering and timers; a long synchronous loop freezes everything.</li>
 <li>C# bridge: ASP.NET Core serves many requests with a pool of threads (Day 3); Node serves many with one thread because waiting is not done by your code. That is why CPU-heavy work hurts Node much more.</li>
 <li>Follow-up: "What prints first, <code>setTimeout 0</code> or <code>Promise.resolve().then</code>?" The promise; puzzle 1 shows the full order.</li>
 </ul>`,
         hi: `<ul>
 <li>हिस्से: <b>call stack</b> (जो अभी चल रहा है), <b>Web APIs / Node runtime</b> (timers, network, files वहाँ इंतज़ार करते हैं), <b>microtask queue</b> (promise reactions, <code>queueMicrotask</code>, <code>await</code> continuations) और <b>macrotask queue</b> (timers, I/O callbacks, UI events)।</li>
-<li>Nuance: <code>setTimeout(fn, 0)</code> का मतलब है "0 ms से जल्दी नहीं, macrotask की तरह", "अभी" नहीं। Node में <code>process.nextTick</code> callbacks promise microtasks से भी पहले चलते हैं, और <code>setImmediate</code> अलग phase है।</li>
-<li>Danger: microtasks की अंतहीन chain rendering और timers को भूखा रख सकती है; लंबा synchronous loop सब कुछ freeze कर देता है।</li>
+<li>Nuance: <code>setTimeout(fn, 0)</code> का मतलब है "0 ms से जल्दी नहीं, macrotask की तरह", "अभी" नहीं। Node में <code>process.nextTick</code> की अपनी queue है: CommonJS में और timer या I/O callbacks के अंदर वह promise callbacks से पहले चलता है, पर ES-module के top level पर promise callbacks पहले चलते हैं। <code>setImmediate</code> अलग phase है।</li>
+<li>Danger: microtasks की endless chain rendering और timers को भूखा रख सकती है; लंबा synchronous loop सब कुछ freeze कर देता है।</li>
 <li>C# bridge: ASP.NET Core कई requests को threads के pool से serve करता है (Day 3); Node कई requests को एक thread से serve करता है क्योंकि इंतज़ार तुम्हारा code नहीं करता। इसीलिए CPU-heavy काम Node को ज़्यादा चोट पहुँचाता है।</li>
 <li>Follow-up: "<code>setTimeout 0</code> पहले print होगा या <code>Promise.resolve().then</code>?" Promise; पूरा order puzzle 1 में है।</li>
 </ul>`,
         hg: `<ul>
 <li>Hisse: <b>call stack</b> (jo abhi chal raha hai), <b>Web APIs / Node runtime</b> (timers, network, files wahan intezaar karte hain), <b>microtask queue</b> (promise reactions, <code>queueMicrotask</code>, <code>await</code> continuations) aur <b>macrotask queue</b> (timers, I/O callbacks, UI events).</li>
-<li>Nuance: <code>setTimeout(fn, 0)</code> ka matlab hai "0 ms se jaldi nahi, macrotask ki tarah", "abhi" nahi. Node mein <code>process.nextTick</code> callbacks promise microtasks se bhi pehle chalte hain, aur <code>setImmediate</code> alag phase hai.</li>
-<li>Danger: microtasks ki anthheen chain rendering aur timers ko bhookha rakh sakti hai; lamba synchronous loop sab kuch freeze kar deta hai.</li>
+<li>Nuance: <code>setTimeout(fn, 0)</code> ka matlab hai "0 ms se jaldi nahi, macrotask ki tarah", "abhi" nahi. Node mein <code>process.nextTick</code> ki apni queue hai: CommonJS mein aur timer ya I/O callbacks ke andar woh promise callbacks se pehle chalta hai, par ES-module ke top level par promise callbacks pehle chalte hain. <code>setImmediate</code> alag phase hai.</li>
+<li>Danger: microtasks ki endless chain rendering aur timers ko bhookha rakh sakti hai; lamba synchronous loop sab kuch freeze kar deta hai.</li>
 <li>C# bridge: ASP.NET Core kai requests ko threads ke pool se serve karta hai (Day 3); Node kai requests ko ek thread se serve karta hai kyonki intezaar tumhara code nahi karta. Isiliye CPU-heavy kaam Node ko zyaada chot pahunchata hai.</li>
 <li>Follow-up: "<code>setTimeout 0</code> pehle print hoga ya <code>Promise.resolve().then</code>?" Promise; poora order puzzle 1 mein hai.</li>
 </ul>`
@@ -1069,21 +1069,21 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
 <li><code>all</code>: all calls are needed (load user and settings for one screen). The other promises keep running; you just stop waiting for them.</li>
 <li><code>allSettled</code>: partial results are fine (a dashboard of independent widgets). You inspect <code>status</code> and <code>value</code>/<code>reason</code> yourself.</li>
 <li><code>race</code>: the first outcome wins, even a rejection; common for a timeout. <code>any</code>: the first success wins, e.g. the fastest mirror.</li>
-<li>C# bridge: <code>all</code> ~ <code>Task.WhenAll</code>, <code>race</code> ~ <code>Task.WhenAny</code>; <code>allSettled</code> has no one-line twin (you inspect each Task).</li>
+<li>C# bridge: <code>all</code> ~ <code>Task.WhenAll</code>, <code>race</code> ~ <code>Task.WhenAny</code>, but <code>WhenAny</code> never throws (it returns the first finished task, even a faulted one) while <code>race</code> rejects; <code>allSettled</code> has no one-line twin (you inspect each Task).</li>
 <li>Follow-up: "Does <code>Promise.all</code> cancel the others?" No, nothing is cancelled. Puzzle 7 runs all four.</li>
 </ul>`,
         hi: `<ul>
 <li><code>all</code>: जब सारे calls चाहिए (एक screen के लिए user और settings load करना)। बाक़ी promises चलते रहते हैं; तुम बस उनका इंतज़ार छोड़ देते हो।</li>
 <li><code>allSettled</code>: जब partial results चलें (independent widgets वाला dashboard)। <code>status</code> और <code>value</code>/<code>reason</code> तुम ख़ुद देखते हो।</li>
 <li><code>race</code>: पहला नतीजा जीतता है, rejection भी; timeout के लिए आम है। <code>any</code>: पहली success जीतती है, जैसे सबसे तेज़ mirror।</li>
-<li>C# bridge: <code>all</code> ~ <code>Task.WhenAll</code>, <code>race</code> ~ <code>Task.WhenAny</code>; <code>allSettled</code> का एक line वाला twin नहीं है (हर Task तुम ख़ुद देखते हो)।</li>
+<li>C# bridge: <code>all</code> ~ <code>Task.WhenAll</code>, <code>race</code> ~ <code>Task.WhenAny</code>, पर <code>WhenAny</code> कभी throw नहीं करता (पहला finished task लौटाता है, faulted भी) जबकि <code>race</code> reject होता है; <code>allSettled</code> का एक line वाला twin नहीं है (हर Task तुम ख़ुद देखते हो)।</li>
 <li>Follow-up: "क्या <code>Promise.all</code> बाक़ियों को cancel करता है?" नहीं, कुछ cancel नहीं होता। Puzzle 7 में चारों चलते हैं।</li>
 </ul>`,
         hg: `<ul>
 <li><code>all</code>: jab saare calls chahiye (ek screen ke liye user aur settings load karna). Baaki promises chalte rehte hain; tum bas unka intezaar chhod dete ho.</li>
 <li><code>allSettled</code>: jab partial results chalein (independent widgets wala dashboard). <code>status</code> aur <code>value</code>/<code>reason</code> tum khud dekhte ho.</li>
 <li><code>race</code>: pehla nateeja jeetta hai, rejection bhi; timeout ke liye aam hai. <code>any</code>: pehli success jeetti hai, jaise sabse tez mirror.</li>
-<li>C# bridge: <code>all</code> ~ <code>Task.WhenAll</code>, <code>race</code> ~ <code>Task.WhenAny</code>; <code>allSettled</code> ka ek line wala twin nahi hai (har Task tum khud dekhte ho).</li>
+<li>C# bridge: <code>all</code> ~ <code>Task.WhenAll</code>, <code>race</code> ~ <code>Task.WhenAny</code>, par <code>WhenAny</code> kabhi throw nahi karta (pehla finished task lautata hai, faulted bhi) jabki <code>race</code> reject hota hai; <code>allSettled</code> ka ek line wala twin nahi hai (har Task tum khud dekhte ho).</li>
 <li>Follow-up: "Kya <code>Promise.all</code> baakiyon ko cancel karta hai?" Nahi, kuch cancel nahi hota. Puzzle 7 mein chaaron chalte hain.</li>
 </ul>`
       }
@@ -1143,14 +1143,14 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
 <li>सही जगह: <code>items.map(x =&gt; x.id)</code>, promise callbacks, और method के अंदर का callback जिसे method का <code>this</code> चाहिए।</li>
 <li>ग़लत जगह: object literal की property जैसे <code>{ total: () =&gt; this.items.length }</code> (यहाँ <code>this</code> वह object नहीं है), prototype methods, और constructors।</li>
 <li>Syntax notes: braces वाली body में <code>return</code> चाहिए; object literal सीधे लौटाने के लिए parentheses चाहिए, <code>() =&gt; ({ id: 1 })</code>।</li>
-<li>Follow-up: "तुम्हारा React class component <code>onClick={this.handle}</code> से बुरा क्यों चलता है?" क्योंकि method <code>this</code> खो देता है (class field arrow इसे fix करता है)। Puzzle 3 में object पर arrow दिखता है।</li>
+<li>Follow-up: "React class component में <code>onClick={this.handle}</code> <code>this</code> क्यों खो देता है?" क्योंकि method <code>this</code> खो देता है (class field arrow इसे fix करता है)। Puzzle 3 में object पर arrow दिखता है।</li>
 </ul>`,
         hg: `<ul>
 <li>"Lexical <code>this</code>" ka matlab hai ki arrow <code>this</code> ko aaspaas ke code ke kisi bhi variable ki tarah khojta hai, isliye <code>call</code>/<code>bind</code> use badal nahi sakte.</li>
 <li>Sahi jagah: <code>items.map(x =&gt; x.id)</code>, promise callbacks, aur method ke andar ka callback jise method ka <code>this</code> chahiye.</li>
 <li>Galat jagah: object literal ki property jaise <code>{ total: () =&gt; this.items.length }</code> (yahan <code>this</code> woh object nahi hai), prototype methods, aur constructors.</li>
 <li>Syntax notes: braces wali body mein <code>return</code> chahiye; object literal seedha lautane ke liye parentheses chahiye, <code>() =&gt; ({ id: 1 })</code>.</li>
-<li>Follow-up: "Tumhara React class component <code>onClick={this.handle}</code> se bura kyon chalta hai?" Kyonki method <code>this</code> kho deta hai (class field arrow ise fix karta hai). Puzzle 3 mein object par arrow dikhta hai.</li>
+<li>Follow-up: "React class component mein <code>onClick={this.handle}</code> <code>this</code> kyon kho deta hai?" Kyonki method <code>this</code> kho deta hai (class field arrow ise fix karta hai). Puzzle 3 mein object par arrow dikhta hai.</li>
 </ul>`
       }
     },
@@ -1205,14 +1205,14 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
 <li>C# bridge: C# conditions accept only <code>bool</code>, so <code>if (count)</code> does not compile.</li>
 </ul>`,
         hi: `<ul>
-<li><code>if (x)</code>, <code>!x</code>, <code>x &amp;&amp; y</code> और <code>x || y</code> जैसी conditions truthiness use करती हैं। यह सुविधाजनक है पर "missing" और "zero" का फ़र्क़ छुपा देता है।</li>
+<li><code>if (x)</code>, <code>!x</code>, <code>x &amp;&amp; y</code> और <code>x || y</code> जैसी conditions truthiness use करती हैं। यह convenient है पर "missing" और "zero" का फ़र्क़ छुपा देता है।</li>
 <li>Gotchas: empty array के लिए <code>if (items)</code> true है (<code>items.length</code> check करो); <code>0</code> के लिए <code>if (count)</code> false है; <code>Boolean("false")</code> <code>true</code> है।</li>
 <li>Browsers में एक अजीब falsy object भी है, <code>document.all</code>; वह तुम्हें कम ही मिलेगा।</li>
 <li>Code-review की आदत: जब value सही तरह से <code>0</code>, <code>""</code> या <code>false</code> हो सकती हो, तो explicitly compare करो (<code>x !== undefined</code>) या <code>??</code> use करो।</li>
 <li>C# bridge: C# conditions सिर्फ़ <code>bool</code> लेती हैं, इसलिए <code>if (count)</code> compile नहीं होता।</li>
 </ul>`,
         hg: `<ul>
-<li><code>if (x)</code>, <code>!x</code>, <code>x &amp;&amp; y</code> aur <code>x || y</code> jaisi conditions truthiness use karti hain. Yeh suvidhajanak hai par "missing" aur "zero" ka farq chhupa deta hai.</li>
+<li><code>if (x)</code>, <code>!x</code>, <code>x &amp;&amp; y</code> aur <code>x || y</code> jaisi conditions truthiness use karti hain. Yeh convenient hai par "missing" aur "zero" ka farq chhupa deta hai.</li>
 <li>Gotchas: empty array ke liye <code>if (items)</code> true hai (<code>items.length</code> check karo); <code>0</code> ke liye <code>if (count)</code> false hai; <code>Boolean("false")</code> <code>true</code> hai.</li>
 <li>Browsers mein ek ajeeb falsy object bhi hai, <code>document.all</code>; woh tumhein kam hi milega.</li>
 <li>Code-review ki aadat: jab value sahi tarah se <code>0</code>, <code>""</code> ya <code>false</code> ho sakti ho, to explicitly compare karo (<code>x !== undefined</code>) ya <code>??</code> use karo.</li>
@@ -1235,21 +1235,21 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
 <li>Read the body once: <code>res.json()</code> or <code>res.text()</code>, not both (use <code>res.clone()</code> if you need two reads). For an ASP.NET Core <code>ProblemDetails</code> body (Day 13), parse it to show a useful message.</li>
 <li>Timeouts and cancel: <code>AbortSignal.timeout(ms)</code> or an <code>AbortController</code>; user navigation or a new search should cancel the old request.</li>
 <li>Browser extras: cross-origin calls need CORS (Day 13); cookies are sent cross-origin only with <code>credentials: "include"</code> and matching server settings.</li>
-<li>TL angle: put this in one small API client function so every screen gets the same error handling, instead of repeating it. Compare with <code>HttpClient</code>, which throws only on <code>EnsureSuccessStatusCode()</code>.</li>
+<li>TL angle: put this in one small API client function so every screen gets the same error handling, instead of repeating it. Compare with <code>HttpClient</code>: <code>GetAsync</code>/<code>SendAsync</code> return 4xx/5xx responses and you call <code>EnsureSuccessStatusCode()</code>, while helpers such as <code>GetStringAsync</code> and <code>GetFromJsonAsync</code> throw <code>HttpRequestException</code> for you.</li>
 </ul>`,
         hi: `<ul>
 <li>Pattern: <code>const res = await fetch(url); if (!res.ok) throw new Error(...); const data = await res.json();</code> और network errors व ख़राब JSON (<code>SyntaxError</code>) के लिए call को <code>try/catch</code> में रखो।</li>
 <li>Body एक बार पढ़ो: <code>res.json()</code> या <code>res.text()</code>, दोनों नहीं (दो बार पढ़ना हो तो <code>res.clone()</code>)। ASP.NET Core <code>ProblemDetails</code> body (Day 13) के लिए उसे parse करके काम का message दिखाओ।</li>
 <li>Timeouts और cancel: <code>AbortSignal.timeout(ms)</code> या <code>AbortController</code>; user का navigate करना या नई search पुरानी request को cancel करे।</li>
 <li>Browser extras: cross-origin calls के लिए CORS चाहिए (Day 13); cookies cross-origin तभी जाती हैं जब <code>credentials: "include"</code> हो और server settings मेल खाएँ।</li>
-<li>TL angle: यह एक छोटे API client function में रखो ताकि हर screen को वही error handling मिले, दोहराने की जगह। <code>HttpClient</code> से compare करो, जो सिर्फ़ <code>EnsureSuccessStatusCode()</code> पर throw करता है।</li>
+<li>TL angle: यह एक छोटे API client function में रखो ताकि हर screen को वही error handling मिले, दोहराने की जगह। <code>HttpClient</code> से compare करो: <code>GetAsync</code>/<code>SendAsync</code> 4xx/5xx responses लौटाते हैं और तुम <code>EnsureSuccessStatusCode()</code> call करते हो, जबकि <code>GetStringAsync</code> और <code>GetFromJsonAsync</code> जैसे helpers ख़ुद <code>HttpRequestException</code> फेंकते हैं।</li>
 </ul>`,
         hg: `<ul>
 <li>Pattern: <code>const res = await fetch(url); if (!res.ok) throw new Error(...); const data = await res.json();</code> aur network errors va kharab JSON (<code>SyntaxError</code>) ke liye call ko <code>try/catch</code> mein rakho.</li>
 <li>Body ek baar padho: <code>res.json()</code> ya <code>res.text()</code>, dono nahi (do baar padhna ho to <code>res.clone()</code>). ASP.NET Core <code>ProblemDetails</code> body (Day 13) ke liye use parse karke kaam ka message dikhao.</li>
 <li>Timeouts aur cancel: <code>AbortSignal.timeout(ms)</code> ya <code>AbortController</code>; user ka navigate karna ya nayi search purani request ko cancel kare.</li>
 <li>Browser extras: cross-origin calls ke liye CORS chahiye (Day 13); cookies cross-origin tabhi jaati hain jab <code>credentials: "include"</code> ho aur server settings match karein.</li>
-<li>TL angle: yeh ek chhote API client function mein rakho taaki har screen ko wahi error handling mile, dohrane ki jagah. <code>HttpClient</code> se compare karo, jo sirf <code>EnsureSuccessStatusCode()</code> par throw karta hai.</li>
+<li>TL angle: yeh ek chhote API client function mein rakho taaki har screen ko wahi error handling mile, dohrane ki jagah. <code>HttpClient</code> se compare karo: <code>GetAsync</code>/<code>SendAsync</code> 4xx/5xx responses lautate hain aur tum <code>EnsureSuccessStatusCode()</code> call karte ho, jabki <code>GetStringAsync</code> aur <code>GetFromJsonAsync</code> jaise helpers khud <code>HttpRequestException</code> phenkte hain.</li>
 </ul>`
       }
     },
@@ -1260,26 +1260,26 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
       answer: "ES modules use static import/export, are strict, support top-level await and work in browsers and modern Node. CommonJS uses require/module.exports, loads synchronously and is mainly legacy Node.",
       meaning: {
         hi: "ES modules static import/export use करते हैं, strict हैं, top-level await support करते हैं और browsers व modern Node में चलते हैं। CommonJS require/module.exports use करता है, synchronously load होता है और मुख्य रूप से legacy Node है।",
-        hg: "ES modules static import/export use karte hain, strict hain, top-level await support karte hain aur browsers va modern Node mein chalte hain. CommonJS require/module.exports use karta hai, synchronously load hota hai aur mukhya roop se legacy Node hai."
+        hg: "ES modules static import/export use karte hain, strict hain, top-level await support karte hain aur browsers va modern Node mein chalte hain. CommonJS require/module.exports use karta hai, synchronously load hota hai aur zyaadatar legacy Node hai."
       },
       explain: {
         en: `<ul>
 <li>Because <code>import</code> is static, bundlers can drop unused exports (tree shaking). <code>require</code> is a normal function call, so it can sit inside an <code>if</code>; ESM uses dynamic <code>import()</code> for that.</li>
-<li>In Node, a file is ESM when it ends in <code>.mjs</code> or the nearest <code>package.json</code> has <code>"type": "module"</code>; otherwise it is treated as CommonJS. Mixing the two causes the classic "Cannot use import statement outside a module" and "require is not defined" errors.</li>
+<li>In Node, a file is ESM when it ends in <code>.mjs</code> or the nearest <code>package.json</code> has <code>"type": "module"</code>; otherwise older Node treats it as CommonJS (newer Node, since 22.7, can detect import syntax in a <code>.js</code> file with no <code>"type"</code> and run it as ESM, and since 22.12 <code>require()</code> can load ESM; use <code>.cjs</code> or <code>"type": "commonjs"</code> to be explicit). Mixing the two causes the classic "Cannot use import statement outside a module" and "require is not defined" errors.</li>
 <li>Browsers load a module with <code>&lt;script type="module"&gt;</code>; it is deferred and strict by default.</li>
 <li>Prefer one style per package. New code: ESM. Keep CommonJS only where a tool or old dependency needs it.</li>
 <li>C# bridge: a bit like <code>using</code> plus <code>public</code>/<code>internal</code> visibility: only what is exported is visible to other files.</li>
 </ul>`,
         hi: `<ul>
 <li>क्योंकि <code>import</code> static है, bundlers unused exports हटा सकते हैं (tree shaking)। <code>require</code> सामान्य function call है, इसलिए <code>if</code> के अंदर आ सकता है; ESM इसके लिए dynamic <code>import()</code> use करता है।</li>
-<li>Node में file तब ESM होती है जब वह <code>.mjs</code> पर ख़त्म हो या सबसे पास की <code>package.json</code> में <code>"type": "module"</code> हो; वरना उसे CommonJS माना जाता है। दोनों को mix करने से classic errors आते हैं "Cannot use import statement outside a module" और "require is not defined"।</li>
+<li>Node में file तब ESM होती है जब वह <code>.mjs</code> पर ख़त्म हो या सबसे पास की <code>package.json</code> में <code>"type": "module"</code> हो; वरना पुराना Node उसे CommonJS मानता है (नया Node, 22.7 से, बिना <code>"type"</code> वाली <code>.js</code> file में import syntax पहचानकर उसे ESM चला सकता है, और 22.12 से <code>require()</code> ESM load कर सकता है; साफ़ रखने के लिए <code>.cjs</code> या <code>"type": "commonjs"</code> use करो)। दोनों को mix करने से classic errors आते हैं "Cannot use import statement outside a module" और "require is not defined"।</li>
 <li>Browsers module को <code>&lt;script type="module"&gt;</code> से load करते हैं; वह deferred और default में strict होता है।</li>
 <li>एक package में एक ही style prefer करो। नया code: ESM। CommonJS वहीं रखो जहाँ कोई tool या पुरानी dependency माँगे।</li>
 <li>C# bridge: कुछ-कुछ <code>using</code> और <code>public</code>/<code>internal</code> visibility जैसा: दूसरी files को सिर्फ़ वही दिखता है जो export हुआ हो।</li>
 </ul>`,
         hg: `<ul>
 <li>Kyonki <code>import</code> static hai, bundlers unused exports hata sakte hain (tree shaking). <code>require</code> saamaanya function call hai, isliye <code>if</code> ke andar aa sakta hai; ESM iske liye dynamic <code>import()</code> use karta hai.</li>
-<li>Node mein file tab ESM hoti hai jab woh <code>.mjs</code> par khatam ho ya sabse paas ki <code>package.json</code> mein <code>"type": "module"</code> ho; warna use CommonJS maana jaata hai. Dono ko mix karne se classic errors aate hain "Cannot use import statement outside a module" aur "require is not defined".</li>
+<li>Node mein file tab ESM hoti hai jab woh <code>.mjs</code> par khatam ho ya sabse paas ki <code>package.json</code> mein <code>"type": "module"</code> ho; warna purana Node use CommonJS maanta hai (naya Node, 22.7 se, bina <code>"type"</code> wali <code>.js</code> file mein import syntax pehchankar use ESM chala sakta hai, aur 22.12 se <code>require()</code> ESM load kar sakta hai; saaf rakhne ke liye <code>.cjs</code> ya <code>"type": "commonjs"</code> use karo). Dono ko mix karne se classic errors aate hain "Cannot use import statement outside a module" aur "require is not defined".</li>
 <li>Browsers module ko <code>&lt;script type="module"&gt;</code> se load karte hain; woh deferred aur default mein strict hota hai.</li>
 <li>Ek package mein ek hi style prefer karo. Naya code: ESM. CommonJS wahin rakho jahan koi tool ya purani dependency maange.</li>
 <li>C# bridge: kuch-kuch <code>using</code> aur <code>public</code>/<code>internal</code> visibility jaisa: doosri files ko sirf wahi dikhta hai jo export hua ho.</li>
@@ -1395,19 +1395,19 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
         en: `<ul>
 <li>Switch on with the string <code>"use strict"</code> at the top of a script or function. In a classic script without it, <code>count = 5</code> on an undeclared name silently creates a global; in strict mode it throws <code>ReferenceError</code>.</li>
 <li>Other effects: duplicate parameter names are an error, writing to a read-only property throws instead of being ignored, and <code>this</code> in a plain call is <code>undefined</code> rather than the global object.</li>
-<li>Practical advice: you rarely type <code>"use strict"</code> today because modules, classes and most bundler or TypeScript setups are already strict. Seeing it in a legacy file tells you the file is not a module.</li>
+<li>Practical advice: you rarely type <code>"use strict"</code> today because modules, classes and most bundler or TypeScript setups are already strict. Seeing it in a legacy file usually means the file is not a module (compiled TypeScript or Babel output can also emit it).</li>
 <li>Follow-up: "Why do you care?" It makes accidental globals and lost-<code>this</code> bugs fail loudly, which is cheaper to find than a silent wrong value.</li>
 </ul>`,
         hi: `<ul>
 <li>Script या function के ऊपर string <code>"use strict"</code> से चालू होता है। उसके बिना classic script में undeclared नाम पर <code>count = 5</code> चुपचाप global बना देता है; strict mode में <code>ReferenceError</code> आता है।</li>
 <li>और असर: duplicate parameter names error हैं, read-only property में लिखना ignore होने की जगह throw करता है, और plain call में <code>this</code> global object की जगह <code>undefined</code> होता है।</li>
-<li>Practical सलाह: आज <code>"use strict"</code> कम ही type करते हैं क्योंकि modules, classes और ज़्यादातर bundler या TypeScript setups पहले से strict हैं। Legacy file में यह दिखे तो मतलब वह file module नहीं है।</li>
+<li>Practical सलाह: आज <code>"use strict"</code> कम ही type करते हैं क्योंकि modules, classes और ज़्यादातर bundler या TypeScript setups पहले से strict हैं। Legacy file में यह दिखे तो आम तौर पर मतलब वह file module नहीं है (compiled TypeScript या Babel output भी इसे लिख सकता है)।</li>
 <li>Follow-up: "तुम्हें परवाह क्यों?" इससे accidental globals और खोए हुए <code>this</code> वाले bugs loud होकर fail होते हैं, जो चुपचाप ग़लत value से सस्ते में मिलते हैं।</li>
 </ul>`,
         hg: `<ul>
 <li>Script ya function ke upar string <code>"use strict"</code> se chaalu hota hai. Uske bina classic script mein undeclared naam par <code>count = 5</code> chupchaap global bana deta hai; strict mode mein <code>ReferenceError</code> aata hai.</li>
 <li>Aur asar: duplicate parameter names error hain, read-only property mein likhna ignore hone ki jagah throw karta hai, aur plain call mein <code>this</code> global object ki jagah <code>undefined</code> hota hai.</li>
-<li>Practical salaah: aaj <code>"use strict"</code> kam hi type karte hain kyonki modules, classes aur zyaadatar bundler ya TypeScript setups pehle se strict hain. Legacy file mein yeh dikhe to matlab woh file module nahi hai.</li>
+<li>Practical salaah: aaj <code>"use strict"</code> kam hi type karte hain kyonki modules, classes aur zyaadatar bundler ya TypeScript setups pehle se strict hain. Legacy file mein yeh dikhe to aam taur par matlab woh file module nahi hai (compiled TypeScript ya Babel output bhi ise likh sakta hai).</li>
 <li>Follow-up: "Tumhein parwah kyon?" Isse accidental globals aur khoye hue <code>this</code> wale bugs loud hokar fail hote hain, jo chupchaap galat value se sasste mein milte hain.</li>
 </ul>`
       }
@@ -1418,8 +1418,8 @@ fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/j
       q: "As a Tech Lead, would you adopt TypeScript on a JavaScript team?",
       answer: "Usually yes for a shared, long-lived codebase: types catch mistakes before running and help refactoring. Adopt gradually and keep tests; types do not replace runtime validation of API data.",
       meaning: {
-        hi: "साझा, लंबे चलने वाले codebase के लिए आम तौर पर हाँ: types चलाने से पहले ग़लतियाँ पकड़ते हैं और refactoring में मदद करते हैं। धीरे-धीरे अपनाओ और tests रखो; types API data की runtime validation की जगह नहीं लेते।",
-        hg: "Saajha, lambe chalne wale codebase ke liye aam taur par haan: types chalane se pehle galatiyan pakadte hain aur refactoring mein madad karte hain. Dheere-dheere apnao aur tests rakho; types API data ki runtime validation ki jagah nahi lete."
+        hi: "shared, लंबे चलने वाले codebase के लिए आम तौर पर हाँ: types चलाने से पहले ग़लतियाँ पकड़ते हैं और refactoring में मदद करते हैं। धीरे-धीरे अपनाओ और tests रखो; types API data की runtime validation की जगह नहीं लेते।",
+        hg: "Shared, lambe chalne wale codebase ke liye aam taur par haan: types chalane se pehle galatiyan pakadte hain aur refactoring mein madad karte hain. Dheere-dheere apnao aur tests rakho; types API data ki runtime validation ki jagah nahi lete."
       },
       explain: {
         en: `<ul>
@@ -1523,11 +1523,11 @@ console.log("3 sync: script end");`,
       answer: "1 sync: script start\n2 sync: inside async, before await\n3 sync: script end\n4 microtask: promise.then\n5 microtask: queueMicrotask\n6 microtask: after await\n7 macrotask: setTimeout 0",
       explain: {
         en: `<p>The order is <b>synchronous code first</b> (lines 1, 2, 3, even the part of the async function before its first <code>await</code>), then <b>all microtasks</b> in the order they were queued (the promise <code>then</code>, <code>queueMicrotask</code>, then the code after <code>await</code>), and only then the <b>macrotask</b> <code>setTimeout 0</code>.</p>
-<p>Why "6" comes after "5": the <code>await null</code> continuation was queued after the other two. Why "7" is last: a timer callback is a macrotask, and the microtask queue is emptied completely before the next macrotask runs. In Node, <code>process.nextTick</code> would run even before the promise callbacks. Output order here is deterministic in Node; do not rely on exact timer-vs-timer ordering between different delays in real apps.</p>`,
+<p>Why "6" comes after "5": the <code>await null</code> continuation was queued after the other two. Why "7" is last: a timer callback is a macrotask, and the microtask queue is emptied completely before the next macrotask runs. In Node, <code>process.nextTick</code> has its own queue: at ES-module top level (as here) it runs after the promise callbacks, but in CommonJS and inside timer callbacks it runs before them. Output order here is deterministic in Node; do not rely on exact timer-vs-timer ordering between different delays in real apps.</p>`,
         hi: `<p>Order यह है: <b>पहले synchronous code</b> (lines 1, 2, 3, यहाँ तक कि async function का वह हिस्सा जो पहले <code>await</code> से पहले है), फिर <b>सारे microtasks</b> उसी order में जिसमें queue हुए (promise का <code>then</code>, <code>queueMicrotask</code>, फिर <code>await</code> के बाद का code), और उसके बाद ही <b>macrotask</b> <code>setTimeout 0</code>।</p>
-<p>"6" "5" के बाद क्यों: <code>await null</code> का continuation बाक़ी दोनों के बाद queue हुआ। "7" आख़िर में क्यों: timer callback macrotask है, और अगला macrotask चलने से पहले microtask queue पूरी ख़ाली होती है। Node में <code>process.nextTick</code> promise callbacks से भी पहले चलता। यहाँ Node में output order deterministic है; असली apps में अलग-अलग delays वाले timers के आपसी order पर भरोसा मत करो।</p>`,
+<p>"6" "5" के बाद क्यों: <code>await null</code> का continuation बाक़ी दोनों के बाद queue हुआ। "7" आख़िर में क्यों: timer callback macrotask है, और अगला macrotask चलने से पहले microtask queue पूरी ख़ाली होती है। Node में <code>process.nextTick</code> की अपनी queue है: ES-module के top level पर (जैसे यहाँ) वह promise callbacks के बाद चलता है, पर CommonJS में और timer callbacks के अंदर उनसे पहले। यहाँ Node में output order deterministic है; असली apps में अलग-अलग delays वाले timers के आपसी order पर भरोसा मत करो।</p>`,
         hg: `<p>Order yeh hai: <b>pehle synchronous code</b> (lines 1, 2, 3, yahan tak ki async function ka woh hissa jo pehle <code>await</code> se pehle hai), phir <b>saare microtasks</b> usi order mein jisme queue hue (promise ka <code>then</code>, <code>queueMicrotask</code>, phir <code>await</code> ke baad ka code), aur uske baad hi <b>macrotask</b> <code>setTimeout 0</code>.</p>
-<p>"6" "5" ke baad kyon: <code>await null</code> ka continuation baaki dono ke baad queue hua. "7" aakhir mein kyon: timer callback macrotask hai, aur agla macrotask chalne se pehle microtask queue poori khaali hoti hai. Node mein <code>process.nextTick</code> promise callbacks se bhi pehle chalta. Yahan Node mein output order deterministic hai; asli apps mein alag-alag delays wale timers ke aapsi order par bharosa mat karo.</p>`
+<p>"6" "5" ke baad kyon: <code>await null</code> ka continuation baaki dono ke baad queue hua. "7" aakhir mein kyon: timer callback macrotask hai, aur agla macrotask chalne se pehle microtask queue poori khaali hoti hai. Node mein <code>process.nextTick</code> ki apni queue hai: ES-module ke top level par (jaise yahan) woh promise callbacks ke baad chalta hai, par CommonJS mein aur timer callbacks ke andar unse pehle. Yahan Node mein output order deterministic hai; asli apps mein alag-alag delays wale timers ke aapsi order par bharosa mat karo.</p>`
       }
     },
     {
@@ -1779,7 +1779,7 @@ try {
       "Use ===; == converts types first and surprises (for example [] == false is true).",
       "?? falls back only for null/undefined; || also replaces 0, \"\" and false.",
       "Event loop order: synchronous code, then all microtasks (promise callbacks), then one macrotask such as setTimeout.",
-      "async/await is syntax over promises: one loop thread, no thread pool, and CPU-heavy work still blocks.",
+      "async/await is syntax over promises; your JS runs on one thread and no thread pool runs your callbacks.",
       "Promise.all fails fast, allSettled reports every result, race returns the first to settle, any the first fulfilled.",
       "fetch rejects only on network failure; a 404 or 500 resolves, so check res.ok.",
       "Leave jQuery page by page: querySelector, addEventListener, classList and fetch cover most uses."
@@ -1794,7 +1794,7 @@ try {
         "=== use करो; == पहले types convert करता है और चौंकाता है (जैसे [] == false true है)।",
         "?? सिर्फ़ null/undefined पर fallback देता है; || 0, \"\" और false को भी बदल देता है।",
         "Event loop का order: synchronous code, फिर सारे microtasks (promise callbacks), फिर एक macrotask जैसे setTimeout।",
-        "async/await promises पर syntax है: एक loop thread, कोई thread pool नहीं, और CPU-heavy काम फिर भी block करता है।",
+        "async/await promises पर syntax है; तुम्हारा JS एक thread पर चलता है और कोई thread pool तुम्हारे callbacks नहीं चलाता।",
         "Promise.all fail-fast है, allSettled हर नतीजा बताता है, race पहला settled देता है, any पहला fulfilled।",
         "fetch सिर्फ़ network failure पर reject होता है; 404 या 500 पर resolve होता है, इसलिए res.ok check करो।",
         "jQuery को page-by-page छोड़ो: querySelector, addEventListener, classList और fetch ज़्यादातर uses cover करते हैं।"
@@ -1808,7 +1808,7 @@ try {
         "=== use karo; == pehle types convert karta hai aur chaunkata hai (jaise [] == false true hai).",
         "?? sirf null/undefined par fallback deta hai; || 0, \"\" aur false ko bhi badal deta hai.",
         "Event loop ka order: synchronous code, phir saare microtasks (promise callbacks), phir ek macrotask jaise setTimeout.",
-        "async/await promises par syntax hai: ek loop thread, koi thread pool nahi, aur CPU-heavy kaam phir bhi block karta hai.",
+        "async/await promises par syntax hai; tumhara JS ek thread par chalta hai aur koi thread pool tumhare callbacks nahi chalata.",
         "Promise.all fail-fast hai, allSettled har nateeja batata hai, race pehla settled deta hai, any pehla fulfilled.",
         "fetch sirf network failure par reject hota hai; 404 ya 500 par resolve hota hai, isliye res.ok check karo.",
         "jQuery ko page-by-page chhodo: querySelector, addEventListener, classList aur fetch zyaadatar uses cover karte hain."
