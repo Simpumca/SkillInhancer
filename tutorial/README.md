@@ -1,6 +1,12 @@
 # TL Prep — .NET Tech Lead in 30 Days
 
-An offline study site for .NET Tech Lead interview preparation. Every day has a short summary, concept sections with analogies and code, interview Q&A, "what will this print?" puzzles, and a last-minute revision list. Days 1–21 are ready. Week 1 (days 1–7): OOP, C# Core, C# Advanced, LINQ, EF Core Parts 1 and 2, and a revision day. Week 2 (days 8–14): SOLID and DI, creational patterns, structural and behavioural patterns, enterprise patterns, ASP.NET Core fundamentals, Web API, and a revision day. Week 3 (days 15–21): Architecture, Microservices, System Design for TL rounds, SQL Server, PostgreSQL and data comparisons, Azure, and DevOps. Days 22–30 are not written yet.
+An offline study site for .NET Tech Lead interview preparation. Every day has a short summary, concept sections with analogies and code, interview Q&A, "what will this print?" puzzles, and a last-minute revision list. All 30 days are ready. Week 1 (days 1–7): OOP, C# Core, C# Advanced, LINQ, EF Core Parts 1 and 2, and a revision day. Week 2 (days 8–14): SOLID and DI, creational patterns, structural and behavioural patterns, enterprise patterns, ASP.NET Core fundamentals, Web API, and a revision day. Week 3 (days 15–21): Architecture, Microservices, System Design for TL rounds, SQL Server, PostgreSQL and data comparisons, Azure, and DevOps. Week 4 (days 22–30): legacy .NET migration, JavaScript, React and Next.js, testing, security and performance, AI for developers, Tech Lead leadership, Mock Interview 1 and Mock Interview 2 with the final cheat sheets.
+
+## How to study
+
+- Do one day a day (about 1–1.5 hours): read the summary and **Short** mode first, then switch to **Detailed** for code and puzzles. Say each interview answer aloud before you open it.
+- Use days 7 and 14 as revision days, and days 29 and 30 as timed mock interviews. Day 30 also has one-page cheat sheets per week and an interview-day checklist.
+- After the 30 days, undo "Day done" on weak days and let **Today ▶** take you back to them (see "After the 30 days" on Day 30).
 
 ## How to open
 
@@ -10,7 +16,7 @@ An offline study site for .NET Tech Lead interview preparation. Every day has a 
 
 ## How it works
 
-- **Home** shows the 30-day plan, your progress (`done/21` while 21 days are ready) and a **Today ▶** button that opens the first day you have not finished. Days 22–30 show as "Coming soon".
+- **Home** shows the 30-day plan, your progress (`done/30`) and a **Today ▶** button that opens the first day you have not finished.
 - **Language**: English, Hindi (Devanagari) or Hinglish (Roman script). Interview answers and revision lines stay in English, because interviews are in English. In Hindi and Hinglish mode, a short meaning appears below each one.
 - **Depth**: **Short** shows the summary, the key sections, the 8 most-asked questions and the revision list. **Detailed** adds everything else, including the puzzles.
 - **Progress**: "Mark day as done" on a day page. Click it again to undo.
