@@ -125,7 +125,7 @@ test('formatMinutes', () => {
 
 test('lang_class_maps_prism_names', () => {
   const { langClass } = require('../assets/core.js');
-  const m = { csharp: 'csharp', sql: 'sql', yaml: 'yaml', dockerfile: 'docker', bash: 'bash', json: 'json', text: 'none' };
+  const m = { csharp: 'csharp', sql: 'sql', yaml: 'yaml', dockerfile: 'docker', bash: 'bash', json: 'json', text: 'none', javascript: 'javascript', jsx: 'jsx', tsx: 'tsx', typescript: 'typescript', html: 'markup' };
   for (const [k, v] of Object.entries(m)) assert.equal(langClass(k), 'language-' + v);
   assert.equal(langClass(undefined), 'language-csharp');
   assert.equal(langClass('weird'), 'language-csharp');

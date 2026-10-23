@@ -8,8 +8,8 @@ const DEVANAGARI = /[ऀ-ॿ]/;
 const isStr = v => typeof v === 'string' && v.length > 0;
 const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
 const FRAMEWORKS = ['aspnetcore'];
-const LANG_IDS = ['csharp', 'sql', 'yaml', 'dockerfile', 'bash', 'json', 'text'];
-const CHECKABLE_LANGS = ['csharp', 'sql'];
+const LANG_IDS = ['csharp', 'sql', 'javascript', 'jsx', 'tsx', 'typescript', 'html', 'yaml', 'dockerfile', 'bash', 'json', 'text'];
+const CHECKABLE_LANGS = ['csharp', 'sql', 'javascript'];
 
 // lang?: one of LANG_IDS (default csharp). Returns true when the lang is known.
 function checkLang(item, label, errors) {
@@ -18,11 +18,12 @@ function checkLang(item, label, errors) {
   return true;
 }
 
-export const minPuzzlesFor = n => (n >= 1 && n <= 21 ? 5 : 0);
+export const minPuzzlesFor = n => (n === 28 ? 3 : n >= 1 && n <= 30 ? 5 : 0);
 
 // frameworks?: string[] of known values; shared by code items and puzzles.
 function checkFrameworks(item, label, errors) {
   if (item.frameworks === undefined) return;
+  if ((item.lang ?? 'csharp') !== 'csharp') { errors.push(`${label}: frameworks only allowed for lang csharp`); return; }
   const f = item.frameworks;
   if (!Array.isArray(f) || !f.every(x => typeof x === 'string')) {
     errors.push(`${label}: frameworks must be an array of strings`);
@@ -35,6 +36,7 @@ const PACKAGE_SPEC = /^[A-Za-z0-9_.\-]+(@[0-9A-Za-z.*\-+]+)?$/;
 // packages?: "Name" or "Name@version" strings.
 function checkPackages(item, label, errors) {
   if (item.packages === undefined) return;
+  if ((item.lang ?? 'csharp') !== 'csharp') { errors.push(`${label}: packages only allowed for lang csharp`); return; }
   if (!Array.isArray(item.packages) || !item.packages.every(x => typeof x === 'string')) {
     errors.push(`${label}: packages must be an array of strings`);
     return;
@@ -207,7 +209,7 @@ export function validateDay(day, opts = {}) {
     checkFrameworks(p, l, errors);
     checkPackages(p, l, errors);
     if (checkLang(p, l, errors) && p.lang !== undefined && !CHECKABLE_LANGS.includes(p.lang)) {
-      errors.push(`${l}: puzzle lang ${p.lang} must be csharp or sql`);
+      errors.push(`${l}: puzzle lang ${p.lang} must be csharp, sql or javascript`);
     }
     if (!isStr(p.src)) errors.push(`${l}: missing src`);
     if (typeof p.answer !== 'string') errors.push(`${l}: missing answer`);

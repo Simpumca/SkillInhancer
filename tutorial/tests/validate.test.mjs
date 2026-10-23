@@ -180,10 +180,11 @@ test('filename_day_mismatch', async () => {
   assert.ok(!validateContentFile('tests/fixtures/day-good.js', 1, RELAXED).some(e => e.startsWith('day: file')));
 });
 
-test('min_puzzles_for_days_1_to_21', async () => {
+test('min_puzzles_for_days_1_to_30', async () => {
   const { minPuzzlesFor } = await import('../tools/validate.mjs');
-  for (let n = 1; n <= 21; n++) assert.equal(minPuzzlesFor(n), 5, `day ${n}`);
-  assert.equal(minPuzzlesFor(22), 0);
+  for (let n = 1; n <= 30; n++) assert.equal(minPuzzlesFor(n), n === 28 ? 3 : 5, `day ${n}`);
+  assert.equal(minPuzzlesFor(31), 0);
+  assert.equal(minPuzzlesFor(0), 0);
 });
 
 test('raw_generic_tag_in_html_field_is_error', () => {
@@ -231,7 +232,7 @@ test('lang_sql_and_csharp_may_be_checked', () => {
 test('puzzle_lang_must_be_csharp_or_sql', () => {
   const d = good();
   d.puzzles[0].lang = 'bash';
-  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: puzzle lang bash must be csharp or sql'));
+  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: puzzle lang bash must be csharp, sql or javascript'));
   d.puzzles[0].lang = 'sql';
   assert.deepEqual(validateDay(d, RELAXED), []);
   d.puzzles[0].lang = 'nope';
@@ -269,4 +270,45 @@ test('packages_spec_validation', () => {
   d = good();
   d.puzzles[0].packages = ['Foo bar'];
   assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: bad package spec Foo bar'));
+});
+
+test('lang_javascript_checkable_and_display_only_langs', () => {
+  const d = good();
+  d.qa[0].code = [
+    { caption: d.summary, src: 'console.log(1);', check: 'run', expected: '1', lang: 'javascript' },
+    { caption: d.summary, src: 'let a = 1;', check: 'compile', lang: 'javascript' },
+    ...['jsx', 'tsx', 'typescript', 'html'].map(lang => ({ caption: d.summary, src: 'x', check: 'none', lang }))
+  ];
+  assert.deepEqual(validateDay(d, RELAXED), []);
+  for (const lang of ['jsx', 'tsx', 'typescript', 'html']) {
+    d.qa[0].code = [{ caption: d.summary, src: 'x', check: 'run', expected: 'x', lang }];
+    assert.ok(validateDay(d, RELAXED).includes(`qa[0].code[0]: lang ${lang} must use check:"none"`), lang);
+  }
+});
+
+test('puzzle_lang_javascript_ok_jsx_rejected', () => {
+  const d = good();
+  d.puzzles[0].lang = 'javascript';
+  assert.deepEqual(validateDay(d, RELAXED), []);
+  d.puzzles[0].lang = 'jsx';
+  assert.ok(validateDay(d, RELAXED).includes('puzzles[0]: puzzle lang jsx must be csharp, sql or javascript'));
+});
+
+test('packages_and_frameworks_only_on_csharp_items', () => {
+  let d = good();
+  d.sections[0].code[0] = { ...d.sections[0].code[0], lang: 'sql', packages: ['Foo'], frameworks: ['aspnetcore'] };
+  let errs = validateDay(d, RELAXED);
+  assert.ok(errs.includes('sections[0].code[0]: packages only allowed for lang csharp'), errs.join('\n'));
+  assert.ok(errs.includes('sections[0].code[0]: frameworks only allowed for lang csharp'), errs.join('\n'));
+  d = good();
+  d.puzzles[0].lang = 'javascript';
+  d.puzzles[0].packages = ['Foo'];
+  d.puzzles[0].frameworks = ['aspnetcore'];
+  errs = validateDay(d, RELAXED);
+  assert.ok(errs.includes('puzzles[0]: packages only allowed for lang csharp'));
+  assert.ok(errs.includes('puzzles[0]: frameworks only allowed for lang csharp'));
+  d = good();
+  d.puzzles[0].lang = 'csharp';
+  d.puzzles[0].packages = ['Foo'];
+  assert.deepEqual(validateDay(d, RELAXED), []);
 });

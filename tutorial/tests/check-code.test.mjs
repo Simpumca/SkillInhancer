@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { loadDay } from '../tools/load-content.mjs';
-import { collectSnippets, isRestoreFailure, normalize, csproj } from '../tools/check-code.mjs';
+import { collectSnippets, isRestoreFailure, normalize, csproj, makeLocalDbStarter } from '../tools/check-code.mjs';
 
 const hasDotnet = spawnSync('dotnet', ['--version'], { encoding: 'utf8' }).status === 0;
 const runCli = (file) =>
@@ -85,10 +85,18 @@ test('cli_fails_loudly_when_frameworks_missing', (t) => {
   assert.doesNotMatch(r.stdout, /SKIP/);
 });
 
-const hasSql = (() => {
+// Start LocalDB first (a cold instance can time out the first probe); report why SQL tests are skipped.
+const sqlProbe = (() => {
+  makeLocalDbStarter()();
   const r = spawnSync('sqlcmd', ['-S', '(localdb)\\MSSQLLocalDB', '-b', '-Q', 'SELECT 1'], { encoding: 'utf8', timeout: 90000 });
-  return r.status === 0;
+  if (r.error?.code === 'ENOENT') return { ok: false, reason: 'sqlcmd not found' };
+  if (r.error?.code === 'ETIMEDOUT') return { ok: false, reason: 'timeout' };
+  if (r.status === 0) return { ok: true, reason: '' };
+  const first = ((r.stderr || '') + (r.stdout || '')).split(/\r?\n/).map(l => l.trim()).find(Boolean);
+  return { ok: false, reason: first || `exit ${r.status}` };
 })();
+const hasSql = sqlProbe.ok;
+const sqlSkip = `LocalDB/sqlcmd unavailable: ${sqlProbe.reason}`;
 
 test('collect_snippets_carries_lang_default_csharp', () => {
   const sql = collectSnippets(loadDay('tests/fixtures/day-sql.js'));
@@ -112,7 +120,7 @@ test('sql_db_name_sanitised_and_capped', async () => {
 });
 
 test('cli_sql_fixture_passes', (t) => {
-  if (!hasSql) return t.skip('LocalDB/sqlcmd unavailable');
+  if (!hasSql) return t.skip(sqlSkip);
   const r = runCli('tests/fixtures/day-sql.js');
   assert.equal(r.status, 0, r.stdout + r.stderr);
   assert.match(r.stdout, /PASS day96-sec-sql-0/);
@@ -121,7 +129,7 @@ test('cli_sql_fixture_passes', (t) => {
 });
 
 test('cli_sql_wrong_expected_and_bad_sql_fail', (t) => {
-  if (!hasSql) return t.skip('LocalDB/sqlcmd unavailable');
+  if (!hasSql) return t.skip(sqlSkip);
   const r = runCli('tests/fixtures/day-sql-bad.js');
   assert.equal(r.status, 1, r.stdout + r.stderr);
   assert.match(r.stdout, /FAIL day95-sec-sql-0: output mismatch/);
@@ -161,4 +169,56 @@ test('localdb_start_attempted_once_and_failure_ignored', async () => {
   assert.equal(calls.length, 1);
   assert.deepEqual(calls[0][1], ['start', 'MSSQLLocalDB']);
   assert.equal(calls[0][2], 30000);
+});
+
+// ---- JavaScript snippets ----
+const runJs = (file, env = {}) =>
+  spawnSync(process.execPath, ['tools/check-code.mjs', '--file', file], { encoding: 'utf8', timeout: 120000, env: { ...process.env, ...env } });
+
+test('collect_snippets_javascript_lang', () => {
+  const items = collectSnippets(loadDay('tests/fixtures/day-js.js'));
+  assert.deepEqual(items.map(i => i.key), ['day94-sec-js-0', 'day94-sec-js-1', 'day94-puz-sum']);
+  assert.deepEqual(items.map(i => i.lang), ['javascript', 'javascript', 'javascript']);
+});
+
+test('cli_javascript_fixture_passes_and_ignores_stderr', () => {
+  const r = runJs('tests/fixtures/day-js.js');
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /PASS day94-sec-js-0/);
+  assert.match(r.stdout, /PASS day94-sec-js-1/);
+  assert.match(r.stdout, /PASS day94-puz-sum/);
+});
+
+test('cli_javascript_wrong_expected_syntax_error_and_exit_code_fail', () => {
+  const r = runJs('tests/fixtures/day-js-bad.js');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /FAIL day93-sec-js-0: output mismatch/);
+  assert.match(r.stdout, /FAIL day93-sec-js-1: .*SyntaxError/);   // compile mode: node --check
+  assert.match(r.stdout, /FAIL day93-sec-js-2: .*SyntaxError/);   // run mode
+  assert.match(r.stdout, /FAIL day93-sec-js-3: exit code 3/);
+  assert.match(r.stdout, /FAIL day93-puz-sum: output mismatch/);
+  assert.doesNotMatch(r.stdout, /SKIP/);
+});
+
+test('cli_javascript_timeout_fails', () => {
+  const r = runJs('tests/fixtures/day-js-timeout.js', { TL_JS_TIMEOUT_MS: '1500' });
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /FAIL day92-sec-js-0: run timed out/);
+});
+
+test('javascript_temp_dir_cleaned_up', async () => {
+  const { existsSync, readdirSync } = await import('node:fs');
+  runJs('tests/fixtures/day-js.js');
+  const dir = 'tools/.snippets';
+  const left = existsSync(dir) ? readdirSync(dir).filter(d => d.includes('-js-')) : [];
+  assert.deepEqual(left, []);
+});
+
+// Needs NuGet access; SKIP (restore failed) skips the test instead of failing it.
+test('cli_compiles_package_pinned_fixture', (t) => {
+  if (!hasDotnet) return t.skip('dotnet not on PATH');
+  const r = runCli('tests/fixtures/day-pkg.js');
+  if (/SKIP day97-sec-pkg-0 \(restore failed\)/.test(r.stdout)) return t.skip('NuGet unavailable');
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /PASS day97-sec-pkg-0/);
 });

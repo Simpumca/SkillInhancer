@@ -155,8 +155,48 @@ function dropSqlDb(db) {
   if (r.status !== 0 || r.timedOut) console.error(`WARN could not drop ${db}`);
 }
 
+// ---- JavaScript snippets: ES module run by node in a throw-away temp dir, no network, hard timeout ----
+const jsTimeout = () => Number(process.env.TL_JS_TIMEOUT_MS) || 30000;
+
+function nodeRun(args, cwd, timeout) {
+  const r = spawnSync(process.execPath, args, { cwd, encoding: 'utf8', timeout, killSignal: 'SIGKILL' });
+  const stdout = r.stdout || '', stderr = r.stderr || '';
+  return { status: r.status, stdout, stderr, out: stdout + stderr, timedOut: r.error?.code === 'ETIMEDOUT' };
+}
+
+// First useful line of node's error output (the "SyntaxError: ..." / "Error: ..." line).
+const jsError = (out) => {
+  const lines = out.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  return lines.find(l => /^\w*Error\b/.test(l)) || lines.find(l => /\bError\b/.test(l)) || lines[0] || 'unknown error';
+};
+
+export function checkJsSnippet(snip) {
+  const dir = path.join(SNIPPETS_DIR, `${snip.key}-js-${process.pid}`);
+  mkdirSync(dir, { recursive: true });
+  try {
+    writeFileSync(path.join(dir, 'snippet.mjs'), snip.src);
+    const c = nodeRun(['--check', 'snippet.mjs'], dir, jsTimeout());
+    if (c.timedOut) return { status: 'FAIL', detail: 'compile timed out' };
+    if (c.status !== 0) return { status: 'FAIL', detail: `syntax check failed: ${jsError(c.stderr || c.stdout)}` };
+    if (snip.mode !== 'run') return { status: 'PASS' };
+    const r = nodeRun(['snippet.mjs'], dir, jsTimeout());
+    if (r.timedOut) return { status: 'FAIL', detail: 'run timed out' };
+    if (r.status !== 0) return { status: 'FAIL', detail: `exit code ${r.status}: ${jsError(r.stderr || r.stdout)}` };
+    if (snip.expected === undefined) return { status: 'PASS' };
+    const actual = normalize(r.stdout);
+    const expected = normalize(snip.expected);
+    if (actual !== expected) {
+      return { status: 'FAIL', detail: `output mismatch\n    expected: ${JSON.stringify(expected)}\n    actual:   ${JSON.stringify(actual)}${r.stderr.trim() ? `\n    stderr:   ${JSON.stringify(r.stderr.trim())}` : ''}` };
+    }
+    return { status: 'PASS' };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 export function checkSnippet(snip) {
   if (snip.lang === 'sql') return checkSqlSnippet(snip);
+  if (snip.lang === 'javascript') return checkJsSnippet(snip);
   const dir = path.join(SNIPPETS_DIR, snip.key);
   mkdirSync(dir, { recursive: true });
   writeIfChanged(path.join(dir, 'Program.cs'), snip.src);
