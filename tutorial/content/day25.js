@@ -13,31 +13,31 @@ window.TL_DAY = {
 <li><b>Good unit test:</b> fast, isolated, repeatable, self-checking (FIRST); written as Arrange-Act-Assert; one behaviour per test; a name that reads like a sentence, e.g. <code>Total_WithTenPercentDiscount_ReducesPrice</code>.</li>
 <li><b>xUnit:</b> <code>[Fact]</code> for one case, <code>[Theory]</code> with <code>[InlineData]</code> or <code>[MemberData]</code> for many. xUnit creates a <b>new test-class instance for every test</b> (constructor = setup, <code>IDisposable</code> = teardown) and shares expensive setup with class or collection fixtures.</li>
 <li><b>Test doubles:</b> dummy, stub, fake, spy and mock are different things. Prefer a <b>fake or stub</b> and check results; use a mock (Moq or NSubstitute) mainly when the interaction itself is the behaviour. Use <code>TimeProvider</code> and <code>FakeTimeProvider</code> for time.</li>
-<li><b>Libraries and licences:</b> FluentAssertions v8 and later need a paid licence for commercial use (v7 stays Apache 2.0); Shouldly, AwesomeAssertions or xUnit's built-in <code>Assert</code> are alternatives. Moq 4.20.0 shipped the SponsorLink analyzer, which caused a backlash and was removed in 4.20.2.</li>
+<li><b>Libraries and licences:</b> assertion and mocking libraries can change licence or behaviour (FluentAssertions v8 and Moq 4.20.0 are the well-known cases); the Q&amp;A has the facts. A TL checks licences before upgrading test libraries.</li>
 <li><b>ASP.NET Core integration tests:</b> <code>WebApplicationFactory&lt;Program&gt;</code> runs your real pipeline in memory; override services with <code>ConfigureTestServices</code> and add a test authentication handler. For a real database use Testcontainers (Day 7), not the EF in-memory provider.</li>
 <li><b>Quality signals:</b> coverage tells you what code <b>ran</b>, not what was <b>checked</b>. Mutation testing (Stryker.NET) and code review of assertions go further. Fix flaky tests (time, order, shared state, sleeps) or quarantine them; do not just ignore them.</li>
 <li><b>TL decision:</b> write a one-page team strategy: what runs on every PR, what runs nightly, what is mandatory (for example a failing test first for every bug fix) and what is left to judgement (TDD for everything is usually not mandated).</li>
 </ul>
 <p>Plan (about 25 minutes for Short plus about 2 hours for Detailed): Short mode, then Q&amp;A aloud, then the code sections (compile-checked with pinned packages), then the eight puzzles, which are plain console programs that model test behaviour.</p>`,
-    hi: `<p>Tech Lead से शायद ही कोई कहता है "इस method का test लिखो"। तुमसे पूछा जाता है "<b>तुम्हारी team की testing strategy क्या है?</b>", "<b>90% coverage है फिर भी bugs क्यों जाते हैं?</b>" और "<b>tests को fast और non-flaky कैसे रखते हो?</b>" Tests को trapeze वाले कलाकार के नीचे लगे <b>safety net</b> की तरह सोचो: इतना net चाहिए कि असली गिरावट पकड़े, इतना भारी नहीं कि कोई कूदने की हिम्मत ही न करे।</p>
+    hi: `<p>Tech Lead से शायद ही कोई कहता है "इस method का test लिखो"। तुमसे पूछा जाता है "<b>तुम्हारी team की testing strategy क्या है?</b>", "<b>90% coverage है फिर भी bugs क्यों जाते हैं?</b>" और "<b>tests को fast और non-flaky कैसे रखते हो?</b>" Tests को trapeze वाले artist के नीचे लगे <b>safety net</b> की तरह सोचो: इतना net चाहिए कि असली fall पकड़े, इतना भारी नहीं कि कोई कूदने की हिम्मत ही न करे।</p>
 <ul>
 <li><b>Suite की shape:</b> <b>test pyramid</b> (बहुत सारे fast unit tests, कम integration tests, बहुत कम end-to-end tests) और <b>testing trophy</b> (integration tests पर ज़्यादा weight) trade-offs हैं, कोई law नहीं। EF Core वाली ASP.NET Core API के लिए real database पर integration tests अक्सर सबसे ज़्यादा value देते हैं।</li>
 <li><b>अच्छा unit test:</b> fast, isolated, repeatable, self-checking (FIRST); Arrange-Act-Assert में लिखा हुआ; एक test में एक behaviour; ऐसा नाम जो sentence जैसा पढ़े, जैसे <code>Total_WithTenPercentDiscount_ReducesPrice</code>।</li>
 <li><b>xUnit:</b> एक case के लिए <code>[Fact]</code>, कई cases के लिए <code>[Theory]</code> के साथ <code>[InlineData]</code> या <code>[MemberData]</code>। xUnit <b>हर test के लिए test-class का नया instance</b> बनाता है (constructor = setup, <code>IDisposable</code> = teardown) और महँगा setup class या collection fixtures से share होता है।</li>
 <li><b>Test doubles:</b> dummy, stub, fake, spy और mock अलग-अलग चीज़ें हैं। <b>Fake या stub</b> को prefer करो और result check करो; mock (Moq या NSubstitute) मुख्य रूप से तब जब interaction ही behaviour हो। Time के लिए <code>TimeProvider</code> और <code>FakeTimeProvider</code> use करो।</li>
-<li><b>Libraries और licences:</b> FluentAssertions v8 और उसके बाद commercial use के लिए paid licence माँगते हैं (v7 Apache 2.0 रहता है); Shouldly, AwesomeAssertions या xUnit का built-in <code>Assert</code> alternatives हैं। Moq 4.20.0 में SponsorLink analyzer आया जिस पर backlash हुआ और 4.20.2 में उसे हटा दिया गया।</li>
+<li><b>Libraries और licences:</b> assertion और mocking libraries का licence या behaviour बदल सकता है (FluentAssertions v8 और Moq 4.20.0 जाने-माने cases हैं); facts Q&amp;A में हैं। TL test libraries upgrade करने से पहले licences check करता है।</li>
 <li><b>ASP.NET Core integration tests:</b> <code>WebApplicationFactory&lt;Program&gt;</code> तुम्हारी real pipeline memory में चलाता है; services को <code>ConfigureTestServices</code> से override करो और test authentication handler जोड़ो। Real database के लिए Testcontainers (Day 7), EF in-memory provider नहीं।</li>
 <li><b>Quality signals:</b> coverage बताती है कि कौन-सा code <b>चला</b>, यह नहीं कि क्या <b>check हुआ</b>। Mutation testing (Stryker.NET) और assertions का code review आगे जाते हैं। Flaky tests (time, order, shared state, sleeps) को fix करो या quarantine करो; बस ignore मत करो।</li>
 <li><b>TL decision:</b> एक page की team strategy लिखो: हर PR पर क्या चलेगा, nightly क्या चलेगा, क्या mandatory है (जैसे हर bug fix के लिए पहले failing test) और क्या judgement पर छोड़ा है (सब कुछ TDD से करना आमतौर पर mandate नहीं होता)।</li>
 </ul>
 <p>Plan (Short के लिए लगभग 25 मिनट और Detailed के लिए लगभग 2 घंटे): पहले Short mode, फिर Q&amp;A ज़ोर से बोलकर, फिर code sections (pinned packages के साथ compile-checked), फिर आठ puzzles, जो simple console programs हैं और test behaviour को model करते हैं।</p>`,
-    hg: `<p>Tech Lead se shaayad hi koi kehta hai "is method ka test likho". Tumse poocha jata hai "<b>tumhari team ki testing strategy kya hai?</b>", "<b>90% coverage hai phir bhi bugs kyon jaate hain?</b>" aur "<b>tests ko fast aur non-flaky kaise rakhte ho?</b>" Tests ko trapeze wale kalakaar ke neeche lage <b>safety net</b> ki tarah socho: itna net chahiye ki asli girawat pakde, itna bhaari nahi ki koi koodne ki himmat hi na kare.</p>
+    hg: `<p>Tech Lead se shaayad hi koi kehta hai "is method ka test likho". Tumse poocha jata hai "<b>tumhari team ki testing strategy kya hai?</b>", "<b>90% coverage hai phir bhi bugs kyon jaate hain?</b>" aur "<b>tests ko fast aur non-flaky kaise rakhte ho?</b>" Tests ko trapeze wale artist ke neeche lage <b>safety net</b> ki tarah socho: itna net chahiye ki asli fall pakde, itna bhaari nahi ki koi koodne ki himmat hi na kare.</p>
 <ul>
 <li><b>Suite ki shape:</b> <b>test pyramid</b> (bahut saare fast unit tests, kam integration tests, bahut kam end-to-end tests) aur <b>testing trophy</b> (integration tests par zyaada weight) trade-offs hain, koi law nahi. EF Core wali ASP.NET Core API ke liye real database par integration tests aksar sabse zyaada value dete hain.</li>
 <li><b>Achha unit test:</b> fast, isolated, repeatable, self-checking (FIRST); Arrange-Act-Assert mein likha hua; ek test mein ek behaviour; aisa naam jo sentence jaisa padhe, jaise <code>Total_WithTenPercentDiscount_ReducesPrice</code>.</li>
 <li><b>xUnit:</b> ek case ke liye <code>[Fact]</code>, kai cases ke liye <code>[Theory]</code> ke saath <code>[InlineData]</code> ya <code>[MemberData]</code>. xUnit <b>har test ke liye test-class ka naya instance</b> banata hai (constructor = setup, <code>IDisposable</code> = teardown) aur mehenga setup class ya collection fixtures se share hota hai.</li>
 <li><b>Test doubles:</b> dummy, stub, fake, spy aur mock alag-alag cheezein hain. <b>Fake ya stub</b> ko prefer karo aur result check karo; mock (Moq ya NSubstitute) mukhya roop se tab jab interaction hi behaviour ho. Time ke liye <code>TimeProvider</code> aur <code>FakeTimeProvider</code> use karo.</li>
-<li><b>Libraries aur licences:</b> FluentAssertions v8 aur uske baad commercial use ke liye paid licence maangte hain (v7 Apache 2.0 rehta hai); Shouldly, AwesomeAssertions ya xUnit ka built-in <code>Assert</code> alternatives hain. Moq 4.20.0 mein SponsorLink analyzer aaya jis par backlash hua aur 4.20.2 mein use hata diya gaya.</li>
+<li><b>Libraries aur licences:</b> assertion aur mocking libraries ka licence ya behaviour badal sakta hai (FluentAssertions v8 aur Moq 4.20.0 jaane-maane cases hain); facts Q&amp;A mein hain. TL test libraries upgrade karne se pehle licences check karta hai.</li>
 <li><b>ASP.NET Core integration tests:</b> <code>WebApplicationFactory&lt;Program&gt;</code> tumhari real pipeline memory mein chalata hai; services ko <code>ConfigureTestServices</code> se override karo aur test authentication handler jodo. Real database ke liye Testcontainers (Day 7), EF in-memory provider nahi.</li>
 <li><b>Quality signals:</b> coverage batati hai ki kaun-sa code <b>chala</b>, yeh nahi ki kya <b>check hua</b>. Mutation testing (Stryker.NET) aur assertions ka code review aage jaate hain. Flaky tests (time, order, shared state, sleeps) ko fix karo ya quarantine karo; bas ignore mat karo.</li>
 <li><b>TL decision:</b> ek page ki team strategy likho: har PR par kya chalega, nightly kya chalega, kya mandatory hai (jaise har bug fix ke liye pehle failing test) aur kya judgement par chhoda hai (sab kuch TDD se karna aamtaur par mandate nahi hota).</li>
@@ -98,7 +98,7 @@ window.TL_DAY = {
 <li><b>Fixtures</b> share expensive setup: <code>IClassFixture&lt;T&gt;</code> = one instance per test class; <code>ICollectionFixture&lt;T&gt;</code> + <code>[Collection]</code> = shared across classes. Test classes in different collections can run in parallel; tests inside one class run one after another.</li>
 <li><b>Test doubles</b> (Meszaros / Martin Fowler's terms): <b>dummy</b> (passed but never used), <b>stub</b> (returns canned answers), <b>fake</b> (a working shortcut, like an in-memory repository), <b>spy</b> (records calls), <b>mock</b> (pre-programmed expectations that verify interactions). Libraries like <b>Moq</b> and <b>NSubstitute</b> generate stubs, spies and mocks for interfaces.</li>
 <li><b>Prefer state over interaction:</b> check what the code returned or stored, not how many times it called a helper. Interaction checks (<code>Verify</code>, <code>Received</code>) make tests break on harmless refactors; keep them for real side effects (an email sent, a message published).</li>
-<li><b>Licence watch:</b> <b>FluentAssertions</b> v8 and later use a commercial licence for commercial use (v7 remains Apache 2.0); alternatives are <b>Shouldly</b>, the community fork <b>AwesomeAssertions</b> (Apache 2.0) or xUnit's built-in <code>Assert</code>. <b>Moq</b> 4.20.0 included the <b>SponsorLink</b> build analyzer, widely criticised for reading the developer's git email; it was removed in 4.20.2. A TL should check licences and dependency changes before upgrading test libraries.</li>
+<li><b>Licence watch:</b> test libraries can change licence or ship surprises: <b>FluentAssertions</b> v8+ (commercial licence for commercial use; alternatives <b>Shouldly</b>, <b>AwesomeAssertions</b>, built-in <code>Assert</code>) and <b>Moq</b> 4.20.0 (SponsorLink analyzer, removed in 4.20.2). Details are in the Q&amp;A; a TL checks licences and dependency changes before upgrading.</li>
 <li><b>Time:</b> inject <code>TimeProvider</code> (Day 1, Day 8) and use <code>FakeTimeProvider</code> from <code>Microsoft.Extensions.TimeProvider.Testing</code> so the test moves the clock by hand and never sleeps.</li>
 </ul>
 <p><b>When to use / when not:</b> use a mock library when the other side is a real boundary (payment gateway, email, message bus) and the interaction is the thing to verify. Do not mock what is cheap to build for real (a value object, a pure helper, your own simple class), and do not mock types you do not own (HttpClient, DbContext): wrap them or use a fake handler or a real test database.</p>`,
@@ -108,7 +108,7 @@ window.TL_DAY = {
 <li><b>Fixtures</b> महँगा setup share करते हैं: <code>IClassFixture&lt;T&gt;</code> = हर test class के लिए एक instance; <code>ICollectionFixture&lt;T&gt;</code> + <code>[Collection]</code> = classes के बीच share। अलग collections की test classes parallel चल सकती हैं; एक class के अंदर tests एक के बाद एक चलते हैं।</li>
 <li><b>Test doubles</b> (Meszaros / Martin Fowler के terms): <b>dummy</b> (pass होता है पर use नहीं होता), <b>stub</b> (canned answers देता है), <b>fake</b> (working shortcut, जैसे in-memory repository), <b>spy</b> (calls record करता है), <b>mock</b> (pre-programmed expectations जो interactions verify करते हैं)। <b>Moq</b> और <b>NSubstitute</b> जैसी libraries interfaces के लिए stubs, spies और mocks बनाती हैं।</li>
 <li><b>State को interaction से ऊपर रखो:</b> check करो कि code ने क्या return या store किया, यह नहीं कि helper को कितनी बार call किया। Interaction checks (<code>Verify</code>, <code>Received</code>) harmless refactor पर भी tests तोड़ देते हैं; उन्हें real side effects (email भेजना, message publish करना) के लिए रखो।</li>
-<li><b>Licence पर नज़र:</b> <b>FluentAssertions</b> v8 और उसके बाद commercial use के लिए commercial licence इस्तेमाल करते हैं (v7 Apache 2.0 रहता है); alternatives हैं <b>Shouldly</b>, community fork <b>AwesomeAssertions</b> (Apache 2.0) या xUnit का built-in <code>Assert</code>। <b>Moq</b> 4.20.0 में <b>SponsorLink</b> build analyzer था, जिसकी developer का git email पढ़ने के लिए बहुत आलोचना हुई; 4.20.2 में उसे हटा दिया गया। TL को test libraries upgrade करने से पहले licences और dependency changes check करने चाहिए।</li>
+<li><b>Licence पर नज़र:</b> test libraries का licence बदल सकता है या surprise आ सकता है: <b>FluentAssertions</b> v8+ (commercial use के लिए commercial licence; alternatives <b>Shouldly</b>, <b>AwesomeAssertions</b>, built-in <code>Assert</code>) और <b>Moq</b> 4.20.0 (SponsorLink analyzer, 4.20.2 में हटा)। Details Q&amp;A में हैं; TL upgrade से पहले licences और dependency changes check करता है।</li>
 <li><b>Time:</b> <code>TimeProvider</code> inject करो (Day 1, Day 8) और <code>Microsoft.Extensions.TimeProvider.Testing</code> का <code>FakeTimeProvider</code> use करो ताकि test घड़ी को हाथ से आगे बढ़ाए और कभी sleep न करे।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> mock library तब use करो जब दूसरी तरफ real boundary हो (payment gateway, email, message bus) और interaction ही verify करनी हो। जो चीज़ असली बनाना सस्ता है (value object, pure helper, अपनी simple class) उसे mock मत करो, और जो types तुम्हारे नहीं हैं (HttpClient, DbContext) उन्हें mock मत करो: उन्हें wrap करो या fake handler या real test database use करो।</p>`,
@@ -118,7 +118,7 @@ window.TL_DAY = {
 <li><b>Fixtures</b> mehenga setup share karte hain: <code>IClassFixture&lt;T&gt;</code> = har test class ke liye ek instance; <code>ICollectionFixture&lt;T&gt;</code> + <code>[Collection]</code> = classes ke beech share. Alag collections ki test classes parallel chal sakti hain; ek class ke andar tests ek ke baad ek chalte hain.</li>
 <li><b>Test doubles</b> (Meszaros / Martin Fowler ke terms): <b>dummy</b> (pass hota hai par use nahi hota), <b>stub</b> (canned answers deta hai), <b>fake</b> (working shortcut, jaise in-memory repository), <b>spy</b> (calls record karta hai), <b>mock</b> (pre-programmed expectations jo interactions verify karte hain). <b>Moq</b> aur <b>NSubstitute</b> jaisi libraries interfaces ke liye stubs, spies aur mocks banati hain.</li>
 <li><b>State ko interaction se upar rakho:</b> check karo ki code ne kya return ya store kiya, yeh nahi ki helper ko kitni baar call kiya. Interaction checks (<code>Verify</code>, <code>Received</code>) harmless refactor par bhi tests tod dete hain; unhe real side effects (email bhejna, message publish karna) ke liye rakho.</li>
-<li><b>Licence par nazar:</b> <b>FluentAssertions</b> v8 aur uske baad commercial use ke liye commercial licence istemaal karte hain (v7 Apache 2.0 rehta hai); alternatives hain <b>Shouldly</b>, community fork <b>AwesomeAssertions</b> (Apache 2.0) ya xUnit ka built-in <code>Assert</code>. <b>Moq</b> 4.20.0 mein <b>SponsorLink</b> build analyzer tha, jiski developer ka git email padhne ke liye bahut aalochna hui; 4.20.2 mein use hata diya gaya. TL ko test libraries upgrade karne se pehle licences aur dependency changes check karne chahiye.</li>
+<li><b>Licence par nazar:</b> test libraries ka licence badal sakta hai ya surprise aa sakta hai: <b>FluentAssertions</b> v8+ (commercial use ke liye commercial licence; alternatives <b>Shouldly</b>, <b>AwesomeAssertions</b>, built-in <code>Assert</code>) aur <b>Moq</b> 4.20.0 (SponsorLink analyzer, 4.20.2 mein hata). Details Q&amp;A mein hain; TL upgrade se pehle licences aur dependency changes check karta hai.</li>
 <li><b>Time:</b> <code>TimeProvider</code> inject karo (Day 1, Day 8) aur <code>Microsoft.Extensions.TimeProvider.Testing</code> ka <code>FakeTimeProvider</code> use karo taaki test ghadi ko haath se aage badhaye aur kabhi sleep na kare.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> mock library tab use karo jab doosri taraf real boundary ho (payment gateway, email, message bus) aur interaction hi verify karni ho. Jo cheez asli banana sasta hai (value object, pure helper, apni simple class) use mock mat karo, aur jo types tumhare nahi hain (HttpClient, DbContext) unhe mock mat karo: unhe wrap karo ya fake handler ya real test database use karo.</p>`
@@ -136,7 +136,7 @@ window.TL_DAY = {
         en: `<p><b>Analogy:</b> before opening a new shop branch you do a dress rehearsal with real stock, real billing counter and a few friendly customers. Integration tests are that rehearsal: the real wiring, but under your control.</p>
 <ul>
 <li><b>WebApplicationFactory&lt;Program&gt;</b> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) starts your real ASP.NET Core app in memory, with routing, middleware, filters and DI (Day 12, Day 13). Use <code>ConfigureTestServices</code> to replace only the outside world: payment client, clock, database, authentication.</li>
-<li><b>Database tests:</b> for EF Core code use a <b>real engine</b>, usually in a container with <b>Testcontainers</b> (Day 7). The EF Core <b>in-memory provider</b> is not a relational database, so Microsoft's guidance advises against it for testing. SQLite is a faster but different engine.</li>
+<li><b>Database tests:</b> for EF Core code use a <b>real engine</b>, usually in a container with <b>Testcontainers</b> (Day 7). It needs Docker, so share one container per test run.</li>
 <li><b>Coverage</b> (coverlet) shows which lines <b>ran</b>. A test with no assertion still gives coverage. Use it to find <b>untested</b> areas, not as a target to chase; <b>mutation testing</b> (Stryker.NET) checks whether tests notice a deliberately introduced bug.</li>
 <li><b>Flaky tests</b> (sometimes pass, sometimes fail) usually come from time, ordering and shared state, real network, random data, <code>Thread.Sleep</code> or async races. Fix the cause; if you cannot fix quickly, <b>quarantine</b> (run separately, tracked) so one flaky test does not teach the team to ignore red builds.</li>
 <li><b>TDD</b> (red, green, refactor): write a failing test, make it pass in the simplest way, clean up. It works very well for business rules and bug fixes. A TL usually promotes it as a habit and mandates a smaller rule that is easy to check: <b>every bug fix comes with a test that failed before the fix</b>.</li>
@@ -146,7 +146,7 @@ window.TL_DAY = {
         hi: `<p><b>Analogy:</b> नई shop branch खोलने से पहले तुम real stock, real billing counter और कुछ friendly customers के साथ dress rehearsal करते हो। Integration tests वही rehearsal हैं: real wiring, पर तुम्हारे control में।</p>
 <ul>
 <li><b>WebApplicationFactory&lt;Program&gt;</b> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) तुम्हारी real ASP.NET Core app को memory में चलाता है, routing, middleware, filters और DI के साथ (Day 12, Day 13)। <code>ConfigureTestServices</code> से सिर्फ़ बाहरी दुनिया बदलो: payment client, clock, database, authentication।</li>
-<li><b>Database tests:</b> EF Core code के लिए <b>real engine</b> use करो, आमतौर पर <b>Testcontainers</b> से container में (Day 7)। EF Core का <b>in-memory provider</b> relational database नहीं है, इसलिए Microsoft की guidance testing के लिए उसके against है। SQLite तेज़ है पर अलग engine है।</li>
+<li><b>Database tests:</b> EF Core code के लिए <b>real engine</b> use करो, आमतौर पर <b>Testcontainers</b> से container में (Day 7)। इसके लिए Docker चाहिए, इसलिए हर test run में एक container share करो।</li>
 <li><b>Coverage</b> (coverlet) दिखाती है कि कौन-सी lines <b>चलीं</b>। बिना assertion वाला test भी coverage देता है। इसे <b>untested</b> areas ढूँढने के लिए use करो, पीछा करने वाले target की तरह नहीं; <b>mutation testing</b> (Stryker.NET) check करती है कि tests जानबूझकर डाले गए bug को notice करते हैं या नहीं।</li>
 <li><b>Flaky tests</b> (कभी pass, कभी fail) आमतौर पर time, ordering और shared state, real network, random data, <code>Thread.Sleep</code> या async races से आते हैं। Cause fix करो; जल्दी fix न हो तो <b>quarantine</b> करो (अलग चलाओ, track करो) ताकि एक flaky test team को red builds ignore करना न सिखा दे।</li>
 <li><b>TDD</b> (red, green, refactor): failing test लिखो, सबसे simple तरीके से pass कराओ, clean up करो। Business rules और bug fixes के लिए यह बहुत अच्छा काम करता है। TL आमतौर पर इसे habit की तरह promote करता है और एक छोटा, आसानी से check होने वाला rule mandate करता है: <b>हर bug fix के साथ ऐसा test जो fix से पहले fail होता था</b>।</li>
@@ -156,7 +156,7 @@ window.TL_DAY = {
         hg: `<p><b>Analogy:</b> nayi shop branch kholne se pehle tum real stock, real billing counter aur kuch friendly customers ke saath dress rehearsal karte ho. Integration tests wahi rehearsal hain: real wiring, par tumhare control mein.</p>
 <ul>
 <li><b>WebApplicationFactory&lt;Program&gt;</b> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) tumhari real ASP.NET Core app ko memory mein chalata hai, routing, middleware, filters aur DI ke saath (Day 12, Day 13). <code>ConfigureTestServices</code> se sirf bahari duniya badlo: payment client, clock, database, authentication.</li>
-<li><b>Database tests:</b> EF Core code ke liye <b>real engine</b> use karo, aamtaur par <b>Testcontainers</b> se container mein (Day 7). EF Core ka <b>in-memory provider</b> relational database nahi hai, isliye Microsoft ki guidance testing ke liye uske against hai. SQLite tez hai par alag engine hai.</li>
+<li><b>Database tests:</b> EF Core code ke liye <b>real engine</b> use karo, aamtaur par <b>Testcontainers</b> se container mein (Day 7). Iske liye Docker chahiye, isliye har test run mein ek container share karo.</li>
 <li><b>Coverage</b> (coverlet) dikhati hai ki kaun-si lines <b>chali</b>. Bina assertion wala test bhi coverage deta hai. Ise <b>untested</b> areas dhoondhne ke liye use karo, peecha karne wale target ki tarah nahi; <b>mutation testing</b> (Stryker.NET) check karti hai ki tests jaanbujhkar daale gaye bug ko notice karte hain ya nahi.</li>
 <li><b>Flaky tests</b> (kabhi pass, kabhi fail) aamtaur par time, ordering aur shared state, real network, random data, <code>Thread.Sleep</code> ya async races se aate hain. Cause fix karo; jaldi fix na ho to <b>quarantine</b> karo (alag chalao, track karo) taaki ek flaky test team ko red builds ignore karna na sikha de.</li>
 <li><b>TDD</b> (red, green, refactor): failing test likho, sabse simple tareeke se pass karao, clean up karo. Business rules aur bug fixes ke liye yeh bahut achha kaam karta hai. TL aamtaur par ise habit ki tarah promote karta hai aur ek chhota, aasaani se check hone wala rule mandate karta hai: <b>har bug fix ke saath aisa test jo fix se pehle fail hota tha</b>.</li>
@@ -181,7 +181,7 @@ window.TL_DAY = {
 <li><b>Fixtures:</b> <code>IClassFixture&lt;T&gt;</code> shares one <code>T</code> within a class. For several classes, define a collection with <code>[CollectionDefinition]</code> and <code>ICollectionFixture&lt;T&gt;</code>, then mark classes with <code>[Collection("name")]</code>. Fixture state is shared, so keep per-test data out of it.</li>
 <li><b>Parallelism:</b> by default each test class is its own collection; collections run in parallel with each other, while the tests in one collection run one after another. Tests that share a database or other global state should share a collection (or be made independent).</li>
 <li><b>Output:</b> inject <code>ITestOutputHelper</code> through the constructor to write diagnostics; <code>Console.WriteLine</code> is not captured per test in xUnit v2.</li>
-<li><b>xUnit v3:</b> the <code>xunit.v3</code> packages are the current generation. Test projects are executables, <code>IAsyncLifetime</code> uses <code>ValueTask</code>, and <code>TestContext.Current</code> exposes things like a cancellation token. Many v2 tests port easily; check the official migration guide and your CI tooling before moving a large solution.</li>
+<li><b>xUnit v3:</b> the <code>xunit.v3</code> packages are the current generation. Test projects are executables that support Microsoft.Testing.Platform natively, <code>IAsyncLifetime</code> uses <code>ValueTask</code>, and <code>TestContext.Current</code> exposes things like a cancellation token. Many v2 tests port easily; check the official migration guide and your CI tooling before moving a large solution.</li>
 </ul>
 <p><b>When to use / when not:</b> use <code>[Theory]</code> when the same rule is checked with different data, not to cram different behaviours into one method. Use a class fixture for a costly resource (container, web factory), but keep each test's data independent (own rows, unique ids) so the shared fixture does not create hidden order dependence.</p>`,
         hi: `<p><b>Analogy:</b> हर test को <b>exam hall की नई desk</b> मिलती है: constructor desk सजाता है और <code>Dispose</code> उसे साफ़ करता है। कोई student एक desk पर notes छोड़ दे तो अगला student उन्हें कभी नहीं देखता। <b>Fixture</b> साझा water cooler है: एक बार लगता है और कई लोग use करते हैं, इसलिए उसमें किसी के private कागज़ नहीं रखने चाहिए।</p>
@@ -191,7 +191,7 @@ window.TL_DAY = {
 <li><b>Fixtures:</b> <code>IClassFixture&lt;T&gt;</code> एक class के अंदर एक <code>T</code> share करता है। कई classes के लिए <code>[CollectionDefinition]</code> और <code>ICollectionFixture&lt;T&gt;</code> से collection बनाओ, फिर classes पर <code>[Collection("name")]</code> लगाओ। Fixture की state shared होती है, इसलिए per-test data उसमें मत रखो।</li>
 <li><b>Parallelism:</b> by default हर test class अपनी collection होती है; collections आपस में parallel चलती हैं, जबकि एक collection के tests एक के बाद एक चलते हैं। जो tests database या कोई global state share करते हैं, उन्हें एक collection share करनी चाहिए (या independent बनाओ)।</li>
 <li><b>Output:</b> diagnostics लिखने के लिए constructor से <code>ITestOutputHelper</code> inject करो; xUnit v2 में <code>Console.WriteLine</code> per-test capture नहीं होता।</li>
-<li><b>xUnit v3:</b> <code>xunit.v3</code> packages current generation हैं। Test projects executables होते हैं, <code>IAsyncLifetime</code> में <code>ValueTask</code> आता है, और <code>TestContext.Current</code> से cancellation token जैसी चीज़ें मिलती हैं। कई v2 tests आसानी से port हो जाते हैं; बड़ा solution move करने से पहले official migration guide और CI tooling check करो।</li>
+<li><b>xUnit v3:</b> <code>xunit.v3</code> packages current generation हैं। Test projects executables होते हैं (Microsoft.Testing.Platform natively support), <code>IAsyncLifetime</code> में <code>ValueTask</code> आता है, और <code>TestContext.Current</code> से cancellation token जैसी चीज़ें मिलती हैं। कई v2 tests आसानी से port हो जाते हैं; बड़ा solution move करने से पहले official migration guide और CI tooling check करो।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> <code>[Theory]</code> तब use करो जब same rule अलग data से check हो रहा हो, अलग behaviours को एक method में ठूँसने के लिए नहीं। महँगे resource (container, web factory) के लिए class fixture use करो, पर हर test का data independent रखो (अपनी rows, unique ids) ताकि shared fixture छुपी हुई order dependence न बनाए।</p>`,
         hg: `<p><b>Analogy:</b> har test ko <b>exam hall ki nayi desk</b> milti hai: constructor desk sajata hai aur <code>Dispose</code> use saaf karta hai. Koi student ek desk par notes chhod de to agla student unhe kabhi nahi dekhta. <b>Fixture</b> saajha water cooler hai: ek baar lagta hai aur kai log use karte hain, isliye usme kisi ke private kaagaz nahi rakhne chahiye.</p>
@@ -201,7 +201,7 @@ window.TL_DAY = {
 <li><b>Fixtures:</b> <code>IClassFixture&lt;T&gt;</code> ek class ke andar ek <code>T</code> share karta hai. Kai classes ke liye <code>[CollectionDefinition]</code> aur <code>ICollectionFixture&lt;T&gt;</code> se collection banao, phir classes par <code>[Collection("name")]</code> lagao. Fixture ki state shared hoti hai, isliye per-test data usme mat rakho.</li>
 <li><b>Parallelism:</b> by default har test class apni collection hoti hai; collections aapas mein parallel chalti hain, jabki ek collection ke tests ek ke baad ek chalte hain. Jo tests database ya koi global state share karte hain, unhe ek collection share karni chahiye (ya independent banao).</li>
 <li><b>Output:</b> diagnostics likhne ke liye constructor se <code>ITestOutputHelper</code> inject karo; xUnit v2 mein <code>Console.WriteLine</code> per-test capture nahi hota.</li>
-<li><b>xUnit v3:</b> <code>xunit.v3</code> packages current generation hain. Test projects executables hote hain, <code>IAsyncLifetime</code> mein <code>ValueTask</code> aata hai, aur <code>TestContext.Current</code> se cancellation token jaisi cheezein milti hain. Kai v2 tests aasaani se port ho jaate hain; bada solution move karne se pehle official migration guide aur CI tooling check karo.</li>
+<li><b>xUnit v3:</b> <code>xunit.v3</code> packages current generation hain. Test projects executables hote hain (Microsoft.Testing.Platform natively support), <code>IAsyncLifetime</code> mein <code>ValueTask</code> aata hai, aur <code>TestContext.Current</code> se cancellation token jaisi cheezein milti hain. Kai v2 tests aasaani se port ho jaate hain; bada solution move karne se pehle official migration guide aur CI tooling check karo.</li>
 </ul>
 <p><b>Kab use karein / kab nahi:</b> <code>[Theory]</code> tab use karo jab same rule alag data se check ho raha ho, alag behaviours ko ek method mein thoonsne ke liye nahi. Mehenge resource (container, web factory) ke liye class fixture use karo, par har test ka data independent rakho (apni rows, unique ids) taaki shared fixture chhupi hui order dependence na banaye.</p>`
       },
@@ -558,7 +558,7 @@ public class OtpServiceTests
       body: {
         en: `<p><b>Analogy:</b> a driving test is done on a real car on a real road layout, but the examiner replaces the busy traffic with a quiet test track. <code>WebApplicationFactory</code> starts your <b>real app</b> (routing, middleware, model binding, serialisation) and you replace only the outside parts.</p>
 <ul>
-<li><b>How it works:</b> <code>WebApplicationFactory&lt;Program&gt;</code> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) builds your app in memory with the in-process test server; <code>CreateClient()</code> gives an <code>HttpClient</code> that talks to it without opening a real port. Your test project needs access to <code>Program</code>: with top-level statements add <code>public partial class Program { }</code> to the app (Program.cs basics: Day 12).</li>
+<li><b>How it works:</b> <code>WebApplicationFactory&lt;Program&gt;</code> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) builds your app in memory with the in-process test server; <code>CreateClient()</code> gives an <code>HttpClient</code> that talks to it without opening a real port. Your test project needs access to <code>Program</code>: on .NET 10 the SDK generates it for you; on .NET 8/9 add <code>public partial class Program { }</code> to the app (or use <code>InternalsVisibleTo</code>). Program.cs basics: Day 12.</li>
 <li><b>Replace the outside world:</b> override <code>ConfigureWebHost</code> and call <code>ConfigureTestServices</code>. It runs <b>after</b> the app registered its services, so your registration wins. Use <code>RemoveAll&lt;T&gt;()</code> then add your fake, to avoid ending up with two registrations.</li>
 <li><b>Authentication:</b> do not generate real JWTs in every test. Register a small <b>test authentication handler</b> that creates a <code>ClaimsPrincipal</code> from a header, then test both the 401 (no user) and the 200/201 (user present) paths. Test the real token validation once, separately.</li>
 <li><b>What to assert:</b> status codes, response body, headers (<code>Location</code>), validation errors as ProblemDetails (Day 13), and effects in the fake or database. This catches wiring bugs unit tests cannot: a missing <code>[Authorize]</code>, a wrong route, a JSON naming mismatch.</li>
@@ -567,7 +567,7 @@ public class OtpServiceTests
 <p><b>When to use / when not:</b> use factory tests for endpoints, auth rules and the request pipeline. Do not use them for pure business rules (a plain unit test is faster), and do not replace so much that you test only your fakes: keep routing, filters, serialisation and DI real.</p>`,
         hi: `<p><b>Analogy:</b> driving test असली car पर असली road layout पर होता है, पर examiner busy traffic की जगह शांत test track रख देता है। <code>WebApplicationFactory</code> तुम्हारी <b>असली app</b> चलाता है (routing, middleware, model binding, serialisation) और तुम सिर्फ़ बाहरी parts बदलते हो।</p>
 <ul>
-<li><b>कैसे काम करता है:</b> <code>WebApplicationFactory&lt;Program&gt;</code> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) तुम्हारी app को in-process test server के साथ memory में बनाता है; <code>CreateClient()</code> एक <code>HttpClient</code> देता है जो असली port खोले बिना उससे बात करता है। Test project को <code>Program</code> का access चाहिए: top-level statements के साथ app में <code>public partial class Program { }</code> जोड़ो (Program.cs की basics: Day 12)।</li>
+<li><b>कैसे काम करता है:</b> <code>WebApplicationFactory&lt;Program&gt;</code> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) तुम्हारी app को in-process test server के साथ memory में बनाता है; <code>CreateClient()</code> एक <code>HttpClient</code> देता है जो असली port खोले बिना उससे बात करता है। Test project को <code>Program</code> का access चाहिए: .NET 10 में SDK उसे ख़ुद generate करता है; .NET 8/9 में app में <code>public partial class Program { }</code> जोड़ो (या <code>InternalsVisibleTo</code> use करो)। Program.cs की basics: Day 12।</li>
 <li><b>बाहरी दुनिया बदलो:</b> <code>ConfigureWebHost</code> override करो और <code>ConfigureTestServices</code> call करो। यह app के services register करने के <b>बाद</b> चलता है, इसलिए तुम्हारा registration जीतता है। पहले <code>RemoveAll&lt;T&gt;()</code> करो फिर अपना fake जोड़ो, ताकि दो registrations न बनें।</li>
 <li><b>Authentication:</b> हर test में असली JWT मत बनाओ। छोटा <b>test authentication handler</b> register करो जो header से <code>ClaimsPrincipal</code> बनाए, फिर 401 (user नहीं) और 200/201 (user मौजूद) दोनों paths test करो। असली token validation एक बार, अलग से test करो।</li>
 <li><b>क्या assert करें:</b> status codes, response body, headers (<code>Location</code>), ProblemDetails के रूप में validation errors (Day 13), और fake या database में effects। यह ऐसे wiring bugs पकड़ता है जो unit tests नहीं पकड़ सकते: छूटा हुआ <code>[Authorize]</code>, ग़लत route, JSON naming mismatch।</li>
@@ -576,7 +576,7 @@ public class OtpServiceTests
 <p><b>कब use करें / कब नहीं:</b> endpoints, auth rules और request pipeline के लिए factory tests use करो। Pure business rules के लिए नहीं (plain unit test तेज़ है), और इतना कुछ replace मत करो कि तुम सिर्फ़ अपने fakes को test करो: routing, filters, serialisation और DI को real रखो।</p>`,
         hg: `<p><b>Analogy:</b> driving test asli car par asli road layout par hota hai, par examiner busy traffic ki jagah shaant test track rakh deta hai. <code>WebApplicationFactory</code> tumhari <b>asli app</b> chalata hai (routing, middleware, model binding, serialisation) aur tum sirf bahari parts badalte ho.</p>
 <ul>
-<li><b>Kaise kaam karta hai:</b> <code>WebApplicationFactory&lt;Program&gt;</code> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) tumhari app ko in-process test server ke saath memory mein banata hai; <code>CreateClient()</code> ek <code>HttpClient</code> deta hai jo asli port khole bina usse baat karta hai. Test project ko <code>Program</code> ka access chahiye: top-level statements ke saath app mein <code>public partial class Program { }</code> jodo (Program.cs ki basics: Day 12).</li>
+<li><b>Kaise kaam karta hai:</b> <code>WebApplicationFactory&lt;Program&gt;</code> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>) tumhari app ko in-process test server ke saath memory mein banata hai; <code>CreateClient()</code> ek <code>HttpClient</code> deta hai jo asli port khole bina usse baat karta hai. Test project ko <code>Program</code> ka access chahiye: .NET 10 mein SDK use khud generate karta hai; .NET 8/9 mein app mein <code>public partial class Program { }</code> jodo (ya <code>InternalsVisibleTo</code> use karo). Program.cs ki basics: Day 12.</li>
 <li><b>Bahari duniya badlo:</b> <code>ConfigureWebHost</code> override karo aur <code>ConfigureTestServices</code> call karo. Yeh app ke services register karne ke <b>baad</b> chalta hai, isliye tumhara registration jeetta hai. Pehle <code>RemoveAll&lt;T&gt;()</code> karo phir apna fake jodo, taaki do registrations na bane.</li>
 <li><b>Authentication:</b> har test mein asli JWT mat banao. Chhota <b>test authentication handler</b> register karo jo header se <code>ClaimsPrincipal</code> banaye, phir 401 (user nahi) aur 200/201 (user maujood) dono paths test karo. Asli token validation ek baar, alag se test karo.</li>
 <li><b>Kya assert karein:</b> status codes, response body, headers (<code>Location</code>), ProblemDetails ke roop mein validation errors (Day 13), aur fake ya database mein effects. Yeh aise wiring bugs pakadta hai jo unit tests nahi pakad sakte: chhoota hua <code>[Authorize]</code>, galat route, JSON naming mismatch.</li>
@@ -631,7 +631,7 @@ public class SqlProductCatalog : IProductCatalog
     public ProductDto? Find(int id) => throw new NotImplementedException("real version talks to SQL Server");
 }
 
-public partial class Program { }   // lets the test project see Program
+public partial class Program { }   // needed only before .NET 10 (the SDK generates it from .NET 10 on)
 
 // ---- the test project ----
 public class FakeProductCatalog : IProductCatalog
@@ -731,30 +731,30 @@ public class ProductApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         en: `<p><b>Analogy:</b> you cannot judge a pressure cooker by testing a toy cooker. Testing EF Core against the real engine is like testing the real cooker with real steam, only in a safe kitchen (a container) that you can throw away after each run.</p>
 <ul>
 <li><b>Testcontainers for .NET:</b> starts a throw-away Docker container from test code (for example <code>Testcontainers.MsSql</code>), gives you a connection string and removes the container when the test run ends. Put it in an <code>IAsyncLifetime</code> fixture so one container serves the whole class or collection (Day 7).</li>
-<li><b>EF Core testing choices:</b> the in-memory provider is not relational (no SQL, no constraints, different behaviour), so Microsoft advises against it; SQLite is a real but different engine; a real SQL Server or PostgreSQL in a container is closest to production. Mocking <code>DbSet</code> hides translation errors because LINQ runs in memory (Day 4).</li>
-<li><b>Replace the DbContext in the factory:</b> remove the existing options registration and add your own with the container's connection string. In EF Core 9 and later also remove <code>IDbContextOptionsConfiguration&lt;T&gt;</code>, otherwise the original provider configuration can still be applied.</li>
+<li><b>EF Core testing choices:</b> a real engine in a container is closest to production; DbSet mocks and the in-memory provider are the weak options (full comparison in the Q&amp;A and Day 7).</li>
+<li><b>Replace the DbContext in the factory:</b> remove the existing options registrations and add your own with the container's connection string, as the snippet shows (the EF Core 9+ detail is explained in the Q&amp;A).</li>
 <li><b>Keep tests independent:</b> create the schema once (<code>EnsureCreated</code> or migrations), then give each test unique data, or reset between tests (for example with a library like Respawn). Never rely on the order in which tests run.</li>
 <li><b>Flaky tests:</b> the usual causes are the clock, shared state or order, real network, random data, <code>Thread.Sleep</code> / fixed delays and unawaited async work. Fix the cause: inject <code>TimeProvider</code>, give each test its own data, await the real signal instead of sleeping.</li>
 <li><b>Coverage and mutation:</b> coverlet (<code>dotnet test --collect:"XPlat Code Coverage"</code>) tells you which lines ran. It does not tell you whether any assertion would notice a bug. <b>Stryker.NET</b> mutates your code (flips <code>&gt;=</code> to <code>&gt;</code>, removes a statement) and checks that some test fails; surviving mutants point at weak tests. It is slow, so run it on changed code or nightly.</li>
 <li><b>Snapshot / approval tests</b> (for example the Verify library) compare a serialised result against an approved file. They suit large outputs such as JSON or generated documents; a reviewer must read every changed snapshot in the PR.</li>
 </ul>
 <p><b>When to use / when not:</b> use a container database for repository, query, migration and transaction behaviour. Do not start a new container per test (too slow); share one per run. Use coverage to find untested areas, not as a quality score; run mutation testing on critical business logic, not the whole solution.</p>`,
-        hi: `<p><b>Analogy:</b> pressure cooker को खिलौने वाले cooker से test करके नहीं परख सकते। EF Core को real engine पर test करना real cooker को real steam के साथ test करने जैसा है, बस एक safe kitchen (container) में जिसे हर run के बाद फेंक सकते हो।</p>
+        hi: `<p><b>Analogy:</b> pressure cooker को खिलौने वाले cooker से test करके नहीं check कर सकते। EF Core को real engine पर test करना real cooker को real steam के साथ test करने जैसा है, बस एक safe kitchen (container) में जिसे हर run के बाद फेंक सकते हो।</p>
 <ul>
 <li><b>Testcontainers for .NET:</b> test code से throw-away Docker container शुरू करता है (जैसे <code>Testcontainers.MsSql</code>), connection string देता है और test run ख़त्म होने पर container हटा देता है। इसे <code>IAsyncLifetime</code> fixture में रखो ताकि एक container पूरी class या collection को serve करे (Day 7)।</li>
-<li><b>EF Core testing choices:</b> in-memory provider relational नहीं है (SQL नहीं, constraints नहीं, अलग behaviour), इसलिए Microsoft उसके against advise करता है; SQLite real पर अलग engine है; container में real SQL Server या PostgreSQL production के सबसे क़रीब है। <code>DbSet</code> को mock करने से translation errors छुप जाते हैं क्योंकि LINQ memory में चलता है (Day 4)।</li>
-<li><b>Factory में DbContext replace करो:</b> मौजूदा options registration हटाओ और container की connection string के साथ अपना जोड़ो। EF Core 9 और उसके बाद <code>IDbContextOptionsConfiguration&lt;T&gt;</code> भी हटाओ, वरना original provider configuration अब भी apply हो सकती है।</li>
+<li><b>EF Core testing choices:</b> container में real engine production के सबसे क़रीब है; DbSet mocks और in-memory provider कमज़ोर options हैं (पूरी comparison Q&amp;A और Day 7 में)।</li>
+<li><b>Factory में DbContext replace करो:</b> मौजूदा options registrations हटाओ और container की connection string के साथ अपना जोड़ो, जैसा snippet में है (EF Core 9+ की detail Q&amp;A में समझाई है)।</li>
 <li><b>Tests independent रखो:</b> schema एक बार बनाओ (<code>EnsureCreated</code> या migrations), फिर हर test को unique data दो, या tests के बीच reset करो (जैसे Respawn जैसी library से)। Tests किस order में चलते हैं उस पर कभी depend मत करो।</li>
 <li><b>Flaky tests:</b> आम causes हैं clock, shared state या order, real network, random data, <code>Thread.Sleep</code> / fixed delays और बिना await किया async काम। Cause fix करो: <code>TimeProvider</code> inject करो, हर test को अपना data दो, sleep की जगह असली signal का await करो।</li>
 <li><b>Coverage और mutation:</b> coverlet (<code>dotnet test --collect:"XPlat Code Coverage"</code>) बताता है कि कौन-सी lines चलीं। यह नहीं बताता कि कोई assertion bug को notice करेगा या नहीं। <b>Stryker.NET</b> तुम्हारे code को mutate करता है (<code>&gt;=</code> को <code>&gt;</code> कर देता है, statement हटा देता है) और check करता है कि कोई test fail होता है; बचे हुए mutants कमज़ोर tests की ओर इशारा करते हैं। यह slow है, इसलिए changed code पर या nightly चलाओ।</li>
 <li><b>Snapshot / approval tests</b> (जैसे Verify library) serialised result को approved file से compare करते हैं। ये JSON या generated documents जैसे बड़े outputs के लिए ठीक हैं; reviewer को PR में हर बदली हुई snapshot पढ़नी पड़ती है।</li>
 </ul>
 <p><b>कब use करें / कब नहीं:</b> repository, query, migration और transaction behaviour के लिए container database use करो। हर test के लिए नया container मत चलाओ (बहुत slow); हर run के लिए एक share करो। Coverage को untested areas ढूँढने के लिए use करो, quality score की तरह नहीं; mutation testing critical business logic पर चलाओ, पूरे solution पर नहीं।</p>`,
-        hg: `<p><b>Analogy:</b> pressure cooker ko khilone wale cooker se test karke nahi parakh sakte. EF Core ko real engine par test karna real cooker ko real steam ke saath test karne jaisa hai, bas ek safe kitchen (container) mein jise har run ke baad phenk sakte ho.</p>
+        hg: `<p><b>Analogy:</b> pressure cooker ko khilone wale cooker se test karke nahi check kar sakte. EF Core ko real engine par test karna real cooker ko real steam ke saath test karne jaisa hai, bas ek safe kitchen (container) mein jise har run ke baad phenk sakte ho.</p>
 <ul>
 <li><b>Testcontainers for .NET:</b> test code se throw-away Docker container shuru karta hai (jaise <code>Testcontainers.MsSql</code>), connection string deta hai aur test run khatam hone par container hata deta hai. Ise <code>IAsyncLifetime</code> fixture mein rakho taaki ek container poori class ya collection ko serve kare (Day 7).</li>
-<li><b>EF Core testing choices:</b> in-memory provider relational nahi hai (SQL nahi, constraints nahi, alag behaviour), isliye Microsoft uske against advise karta hai; SQLite real par alag engine hai; container mein real SQL Server ya PostgreSQL production ke sabse kareeb hai. <code>DbSet</code> ko mock karne se translation errors chhup jaate hain kyonki LINQ memory mein chalta hai (Day 4).</li>
-<li><b>Factory mein DbContext replace karo:</b> maujooda options registration hatao aur container ki connection string ke saath apna jodo. EF Core 9 aur uske baad <code>IDbContextOptionsConfiguration&lt;T&gt;</code> bhi hatao, warna original provider configuration ab bhi apply ho sakti hai.</li>
+<li><b>EF Core testing choices:</b> container mein real engine production ke sabse kareeb hai; DbSet mocks aur in-memory provider kamzor options hain (poori comparison Q&amp;A aur Day 7 mein).</li>
+<li><b>Factory mein DbContext replace karo:</b> maujooda options registrations hatao aur container ki connection string ke saath apna jodo, jaisa snippet mein hai (EF Core 9+ ki detail Q&amp;A mein samjhai hai).</li>
 <li><b>Tests independent rakho:</b> schema ek baar banao (<code>EnsureCreated</code> ya migrations), phir har test ko unique data do, ya tests ke beech reset karo (jaise Respawn jaisi library se). Tests kis order mein chalte hain us par kabhi depend mat karo.</li>
 <li><b>Flaky tests:</b> aam causes hain clock, shared state ya order, real network, random data, <code>Thread.Sleep</code> / fixed delays aur bina await kiya async kaam. Cause fix karo: <code>TimeProvider</code> inject karo, har test ko apna data do, sleep ki jagah asli signal ka await karo.</li>
 <li><b>Coverage aur mutation:</b> coverlet (<code>dotnet test --collect:"XPlat Code Coverage"</code>) batata hai ki kaun-si lines chali. Yeh nahi batata ki koi assertion bug ko notice karega ya nahi. <b>Stryker.NET</b> tumhare code ko mutate karta hai (<code>&gt;=</code> ko <code>&gt;</code> kar deta hai, statement hata deta hai) aur check karta hai ki koi test fail hota hai; bache hue mutants kamzor tests ki taraf ishaara karte hain. Yeh slow hai, isliye changed code par ya nightly chalao.</li>
@@ -797,12 +797,13 @@ public class ShopDbContext(DbContextOptions<ShopDbContext> options) : DbContext(
     public DbSet<Order> Orders => Set<Order>();
 }
 
-public partial class Program { }
+public partial class Program { }   // needed only before .NET 10
 
 // ---- the test project ----
 // One real SQL Server in Docker for the whole collection of tests; removed when the run ends.
 public class SqlServerFixture : IAsyncLifetime
 {
+    // pin a specific image tag in real projects so the database version does not change under you
     private readonly MsSqlContainer _container = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest").Build();
 
     public string ConnectionString => _container.GetConnectionString();
@@ -1115,21 +1116,21 @@ public class ReservationServiceTests
       },
       explain: {
         en: `<ul>
-<li>Pyramid (Mike Cohn): speed and cost grow as you go up, so keep the top thin. It was a reaction to suites made only of slow UI tests.</li>
+<li>Pyramid (Mike Cohn): speed and cost grow as you go up, so keep the top thin. It was a reaction to suites that leaned heavily on slow UI tests.</li>
 <li>Trophy (Kent C. Dodds) and the microservices honeycomb: most bugs are in the wiring between parts, and mocks hide wiring bugs, so integration tests give more confidence per test.</li>
 <li>For an ASP.NET Core API on EF Core there is often little pure logic; endpoint tests with <code>WebApplicationFactory</code> and a real database may be the biggest group, and that is fine.</li>
 <li>TL angle: ask "where did our last ten production bugs come from?" and shape the suite to catch those. Do not argue about shapes without that data.</li>
-<li>Follow-up: "Isn't it anti-pattern to have an ice-cream cone (many UI tests, few unit tests)?" Yes, usually: slow, flaky and expensive to debug.</li>
+<li>Follow-up: "Isn't it an anti-pattern to have an ice-cream cone (many UI tests, few unit tests)?" Yes, usually: slow, flaky and expensive to debug.</li>
 </ul>`,
         hi: `<ul>
-<li>Pyramid (Mike Cohn): ऊपर जाने पर speed और cost बढ़ती है, इसलिए top पतला रखो। यह सिर्फ़ slow UI tests वाली suites की reaction थी।</li>
+<li>Pyramid (Mike Cohn): ऊपर जाने पर speed और cost बढ़ती है, इसलिए top पतला रखो। यह slow UI tests पर बहुत ज़्यादा टिकी suites की reaction थी।</li>
 <li>Trophy (Kent C. Dodds) और microservices honeycomb: ज़्यादातर bugs parts के बीच की wiring में होते हैं, और mocks wiring bugs छुपाते हैं, इसलिए integration tests हर test पर ज़्यादा confidence देते हैं।</li>
 <li>EF Core पर ASP.NET Core API में अक्सर pure logic कम होती है; <code>WebApplicationFactory</code> और real database वाले endpoint tests सबसे बड़ा group हो सकते हैं, और वो ठीक है।</li>
 <li>TL angle: पूछो "हमारे पिछले दस production bugs कहाँ से आए?" और suite की shape वैसी बनाओ जो उन्हें पकड़े। उस data के बिना shapes पर बहस मत करो।</li>
 <li>Follow-up: "Ice-cream cone (बहुत UI tests, कम unit tests) anti-pattern है न?" हाँ, आमतौर पर: slow, flaky और debug करने में महँगा।</li>
 </ul>`,
         hg: `<ul>
-<li>Pyramid (Mike Cohn): upar jaane par speed aur cost badhti hai, isliye top patla rakho. Yeh sirf slow UI tests wali suites ki reaction thi.</li>
+<li>Pyramid (Mike Cohn): upar jaane par speed aur cost badhti hai, isliye top patla rakho. Yeh slow UI tests par bahut zyaada tiki suites ki reaction thi.</li>
 <li>Trophy (Kent C. Dodds) aur microservices honeycomb: zyaadatar bugs parts ke beech ki wiring mein hote hain, aur mocks wiring bugs chhupate hain, isliye integration tests har test par zyaada confidence dete hain.</li>
 <li>EF Core par ASP.NET Core API mein aksar pure logic kam hoti hai; <code>WebApplicationFactory</code> aur real database wale endpoint tests sabse bada group ho sakte hain, aur woh theek hai.</li>
 <li>TL angle: poochho "hamare pichhle das production bugs kahan se aaye?" aur suite ki shape waisi banao jo unhe pakde. Us data ke bina shapes par bahas mat karo.</li>
@@ -1182,20 +1183,20 @@ public class ReservationServiceTests
       explain: {
         en: `<ul>
 <li><b>FIRST:</b> Fast, Isolated, Repeatable, Self-validating, Timely. A test that needs the network, the clock or another test's leftovers breaks the rules.</li>
-<li><b>One behaviour</b> does not mean one assert line: several asserts on one result object are fine. It means that one reason to fail per test.</li>
+<li><b>One behaviour</b> does not mean one assert line: several asserts on one result object are fine. It means one reason to fail per test.</li>
 <li><b>Naming:</b> <code>Total_NoDiscount_MultipliesPriceByQuantity</code> or a sentence style; pick one convention for the team and write it down. Avoid <code>Test1</code> and <code>ShouldWork</code>.</li>
 <li><b>Test through the public behaviour</b>, not private methods. Tests tied to internals break on every refactor and teach the team to hate tests.</li>
 <li>TL angle: tests are documentation. A new joiner should understand the rule by reading the test names alone.</li>
 </ul>`,
         hi: `<ul>
-<li><b>FIRST:</b> Fast, Isolated, Repeatable, Self-validating, Timely। जो test network, clock या दूसरे test के बचे हुए data पर निर्भर करे, वो rules तोड़ता है।</li>
+<li><b>FIRST:</b> Fast, Isolated, Repeatable, Self-validating, Timely। जो test network, clock या दूसरे test के बचे हुए data पर depend करे, वो rules तोड़ता है।</li>
 <li><b>एक behaviour</b> का मतलब एक assert line नहीं है: एक result object पर कई asserts ठीक हैं। मतलब यह कि हर test के fail होने की एक ही वजह हो।</li>
 <li><b>Naming:</b> <code>Total_NoDiscount_MultipliesPriceByQuantity</code> या sentence style; team के लिए एक convention चुनो और लिख लो। <code>Test1</code> और <code>ShouldWork</code> से बचो।</li>
 <li><b>Public behaviour के through test करो</b>, private methods नहीं। Internals से बंधे tests हर refactor पर टूटते हैं और team को tests से नफ़रत सिखा देते हैं।</li>
 <li>TL angle: tests documentation हैं। नए joiner को सिर्फ़ test names पढ़कर rule समझ आना चाहिए।</li>
 </ul>`,
         hg: `<ul>
-<li><b>FIRST:</b> Fast, Isolated, Repeatable, Self-validating, Timely. Jo test network, clock ya doosre test ke bache hue data par nirbhar kare, woh rules todta hai.</li>
+<li><b>FIRST:</b> Fast, Isolated, Repeatable, Self-validating, Timely. Jo test network, clock ya doosre test ke bache hue data par depend kare, woh rules todta hai.</li>
 <li><b>Ek behaviour</b> ka matlab ek assert line nahi hai: ek result object par kai asserts theek hain. Matlab yeh ki har test ke fail hone ki ek hi wajah ho.</li>
 <li><b>Naming:</b> <code>Total_NoDiscount_MultipliesPriceByQuantity</code> ya sentence style; team ke liye ek convention chuno aur likh lo. <code>Test1</code> aur <code>ShouldWork</code> se bacho.</li>
 <li><b>Public behaviour ke through test karo</b>, private methods nahi. Internals se bandhe tests har refactor par tootte hain aur team ko tests se nafrat sikha dete hain.</li>
@@ -1314,21 +1315,21 @@ public class ReservationServiceTests
       explain: {
         en: `<ul>
 <li>The factory builds your real <code>Program</code> pipeline: routing, middleware, model binding, filters, DI (Day 12, Day 13) with an in-memory test server, so tests run fast and need no port.</li>
-<li>Make <code>Program</code> visible with <code>public partial class Program { }</code> when using top-level statements.</li>
+<li>Make <code>Program</code> visible: .NET 10 generates it; on .NET 8/9 add <code>public partial class Program { }</code> when using top-level statements.</li>
 <li>Override in <code>ConfigureTestServices</code> (runs after the app's registrations). Typical overrides: payment client to a fake, <code>TimeProvider</code> to a <code>FakeTimeProvider</code>, DbContext to a container database, authentication to a test handler.</li>
 <li>Assert on status codes, bodies, headers and persisted effects. This catches missing <code>[Authorize]</code>, wrong routes and serialisation mismatches.</li>
 <li>Follow-up: "How do you handle authentication?" A test auth handler that builds the principal from a header; test real JWT validation once separately.</li>
 </ul>`,
         hi: `<ul>
 <li>Factory तुम्हारी real <code>Program</code> pipeline बनाता है: routing, middleware, model binding, filters, DI (Day 12, Day 13), in-memory test server के साथ, इसलिए tests fast चलते हैं और port नहीं चाहिए।</li>
-<li>Top-level statements के साथ <code>public partial class Program { }</code> से <code>Program</code> को visible करो।</li>
+<li><code>Program</code> को visible करो: .NET 10 उसे generate करता है; .NET 8/9 में top-level statements के साथ <code>public partial class Program { }</code> जोड़ो।</li>
 <li><code>ConfigureTestServices</code> में override करो (app की registrations के बाद चलता है)। Typical overrides: payment client को fake, <code>TimeProvider</code> को <code>FakeTimeProvider</code>, DbContext को container database, authentication को test handler।</li>
 <li>Status codes, bodies, headers और persisted effects पर assert करो। यह छूटा <code>[Authorize]</code>, ग़लत routes और serialisation mismatch पकड़ता है।</li>
 <li>Follow-up: "Authentication कैसे handle करते हो?" Test auth handler जो header से principal बनाए; real JWT validation एक बार अलग से test करो।</li>
 </ul>`,
         hg: `<ul>
 <li>Factory tumhari real <code>Program</code> pipeline banata hai: routing, middleware, model binding, filters, DI (Day 12, Day 13), in-memory test server ke saath, isliye tests fast chalte hain aur port nahi chahiye.</li>
-<li>Top-level statements ke saath <code>public partial class Program { }</code> se <code>Program</code> ko visible karo.</li>
+<li><code>Program</code> ko visible karo: .NET 10 use generate karta hai; .NET 8/9 mein top-level statements ke saath <code>public partial class Program { }</code> jodo.</li>
 <li><code>ConfigureTestServices</code> mein override karo (app ki registrations ke baad chalta hai). Typical overrides: payment client ko fake, <code>TimeProvider</code> ko <code>FakeTimeProvider</code>, DbContext ko container database, authentication ko test handler.</li>
 <li>Status codes, bodies, headers aur persisted effects par assert karo. Yeh chhoota <code>[Authorize]</code>, galat routes aur serialisation mismatch pakadta hai.</li>
 <li>Follow-up: "Authentication kaise handle karte ho?" Test auth handler jo header se principal banaye; real JWT validation ek baar alag se test karo.</li>
@@ -1382,21 +1383,21 @@ public class ReservationServiceTests
 <li><b>Syntax:</b> Moq: <code>mock.Setup(x =&gt; x.Get(1)).Returns(2)</code>, <code>mock.Object</code>, <code>Verify</code>. NSubstitute: <code>sub.Get(1).Returns(2)</code>, the substitute <i>is</i> the object, <code>Received</code>. Both: interfaces and virtual members only, no static or sealed.</li>
 <li><b>Behavioural details to know:</b> in Moq the latest matching setup wins (Puzzle 3); NSubstitute <code>Returns(a, b, c)</code> plays a sequence then repeats the last (Puzzle 4), and unconfigured members return defaults (empty string for string).</li>
 <li><b>SponsorLink, factually (Aug 2023):</b> Moq 4.20.0 included a closed-source, obfuscated build analyzer; developers reported that it read the local git email, hashed it and checked it against a sponsorship service, with no way to opt out (the maintainer said the email itself is never sent). Many objected (privacy, corporate security rules). The maintainer defended it as a way to fund open source. Version 4.20.2 removed it. Sources: the Moq GitHub issue and the 4.20.2 release notes.</li>
-<li><b>TL lesson:</b> pin and review versions of test dependencies, use dependency scanning, and know your licences. Test packages run on every developer machine and build agent. Do not tell the learner that a library is "bad"; say what happened and how you protect the team.</li>
+<li><b>TL lesson:</b> pin and review versions of test dependencies, use dependency scanning, and know your licences. Test packages run on every developer machine and build agent. Do not tell the interviewer that a library is "bad"; say what happened and how you protect the team.</li>
 <li>Follow-up: "Would you migrate away from Moq?" Cost versus risk: Moq 4.20.2 removed SponsorLink; teams moved for various reasons, and migrating a large suite is real work. Decide on policy and cost, not on the news cycle.</li>
 </ul>`,
         hi: `<ul>
 <li><b>Syntax:</b> Moq: <code>mock.Setup(x =&gt; x.Get(1)).Returns(2)</code>, <code>mock.Object</code>, <code>Verify</code>। NSubstitute: <code>sub.Get(1).Returns(2)</code>, substitute ख़ुद object <i>है</i>, <code>Received</code>। दोनों: सिर्फ़ interfaces और virtual members, static या sealed नहीं।</li>
 <li><b>Behavioural details:</b> Moq में सबसे latest matching setup जीतता है (Puzzle 3); NSubstitute <code>Returns(a, b, c)</code> sequence चलाता है फिर आख़िरी दोहराता है (Puzzle 4), और unconfigured members defaults देते हैं (string के लिए empty string)।</li>
 <li><b>SponsorLink, factually (Aug 2023):</b> Moq 4.20.0 में closed-source, obfuscated build analyzer था; developers ने report किया कि वो local git email पढ़ता, hash करता और sponsorship service से check करता था, opt-out का रास्ता नहीं था (maintainer ने कहा कि email ख़ुद कभी भेजा नहीं जाता)। कई लोगों ने objection किया (privacy, corporate security rules)। Maintainer ने इसे open source को fund करने का तरीक़ा बताकर defend किया। Version 4.20.2 ने इसे हटा दिया। Sources: Moq का GitHub issue और 4.20.2 release notes।</li>
-<li><b>TL lesson:</b> test dependencies के versions pin और review करो, dependency scanning use करो, और licences जानो। Test packages हर developer machine और build agent पर चलते हैं। Library को "बुरी" मत कहो; बताओ क्या हुआ और तुम team को कैसे protect करते हो।</li>
+<li><b>TL lesson:</b> test dependencies के versions pin और review करो, dependency scanning use करो, और licences जानो। Test packages हर developer machine और build agent पर चलते हैं। Interviewer को library "बुरी" मत बताओ; बताओ क्या हुआ और तुम team को कैसे protect करते हो।</li>
 <li>Follow-up: "क्या Moq से migrate करोगे?" Cost बनाम risk: Moq 4.20.2 ने SponsorLink हटा दिया; teams अलग-अलग कारणों से move हुईं, और बड़ी suite migrate करना असली काम है। Policy और cost पर decide करो, news cycle पर नहीं।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Syntax:</b> Moq: <code>mock.Setup(x =&gt; x.Get(1)).Returns(2)</code>, <code>mock.Object</code>, <code>Verify</code>. NSubstitute: <code>sub.Get(1).Returns(2)</code>, substitute khud object <i>hai</i>, <code>Received</code>. Dono: sirf interfaces aur virtual members, static ya sealed nahi.</li>
 <li><b>Behavioural details:</b> Moq mein sabse latest matching setup jeetta hai (Puzzle 3); NSubstitute <code>Returns(a, b, c)</code> sequence chalata hai phir aakhri dohrata hai (Puzzle 4), aur unconfigured members defaults dete hain (string ke liye empty string).</li>
 <li><b>SponsorLink, factually (Aug 2023):</b> Moq 4.20.0 mein closed-source, obfuscated build analyzer tha; developers ne report kiya ki woh local git email padhta, hash karta aur sponsorship service se check karta tha, opt-out ka raasta nahi tha (maintainer ne kaha ki email khud kabhi bheja nahi jaata). Kai logon ne objection kiya (privacy, corporate security rules). Maintainer ne ise open source ko fund karne ka tareeka bataakar defend kiya. Version 4.20.2 ne ise hata diya. Sources: Moq ka GitHub issue aur 4.20.2 release notes.</li>
-<li><b>TL lesson:</b> test dependencies ke versions pin aur review karo, dependency scanning use karo, aur licences jaano. Test packages har developer machine aur build agent par chalte hain. Library ko "buri" mat kaho; batao kya hua aur tum team ko kaise protect karte ho.</li>
+<li><b>TL lesson:</b> test dependencies ke versions pin aur review karo, dependency scanning use karo, aur licences jaano. Test packages har developer machine aur build agent par chalte hain. Interviewer ko library "buri" mat batao; batao kya hua aur tum team ko kaise protect karte ho.</li>
 <li>Follow-up: "Kya Moq se migrate karoge?" Cost banam risk: Moq 4.20.2 ne SponsorLink hata diya; teams alag-alag kaaranon se move hui, aur badi suite migrate karna asli kaam hai. Policy aur cost par decide karo, news cycle par nahi.</li>
 </ul>`
       }
@@ -1445,21 +1446,21 @@ public class ReservationServiceTests
       },
       explain: {
         en: `<ul>
-<li><b>What is new (xunit.net docs):</b> package ids are <code>xunit.v3</code> (plus <code>xunit.v3.core</code>, <code>xunit.v3.assert</code>, the console runner); test projects run as separate executables; <code>TestContext.Current</code> gives a cancellation token, diagnostic messages and attachments; assembly-wide fixtures exist; parallelism algorithm is configurable; some features need .NET 8+ (for example generic <code>[Collection&lt;T&gt;]</code>).</li>
+<li><b>What is new (xunit.net docs):</b> package ids are <code>xunit.v3</code> (plus <code>xunit.v3.core</code>, <code>xunit.v3.assert</code>, the console runner); test projects run as separate executables and support Microsoft.Testing.Platform natively; <code>TestContext.Current</code> gives a cancellation token, diagnostic messages and attachments; assembly-wide fixtures exist; parallelism algorithm is configurable; some features need .NET 8+ (for example generic <code>[Collection&lt;T&gt;]</code>).</li>
 <li><b>Status:</b> v3 is released and stable on NuGet, shown as 3.x and 4.x versions at the time of writing; v2 (<code>xunit</code> 2.9.x) is still widely used. Check xunit.net and NuGet for the current version before you write a migration plan.</li>
 <li><b>Migration risk:</b> check <code>IAsyncLifetime</code> signatures (<code>ValueTask</code>), namespace moves (for example <code>ITestOutputHelper</code>), third-party extensions that target v2 (some packages have separate v3 versions), and your CI and IDE test adapters.</li>
 <li>TL angle: no big-bang migration; start with a new test project, or migrate one project per sprint. The test names and AAA structure do not change, so it is mostly mechanical.</li>
 <li>Honest answer in an interview: "I know v3 exists and what changed; for a stable v2 suite I would migrate when a feature or support policy justifies it."</li>
 </ul>`,
         hi: `<ul>
-<li><b>क्या नया है (xunit.net docs):</b> package ids <code>xunit.v3</code> हैं (साथ में <code>xunit.v3.core</code>, <code>xunit.v3.assert</code>, console runner); test projects अलग executables की तरह चलते हैं; <code>TestContext.Current</code> cancellation token, diagnostic messages और attachments देता है; assembly-wide fixtures हैं; parallelism algorithm configurable है; कुछ features को .NET 8+ चाहिए (जैसे generic <code>[Collection&lt;T&gt;]</code>)।</li>
+<li><b>क्या नया है (xunit.net docs):</b> package ids <code>xunit.v3</code> हैं (साथ में <code>xunit.v3.core</code>, <code>xunit.v3.assert</code>, console runner); test projects अलग executables की तरह चलते हैं और Microsoft.Testing.Platform natively support करते हैं; <code>TestContext.Current</code> cancellation token, diagnostic messages और attachments देता है; assembly-wide fixtures हैं; parallelism algorithm configurable है; कुछ features को .NET 8+ चाहिए (जैसे generic <code>[Collection&lt;T&gt;]</code>)।</li>
 <li><b>Status:</b> v3 released और NuGet पर stable है, लिखते समय 3.x और 4.x versions दिखते हैं; v2 (<code>xunit</code> 2.9.x) अब भी widely use होता है। Migration plan लिखने से पहले xunit.net और NuGet पर current version check करो।</li>
 <li><b>Migration risk:</b> <code>IAsyncLifetime</code> signatures (<code>ValueTask</code>), namespace moves (जैसे <code>ITestOutputHelper</code>), v2 को target करने वाले third-party extensions (कुछ packages के अलग v3 versions हैं), और तुम्हारे CI और IDE test adapters check करो।</li>
 <li>TL angle: big-bang migration नहीं; नए test project से शुरू करो, या हर sprint में एक project migrate करो। Test names और AAA structure नहीं बदलते, इसलिए ज़्यादातर काम mechanical है।</li>
 <li>Interview में honest answer: "मुझे पता है v3 क्या है और क्या बदला; stable v2 suite को मैं तब migrate करूँगा जब कोई feature या support policy justify करे।"</li>
 </ul>`,
         hg: `<ul>
-<li><b>Kya naya hai (xunit.net docs):</b> package ids <code>xunit.v3</code> hain (saath mein <code>xunit.v3.core</code>, <code>xunit.v3.assert</code>, console runner); test projects alag executables ki tarah chalte hain; <code>TestContext.Current</code> cancellation token, diagnostic messages aur attachments deta hai; assembly-wide fixtures hain; parallelism algorithm configurable hai; kuch features ko .NET 8+ chahiye (jaise generic <code>[Collection&lt;T&gt;]</code>).</li>
+<li><b>Kya naya hai (xunit.net docs):</b> package ids <code>xunit.v3</code> hain (saath mein <code>xunit.v3.core</code>, <code>xunit.v3.assert</code>, console runner); test projects alag executables ki tarah chalte hain aur Microsoft.Testing.Platform natively support karte hain; <code>TestContext.Current</code> cancellation token, diagnostic messages aur attachments deta hai; assembly-wide fixtures hain; parallelism algorithm configurable hai; kuch features ko .NET 8+ chahiye (jaise generic <code>[Collection&lt;T&gt;]</code>).</li>
 <li><b>Status:</b> v3 released aur NuGet par stable hai, likhte samay 3.x aur 4.x versions dikhte hain; v2 (<code>xunit</code> 2.9.x) ab bhi widely use hota hai. Migration plan likhne se pehle xunit.net aur NuGet par current version check karo.</li>
 <li><b>Migration risk:</b> <code>IAsyncLifetime</code> signatures (<code>ValueTask</code>), namespace moves (jaise <code>ITestOutputHelper</code>), v2 ko target karne wale third-party extensions (kuch packages ke alag v3 versions hain), aur tumhare CI aur IDE test adapters check karo.</li>
 <li>TL angle: big-bang migration nahi; naye test project se shuru karo, ya har sprint mein ek project migrate karo. Test names aur AAA structure nahi badalte, isliye zyaadatar kaam mechanical hai.</li>
@@ -1519,14 +1520,14 @@ public class ReservationServiceTests
 </ul>`,
         hi: `<ul>
 <li>Default: अलग collections की classes एक ही समय पर चलती हैं; इसलिए एक ही table में लिखने वाली दो classes आपस में टकरा सकती हैं। Symptom: tests अकेले pass, साथ में fail।</li>
-<li>Options: (1) classes को एक <code>[Collection]</code> में डालो ताकि वे sequentially चलें (simple, slower); (2) data independent बनाओ (हर test के unique keys, अलग schemas या databases); (3) आख़िरी उपाय के तौर पर assembly के लिए parallelism बंद करो (<code>[assembly: CollectionBehavior(DisableTestParallelization = true)]</code>)।</li>
+<li>Options: (1) classes को एक <code>[Collection]</code> में डालो ताकि वे sequentially चलें (simple, slower); (2) data independent बनाओ (हर test के unique keys, अलग schemas या databases); (3) last resort के तौर पर assembly के लिए parallelism बंद करो (<code>[assembly: CollectionBehavior(DisableTestParallelization = true)]</code>)।</li>
 <li>एक class के अंदर tests आपस में parallel कभी नहीं चलते, पर उनके order पर depend नहीं करना चाहिए।</li>
 <li>v3 में parallelism algorithm और limits configurable हैं; current docs check करो।</li>
 <li>Follow-up: "Order dependency कैसे ढूँढते हो?" Suite को अलग order में या parallelism toggle करके चलाओ; नए versions में xUnit order randomise कर सकता है।</li>
 </ul>`,
         hg: `<ul>
 <li>Default: alag collections ki classes ek hi samay par chalti hain; isliye ek hi table mein likhne wali do classes aapas mein takra sakti hain. Symptom: tests akele pass, saath mein fail.</li>
-<li>Options: (1) classes ko ek <code>[Collection]</code> mein daalo taaki woh sequentially chalein (simple, slower); (2) data independent banao (har test ke unique keys, alag schemas ya databases); (3) aakhri upaay ke taur par assembly ke liye parallelism band karo (<code>[assembly: CollectionBehavior(DisableTestParallelization = true)]</code>).</li>
+<li>Options: (1) classes ko ek <code>[Collection]</code> mein daalo taaki woh sequentially chalein (simple, slower); (2) data independent banao (har test ke unique keys, alag schemas ya databases); (3) last resort ke taur par assembly ke liye parallelism band karo (<code>[assembly: CollectionBehavior(DisableTestParallelization = true)]</code>).</li>
 <li>Ek class ke andar tests aapas mein parallel kabhi nahi chalte, par unke order par depend nahi karna chahiye.</li>
 <li>v3 mein parallelism algorithm aur limits configurable hain; current docs check karo.</li>
 <li>Follow-up: "Order dependency kaise dhoondhte ho?" Suite ko alag order mein ya parallelism toggle karke chalao; naye versions mein xUnit order randomise kar sakta hai.</li>
@@ -1554,14 +1555,14 @@ public class ReservationServiceTests
 <li>यह Day 7 के answer का पूरा picture है: <b>DbSet mock</b> करने से LINQ memory में चलता है, इसलिए untranslatable queries pass हो जाती हैं (Day 4); <b>in-memory provider</b> में SQL नहीं, constraints नहीं, real transactions नहीं, और Microsoft testing के लिए उसके against advise करता है।</li>
 <li><b>SQLite</b> fast और relational है पर अलग dialect: types, collations, locking, <code>DateTimeOffset</code> और provider-specific SQL SQL Server से अलग behave करते हैं।</li>
 <li><b>Container में real engine (Testcontainers)</b> production के सबसे क़रीब है: migrations, unique indexes, concurrency tokens, raw SQL test करो। Cost: dev machines और agents पर Docker, और start-up के कुछ seconds (एक container share करो)।</li>
-<li>समझदार split: domain logic के लिए fakes वाले unit tests (EF बिल्कुल नहीं); repositories, queries और migrations के लिए real engine पर सीमित integration tests; endpoints के लिए WebApplicationFactory tests।</li>
+<li>समझदार split: domain logic के लिए fakes वाले unit tests (EF बिल्कुल नहीं); repositories, queries और migrations के लिए real engine पर limited integration tests; endpoints के लिए WebApplicationFactory tests।</li>
 <li>Follow-up: "Database tests independent कैसे रखते हो?" हर test का unique data या tests के बीच reset (जैसे Respawn); किसी दूसरे test की छोड़ी rows पर कभी depend मत करो।</li>
 </ul>`,
         hg: `<ul>
 <li>Yeh Day 7 ke answer ka poora picture hai: <b>DbSet mock</b> karne se LINQ memory mein chalta hai, isliye untranslatable queries pass ho jaati hain (Day 4); <b>in-memory provider</b> mein SQL nahi, constraints nahi, real transactions nahi, aur Microsoft testing ke liye uske against advise karta hai.</li>
 <li><b>SQLite</b> fast aur relational hai par alag dialect: types, collations, locking, <code>DateTimeOffset</code> aur provider-specific SQL SQL Server se alag behave karte hain.</li>
 <li><b>Container mein real engine (Testcontainers)</b> production ke sabse kareeb hai: migrations, unique indexes, concurrency tokens, raw SQL test karo. Cost: dev machines aur agents par Docker, aur start-up ke kuch seconds (ek container share karo).</li>
-<li>Samajhdaar split: domain logic ke liye fakes wale unit tests (EF bilkul nahi); repositories, queries aur migrations ke liye real engine par seemit integration tests; endpoints ke liye WebApplicationFactory tests.</li>
+<li>Samajhdaar split: domain logic ke liye fakes wale unit tests (EF bilkul nahi); repositories, queries aur migrations ke liye real engine par limited integration tests; endpoints ke liye WebApplicationFactory tests.</li>
 <li>Follow-up: "Database tests independent kaise rakhte ho?" Har test ka unique data ya tests ke beech reset (jaise Respawn); kisi doosre test ki chhodi rows par kabhi depend mat karo.</li>
 </ul>`
       }
@@ -1620,14 +1621,14 @@ public class ReservationServiceTests
 <li><code>TimeProvider</code> .NET 8+ में built-in है (production में <code>TimeProvider.System</code>); <code>FakeTimeProvider</code> <code>Microsoft.Extensions.TimeProvider.Testing</code> से आता है। DI में <code>TimeProvider.System</code> register करो (Day 1, Day 8)।</li>
 <li>यह timers और delays भी cover करता है: <code>CreateTimer</code> और <code>Task.Delay(..., timeProvider)</code> fake clock को follow करते हैं, इसलिए <code>Advance(...)</code> उन्हें deterministic तरीक़े से fire करता है (Puzzle 5)। Day 16 इसे circuit breaker test करने के लिए use करता है।</li>
 <li>Boundary precisely test करो: expiry से एक tick पहले और expiry पर। असली <code>Thread.Sleep</code> test सिर्फ़ अंदाज़ा लगा सकता है।</li>
-<li>जिस code को बदल नहीं सकते, उसकी static call को अपने छोटे interface के पीछे wrap करो; <code>TimeProvider</code> अब standard abstraction है, इसलिए <code>IClock</code> मत गढ़ो।</li>
+<li>जिस code को बदल नहीं सकते, उसकी static call को अपने छोटे interface के पीछे wrap करो; <code>TimeProvider</code> अब standard abstraction है, इसलिए <code>IClock</code> मत बनाओ।</li>
 <li>Time zones: UTC में store और compare करो (<code>DateTimeOffset</code>); local time zone को <code>TimeProvider.LocalTimeZone</code> से सिर्फ़ तब fake करो जब logic को सच में चाहिए।</li>
 </ul>`,
         hg: `<ul>
 <li><code>TimeProvider</code> .NET 8+ mein built-in hai (production mein <code>TimeProvider.System</code>); <code>FakeTimeProvider</code> <code>Microsoft.Extensions.TimeProvider.Testing</code> se aata hai. DI mein <code>TimeProvider.System</code> register karo (Day 1, Day 8).</li>
 <li>Yeh timers aur delays bhi cover karta hai: <code>CreateTimer</code> aur <code>Task.Delay(..., timeProvider)</code> fake clock ko follow karte hain, isliye <code>Advance(...)</code> unhe deterministic tareeke se fire karta hai (Puzzle 5). Day 16 ise circuit breaker test karne ke liye use karta hai.</li>
 <li>Boundary precisely test karo: expiry se ek tick pehle aur expiry par. Asli <code>Thread.Sleep</code> test sirf andaaza laga sakta hai.</li>
-<li>Jis code ko badal nahi sakte, uski static call ko apne chhote interface ke peeche wrap karo; <code>TimeProvider</code> ab standard abstraction hai, isliye <code>IClock</code> mat gadho.</li>
+<li>Jis code ko badal nahi sakte, uski static call ko apne chhote interface ke peeche wrap karo; <code>TimeProvider</code> ab standard abstraction hai, isliye <code>IClock</code> mat banao.</li>
 <li>Time zones: UTC mein store aur compare karo (<code>DateTimeOffset</code>); local time zone ko <code>TimeProvider.LocalTimeZone</code> se sirf tab fake karo jab logic ko sach mein chahiye.</li>
 </ul>`
       }
@@ -1645,7 +1646,7 @@ public class ReservationServiceTests
         en: `<ul>
 <li><b>DbContext:</b> <code>RemoveAll&lt;DbContextOptions&lt;T&gt;&gt;()</code>, in EF Core 9 and later also <code>RemoveAll&lt;IDbContextOptionsConfiguration&lt;T&gt;&gt;()</code>, then <code>AddDbContext&lt;T&gt;(o =&gt; o.UseSqlServer(testConnectionString))</code>. If you only add a second registration, the original provider setup can still be applied. Use the same pattern when the test database is SQLite.</li>
 <li><b>Seed data</b> after the host starts (create a scope, get the context, <code>EnsureCreated</code> or migrate) or in the fixture, and give each test its own keys.</li>
-<li><b>Auth:</b> a test handler registered with <code>AddScheme</code> makes <code>[Authorize]</code> work without real tokens. Let tests choose the user and roles through headers, and test <b>both</b> the 401 and 403 paths and the allowed path.</li>
+<li><b>Auth:</b> a test handler registered with <code>AddScheme</code> makes <code>[Authorize]</code> work without real tokens. Let tests choose the user and roles through headers, and test the 401, 403 and allowed paths.</li>
 <li>Keep one separate test that goes through the real JWT bearer validation (with a locally signed token), so the real configuration is also exercised (Day 13).</li>
 <li>Pitfall: replacing too much. If you swap routing, filters and serialisation as well, you are testing a different app.</li>
 </ul>`,
@@ -1687,14 +1688,14 @@ public class ReservationServiceTests
 <li><b>Causes और fixes:</b> clock → <code>FakeTimeProvider</code>; shared static या database state → per-test data और statics नहीं; real network या external API → fake handler या container; random/GUID data → seeded या fixed values; किसी चीज़ का इंतज़ार करता <code>Thread.Sleep</code>/<code>Task.Delay</code> → असली signal या <code>TaskCompletionSource</code> का await; बिना await का async काम → await करो; port clashes → test server को port चुनने दो।</li>
 <li><b>Policy:</b> flaky test एक bug है जिसका owner है। Blind automatic retries को fix मत बनाओ (वे real races छुपाते हैं); retry cause fix होने तक temporary, visible stopgap के रूप में ठीक हो सकता है। Quarantine का मतलब: blocking build से बाहर, फिर भी चलता और report होता है, और तारीख़ वाला ticket है।</li>
 <li><b>TLs को क्यों फ़िक्र:</b> एक बार team "बस re-run कर दो" कहना सीख ले तो real failures भी ignore होने लगती हैं। Flaky rate को team health metric की तरह track करो।</li>
-<li>Puzzle 8-style bugs (order dependence) classic case हैं; Puzzle 5 sleep का deterministic विकल्प दिखाता है।</li>
+<li>Puzzle 8-style bugs (order dependence) classic case हैं; Puzzle 5 sleep का deterministic option दिखाता है।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Dhoondho:</b> test ko loop mein 50 baar chalao; suite ko alag order mein ya parallelism on aur off ke saath chalao; CI aur local ki tulna karo (CPU speed, time zone, culture, file paths, Docker).</li>
 <li><b>Causes aur fixes:</b> clock → <code>FakeTimeProvider</code>; shared static ya database state → per-test data aur statics nahi; real network ya external API → fake handler ya container; random/GUID data → seeded ya fixed values; kisi cheez ka intezaar karta <code>Thread.Sleep</code>/<code>Task.Delay</code> → asli signal ya <code>TaskCompletionSource</code> ka await; bina await ka async kaam → await karo; port clashes → test server ko port chunne do.</li>
 <li><b>Policy:</b> flaky test ek bug hai jiska owner hai. Blind automatic retries ko fix mat banao (woh real races chhupate hain); retry cause fix hone tak temporary, visible stopgap ke roop mein theek ho sakta hai. Quarantine ka matlab: blocking build se bahar, phir bhi chalta aur report hota hai, aur taareekh wala ticket hai.</li>
 <li><b>TLs ko kyon fikar:</b> ek baar team "bas re-run kar do" kehna seekh le to real failures bhi ignore hone lagti hain. Flaky rate ko team health metric ki tarah track karo.</li>
-<li>Puzzle 8-style bugs (order dependence) classic case hain; Puzzle 5 sleep ka deterministic vikalp dikhata hai.</li>
+<li>Puzzle 8-style bugs (order dependence) classic case hain; Puzzle 5 sleep ka deterministic option dikhata hai.</li>
 </ul>`
       }
     },
@@ -1713,21 +1714,21 @@ public class ReservationServiceTests
 <li><b>Where it shines:</b> clear business rules, algorithms, parsers, bug fixes (the failing test is the reproduction), APIs where the design is unclear and you want to feel the caller's side first.</li>
 <li><b>Where it is weak:</b> exploratory spikes, UI layout, glue code, and when requirements are changing hourly. Writing the test after a spike is fine.</li>
 <li><b>TL stance:</b> be honest that research on TDD benefits is mixed; the lasting value is testable design and fast feedback. Mandating a process is hard to verify and creates resentment; mandating <i>outcomes</i> (tests with every change, failing test first for bugs) can be checked in the PR.</li>
-<li>Follow-up: "What is the difference between TDD and BDD?" BDD focuses on describing behaviour in business language (Given-When-Then, tools like Reqnroll/SpecFlow); you can do TDD without BDD tooling.</li>
+<li>Follow-up: "What is the difference between TDD and BDD?" BDD focuses on describing behaviour in business language (Given-When-Then, tools like Reqnroll, the successor to SpecFlow); you can do TDD without BDD tooling.</li>
 </ul>`,
         hi: `<ul>
 <li><b>Loop:</b> red (छोटा failing test लिखो), green (pass कराने वाला सबसे simple code), refactor (tests को safety net बनाकर clean up)। छोटे cycles, हर एक मिनटों का।</li>
 <li><b>कहाँ चमकता है:</b> साफ़ business rules, algorithms, parsers, bug fixes (failing test ही reproduction है), ऐसे APIs जहाँ design साफ़ नहीं और पहले caller की तरफ़ से महसूस करना है।</li>
 <li><b>कहाँ कमज़ोर:</b> exploratory spikes, UI layout, glue code, और जब requirements हर घंटे बदल रही हों। Spike के बाद test लिखना ठीक है।</li>
 <li><b>TL stance:</b> honest रहो कि TDD के फ़ायदों पर research mixed है; टिकने वाली value testable design और fast feedback है। Process mandate करना verify करना मुश्किल है और नाराज़गी पैदा करता है; <i>outcomes</i> mandate करना (हर change के साथ tests, bugs के लिए पहले failing test) PR में check हो सकता है।</li>
-<li>Follow-up: "TDD और BDD में क्या फ़र्क़ है?" BDD behaviour को business language में describe करने पर focus करता है (Given-When-Then, Reqnroll/SpecFlow जैसे tools); BDD tooling के बिना भी TDD हो सकता है।</li>
+<li>Follow-up: "TDD और BDD में क्या फ़र्क़ है?" BDD behaviour को business language में describe करने पर focus करता है (Given-When-Then, Reqnroll (SpecFlow का successor) जैसे tools); BDD tooling के बिना भी TDD हो सकता है।</li>
 </ul>`,
         hg: `<ul>
 <li><b>Loop:</b> red (chhota failing test likho), green (pass karane wala sabse simple code), refactor (tests ko safety net banakar clean up). Chhote cycles, har ek minuton ka.</li>
 <li><b>Kahan chamakta hai:</b> saaf business rules, algorithms, parsers, bug fixes (failing test hi reproduction hai), aise APIs jahan design saaf nahi aur pehle caller ki taraf se mehsoos karna hai.</li>
 <li><b>Kahan kamzor:</b> exploratory spikes, UI layout, glue code, aur jab requirements har ghante badal rahi hon. Spike ke baad test likhna theek hai.</li>
 <li><b>TL stance:</b> honest raho ki TDD ke faaydon par research mixed hai; tikne wali value testable design aur fast feedback hai. Process mandate karna verify karna mushkil hai aur naaraazgi paida karta hai; <i>outcomes</i> mandate karna (har change ke saath tests, bugs ke liye pehle failing test) PR mein check ho sakta hai.</li>
-<li>Follow-up: "TDD aur BDD mein kya farq hai?" BDD behaviour ko business language mein describe karne par focus karta hai (Given-When-Then, Reqnroll/SpecFlow jaise tools); BDD tooling ke bina bhi TDD ho sakta hai.</li>
+<li>Follow-up: "TDD aur BDD mein kya farq hai?" BDD behaviour ko business language mein describe karne par focus karta hai (Given-When-Then, Reqnroll (SpecFlow ka successor) jaise tools); BDD tooling ke bina bhi TDD ho sakta hai.</li>
 </ul>`
       }
     },
@@ -2112,19 +2113,19 @@ after 35m: ticks=4`,
         en: `<ul>
 <li>The timer is due after 5 minutes, then every 10 minutes. After <code>Advance(4m)</code> nothing is due yet; after one more minute (5m) the first tick fires. No real time passes: the test is instant.</li>
 <li>Advancing 30 more minutes (to 35m) makes three more ticks due (at 15m, 25m and 35m), so the total is 4. The fake clock runs every callback that became due.</li>
-<li>Look at the printed times: all three callbacks report <code>+35m</code>. With this package version, <code>Advance</code> moves the clock to the target time and then runs the due callbacks, so the callbacks see the final time, not their own due time. Assert on the <b>count</b>, not on the time inside a callback.</li>
+<li>Look at the printed times: all three callbacks report <code>+35m</code>. With current 9.x/10.x packages, <code>Advance</code> moves the clock to the target time and then runs the due callbacks, so the callbacks see the final time, not their own due time. Assert on the <b>count</b>, not on the time inside a callback.</li>
 <li>This works for any code that uses <code>TimeProvider.CreateTimer</code> (background refresh, cache expiry, debounce), so such code needs no sleeping tests. Compare Day 16, which uses the fake clock for a circuit breaker.</li>
 </ul>`,
         hi: `<ul>
 <li>Timer 5 मिनट बाद due है, फिर हर 10 मिनट पर। <code>Advance(4m)</code> के बाद अभी कुछ due नहीं; एक मिनट और (5m) बाद पहली tick fire होती है। असली समय नहीं बीतता: test instant है।</li>
 <li>30 मिनट और आगे (35m तक) बढ़ाने पर तीन और ticks due हो जाती हैं (15m, 25m और 35m पर), इसलिए कुल 4। Fake clock हर due हुआ callback चला देता है।</li>
-<li>Printed times देखो: तीनों callbacks <code>+35m</code> बताते हैं। इस package version में <code>Advance</code> clock को target time पर ले जाता है और फिर due callbacks चलाता है, इसलिए callbacks को final time दिखता है, अपना due time नहीं। <b>Count</b> पर assert करो, callback के अंदर के time पर नहीं।</li>
+<li>Printed times देखो: तीनों callbacks <code>+35m</code> बताते हैं। current 9.x/10.x packages में <code>Advance</code> clock को target time पर ले जाता है और फिर due callbacks चलाता है, इसलिए callbacks को final time दिखता है, अपना due time नहीं। <b>Count</b> पर assert करो, callback के अंदर के time पर नहीं।</li>
 <li>यह उस हर code के लिए काम करता है जो <code>TimeProvider.CreateTimer</code> use करता है (background refresh, cache expiry, debounce), इसलिए ऐसे code को sleeping tests नहीं चाहिए। Day 16 से compare करो, जो fake clock को circuit breaker के लिए use करता है।</li>
 </ul>`,
         hg: `<ul>
 <li>Timer 5 minute baad due hai, phir har 10 minute par. <code>Advance(4m)</code> ke baad abhi kuch due nahi; ek minute aur (5m) baad pehli tick fire hoti hai. Asli samay nahi beetta: test instant hai.</li>
 <li>30 minute aur aage (35m tak) badhane par teen aur ticks due ho jaati hain (15m, 25m aur 35m par), isliye kul 4. Fake clock har due hua callback chala deta hai.</li>
-<li>Printed times dekho: teeno callbacks <code>+35m</code> batate hain. Is package version mein <code>Advance</code> clock ko target time par le jaata hai aur phir due callbacks chalata hai, isliye callbacks ko final time dikhta hai, apna due time nahi. <b>Count</b> par assert karo, callback ke andar ke time par nahi.</li>
+<li>Printed times dekho: teeno callbacks <code>+35m</code> batate hain. Current 9.x/10.x packages mein <code>Advance</code> clock ko target time par le jaata hai aur phir due callbacks chalata hai, isliye callbacks ko final time dikhta hai, apna due time nahi. <b>Count</b> par assert karo, callback ke andar ke time par nahi.</li>
 <li>Yeh us har code ke liye kaam karta hai jo <code>TimeProvider.CreateTimer</code> use karta hai (background refresh, cache expiry, debounce), isliye aise code ko sleeping tests nahi chahiye. Day 16 se compare karo, jo fake clock ko circuit breaker ke liye use karta hai.</li>
 </ul>`
       }
@@ -2287,14 +2288,14 @@ isolated order 3: Add_one=ok Clear_all=ok Starts_empty=ok`,
 <li>To hunt such bugs: run the suite in different orders, run a single test alone, and treat "passes alone, fails together" as a shared-state alarm.</li>
 </ul>`,
         hi: `<ul>
-<li><b>Shared state</b> के साथ <code>Starts_empty</code> तभी pass होता है जब किसी पहले के test ने item नहीं छोड़ा। Order 1 में वह पहले चलता है और pass होता है; order 2 में <code>Add_one</code> उससे पहले चलता है और वह fail होता है; order 3 में <code>Clear_all</code> संयोग से पहले साफ़ कर देता है, इसलिए वह फिर pass होता है। वही tests, तीन अलग results।</li>
-<li>यह typical flaky pattern है: CI तुम्हारे laptop से अलग order या parallelism use करता है, इसलिए failure random दिखती है। Fail होने वाला test दोषी नहीं है; shared list दोषी है।</li>
+<li><b>Shared state</b> के साथ <code>Starts_empty</code> तभी pass होता है जब किसी पहले के test ने item नहीं छोड़ा। Order 1 में वह पहले चलता है और pass होता है; order 2 में <code>Add_one</code> उससे पहले चलता है और वह fail होता है; order 3 में <code>Clear_all</code> luck से पहले साफ़ कर देता है, इसलिए वह फिर pass होता है। वही tests, तीन अलग results।</li>
+<li>यह typical flaky pattern है: CI तुम्हारे laptop से अलग order या parallelism use करता है, इसलिए failure random दिखती है। Fail होने वाला test culprit नहीं है; shared list culprit है।</li>
 <li><b>Isolated</b> version हर test के अंदर state बनाता है, इसलिए हर order pass होता है। xUnit का per-test instance यही देता है जब तुम data को statics की जगह instance fields में रखते हो।</li>
 <li>ऐसे bugs ढूँढने के लिए: suite को अलग orders में चलाओ, एक test अकेले चलाओ, और "अकेले pass, साथ में fail" को shared-state का alarm मानो।</li>
 </ul>`,
         hg: `<ul>
-<li><b>Shared state</b> ke saath <code>Starts_empty</code> tabhi pass hota hai jab kisi pehle ke test ne item nahi chhoda. Order 1 mein woh pehle chalta hai aur pass hota hai; order 2 mein <code>Add_one</code> usse pehle chalta hai aur woh fail hota hai; order 3 mein <code>Clear_all</code> sanyog se pehle saaf kar deta hai, isliye woh phir pass hota hai. Wahi tests, teen alag results.</li>
-<li>Yeh typical flaky pattern hai: CI tumhare laptop se alag order ya parallelism use karta hai, isliye failure random dikhti hai. Fail hone wala test doshi nahi hai; shared list doshi hai.</li>
+<li><b>Shared state</b> ke saath <code>Starts_empty</code> tabhi pass hota hai jab kisi pehle ke test ne item nahi chhoda. Order 1 mein woh pehle chalta hai aur pass hota hai; order 2 mein <code>Add_one</code> usse pehle chalta hai aur woh fail hota hai; order 3 mein <code>Clear_all</code> luck se pehle saaf kar deta hai, isliye woh phir pass hota hai. Wahi tests, teen alag results.</li>
+<li>Yeh typical flaky pattern hai: CI tumhare laptop se alag order ya parallelism use karta hai, isliye failure random dikhti hai. Fail hone wala test culprit nahi hai; shared list culprit hai.</li>
 <li><b>Isolated</b> version har test ke andar state banata hai, isliye har order pass hota hai. xUnit ka per-test instance yahi deta hai jab tum data ko statics ki jagah instance fields mein rakhte ho.</li>
 <li>Aise bugs dhoondhne ke liye: suite ko alag orders mein chalao, ek test akele chalao, aur "akele pass, saath mein fail" ko shared-state ka alarm maano.</li>
 </ul>`
@@ -2323,7 +2324,7 @@ isolated order 3: Add_one=ok Clear_all=ok Starts_empty=ok`,
         "xUnit हर test के लिए test-class का नया instance बनाता है; constructor setup है, IDisposable teardown।",
         "State assertions के साथ fakes और stubs को prefer करो; mock तभी जब interaction ही behaviour हो।",
         "FluentAssertions v8 और उसके बाद commercial use के लिए paid licence माँगते हैं; v7 Apache 2.0 रहता है; upgrade से पहले licences check करो।",
-        "Moq 4.20.0 में SponsorLink आया और आलोचना हुई; 4.20.2 ने हटाया; test dependencies pin और review करो।",
+        "Moq 4.20.0 में SponsorLink आया और criticism हुई; 4.20.2 ने हटाया; test dependencies pin और review करो।",
         "DateTime.UtcNow और sleep की जगह TimeProvider inject करो और FakeTimeProvider.Advance use करो।",
         "WebApplicationFactory real pipeline memory में चलाता है; ConfigureTestServices में सिर्फ़ बाहरी services override करो।",
         "EF Core code को real engine पर test करो, जैसे Testcontainers; in-memory provider से बचो।",
@@ -2337,7 +2338,7 @@ isolated order 3: Add_one=ok Clear_all=ok Starts_empty=ok`,
         "xUnit har test ke liye test-class ka naya instance banata hai; constructor setup hai, IDisposable teardown.",
         "State assertions ke saath fakes aur stubs ko prefer karo; mock tabhi jab interaction hi behaviour ho.",
         "FluentAssertions v8 aur uske baad commercial use ke liye paid licence maangte hain; v7 Apache 2.0 rehta hai; upgrade se pehle licences check karo.",
-        "Moq 4.20.0 mein SponsorLink aaya aur aalochna hui; 4.20.2 ne hataya; test dependencies pin aur review karo.",
+        "Moq 4.20.0 mein SponsorLink aaya aur criticism hui; 4.20.2 ne hataya; test dependencies pin aur review karo.",
         "DateTime.UtcNow aur sleep ki jagah TimeProvider inject karo aur FakeTimeProvider.Advance use karo.",
         "WebApplicationFactory real pipeline memory mein chalata hai; ConfigureTestServices mein sirf bahari services override karo.",
         "EF Core code ko real engine par test karo, jaise Testcontainers; in-memory provider se bacho.",
@@ -2348,8 +2349,8 @@ isolated order 3: Add_one=ok Clear_all=ok Starts_empty=ok`,
     }
   },
   whatsNew: {
-    en: `<p><b>What is current (verify versions on NuGet before you pin):</b> <b>xUnit v3</b> (<code>xunit.v3</code> packages) is released next to v2; <b>MSTest</b> v4 is the current major version and works with Microsoft.Testing.Platform; <code>TimeProvider</code> (.NET 8) with <code>FakeTimeProvider</code> replaces hand-made clocks; <b>FluentAssertions</b> v8+ is commercially licensed for commercial use, with Shouldly and the AwesomeAssertions fork as alternatives; in <b>EF Core 9+</b>, replacing a DbContext in <code>WebApplicationFactory</code> also needs <code>IDbContextOptionsConfiguration&lt;T&gt;</code> removed.</p>`,
-    hi: `<p><b>अभी का हाल (pin करने से पहले NuGet पर versions verify करो):</b> <b>xUnit v3</b> (<code>xunit.v3</code> packages) v2 के साथ released है; <b>MSTest</b> v4 current major version है और Microsoft.Testing.Platform के साथ चलता है; <code>TimeProvider</code> (.NET 8) और <code>FakeTimeProvider</code> hand-made clocks की जगह लेते हैं; <b>FluentAssertions</b> v8+ commercial use के लिए commercially licensed है, alternatives हैं Shouldly और AwesomeAssertions fork; <b>EF Core 9+</b> में <code>WebApplicationFactory</code> में DbContext replace करने के लिए <code>IDbContextOptionsConfiguration&lt;T&gt;</code> भी हटाना पड़ता है।</p>`,
-    hg: `<p><b>Abhi ka haal (pin karne se pehle NuGet par versions verify karo):</b> <b>xUnit v3</b> (<code>xunit.v3</code> packages) v2 ke saath released hai; <b>MSTest</b> v4 current major version hai aur Microsoft.Testing.Platform ke saath chalta hai; <code>TimeProvider</code> (.NET 8) aur <code>FakeTimeProvider</code> hand-made clocks ki jagah lete hain; <b>FluentAssertions</b> v8+ commercial use ke liye commercially licensed hai, alternatives hain Shouldly aur AwesomeAssertions fork; <b>EF Core 9+</b> mein <code>WebApplicationFactory</code> mein DbContext replace karne ke liye <code>IDbContextOptionsConfiguration&lt;T&gt;</code> bhi hatana padta hai.</p>`
+    en: `<p><b>What is current (verify versions on NuGet before you pin):</b> <b>xUnit v3</b> (<code>xunit.v3</code> packages) is released next to v2 and supports Microsoft.Testing.Platform natively; <b>MSTest</b> v4 is the current major version; <code>TimeProvider</code> with <code>FakeTimeProvider</code> replaces hand-made clocks; on <b>.NET 10</b> the SDK generates the <code>Program</code> class that <code>WebApplicationFactory</code> needs, so an explicit <code>public partial class Program { }</code> is only for .NET 8/9; FluentAssertions v8+ is commercially licensed (see the Q&amp;A).</p>`,
+    hi: `<p><b>अभी का हाल (pin करने से पहले NuGet पर versions verify करो):</b> <b>xUnit v3</b> (<code>xunit.v3</code> packages) v2 के साथ released है और Microsoft.Testing.Platform natively support करता है; <b>MSTest</b> v4 current major version है; <code>TimeProvider</code> और <code>FakeTimeProvider</code> hand-made clocks की जगह लेते हैं; <b>.NET 10</b> में SDK वह <code>Program</code> class generate करता है जो <code>WebApplicationFactory</code> को चाहिए, इसलिए explicit <code>public partial class Program { }</code> सिर्फ़ .NET 8/9 के लिए है; FluentAssertions v8+ commercially licensed है (Q&amp;A देखो)।</p>`,
+    hg: `<p><b>Abhi ka haal (pin karne se pehle NuGet par versions verify karo):</b> <b>xUnit v3</b> (<code>xunit.v3</code> packages) v2 ke saath released hai aur Microsoft.Testing.Platform natively support karta hai; <b>MSTest</b> v4 current major version hai; <code>TimeProvider</code> aur <code>FakeTimeProvider</code> hand-made clocks ki jagah lete hain; <b>.NET 10</b> mein SDK woh <code>Program</code> class generate karta hai jo <code>WebApplicationFactory</code> ko chahiye, isliye explicit <code>public partial class Program { }</code> sirf .NET 8/9 ke liye hai; FluentAssertions v8+ commercially licensed hai (Q&amp;A dekho).</p>`
   }
 };
