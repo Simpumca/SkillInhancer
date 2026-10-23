@@ -189,7 +189,7 @@ window.TL_DAY = {
         hi: `<p><b>Analogy:</b> एक thali। हर katori एक component है जिसका अपना काम है; parent plate तय करती है कि कौन-सी katori कहाँ रखी जाए और ingredients (props) देती है। Katori ख़ुद plate को rearrange नहीं करती; वह callback के ज़रिए parent से कहती है।</p>
 <ul>
 <li><b>JSX कोई जादू नहीं है:</b> compiler हर tag को function call में बदल देता है जो एक plain description object लौटाता है। नीचे का पहला snippet इसे plain JavaScript में model करता है ताकि तुम चला सको।</li>
-<li><b>Conditional rendering</b> सामान्य JavaScript से होती है: <code>if</code>, ternary, या <code>cond &amp;&amp; &lt;X /&gt;</code>। Trap: <code>{count &amp;&amp; &lt;X /&gt;}</code> में <code>count</code> 0 हो तो literal <code>0</code> render होता है, इसलिए <code>count &gt; 0 &amp;&amp; ...</code> लिखो।</li>
+<li><b>Conditional rendering</b> normal JavaScript से होती है: <code>if</code>, ternary, या <code>cond &amp;&amp; &lt;X /&gt;</code>। Trap: <code>{count &amp;&amp; &lt;X /&gt;}</code> में <code>count</code> 0 हो तो literal <code>0</code> render होता है, इसलिए <code>count &gt; 0 &amp;&amp; ...</code> लिखो।</li>
 <li><b>Lists:</b> array को elements में map करो और हर एक को अपने data से (id) <code>key</code> दो। Key React को बताती है कि renders के बीच कौन-सा item कौन-सा है, ताकि सही row के साथ सही state रहे। Index key सिर्फ़ ऐसी static list के लिए ठीक है जो कभी reorder या filter नहीं होती।</li>
 <li><b>Lifting state up:</b> दूसरे snippet में parent <code>selectedId</code> का owner है; list उसे props से पढ़ती है और clicks को <code>onSelect</code> से report करती है। इसे MVC में child views को value नीचे देने और event वापस ऊपर भेजने से compare करो।</li>
 <li><b>TypeScript:</b> props को type करने से compile-time checks मिलते हैं, C# के parameter type जैसे। जिन teams को C# की type safety पसंद है वहाँ यही आम choice है।</li>
@@ -198,7 +198,7 @@ window.TL_DAY = {
         hg: `<p><b>Analogy:</b> ek thali. Har katori ek component hai jiska apna kaam hai; parent plate tay karti hai ki kaun-si katori kahan rakhi jaaye aur ingredients (props) deti hai. Katori khud plate ko rearrange nahi karti; woh callback ke zariye parent se kehti hai.</p>
 <ul>
 <li><b>JSX koi jaadu nahi hai:</b> compiler har tag ko function call mein badal deta hai jo ek plain description object lautata hai. Neeche ka pehla snippet ise plain JavaScript mein model karta hai taaki tum chala sako.</li>
-<li><b>Conditional rendering</b> saamanya JavaScript se hoti hai: <code>if</code>, ternary, ya <code>cond &amp;&amp; &lt;X /&gt;</code>. Trap: <code>{count &amp;&amp; &lt;X /&gt;}</code> mein <code>count</code> 0 ho to literal <code>0</code> render hota hai, isliye <code>count &gt; 0 &amp;&amp; ...</code> likho.</li>
+<li><b>Conditional rendering</b> normal JavaScript se hoti hai: <code>if</code>, ternary, ya <code>cond &amp;&amp; &lt;X /&gt;</code>. Trap: <code>{count &amp;&amp; &lt;X /&gt;}</code> mein <code>count</code> 0 ho to literal <code>0</code> render hota hai, isliye <code>count &gt; 0 &amp;&amp; ...</code> likho.</li>
 <li><b>Lists:</b> array ko elements mein map karo aur har ek ko apne data se (id) <code>key</code> do. Key React ko batati hai ki renders ke beech kaun-sa item kaun-sa hai, taaki sahi row ke saath sahi state rahe. Index key sirf aisi static list ke liye theek hai jo kabhi reorder ya filter nahi hoti.</li>
 <li><b>Lifting state up:</b> doosre snippet mein parent <code>selectedId</code> ka owner hai; list use props se padhti hai aur clicks ko <code>onSelect</code> se report karti hai. Ise MVC mein child views ko value neeche dene aur event wapas upar bhejne se compare karo.</li>
 <li><b>TypeScript:</b> props ko type karne se compile-time checks milte hain, C# ke parameter type jaise. Jin teams ko C# ki type safety pasand hai wahan yahi aam choice hai.</li>
@@ -340,7 +340,7 @@ export default function OrdersPage({ orders }: { orders: Order[] }) {
 <li><b>Updater function:</b> <code>setCount(c =&gt; c + 1)</code> को latest queued value मिलती है। जब भी नया state पुराने state पर depend करे, इसे use करो। Plain value देने से state उसी value से replace हो जाता है।</li>
 <li><b>Immutability:</b> state के objects और arrays को read-only मानो। Spread, <code>map</code>, <code>filter</code> या <code>toSorted</code> से copy बनाओ। React <code>Object.is</code> से compare करता है, इसलिए mutate करके वापस set किया गया array "unchanged" दिखता है। Spread वाली copy <b>shallow</b> है: nested objects अब भी share होते हैं, इसलिए जिस level को बदल रहे हो उसे copy करो (या Immer जैसी helper library)।</li>
 <li><b>वही state दोबारा:</b> अगर नई value मौजूदा के बराबर (<code>Object.is</code>) है तो React children को re-render करना skip कर देता है।</li>
-<li><b>कब use करें / कब नहीं:</b> state उन values के लिए use करो जो समय के साथ बदलती हैं और जो दिखता है उसे प्रभावित करती हैं। Derived values को state में मत रखो (<code>total</code> को render के दौरान <code>items</code> से compute करो), और जो चीज़ें UI पर असर नहीं डालतीं उन्हें store मत करो (ref या component के बाहर का plain variable use करो)। जब अगली value पिछली पर depend करे तो updater form use करो; जब नहीं करती (जैसे text field की value set करना) तो plain value ठीक है।</li>
+<li><b>कब use करें / कब नहीं:</b> state उन values के लिए use करो जो समय के साथ बदलती हैं और जो दिखता है उस पर असर डालती हैं। Derived values को state में मत रखो (<code>total</code> को render के दौरान <code>items</code> से compute करो), और जो चीज़ें UI पर असर नहीं डालतीं उन्हें store मत करो (ref या component के बाहर का plain variable use करो)। जब अगली value पिछली पर depend करे तो updater form use करो; जब नहीं करती (जैसे text field की value set करना) तो plain value ठीक है।</li>
 </ul>`,
         hg: `<p><b>Analogy:</b> railway ticket-booking form. Form kholte hi tum seat chart waisa dekhte ho jaisa us pal tha (<b>snapshot</b>). Usi purane chart par "ek seat jodo" teen baar dabane se bhi ek hi seat extra book hoti hai, jab tak har click yeh na kahe ki "abhi jitni book hai usse ek zyaada" (<b>updater function</b>).</p>
 <ul>
@@ -349,7 +349,7 @@ export default function OrdersPage({ orders }: { orders: Order[] }) {
 <li><b>Updater function:</b> <code>setCount(c =&gt; c + 1)</code> ko latest queued value milti hai. Jab bhi naya state purane state par depend kare, ise use karo. Plain value dene se state usi value se replace ho jaata hai.</li>
 <li><b>Immutability:</b> state ke objects aur arrays ko read-only mano. Spread, <code>map</code>, <code>filter</code> ya <code>toSorted</code> se copy banao. React <code>Object.is</code> se compare karta hai, isliye mutate karke wapas set kiya gaya array "unchanged" dikhta hai. Spread wali copy <b>shallow</b> hai: nested objects ab bhi share hote hain, isliye jis level ko badal rahe ho use copy karo (ya Immer jaisi helper library).</li>
 <li><b>Wahi state dobara:</b> agar nayi value maujooda ke barabar (<code>Object.is</code>) hai to React children ko re-render karna skip kar deta hai.</li>
-<li><b>Kab use karein / kab nahi:</b> state un values ke liye use karo jo samay ke saath badalti hain aur jo dikhta hai use prabhavit karti hain. Derived values ko state mein mat rakho (<code>total</code> ko render ke dauran <code>items</code> se compute karo), aur jo cheezein UI par asar nahi daalti unhe store mat karo (ref ya component ke bahar ka plain variable use karo). Jab agli value pichli par depend kare to updater form use karo; jab nahi karti (jaise text field ki value set karna) to plain value theek hai.</li>
+<li><b>Kab use karein / kab nahi:</b> state un values ke liye use karo jo samay ke saath badalti hain aur jo dikhta hai us par asar daalti hain. Derived values ko state mein mat rakho (<code>total</code> ko render ke dauran <code>items</code> se compute karo), aur jo cheezein UI par asar nahi daalti unhe store mat karo (ref ya component ke bahar ka plain variable use karo). Jab agli value pichli par depend kare to updater form use karo; jab nahi karti (jaise text field ki value set karna) to plain value theek hai.</li>
 </ul>`
       },
       code: [
@@ -361,28 +361,17 @@ export default function OrdersPage({ orders }: { orders: Order[] }) {
             hg: "useState ka chhota model: updates queue hoti hain, phir order mein apply hoti hain (Node par chalta hai)"
           },
           check: "run",
-          src: `// Apply a queue of updates: each is either a value or an updater function
-function processQueue(initial, queue) {
-  let state = initial;
-  for (const u of queue) state = typeof u === "function" ? u(state) : u;
-  return state;
-}
+          src: `const snapshot = 0; // what this render's handler sees; it never changes inside the handler
 
-const count = 0; // the snapshot this render sees: it never changes inside the handler
-let queue = [];
-const setCount = (u) => queue.push(u);
+// Three plain updates: each is computed from the same snapshot, so the last one wins
+const plain = [snapshot + 1, snapshot + 1, snapshot + 1].at(-1);
 
-setCount(count + 1);
-setCount(count + 1);
-setCount(count + 1);
-console.log("3 x setCount(count + 1):", processQueue(count, queue));
+// Three updaters: each one receives the result of the previous one
+const updaters = [(c) => c + 1, (c) => c + 1, (c) => c + 1].reduce((s, fn) => fn(s), snapshot);
 
-queue = [];
-setCount((c) => c + 1);
-setCount((c) => c + 1);
-setCount((c) => c + 1);
-console.log("3 x setCount(c => c + 1):", processQueue(count, queue));
-console.log("count in this render is still", count);`,
+console.log("3 x setCount(count + 1):", plain);
+console.log("3 x setCount(c => c + 1):", updaters);
+console.log("count in this render is still", snapshot);`,
           expected: `3 x setCount(count + 1): 1
 3 x setCount(c => c + 1): 3
 count in this render is still 0`
@@ -404,14 +393,10 @@ console.log("same reference after spread:", Object.is(items, next));
 
 const user = { name: "Asha", address: { city: "Pune" } };
 const shallow = { ...user, name: "Ravi" };
-console.log("nested object shared:", shallow.address === user.address);
-
-const deep = { ...user, address: { ...user.address, city: "Delhi" } };
-console.log(user.address.city, deep.address.city);`,
+console.log("nested object shared:", shallow.address === user.address);`,
           expected: `same reference after push: true
 same reference after spread: false
-nested object shared: true
-Pune Delhi`
+nested object shared: true`
         },
         {
           lang: "jsx",
@@ -469,7 +454,7 @@ export default function Cart() {
       body: {
         en: `<p><b>Analogy:</b> a newspaper subscription. When you move house (a dependency changes), you first <b>cancel</b> the old subscription (cleanup) and then <b>start</b> a new one (setup). If you forget to cancel, two papers arrive and you pay twice. React's development-only Strict Mode is like a friend who moves you out and in once on day one, just to check that your cancel step really works.</p>
 <ul>
-<li><b>What an effect is for:</b> synchronising with something <b>outside React</b>: a network request, a timer, a WebSocket, a browser API. It runs <b>after</b> the screen is painted or updated.</li>
+<li><b>What an effect is for:</b> synchronising with something <b>outside React</b>: a network request, a timer, a WebSocket, a browser API. It runs <b>after</b> React commits the changes to the screen (usually after the browser paints).</li>
 <li><b>Dependencies:</b> React re-runs the effect when a value in the array changed (compared with <code>Object.is</code>). List every reactive value the effect reads; the <code>react-hooks/exhaustive-deps</code> lint rule checks this. An object or array literal created during render is a new reference each time, so it re-runs the effect on every render.</li>
 <li><b>Cleanup:</b> the function you return runs before the next run and on unmount. Use it to abort requests, clear timers and unsubscribe. <b>Strict Mode</b> (development only) runs setup, cleanup and setup again on mount; if that breaks your effect, the cleanup is missing or wrong. Production runs it once.</li>
 <li><b>Stale closures:</b> an effect with <code>[]</code> that reads <code>count</code> keeps the <code>count</code> from the first render, like the closures on Day 23. Fix it by listing the dependency or by using an updater function.</li>
@@ -479,7 +464,7 @@ export default function Cart() {
 </ul>`,
         hi: `<p><b>Analogy:</b> अख़बार की subscription। घर बदलने पर (dependency बदली) पहले पुरानी subscription <b>cancel</b> करते हो (cleanup) और फिर नई <b>शुरू</b> करते हो (setup)। Cancel करना भूल गए तो दो अख़बार आएँगे और दो बार पैसे लगेंगे। React का सिर्फ़ development वाला Strict Mode एक दोस्त जैसा है जो पहले दिन तुम्हें एक बार बाहर निकालकर वापस ले आता है, बस यह देखने के लिए कि तुम्हारा cancel step सच में काम करता है।</p>
 <ul>
-<li><b>Effect किसलिए है:</b> <b>React के बाहर</b> की किसी चीज़ से sync करने के लिए: network request, timer, WebSocket, browser API। यह screen paint या update होने के <b>बाद</b> चलता है।</li>
+<li><b>Effect किसलिए है:</b> <b>React के बाहर</b> की किसी चीज़ से sync करने के लिए: network request, timer, WebSocket, browser API। यह तब चलता है जब React changes को screen पर commit कर चुका होता है (आम तौर पर browser के paint के <b>बाद</b>)।</li>
 <li><b>Dependencies:</b> array की कोई value बदली हो तो React effect दोबारा चलाता है (<code>Object.is</code> से compare करके)। Effect जो भी reactive value पढ़ता है उसे list करो; <code>react-hooks/exhaustive-deps</code> lint rule यह check करता है। Render के दौरान बना object या array literal हर बार नया reference होता है, इसलिए वह effect को हर render पर चला देता है।</li>
 <li><b>Cleanup:</b> जो function तुम return करते हो वह अगले run से पहले और unmount पर चलता है। Requests abort करने, timers clear करने और unsubscribe करने में use करो। <b>Strict Mode</b> (सिर्फ़ development) mount पर setup, cleanup और फिर setup चलाता है; इससे तुम्हारा effect टूटे तो cleanup missing या ग़लत है। Production में यह एक बार ही चलता है।</li>
 <li><b>Stale closures:</b> <code>[]</code> वाला effect जो <code>count</code> पढ़ता है, वह पहले render वाला <code>count</code> पकड़े रखता है, Day 23 के closures जैसा। Dependency list करके या updater function से इसे ठीक करो।</li>
@@ -489,7 +474,7 @@ export default function Cart() {
 </ul>`,
         hg: `<p><b>Analogy:</b> akhbaar ki subscription. Ghar badalne par (dependency badli) pehle purani subscription <b>cancel</b> karte ho (cleanup) aur phir nayi <b>shuru</b> karte ho (setup). Cancel karna bhool gaye to do akhbaar aayenge aur do baar paise lagenge. React ka sirf development wala Strict Mode ek dost jaisa hai jo pehle din tumhe ek baar bahar nikaalkar wapas le aata hai, bas yeh dekhne ke liye ki tumhara cancel step sach mein kaam karta hai.</p>
 <ul>
-<li><b>Effect kisliye hai:</b> <b>React ke bahar</b> ki kisi cheez se sync karne ke liye: network request, timer, WebSocket, browser API. Yeh screen paint ya update hone ke <b>baad</b> chalta hai.</li>
+<li><b>Effect kisliye hai:</b> <b>React ke bahar</b> ki kisi cheez se sync karne ke liye: network request, timer, WebSocket, browser API. Yeh tab chalta hai jab React changes ko screen par commit kar chuka hota hai (aam taur par browser ke paint ke <b>baad</b>).</li>
 <li><b>Dependencies:</b> array ki koi value badli ho to React effect dobara chalata hai (<code>Object.is</code> se compare karke). Effect jo bhi reactive value padhta hai use list karo; <code>react-hooks/exhaustive-deps</code> lint rule yeh check karta hai. Render ke dauran bana object ya array literal har baar naya reference hota hai, isliye woh effect ko har render par chala deta hai.</li>
 <li><b>Cleanup:</b> jo function tum return karte ho woh agle run se pehle aur unmount par chalta hai. Requests abort karne, timers clear karne aur unsubscribe karne mein use karo. <b>Strict Mode</b> (sirf development) mount par setup, cleanup aur phir setup chalata hai; isse tumhara effect toote to cleanup missing ya galat hai. Production mein yeh ek baar hi chalta hai.</li>
 <li><b>Stale closures:</b> <code>[]</code> wala effect jo <code>count</code> padhta hai, woh pehle render wala <code>count</code> pakde rehta hai, Day 23 ke closures jaisa. Dependency list karke ya updater function se ise theek karo.</li>
@@ -507,37 +492,18 @@ export default function Cart() {
             hg: "Effect lifecycle ka model: purane run ka cleanup agle setup se pehle hota hai (Node par chalta hai)"
           },
           check: "run",
-          src: `// Re-run the effect only when a dependency changed (Object.is), cleaning up first
-function createEffectRunner() {
-  let prevDeps;
-  let cleanup;
-  return {
-    render(effect, deps) {
-      const changed =
-        !prevDeps || deps.some((d, i) => !Object.is(d, prevDeps[i]));
-      if (changed) {
-        if (cleanup) cleanup();
-        cleanup = effect();
-        prevDeps = deps;
-      }
-    },
-    unmount() {
-      if (cleanup) cleanup();
-    },
-  };
+          src: `const log = [];
+
+function runEffect(id) {
+  log.push("connect " + id); // setup
+  return () => log.push("disconnect " + id); // the cleanup it returns
 }
 
-const log = [];
-const roomEffect = (id) => () => {
-  log.push("connect " + id);
-  return () => log.push("disconnect " + id);
-};
-
-const runner = createEffectRunner();
-runner.render(roomEffect(1), [1]); // mount
-runner.render(roomEffect(1), [1]); // same dependency: nothing runs
-runner.render(roomEffect(2), [2]); // dependency changed
-runner.unmount();
+let cleanup = runEffect(1); // mount
+// The dependency changes from 1 to 2: React runs the OLD cleanup first, then the new setup
+cleanup();
+cleanup = runEffect(2);
+cleanup(); // unmount
 console.log(log.join("\\n"));`,
           expected: `connect 1
 disconnect 1
@@ -639,7 +605,7 @@ function SearchBox() {
 <ul>
 <li><b>Controlled input:</b> <code>value</code> comes from state and <code>onChange</code> writes to state, so React always knows what the field contains. This makes validation, resetting and disabling simple. An <b>uncontrolled</b> input lets the DOM hold the value and reads it with a ref or <code>FormData</code>; that is fine for simple forms.</li>
 <li><b>Calling the API:</b> use <code>fetch</code> with an <code>AbortController</code> in an effect (Day 23 covers <code>res.ok</code>), or a data library such as <b>TanStack Query</b> (optional; it adds caching, retries and background refresh). Always model three states: loading, error, data. Show the server's <code>ProblemDetails</code> <code>title</code> or validation errors (Day 13) instead of a generic message.</li>
-<li><b>CORS on ASP.NET Core:</b> the browser compares origins (scheme, host, port). Register a named policy with the exact front-end origins and call <code>app.UseCors(...)</code>. Do not use <code>AllowAnyOrigin</code> together with credentials; browsers reject that combination, and in production list your real origins. A development proxy (Vite or Next.js rewrites) can avoid CORS locally by making the call same-origin.</li>
+<li><b>CORS on ASP.NET Core:</b> the browser compares origins (scheme, host, port). Register a named policy with the exact front-end origins and call <code>app.UseCors(...)</code>. Do not use <code>AllowAnyOrigin</code> together with credentials; ASP.NET Core refuses that combination (it throws at startup) and the CORS protocol forbids it; in production list your real origins. A development proxy (Vite or Next.js rewrites) can avoid CORS locally by making the call same-origin.</li>
 <li><b>Auth tokens:</b> a token in <code>localStorage</code> or <code>sessionStorage</code> can be read by any script on your page, so one XSS hole exposes it. A common safer shape is an <code>HttpOnly</code>, <code>Secure</code> cookie with a suitable <code>SameSite</code> value, set by the server; the browser sends it and JavaScript cannot read it. Cookies then need CSRF thinking (Day 26 covers security). The <b>BFF</b> pattern (Day 16) keeps tokens on a small server component and gives the browser only a session cookie.</li>
 <li><b>When to use / when not:</b> controlled inputs for fields you validate or react to as the user types; uncontrolled for simple submit-only forms. Use a data library when several components share server data; plain <code>fetch</code> in an effect is acceptable for one small screen. Do not widen CORS to <code>*</code> to "make the error go away", and do not hide a failing call behind an empty catch. Library choices such as React Hook Form or Zod for bigger forms are team decisions, not interview facts.</li>
 </ul>`,
@@ -647,7 +613,7 @@ function SearchBox() {
 <ul>
 <li><b>Controlled input:</b> <code>value</code> state से आती है और <code>onChange</code> state में लिखता है, इसलिए React को हमेशा पता रहता है कि field में क्या है। इससे validation, reset और disable आसान हो जाते हैं। <b>Uncontrolled</b> input में value DOM रखता है और तुम उसे ref या <code>FormData</code> से पढ़ते हो; simple forms के लिए यह ठीक है।</li>
 <li><b>API call करना:</b> effect में <code>AbortController</code> के साथ <code>fetch</code> use करो (Day 23 में <code>res.ok</code> है), या <b>TanStack Query</b> जैसी data library (optional; यह caching, retries और background refresh जोड़ती है)। हमेशा तीन states model करो: loading, error, data। Generic message की जगह server का <code>ProblemDetails</code> <code>title</code> या validation errors दिखाओ (Day 13)।</li>
-<li><b>ASP.NET Core पर CORS:</b> browser origins compare करता है (scheme, host, port)। Exact front-end origins के साथ एक named policy register करो और <code>app.UseCors(...)</code> call करो। Credentials के साथ <code>AllowAnyOrigin</code> use मत करो; browsers इस combination को reject करते हैं, और production में अपने असली origins list करो। Development proxy (Vite या Next.js rewrites) call को same-origin बनाकर local में CORS से बचा सकता है।</li>
+<li><b>ASP.NET Core पर CORS:</b> browser origins compare करता है (scheme, host, port)। Exact front-end origins के साथ एक named policy register करो और <code>app.UseCors(...)</code> call करो। Credentials के साथ <code>AllowAnyOrigin</code> use मत करो; ASP.NET Core इस combination को refuse करता है (startup पर throw करता है) और CORS protocol भी इसे मना करता है; production में अपने असली origins list करो। Development proxy (Vite या Next.js rewrites) call को same-origin बनाकर local में CORS से बचा सकता है।</li>
 <li><b>Auth tokens:</b> <code>localStorage</code> या <code>sessionStorage</code> में रखा token तुम्हारे page का कोई भी script पढ़ सकता है, इसलिए एक XSS hole उसे expose कर देता है। आम तौर पर ज़्यादा safe shape है server द्वारा set की गई <code>HttpOnly</code>, <code>Secure</code> cookie, सही <code>SameSite</code> value के साथ; browser उसे भेजता है और JavaScript उसे पढ़ नहीं सकता। फिर cookies के लिए CSRF सोचना पड़ता है (Day 26 security cover करेगा)। <b>BFF</b> pattern (Day 16) tokens को एक छोटे server component पर रखता है और browser को सिर्फ़ session cookie देता है।</li>
 <li><b>कब use करें / कब नहीं:</b> जिन fields को तुम validate करते हो या user के type करते ही react करते हो उनके लिए controlled inputs; simple submit-only forms के लिए uncontrolled। जब कई components server data share करें तो data library use करो; एक छोटी screen के लिए effect में plain <code>fetch</code> चल जाता है। "error हटाने" के लिए CORS को <code>*</code> मत करो, और failing call को खाली catch के पीछे मत छुपाओ। बड़े forms के लिए React Hook Form या Zod जैसी library choices team decisions हैं, interview facts नहीं।</li>
 </ul>`,
@@ -655,7 +621,7 @@ function SearchBox() {
 <ul>
 <li><b>Controlled input:</b> <code>value</code> state se aati hai aur <code>onChange</code> state mein likhta hai, isliye React ko hamesha pata rehta hai ki field mein kya hai. Isse validation, reset aur disable aasaan ho jaate hain. <b>Uncontrolled</b> input mein value DOM rakhta hai aur tum use ref ya <code>FormData</code> se padhte ho; simple forms ke liye yeh theek hai.</li>
 <li><b>API call karna:</b> effect mein <code>AbortController</code> ke saath <code>fetch</code> use karo (Day 23 mein <code>res.ok</code> hai), ya <b>TanStack Query</b> jaisi data library (optional; yeh caching, retries aur background refresh jodti hai). Hamesha teen states model karo: loading, error, data. Generic message ki jagah server ka <code>ProblemDetails</code> <code>title</code> ya validation errors dikhao (Day 13).</li>
-<li><b>ASP.NET Core par CORS:</b> browser origins compare karta hai (scheme, host, port). Exact front-end origins ke saath ek named policy register karo aur <code>app.UseCors(...)</code> call karo. Credentials ke saath <code>AllowAnyOrigin</code> use mat karo; browsers is combination ko reject karte hain, aur production mein apne asli origins list karo. Development proxy (Vite ya Next.js rewrites) call ko same-origin banakar local mein CORS se bacha sakta hai.</li>
+<li><b>ASP.NET Core par CORS:</b> browser origins compare karta hai (scheme, host, port). Exact front-end origins ke saath ek named policy register karo aur <code>app.UseCors(...)</code> call karo. Credentials ke saath <code>AllowAnyOrigin</code> use mat karo; ASP.NET Core is combination ko refuse karta hai (startup par throw karta hai) aur CORS protocol bhi ise mana karta hai; production mein apne asli origins list karo. Development proxy (Vite ya Next.js rewrites) call ko same-origin banakar local mein CORS se bacha sakta hai.</li>
 <li><b>Auth tokens:</b> <code>localStorage</code> ya <code>sessionStorage</code> mein rakha token tumhare page ka koi bhi script padh sakta hai, isliye ek XSS hole use expose kar deta hai. Aam taur par zyaada safe shape hai server dwara set ki gayi <code>HttpOnly</code>, <code>Secure</code> cookie, sahi <code>SameSite</code> value ke saath; browser use bhejta hai aur JavaScript use padh nahi sakta. Phir cookies ke liye CSRF sochna padta hai (Day 26 security cover karega). <b>BFF</b> pattern (Day 16) tokens ko ek chhote server component par rakhta hai aur browser ko sirf session cookie deta hai.</li>
 <li><b>Kab use karein / kab nahi:</b> jin fields ko tum validate karte ho ya user ke type karte hi react karte ho unke liye controlled inputs; simple submit-only forms ke liye uncontrolled. Jab kai components server data share karein to data library use karo; ek chhoti screen ke liye effect mein plain <code>fetch</code> chal jaata hai. "Error hatane" ke liye CORS ko <code>*</code> mat karo, aur failing call ko khaali catch ke peeche mat chhupao. Bade forms ke liye React Hook Form ya Zod jaisi library choices team decisions hain, interview facts nahi.</li>
 </ul>`
@@ -803,7 +769,7 @@ app.Run();`
 <li><b>Server Component page:</b> <code>async</code> function, <code>await</code> data directly, render HTML on the server. Secrets (API keys, connection details) stay on the server. In Next.js 15 and later, <code>params</code> and <code>searchParams</code> are promises you <code>await</code>.</li>
 <li><b>Client Component:</b> a file that starts with <code>'use client'</code>. It is still pre-rendered to HTML on the server for the first load, then <b>hydrated</b> in the browser so handlers work. Everything that file imports joins the client bundle, so keep the interactive part small and pass server-rendered content in as <code>children</code>.</li>
 <li><b>Data in server components:</b> call your ASP.NET Core API with <code>fetch</code> (or a database client) on the server. According to the current docs, <code>fetch</code> results are <b>not cached by default</b>, and slow fetches can be wrapped in <code>&lt;Suspense&gt;</code> so the rest of the page streams first.</li>
-<li><b>Caching (version-sensitive):</b> Next.js 16 documents Cache Components: you opt in with <code>cacheComponents: true</code> in the config, then mark data or components with <code>'use cache'</code> and choose a lifetime with <code>cacheLife</code>. Earlier versions used route segment options and <code>revalidate</code>. Check the docs for your installed version.</li>
+<li><b>Caching (version-sensitive):</b> Next.js 16 documents Cache Components: you opt in with <code>cacheComponents: true</code> in the config, then mark data or components with <code>'use cache'</code> and choose a lifetime with <code>cacheLife</code>. Without Cache Components (and in earlier versions) you use route segment options and <code>revalidate</code>. Check the docs for your installed version.</li>
 <li><b>SSG / ISR / SSR / CSR in practice:</b> a page with no request-time data can be prebuilt (static); <code>generateStaticParams</code> lists dynamic URLs to prebuild; cached content refreshes by a time or an on-demand call (the ISR idea); request data such as cookies makes that part render per request (SSR) and is best wrapped in <code>&lt;Suspense&gt;</code>; <code>'use client'</code> parts with fetch-in-effect are CSR.</li>
 <li><b>Route Handlers:</b> a <code>route.ts</code> file exporting <code>GET</code>, <code>POST</code> and so on. In the current docs, they are not cached by default. A handler can act as a small <b>BFF</b> (Day 16): read an HttpOnly cookie on the server, call the ASP.NET Core API with the token, and return only what the browser needs.</li>
 <li><b>When to use / when not:</b> use server components for data-heavy, SEO-visible pages and keep client components for interactivity. Use a Route Handler as a BFF for token handling; do not rebuild your whole business API in it when ASP.NET Core already owns that logic. Do not add <code>'use client'</code> to a whole layout "to make an error go away"; find the one component that needs state. Avoid a Node-based Next.js server when a static Vite build behind your API would do.</li>
@@ -813,8 +779,8 @@ app.Run();`
 <li><b>Server Component page:</b> <code>async</code> function, data को सीधे <code>await</code> करो, HTML server पर render करो। Secrets (API keys, connection details) server पर ही रहते हैं। Next.js 15 और उसके बाद <code>params</code> और <code>searchParams</code> promises हैं जिन्हें <code>await</code> करना पड़ता है।</li>
 <li><b>Client Component:</b> वह file जो <code>'use client'</code> से शुरू होती है। पहले load के लिए यह भी server पर HTML में pre-render होती है, फिर browser में <b>hydrate</b> होती है ताकि handlers काम करें। उस file के सारे imports client bundle में जाते हैं, इसलिए interactive हिस्सा छोटा रखो और server-rendered content को <code>children</code> की तरह पास करो।</li>
 <li><b>Server components में data:</b> server पर <code>fetch</code> (या database client) से अपनी ASP.NET Core API call करो। मौजूदा docs के हिसाब से <code>fetch</code> results by default <b>cache नहीं</b> होते, और धीमे fetches को <code>&lt;Suspense&gt;</code> में रखा जा सकता है ताकि बाक़ी page पहले stream हो।</li>
-<li><b>Caching (version-sensitive):</b> Next.js 16 Cache Components document करता है: config में <code>cacheComponents: true</code> से opt in करते हो, फिर data या components को <code>'use cache'</code> से mark करते हो और <code>cacheLife</code> से lifetime चुनते हो। पुराने versions route segment options और <code>revalidate</code> use करते थे। अपने installed version के docs देखो।</li>
-<li><b>SSG / ISR / SSR / CSR व्यवहार में:</b> जिस page में request-time data नहीं है वह पहले से बन सकता है (static); <code>generateStaticParams</code> prebuild होने वाले dynamic URLs list करता है; cached content समय या on-demand call से refresh होता है (ISR का idea); cookies जैसा request data उस हिस्से को हर request पर render करवाता है (SSR) और उसे <code>&lt;Suspense&gt;</code> में रखना बेहतर है; effect में fetch करने वाले <code>'use client'</code> हिस्से CSR हैं।</li>
+<li><b>Caching (version-sensitive):</b> Next.js 16 Cache Components document करता है: config में <code>cacheComponents: true</code> से opt in करते हो, फिर data या components को <code>'use cache'</code> से mark करते हो और <code>cacheLife</code> से lifetime चुनते हो। Cache Components के बिना (और पुराने versions में) route segment options और <code>revalidate</code> use करते हैं। अपने installed version के docs देखो।</li>
+<li><b>SSG / ISR / SSR / CSR practice में:</b> जिस page में request-time data नहीं है वह पहले से बन सकता है (static); <code>generateStaticParams</code> prebuild होने वाले dynamic URLs list करता है; cached content समय या on-demand call से refresh होता है (ISR का idea); cookies जैसा request data उस हिस्से को हर request पर render करवाता है (SSR) और उसे <code>&lt;Suspense&gt;</code> में रखना बेहतर है; effect में fetch करने वाले <code>'use client'</code> हिस्से CSR हैं।</li>
 <li><b>Route Handlers:</b> <code>route.ts</code> file जो <code>GET</code>, <code>POST</code> वग़ैरह export करती है। मौजूदा docs में ये by default cache नहीं होते। Handler एक छोटे <b>BFF</b> (Day 16) का काम कर सकता है: server पर HttpOnly cookie पढ़ो, token के साथ ASP.NET Core API call करो, और browser को सिर्फ़ वही लौटाओ जो उसे चाहिए।</li>
 <li><b>कब use करें / कब नहीं:</b> data-heavy, SEO में दिखने वाले pages के लिए server components और interactivity के लिए client components। Token handling के लिए Route Handler को BFF की तरह use करो; जब ASP.NET Core पहले से वह logic own करता है तो पूरी business API उसमें दोबारा मत बनाओ। "error हटाने" के लिए पूरे layout पर <code>'use client'</code> मत लगाओ; वह एक component खोजो जिसे state चाहिए। जब तुम्हारी API के पीछे static Vite build काफ़ी हो तब Node-based Next.js server से बचो।</li>
 </ul>`,
@@ -823,8 +789,8 @@ app.Run();`
 <li><b>Server Component page:</b> <code>async</code> function, data ko seedhe <code>await</code> karo, HTML server par render karo. Secrets (API keys, connection details) server par hi rehte hain. Next.js 15 aur uske baad <code>params</code> aur <code>searchParams</code> promises hain jinhe <code>await</code> karna padta hai.</li>
 <li><b>Client Component:</b> woh file jo <code>'use client'</code> se shuru hoti hai. Pehle load ke liye yeh bhi server par HTML mein pre-render hoti hai, phir browser mein <b>hydrate</b> hoti hai taaki handlers kaam karein. Us file ke saare imports client bundle mein jaate hain, isliye interactive hissa chhota rakho aur server-rendered content ko <code>children</code> ki tarah pass karo.</li>
 <li><b>Server components mein data:</b> server par <code>fetch</code> (ya database client) se apni ASP.NET Core API call karo. Maujooda docs ke hisaab se <code>fetch</code> results by default <b>cache nahi</b> hote, aur dheemi fetches ko <code>&lt;Suspense&gt;</code> mein rakha ja sakta hai taaki baaki page pehle stream ho.</li>
-<li><b>Caching (version-sensitive):</b> Next.js 16 Cache Components document karta hai: config mein <code>cacheComponents: true</code> se opt in karte ho, phir data ya components ko <code>'use cache'</code> se mark karte ho aur <code>cacheLife</code> se lifetime chunte ho. Purane versions route segment options aur <code>revalidate</code> use karte the. Apne installed version ke docs dekho.</li>
-<li><b>SSG / ISR / SSR / CSR vyavahar mein:</b> jis page mein request-time data nahi hai woh pehle se ban sakta hai (static); <code>generateStaticParams</code> prebuild hone wale dynamic URLs list karta hai; cached content samay ya on-demand call se refresh hota hai (ISR ka idea); cookies jaisa request data us hisse ko har request par render karwata hai (SSR) aur use <code>&lt;Suspense&gt;</code> mein rakhna behtar hai; effect mein fetch karne wale <code>'use client'</code> hisse CSR hain.</li>
+<li><b>Caching (version-sensitive):</b> Next.js 16 Cache Components document karta hai: config mein <code>cacheComponents: true</code> se opt in karte ho, phir data ya components ko <code>'use cache'</code> se mark karte ho aur <code>cacheLife</code> se lifetime chunte ho. Cache Components ke bina (aur purane versions mein) route segment options aur <code>revalidate</code> use karte hain. Apne installed version ke docs dekho.</li>
+<li><b>SSG / ISR / SSR / CSR practice mein:</b> jis page mein request-time data nahi hai woh pehle se ban sakta hai (static); <code>generateStaticParams</code> prebuild hone wale dynamic URLs list karta hai; cached content samay ya on-demand call se refresh hota hai (ISR ka idea); cookies jaisa request data us hisse ko har request par render karwata hai (SSR) aur use <code>&lt;Suspense&gt;</code> mein rakhna behtar hai; effect mein fetch karne wale <code>'use client'</code> hisse CSR hain.</li>
 <li><b>Route Handlers:</b> <code>route.ts</code> file jo <code>GET</code>, <code>POST</code> waghairah export karti hai. Maujooda docs mein yeh by default cache nahi hote. Handler ek chhote <b>BFF</b> (Day 16) ka kaam kar sakta hai: server par HttpOnly cookie padho, token ke saath ASP.NET Core API call karo, aur browser ko sirf wahi lautao jo use chahiye.</li>
 <li><b>Kab use karein / kab nahi:</b> data-heavy, SEO mein dikhne wale pages ke liye server components aur interactivity ke liye client components. Token handling ke liye Route Handler ko BFF ki tarah use karo; jab ASP.NET Core pehle se woh logic own karta hai to poori business API usme dobara mat banao. "Error hatane" ke liye poore layout par <code>'use client'</code> mat lagao; woh ek component khojo jise state chahiye. Jab tumhari API ke peeche static Vite build kaafi ho tab Node-based Next.js server se bacho.</li>
 </ul>`
@@ -1165,8 +1131,8 @@ export default function Page() {
       q: "Explain SSR, SSG, ISR and CSR. How do you choose?",
       answer: "SSG builds HTML at build time, ISR refreshes prebuilt pages in the background, SSR renders per request, and CSR renders in the browser after JavaScript loads. Choose per route by freshness and SEO needs.",
       meaning: {
-        hi: "SSG build time पर HTML बनाता है, ISR prebuilt pages को background में refresh करता है, SSR हर request पर render करता है, और CSR JavaScript load होने के बाद browser में। Route के हिसाब से freshness, personalisation और SEO देखकर चुनो।",
-        hg: "SSG build time par HTML banata hai, ISR prebuilt pages ko background mein refresh karta hai, SSR har request par render karta hai, aur CSR JavaScript load hone ke baad browser mein. Route ke hisaab se freshness, personalisation aur SEO dekhkar chuno."
+        hi: "SSG build time पर HTML बनाता है, ISR prebuilt pages को background में refresh करता है, SSR हर request पर render करता है, और CSR JavaScript load होने के बाद browser में। Route के हिसाब से freshness और SEO देखकर चुनो।",
+        hg: "SSG build time par HTML banata hai, ISR prebuilt pages ko background mein refresh karta hai, SSR har request par render karta hai, aur CSR JavaScript load hone ke baad browser mein. Route ke hisaab se freshness aur SEO dekhkar chuno."
       },
       explain: {
         en: `<ul>
@@ -1201,8 +1167,8 @@ export default function Page() {
       q: "As a Tech Lead in a .NET shop, how would you choose between Next.js, plain React with Vite, and Blazor?",
       answer: "I weigh SEO, team skills, hosting and the cost of a second runtime. Next.js suits public SEO pages, Vite React suits internal SPAs, and Blazor suits teams that want to stay in C#.",
       meaning: {
-        hi: "मैं SEO और first-load की ज़रूरत, team skills, hosting और दूसरे runtime की क़ीमत तौलता हूँ। Public SEO pages के लिए Next.js, internal SPAs के लिए Vite React, और C# में रहना चाहने वाली teams के लिए Blazor।",
-        hg: "Main SEO aur first-load ki zaroorat, team skills, hosting aur doosre runtime ki keemat taulta hoon. Public SEO pages ke liye Next.js, internal SPAs ke liye Vite React, aur C# mein rehna chahne wali teams ke liye Blazor."
+        hi: "मैं SEO, team skills, hosting और दूसरे runtime की क़ीमत तौलता हूँ। Public SEO pages के लिए Next.js, internal SPAs के लिए Vite React, और C# में रहना चाहने वाली teams के लिए Blazor।",
+        hg: "Main SEO, team skills, hosting aur doosre runtime ki keemat taulta hoon. Public SEO pages ke liye Next.js, internal SPAs ke liye Vite React, aur C# mein rehna chahne wali teams ke liye Blazor."
       },
       explain: {
         en: `<ul>
@@ -1337,19 +1303,19 @@ export default function Page() {
         en: `<ul>
 <li>The extra cycle simulates a user leaving and returning to the screen. A correct effect (with cleanup) behaves the same either way; a leaking one shows duplicate subscriptions or requests.</li>
 <li>Typical fixes: abort the fetch in cleanup, remove event listeners, clear timers, disconnect sockets. Puzzle 7 models the leak.</li>
-<li>For a one-time action such as sending analytics on page view, an effect with cleanup is still the place, but think about whether a duplicate in development matters; do not use a "ran once" ref flag to hide the double run.</li>
+<li>For a one-time action such as sending analytics on page view, an effect is still the place (no cleanup needed); a duplicate log in development is acceptable. Do not use a "ran once" ref flag to hide the double run.</li>
 <li>Follow-up: "A POST in an effect fired twice in dev?" A POST belongs in an event handler (user action), not in an effect.</li>
 </ul>`,
         hi: `<ul>
 <li>Extra cycle एक user के screen छोड़कर वापस आने को simulate करता है। सही effect (cleanup के साथ) दोनों तरह एक जैसा चलता है; leak करने वाला duplicate subscriptions या requests दिखाता है।</li>
 <li>Typical fixes: cleanup में fetch abort करो, event listeners हटाओ, timers clear करो, sockets disconnect करो। Puzzle 7 leak को model करता है।</li>
-<li>Page view पर analytics भेजने जैसे one-time action के लिए effect cleanup के साथ अब भी सही जगह है, पर सोचो कि development में duplicate से फ़र्क़ पड़ता है या नहीं; double run छुपाने के लिए "ran once" वाला ref flag मत लगाओ।</li>
+<li>Page view पर analytics भेजने जैसे one-time action के लिए effect अब भी सही जगह है (cleanup की ज़रूरत नहीं); development में duplicate log चलेगा। Double run छुपाने के लिए "ran once" वाला ref flag मत लगाओ।</li>
 <li>Follow-up: "Effect में POST dev में दो बार चला?" POST event handler (user action) में होना चाहिए, effect में नहीं।</li>
 </ul>`,
         hg: `<ul>
 <li>Extra cycle ek user ke screen chhodkar wapas aane ko simulate karta hai. Sahi effect (cleanup ke saath) dono tarah ek jaisa chalta hai; leak karne wala duplicate subscriptions ya requests dikhata hai.</li>
 <li>Typical fixes: cleanup mein fetch abort karo, event listeners hatao, timers clear karo, sockets disconnect karo. Puzzle 7 leak ko model karta hai.</li>
-<li>Page view par analytics bhejne jaise one-time action ke liye effect cleanup ke saath ab bhi sahi jagah hai, par socho ki development mein duplicate se fark padta hai ya nahi; double run chhupane ke liye "ran once" wala ref flag mat lagao.</li>
+<li>Page view par analytics bhejne jaise one-time action ke liye effect ab bhi sahi jagah hai (cleanup ki zaroorat nahi); development mein duplicate log chalega. Double run chhupane ke liye "ran once" wala ref flag mat lagao.</li>
 <li>Follow-up: "Effect mein POST dev mein do baar chala?" POST event handler (user action) mein hona chahiye, effect mein nahi.</li>
 </ul>`
       }
@@ -1438,13 +1404,13 @@ export default function Page() {
 </ul>`,
         hi: `<ul>
 <li>आम use: input को focus करना, timer id रखना, पिछली value रखना, <code>AbortController</code> store करना।</li>
-<li>जो values output को प्रभावित करती हैं उनके लिए render के दौरान <code>ref.current</code> पढ़ो या लिखो मत; React को बदलाव दिखता नहीं। इसे event handlers या effects में लिखो।</li>
+<li>जो values output पर असर डालती हैं उनके लिए render के दौरान <code>ref.current</code> पढ़ो या लिखो मत; React को बदलाव दिखता नहीं। इसे event handlers या effects में लिखो।</li>
 <li>Rule of thumb: जिसके बदलने पर screen बदलनी चाहिए उसके लिए state, जिसे सिर्फ़ तुम्हारा code याद रखे उसके लिए ref।</li>
 <li>Follow-up: "क्या ref और module-level variable एक ही चीज़ है?" नहीं। Ref हर component instance का अपना है और re-renders में बचा रहता है, जबकि module variable हर instance में share होता है।</li>
 </ul>`,
         hg: `<ul>
 <li>Aam use: input ko focus karna, timer id rakhna, pichli value rakhna, <code>AbortController</code> store karna.</li>
-<li>Jo values output ko prabhavit karti hain unke liye render ke dauran <code>ref.current</code> padho ya likho mat; React ko badlaav dikhta nahi. Ise event handlers ya effects mein likho.</li>
+<li>Jo values output par asar daalti hain unke liye render ke dauran <code>ref.current</code> padho ya likho mat; React ko badlaav dikhta nahi. Ise event handlers ya effects mein likho.</li>
 <li>Rule of thumb: jiske badalne par screen badalni chahiye uske liye state, jise sirf tumhara code yaad rakhe uske liye ref.</li>
 <li>Follow-up: "Kya ref aur module-level variable ek hi cheez hai?" Nahi. Ref har component instance ka apna hai aur re-renders mein bacha rehta hai, jabki module variable har instance mein share hota hai.</li>
 </ul>`
@@ -1505,14 +1471,14 @@ export default function Page() {
 <li><code>onChange</code> के बिना <code>value</code> set करोगे तो field read-only हो जाता है और React warn करता है।</li>
 <li>Uncontrolled: <code>defaultValue</code> use करो और submit पर <code>FormData</code> या ref से value पढ़ो; कम code, बड़े forms में कम re-renders।</li>
 <li>Server-side validation अब भी फ़ैसला करती है: ASP.NET Core API को फिर से validate करना होगा (Day 13); client checks user experience के लिए हैं।</li>
-<li>Follow-up: "Form libraries का इससे क्या संबंध?" React Hook Form जैसी libraries re-renders घटाने के लिए नीचे ज़्यादातर uncontrolled inputs use करती हैं; कौन-सी लेनी है यह team decision है।</li>
+<li>Follow-up: "Form libraries का इससे क्या लेना-देना?" React Hook Form जैसी libraries re-renders घटाने के लिए नीचे ज़्यादातर uncontrolled inputs use करती हैं; कौन-सी लेनी है यह team decision है।</li>
 </ul>`,
         hg: `<ul>
 <li>Controlled: <code>&lt;input value={name} onChange={e =&gt; setName(e.target.value)} /&gt;</code>. Live validation, submit button disable karna, typing ke dauran formatting aasaan.</li>
 <li><code>onChange</code> ke bina <code>value</code> set karoge to field read-only ho jaata hai aur React warn karta hai.</li>
 <li>Uncontrolled: <code>defaultValue</code> use karo aur submit par <code>FormData</code> ya ref se value padho; kam code, bade forms mein kam re-renders.</li>
 <li>Server-side validation ab bhi faisla karti hai: ASP.NET Core API ko phir se validate karna hoga (Day 13); client checks user experience ke liye hain.</li>
-<li>Follow-up: "Form libraries ka isse kya sambandh?" React Hook Form jaisi libraries re-renders ghatane ke liye neeche zyaadatar uncontrolled inputs use karti hain; kaun-si leni hai yeh team decision hai.</li>
+<li>Follow-up: "Form libraries ka isse kya lena-dena?" React Hook Form jaisi libraries re-renders ghatane ke liye neeche zyaadatar uncontrolled inputs use karti hain; kaun-si leni hai yeh team decision hai.</li>
 </ul>`
       }
     },
@@ -1537,14 +1503,14 @@ export default function Page() {
 <li>Origin = scheme + host + port, इसलिए <code>localhost:5173</code> और <code>localhost:5001</code> अलग origins हैं। Browser request भेजता है (या non-simple calls के लिए पहले <b>preflight</b> <code>OPTIONS</code> request) और server के CORS headers allow न करें तो response expose करने से मना कर देता है।</li>
 <li>Server पर fix: named policy के साथ <code>AddCors</code> (C# snippet देखो), pipeline में <code>UseCors</code> (Day 13 CORS को गहराई से cover करता है)। Cookies use करो तो <code>AllowCredentials</code> सिर्फ़ explicit origins के साथ लगाओ।</li>
 <li>Development में alternative: dev-server proxy ताकि browser same origin को call करे। Production में reverse proxy या gateway (Day 16) दोनों को एक origin के नीचे serve करके CORS हटा सकता है।</li>
-<li>CORS user के browser की हिफ़ाज़त करता है; यह authentication या server-side security control नहीं है। curl और Postman इसे ignore करते हैं, इसलिए API की सुरक्षा के लिए इस पर भरोसा मत करो।</li>
+<li>CORS user के browser की हिफ़ाज़त करता है; यह authentication या server-side security control नहीं है। curl और Postman इसे ignore करते हैं, इसलिए API की security के लिए इस पर भरोसा मत करो।</li>
 <li>Follow-up: "Request Postman में चलती है पर browser में नहीं?" यह CORS की तरफ़ इशारा करता है, API logic की तरफ़ नहीं।</li>
 </ul>`,
         hg: `<ul>
 <li>Origin = scheme + host + port, isliye <code>localhost:5173</code> aur <code>localhost:5001</code> alag origins hain. Browser request bhejta hai (ya non-simple calls ke liye pehle <b>preflight</b> <code>OPTIONS</code> request) aur server ke CORS headers allow na karein to response expose karne se mana kar deta hai.</li>
 <li>Server par fix: named policy ke saath <code>AddCors</code> (C# snippet dekho), pipeline mein <code>UseCors</code> (Day 13 CORS ko gehraai se cover karta hai). Cookies use karo to <code>AllowCredentials</code> sirf explicit origins ke saath lagao.</li>
 <li>Development mein alternative: dev-server proxy taaki browser same origin ko call kare. Production mein reverse proxy ya gateway (Day 16) dono ko ek origin ke neeche serve karke CORS hata sakta hai.</li>
-<li>CORS user ke browser ki hifaazat karta hai; yeh authentication ya server-side security control nahi hai. curl aur Postman ise ignore karte hain, isliye API ki suraksha ke liye is par bharosa mat karo.</li>
+<li>CORS user ke browser ki hifaazat karta hai; yeh authentication ya server-side security control nahi hai. curl aur Postman ise ignore karte hain, isliye API ki security ke liye is par bharosa mat karo.</li>
 <li>Follow-up: "Request Postman mein chalti hai par browser mein nahi?" yeh CORS ki taraf ishaara karta hai, API logic ki taraf nahi.</li>
 </ul>`
       }
@@ -1769,9 +1735,9 @@ id key: Ravi=[], Meena=[]`,
       explain: {
         en: `<p>With index keys, after Asha is removed, Ravi becomes index 0, the same key Asha's row had, so React hands Ravi the row state that belonged to Asha: the note "call back at 5" now appears on the wrong person.</p>
 <p>With the database id as the key, Ravi's key (102) never matched Asha's row (101), so the note disappears together with Asha's row, which is correct. Real React also reuses DOM nodes and component state by key in the same spirit; this is a simplified model of that matching, not React's real algorithm.</p>`,
-        hi: `<p>Index keys के साथ Asha के हटने के बाद Ravi index 0 बन जाता है, वही key जो Asha की row की थी, इसलिए React Ravi को वह row state दे देता है जो Asha की थी: note "call back at 5" अब ग़लत व्यक्ति पर दिखता है।</p>
+        hi: `<p>Index keys के साथ Asha के हटने के बाद Ravi index 0 बन जाता है, वही key जो Asha की row की थी, इसलिए React Ravi को वह row state दे देता है जो Asha की थी: note "call back at 5" अब ग़लत इंसान पर दिखता है।</p>
 <p>Database id को key बनाने पर Ravi की key (102) Asha की row (101) से कभी match नहीं हुई, इसलिए note Asha की row के साथ ग़ायब हो जाता है, जो सही है। असली React भी DOM nodes और component state को key से इसी तरह reuse करता है; यह उस matching का simplified model है, React का असली algorithm नहीं।</p>`,
-        hg: `<p>Index keys ke saath Asha ke hatne ke baad Ravi index 0 ban jaata hai, wahi key jo Asha ki row ki thi, isliye React Ravi ko woh row state de deta hai jo Asha ki thi: note "call back at 5" ab galat vyakti par dikhta hai.</p>
+        hg: `<p>Index keys ke saath Asha ke hatne ke baad Ravi index 0 ban jaata hai, wahi key jo Asha ki row ki thi, isliye React Ravi ko woh row state de deta hai jo Asha ki thi: note "call back at 5" ab galat insaan par dikhta hai.</p>
 <p>Database id ko key banane par Ravi ki key (102) Asha ki row (101) se kabhi match nahi hui, isliye note Asha ki row ke saath gaayab ho jaata hai, jo sahi hai. Asli React bhi DOM nodes aur component state ko key se isi tarah reuse karta hai; yeh us matching ka simplified model hai, React ka asli algorithm nahi.</p>`
       }
     },
@@ -1947,14 +1913,14 @@ no cleanup: mounted=2, after unmount=2`,
   revision: {
     en: [
       "React is a UI library: components describe the UI for the current state, while routing and data loading come from other tools.",
-      "JSX compiles to plain function calls; use className, put expressions in {}, and give list items a stable key.",
-      "Props are read-only inputs from the parent, state is owned by the component, data flows down and events go up as callbacks.",
+      "JSX compiles to plain function calls (className, expressions in {}).",
+      "Props are read-only inputs from the parent; state is owned by the component.",
       "A render sees a snapshot of state; use setCount(c =&gt; c + 1) when the next value depends on the previous one.",
       "Do not mutate state arrays or objects; React compares with Object.is, so copy and replace.",
       "Index keys can attach row state to the wrong item when a list reorders or shrinks; prefer stable ids.",
       "useEffect synchronises with outside systems: list every dependency and return a cleanup function.",
       "Compute derived values during render and handle clicks in event handlers; many effects are not needed.",
-      "The browser enforces CORS, so the ASP.NET Core API must allow your exact front-end origin; always show loading and error states.",
+      "The browser enforces CORS, so the ASP.NET Core API must allow your exact front-end origin.",
       "Do not keep sensitive tokens in localStorage carelessly; prefer an HttpOnly cookie, often through a BFF.",
       "In the Next.js App Router, components are Server Components by default; add 'use client' only for state, effects or browser APIs.",
       "SSG, ISR, SSR and CSR trade freshness against speed and SEO; pick per route and check caching defaults for your Next.js version.",
@@ -1962,32 +1928,37 @@ no cleanup: mounted=2, after unmount=2`,
     meaning: {
       hi: [
       "React एक UI library है: components मौजूदा state के लिए UI describe करते हैं, जबकि routing और data loading दूसरे tools से आते हैं।",
-      "JSX plain function calls में compile होता है; className use करो, expressions को {} में रखो, और list items को stable key दो।",
-      "Props parent से मिले read-only inputs हैं, state component की अपनी है, data नीचे बहता है और events callbacks से ऊपर जाते हैं।",
+      "JSX plain function calls में compile होता है (className, expressions {} में)।",
+      "Props parent से मिले read-only inputs हैं; state component की अपनी है।",
       "हर render state का snapshot देखता है; अगली value पिछली पर depend करे तो setCount(c =&gt; c + 1) use करो।",
       "State के arrays या objects को mutate मत करो; React Object.is से compare करता है, इसलिए copy बनाकर replace करो।",
       "List reorder या छोटी होने पर index keys row की state ग़लत item से जोड़ सकती हैं; stable ids पसंद करो।",
       "useEffect बाहर के systems से sync करता है: हर dependency list करो और cleanup function return करो।",
       "Derived values को render के दौरान compute करो और clicks को event handlers में handle करो; कई effects की ज़रूरत नहीं होती।",
-      "CORS browser enforce करता है, इसलिए ASP.NET Core API को तुम्हारा exact front-end origin allow करना होगा; loading और error states हमेशा दिखाओ।",
+      "CORS browser enforce करता है, इसलिए ASP.NET Core API को तुम्हारा exact front-end origin allow करना होगा।",
       "Sensitive tokens को localStorage में लापरवाही से मत रखो; HttpOnly cookie पसंद करो, अक्सर BFF के ज़रिए।",
       "Next.js App Router में components by default Server Components हैं; 'use client' सिर्फ़ state, effects या browser APIs के लिए लगाओ।",
       "SSG, ISR, SSR और CSR में freshness बनाम speed और SEO का trade-off है; route के हिसाब से चुनो और अपने Next.js version के caching defaults देखो।",
       ],
       hg: [
       "React ek UI library hai: components maujooda state ke liye UI describe karte hain, jabki routing aur data loading doosre tools se aate hain.",
-      "JSX plain function calls mein compile hota hai; className use karo, expressions ko {} mein rakho, aur list items ko stable key do.",
-      "Props parent se mile read-only inputs hain, state component ki apni hai, data neeche behta hai aur events callbacks se upar jaate hain.",
+      "JSX plain function calls mein compile hota hai (className, expressions {} mein).",
+      "Props parent se mile read-only inputs hain; state component ki apni hai.",
       "Har render state ka snapshot dekhta hai; agli value pichli par depend kare to setCount(c =&gt; c + 1) use karo.",
       "State ke arrays ya objects ko mutate mat karo; React Object.is se compare karta hai, isliye copy banakar replace karo.",
       "List reorder ya chhoti hone par index keys row ki state galat item se jod sakti hain; stable ids pasand karo.",
       "useEffect bahar ke systems se sync karta hai: har dependency list karo aur cleanup function return karo.",
       "Derived values ko render ke dauran compute karo aur clicks ko event handlers mein handle karo; kai effects ki zaroorat nahi hoti.",
-      "CORS browser enforce karta hai, isliye ASP.NET Core API ko tumhara exact front-end origin allow karna hoga; loading aur error states hamesha dikhao.",
+      "CORS browser enforce karta hai, isliye ASP.NET Core API ko tumhara exact front-end origin allow karna hoga.",
       "Sensitive tokens ko localStorage mein laparwahi se mat rakho; HttpOnly cookie pasand karo, aksar BFF ke zariye.",
       "Next.js App Router mein components by default Server Components hain; 'use client' sirf state, effects ya browser APIs ke liye lagao.",
       "SSG, ISR, SSR aur CSR mein freshness banam speed aur SEO ka trade-off hai; route ke hisaab se chuno aur apne Next.js version ke caching defaults dekho.",
       ]
     }
+  },
+  whatsNew: {
+    en: `<p><b>Currency check (this area moves fast):</b> React 19 became stable in December 2024 (confirmed by the Next.js 15.1 announcement). It adds Actions, form actions, <code>useActionState</code>, <code>useOptimistic</code> and the <code>use</code> API; the Next.js docs confirm <code>use</code>, so check react.dev for the rest and for current status. Next.js 16 documents a stable <code>reactCompiler</code> option (it needs <code>babel-plugin-react-compiler</code>), which can reduce hand-written <code>useMemo</code>/<code>useCallback</code>; check react.dev for the compiler's current status. A Next.js static export (<code>output: 'export'</code>) produces plain HTML, CSS and JavaScript files that need no Node.js server, but cookies, Server Actions and ISR are not available there.</p>`,
+    hi: `<p><b>Currency check (यह area तेज़ी से बदलता है):</b> React 19 December 2024 में stable हुआ (Next.js 15.1 के announcement से confirmed)। इसमें Actions, form actions, <code>useActionState</code>, <code>useOptimistic</code> और <code>use</code> API आते हैं; Next.js docs <code>use</code> को confirm करते हैं, बाक़ी के लिए और current status के लिए react.dev देखो। Next.js 16 एक stable <code>reactCompiler</code> option document करता है (इसे <code>babel-plugin-react-compiler</code> चाहिए), जो हाथ से लिखे <code>useMemo</code>/<code>useCallback</code> घटा सकता है; compiler के current status के लिए react.dev देखो। Next.js static export (<code>output: 'export'</code>) plain HTML, CSS और JavaScript files बनाता है जिन्हें Node.js server नहीं चाहिए, पर cookies, Server Actions और ISR वहाँ नहीं मिलते।</p>`,
+    hg: `<p><b>Currency check (yeh area tezi se badalta hai):</b> React 19 December 2024 mein stable hua (Next.js 15.1 ke announcement se confirmed). Isme Actions, form actions, <code>useActionState</code>, <code>useOptimistic</code> aur <code>use</code> API aate hain; Next.js docs <code>use</code> ko confirm karte hain, baaki ke liye aur current status ke liye react.dev dekho. Next.js 16 ek stable <code>reactCompiler</code> option document karta hai (ise <code>babel-plugin-react-compiler</code> chahiye), jo haath se likhe <code>useMemo</code>/<code>useCallback</code> ghata sakta hai; compiler ke current status ke liye react.dev dekho. Next.js static export (<code>output: 'export'</code>) plain HTML, CSS aur JavaScript files banata hai jinhe Node.js server nahi chahiye, par cookies, Server Actions aur ISR wahan nahi milte.</p>`
   }
 };
