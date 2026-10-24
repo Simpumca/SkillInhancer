@@ -88,7 +88,7 @@ window.TL_DAY = {
 <li><b>Exceptions:</b> <code>throw;</code> keeps the stack trace, <code>throw ex;</code> resets it (Day 3).</li>
 <li><b>LINQ:</b> a query runs only when enumerated, and again at every enumeration; <code>IQueryable</code> becomes SQL, but after <code>ToList()</code> it is all in memory (Day 4).</li>
 <li><b>DbContext:</b> Scoped, short-lived, not thread-safe; in production run migrations through an idempotent script or a bundle, not <code>Migrate()</code> at startup on many instances (Day 5).</li>
-<li><b>N+1 and SQL:</b> count the queries and read the SQL; <code>FromSql($"...")</code> parameterises, <code>FromSqlRaw</code> with concatenation is injection; <code>ExecuteUpdate</code> bypasses the change tracker (Day 6).</li>
+<li><b>N+1 and SQL:</b> count the queries and read the SQL; <code>FromSql($"...")</code> parameterises, <code>FromSqlRaw</code> with concatenation is injection; <code>ExecuteUpdate</code> bypasses the change tracker (tracked entities aren't refreshed; only SaveChanges interceptors are skipped) (Day 6).</li>
 <li><b>Concurrency:</b> a rowversion goes into the UPDATE's WHERE; 0 rows affected means <code>DbUpdateConcurrencyException</code> (Day 6).</li>
 </ul>
 <p><b>When to use:</b> the night before and the morning of the interview. <b>When not:</b> as a first read of a topic; open the day instead.</p>`,
@@ -102,7 +102,7 @@ window.TL_DAY = {
 <li><b>Exceptions:</b> <code>throw;</code> stack trace रखता है, <code>throw ex;</code> उसे reset कर देता है (Day 3)।</li>
 <li><b>LINQ:</b> query तभी चलती है जब enumerate हो, और हर enumeration पर दोबारा चलती है; <code>IQueryable</code> SQL बनता है, पर <code>ToList()</code> के बाद सब memory में चलता है (Day 4)।</li>
 <li><b>DbContext:</b> Scoped, short-lived, thread-safe नहीं; production में migrations idempotent script या bundle से चलाओ, कई instances पर startup में <code>Migrate()</code> से नहीं (Day 5)।</li>
-<li><b>N+1 और SQL:</b> queries गिनो और SQL पढ़ो; <code>FromSql($"...")</code> parameter बनाता है, concatenation वाला <code>FromSqlRaw</code> injection है; <code>ExecuteUpdate</code> change tracker को bypass करता है (Day 6)।</li>
+<li><b>N+1 और SQL:</b> queries गिनो और SQL पढ़ो; <code>FromSql($"...")</code> parameter बनाता है, concatenation वाला <code>FromSqlRaw</code> injection है; <code>ExecuteUpdate</code> change tracker को bypass करता है (tracked entities refresh नहीं होते; सिर्फ़ SaveChanges interceptors skip होते हैं) (Day 6)।</li>
 <li><b>Concurrency:</b> rowversion UPDATE के WHERE में जाता है; 0 rows affected का मतलब <code>DbUpdateConcurrencyException</code> (Day 6)।</li>
 </ul>
 <p><b>कब use करें:</b> interview से पहली रात और सुबह। <b>कब नहीं:</b> किसी topic को पहली बार पढ़ने के लिए; उसके लिए वो day खोलो।</p>`,
@@ -116,7 +116,7 @@ window.TL_DAY = {
 <li><b>Exceptions:</b> <code>throw;</code> stack trace rakhta hai, <code>throw ex;</code> use reset kar deta hai (Day 3).</li>
 <li><b>LINQ:</b> query tabhi chalti hai jab enumerate ho, aur har enumeration par dobara chalti hai; <code>IQueryable</code> SQL banta hai, par <code>ToList()</code> ke baad sab memory mein chalta hai (Day 4).</li>
 <li><b>DbContext:</b> Scoped, short-lived, thread-safe nahi; production mein migrations idempotent script ya bundle se chalao, kai instances par startup mein <code>Migrate()</code> se nahi (Day 5).</li>
-<li><b>N+1 aur SQL:</b> queries gino aur SQL padho; <code>FromSql($"...")</code> parameter banata hai, concatenation wala <code>FromSqlRaw</code> injection hai; <code>ExecuteUpdate</code> change tracker ko bypass karta hai (Day 6).</li>
+<li><b>N+1 aur SQL:</b> queries gino aur SQL padho; <code>FromSql($"...")</code> parameter banata hai, concatenation wala <code>FromSqlRaw</code> injection hai; <code>ExecuteUpdate</code> change tracker ko bypass karta hai (tracked entities refresh nahi hote; sirf SaveChanges interceptors skip hote hain) (Day 6).</li>
 <li><b>Concurrency:</b> rowversion UPDATE ke WHERE mein jata hai; 0 rows affected ka matlab <code>DbUpdateConcurrencyException</code> (Day 6).</li>
 </ul>
 <p><b>Kab use karein:</b> interview se pehli raat aur subah. <b>Kab nahi:</b> kisi topic ko pehli baar padhne ke liye; uske liye woh day kholo.</p>`
@@ -127,46 +127,46 @@ window.TL_DAY = {
       depth: "short",
       title: { en: "Cheat sheet — Week 2 (SOLID, patterns, ASP.NET Core, Web API)", hi: "Cheat sheet — हफ़्ता 2 (SOLID, patterns, ASP.NET Core, Web API)", hg: "Cheat sheet — Hafta 2 (SOLID, patterns, ASP.NET Core, Web API)" },
       body: {
-        en: `<p><b>Analogy:</b> the same railway-ticket card, week two. Short facts, each with the day to open if it feels shaky.</p>
+        en: `<p><b>Analogy:</b> the same revision card in the auto, week two. Short facts, each with the day to open if it feels shaky.</p>
 <ul>
 <li><b>SOLID:</b> five habits that make change cheap, guidelines and not laws; DIP is the principle, DI the technique, the container the tool (Day 8).</li>
 <li><b>DI resolution:</b> the last registration wins for one service, <code>IEnumerable&lt;T&gt;</code> gets all of them in registration order (Day 8).</li>
 <li><b>Captive dependency:</b> a long-lived service holding a short-lived one; <code>ValidateScopes</code> catches singleton to scoped, not singleton to transient (Days 11, 14).</li>
-<li><b>Patterns:</b> add one only when you can name the pain it removes; Decorator, Proxy and Adapter share a shape but differ in intent (Days 9, 10).</li>
+<li><b>Patterns:</b> add one only when you can name the pain it removes; Decorator, Proxy and Adapter share a shape but differ in intent (Day 10).</li>
 <li><b>Repository and CQRS:</b> <code>DbSet</code> is already a repository and <code>DbContext</code> a unit of work; CQRS does not need two databases; MediatR is under a commercial licence since 2025, so check its terms (Day 11).</li>
 <li><b>Middleware:</b> code before <code>next</code> runs in order, code after runs in reverse; a short-circuit means not calling <code>next</code> (Day 12).</li>
 <li><b>Configuration:</b> the last source wins (appsettings, environment file, user secrets in Development, environment variables, command line); the environment defaults to Production (Day 12).</li>
 <li><b>HTTP semantics:</b> idempotent means GET, HEAD, OPTIONS, PUT, DELETE; POST is not, PATCH is not guaranteed; 201 with Location after create; 401 not authenticated, 403 not allowed (Day 13).</li>
 <li><b>API errors:</b> <code>[ApiController]</code> gives an automatic 400 with ProblemDetails; rate limiting rejects with 503 by default, so set <code>RejectionStatusCode</code> to 429 (Day 13).</li>
-<li><b>Security basics:</b> a JWT is signed, not encrypted; CORS is enforced by browsers only; <code>IHttpClientFactory</code> with <code>AddStandardResilienceHandler</code>, and no retries on POST (Day 13).</li>
+<li><b>Security basics:</b> a JWT is signed, not encrypted; CORS is enforced by browsers only; <code>IHttpClientFactory</code> with <code>AddStandardResilienceHandler</code>, and its defaults retry every method, so disable retries for POST unless it is idempotent (Day 13).</li>
 </ul>
 <p><b>When to use:</b> the night before and the morning of the interview. <b>When not:</b> as a first read of a topic; open the day instead.</p>`,
-        hi: `<p><b>Analogy:</b> वही railway-ticket वाला card, दूसरा हफ़्ता। छोटे facts, हर एक के साथ वो day जो शक होने पर खोलना है।</p>
+        hi: `<p><b>Analogy:</b> वही revision card जो auto में पलटते हो, दूसरा हफ़्ता। छोटे facts, हर एक के साथ वो day जो शक होने पर खोलना है।</p>
 <ul>
 <li><b>SOLID:</b> पाँच habits जो change को सस्ता बनाती हैं, guidelines हैं laws नहीं; DIP principle है, DI technique, और container tool (Day 8)।</li>
 <li><b>DI resolution:</b> एक service के लिए आख़िरी registration जीतता है, <code>IEnumerable&lt;T&gt;</code> सबको registration order में देता है (Day 8)।</li>
 <li><b>Captive dependency:</b> long-lived service जो short-lived को पकड़े रखे; <code>ValidateScopes</code> singleton से scoped पकड़ता है, singleton से transient नहीं (Days 11, 14)।</li>
-<li><b>Patterns:</b> तभी जोड़ो जब उस pain का नाम ले सको जो वो हटाता है; Decorator, Proxy और Adapter का shape एक है पर intent अलग (Days 9, 10)।</li>
+<li><b>Patterns:</b> तभी जोड़ो जब उस pain का नाम ले सको जो वो हटाता है; Decorator, Proxy और Adapter का shape एक है पर intent अलग (Day 10)।</li>
 <li><b>Repository और CQRS:</b> <code>DbSet</code> पहले से repository है और <code>DbContext</code> unit of work; CQRS को दो databases नहीं चाहिए; MediatR 2025 से commercial licence में है, इसलिए terms check करो (Day 11)।</li>
 <li><b>Middleware:</b> <code>next</code> से पहले का code order में चलता है, बाद का code उल्टे order में; short-circuit मतलब <code>next</code> को न बुलाना (Day 12)।</li>
 <li><b>Configuration:</b> आख़िरी source जीतता है (appsettings, environment file, Development में user secrets, environment variables, command line); environment default में Production होता है (Day 12)।</li>
 <li><b>HTTP semantics:</b> idempotent मतलब GET, HEAD, OPTIONS, PUT, DELETE; POST नहीं है, PATCH की guarantee नहीं; create के बाद 201 और Location; 401 not authenticated, 403 not allowed (Day 13)।</li>
 <li><b>API errors:</b> <code>[ApiController]</code> ProblemDetails के साथ automatic 400 देता है; rate limiting default में 503 से reject करता है, इसलिए <code>RejectionStatusCode</code> को 429 set करो (Day 13)।</li>
-<li><b>Security basics:</b> JWT signed है, encrypted नहीं; CORS सिर्फ़ browsers लागू करते हैं; <code>IHttpClientFactory</code> के साथ <code>AddStandardResilienceHandler</code>, और POST पर retries नहीं (Day 13)।</li>
+<li><b>Security basics:</b> JWT signed है, encrypted नहीं; CORS सिर्फ़ browsers लागू करते हैं; <code>IHttpClientFactory</code> के साथ <code>AddStandardResilienceHandler</code>, और इसके defaults हर method को retry करते हैं, इसलिए POST पर retries बंद करो जब तक वो idempotent न हो (Day 13)।</li>
 </ul>
 <p><b>कब use करें:</b> interview से पहली रात और सुबह। <b>कब नहीं:</b> किसी topic को पहली बार पढ़ने के लिए; उसके लिए वो day खोलो।</p>`,
-        hg: `<p><b>Analogy:</b> wahi railway-ticket wala card, doosra hafta. Chhote facts, har ek ke saath woh day jo shak hone par kholna hai.</p>
+        hg: `<p><b>Analogy:</b> wahi revision card jo auto mein palatte ho, doosra hafta. Chhote facts, har ek ke saath woh day jo shak hone par kholna hai.</p>
 <ul>
 <li><b>SOLID:</b> paanch habits jo change ko sasta banati hain, guidelines hain laws nahi; DIP principle hai, DI technique, aur container tool (Day 8).</li>
 <li><b>DI resolution:</b> ek service ke liye aakhri registration jeetta hai, <code>IEnumerable&lt;T&gt;</code> sabko registration order mein deta hai (Day 8).</li>
 <li><b>Captive dependency:</b> long-lived service jo short-lived ko pakde rahe; <code>ValidateScopes</code> singleton se scoped pakadta hai, singleton se transient nahi (Days 11, 14).</li>
-<li><b>Patterns:</b> tabhi jodo jab us pain ka naam le sako jo woh hatata hai; Decorator, Proxy aur Adapter ka shape ek hai par intent alag (Days 9, 10).</li>
+<li><b>Patterns:</b> tabhi jodo jab us pain ka naam le sako jo woh hatata hai; Decorator, Proxy aur Adapter ka shape ek hai par intent alag (Day 10).</li>
 <li><b>Repository aur CQRS:</b> <code>DbSet</code> pehle se repository hai aur <code>DbContext</code> unit of work; CQRS ko do databases nahi chahiye; MediatR 2025 se commercial licence mein hai, isliye terms check karo (Day 11).</li>
 <li><b>Middleware:</b> <code>next</code> se pehle ka code order mein chalta hai, baad ka code ulte order mein; short-circuit matlab <code>next</code> ko na bulana (Day 12).</li>
 <li><b>Configuration:</b> aakhri source jeetta hai (appsettings, environment file, Development mein user secrets, environment variables, command line); environment default mein Production hota hai (Day 12).</li>
 <li><b>HTTP semantics:</b> idempotent matlab GET, HEAD, OPTIONS, PUT, DELETE; POST nahi hai, PATCH ki guarantee nahi; create ke baad 201 aur Location; 401 not authenticated, 403 not allowed (Day 13).</li>
 <li><b>API errors:</b> <code>[ApiController]</code> ProblemDetails ke saath automatic 400 deta hai; rate limiting default mein 503 se reject karta hai, isliye <code>RejectionStatusCode</code> ko 429 set karo (Day 13).</li>
-<li><b>Security basics:</b> JWT signed hai, encrypted nahi; CORS sirf browsers lagu karte hain; <code>IHttpClientFactory</code> ke saath <code>AddStandardResilienceHandler</code>, aur POST par retries nahi (Day 13).</li>
+<li><b>Security basics:</b> JWT signed hai, encrypted nahi; CORS sirf browsers lagu karte hain; <code>IHttpClientFactory</code> ke saath <code>AddStandardResilienceHandler</code>, aur iske defaults har method ko retry karte hain, isliye POST par retries band karo jab tak woh idempotent na ho (Day 13).</li>
 </ul>
 <p><b>Kab use karein:</b> interview se pehli raat aur subah. <b>Kab nahi:</b> kisi topic ko pehli baar padhne ke liye; uske liye woh day kholo.</p>`
       }
@@ -682,7 +682,7 @@ foreach (var gap in gaps)
 <li><b>Action:</b> [मैंने किसकी सुनी, कौन सा data या prototype use किया, कारण कैसे लिखा (ADR, Day 15), असहमत लोगों को कैसे संभाला]।</li>
 <li><b>Result:</b> [क्या हुआ, उसमें भी जो plan के मुताबिक़ नहीं गया, और बाद में team को कैसा लगा]।</li>
 </ul>
-<p><b>Sample — अपनी story से बदल दो, यह आपकी story नहीं है:</b> "मैंने flaky tests ठीक करने के लिए एक sprint features रोकने का प्रस्ताव दिया, जो product owner को पसंद नहीं आया। मैंने [पिछले महीने के failed builds की संख्या] दिखाई, हमने दो हफ़्ते की limit मानी, और मैंने ADR लिखा। Pause के बाद [builds ज़्यादा बार green रहे] और pause दोबारा नहीं करना पड़ा।"</p>
+<p><b>Sample — अपनी story से बदल दो, यह आपकी story नहीं है:</b> "मैंने flaky tests ठीक करने के लिए एक sprint features रोकने का proposal दिया, जो product owner को पसंद नहीं आया। मैंने [पिछले महीने के failed builds की number] दिखाई, हमने दो हफ़्ते की limit मानी, और मैंने ADR लिखा। Pause के बाद [builds ज़्यादा बार green रहे] और pause दोबारा नहीं करना पड़ा।"</p>
 <ul>
 <li>अच्छे signals: आपने सुना, facts use किए, कारण लिखा, और team के फ़ैसले को commit किया चाहे वो आपका न हो।</li>
 <li>Warning signals: "मैंने बस decide कर दिया" या ऐसी story जिसमें आप ही सही थे और बाक़ी सब ग़लत।</li>
@@ -695,7 +695,7 @@ foreach (var gap in gaps)
 <li><b>Action:</b> [maine kiski suni, kaun sa data ya prototype use kiya, kaaran kaise likha (ADR, Day 15), asehmat logon ko kaise sambhala].</li>
 <li><b>Result:</b> [kya hua, usme bhi jo plan ke mutabik nahi gaya, aur baad mein team ko kaisa laga].</li>
 </ul>
-<p><b>Sample — apni story se badal do, yeh aapki story nahi hai:</b> "Maine flaky tests theek karne ke liye ek sprint features rokne ka prastaav diya, jo product owner ko pasand nahi aaya. Maine [pichhle mahine ke failed builds ki sankhya] dikhayi, humne do hafte ki limit maani, aur maine ADR likha. Pause ke baad [builds zyada baar green rahe] aur pause dobara nahi karna pada."</p>
+<p><b>Sample — apni story se badal do, yeh aapki story nahi hai:</b> "Maine flaky tests theek karne ke liye ek sprint features rokne ka proposal diya, jo product owner ko pasand nahi aaya. Maine [pichhle mahine ke failed builds ki number] dikhayi, humne do hafte ki limit maani, aur maine ADR likha. Pause ke baad [builds zyada baar green rahe] aur pause dobara nahi karna pada."</p>
 <ul>
 <li>Achhe signals: aapne suna, facts use kiye, kaaran likha, aur team ke faisle ko commit kiya chahe woh aapka na ho.</li>
 <li>Warning signals: "Maine bas decide kar diya" ya aisi story jisme aap hi sahi the aur baaki sab galat.</li>
@@ -824,7 +824,7 @@ foreach (var gap in gaps)
 <li><b>Progress:</b> [सुधार का एक छोटा, ईमानदार संकेत]।</li>
 </ul>
 <p><b>Sample — अपने answer से बदल दो, यह आपका answer नहीं है:</b> "मैं delegate देर से करता था क्योंकि quality को लेकर पक्का होना चाहता था। अब मैं पहले छोटी definition of done लिखता हूँ, तय checkpoints पर review करता हूँ, और पूरा outcome सौंपता हूँ। हाल ही में [एक teammate] ने [एक feature] शुरू से आख़िर तक own किया।"</p>
-<p>ऐसी technical कमी भी ईमानदार जवाब है जिसे आप सक्रिय रूप से भर रहे हो, जैसे "मैं हफ़्ते की practice से [design patterns] गहरे कर रहा हूँ", बशर्ते वो role की core skill न हो।</p>
+<p>ऐसी technical कमी भी ईमानदार जवाब है जिसे आप actively भर रहे हो, जैसे "मैं हफ़्ते की practice से [design patterns] गहरे कर रहा हूँ", पर तब जब वो role की core skill न हो।</p>
 <ul>
 <li>"मैं बहुत ज़्यादा काम करता हूँ" से बचो और ऐसी कमज़ोरी से भी जो ख़ुद नौकरी है, जैसे "मुझे लोगों से बात करना पसंद नहीं"।</li>
 </ul>
@@ -837,7 +837,7 @@ foreach (var gap in gaps)
 <li><b>Progress:</b> [sudhaar ka ek chhota, imaandaar sanket].</li>
 </ul>
 <p><b>Sample — apne answer se badal do, yeh aapka answer nahi hai:</b> "Main delegate der se karta tha kyonki quality ko lekar pakka hona chahta tha. Ab main pehle chhoti definition of done likhta hoon, tay checkpoints par review karta hoon, aur poora outcome saunpta hoon. Haal hi mein [ek teammate] ne [ek feature] shuru se aakhir tak own kiya."</p>
-<p>Aisi technical kami bhi imaandaar jawab hai jise aap sakriya roop se bhar rahe ho, jaise "main hafte ki practice se [design patterns] gehre kar raha hoon", bashart woh role ki core skill na ho.</p>
+<p>Aisi technical kami bhi imaandaar jawab hai jise aap actively bhar rahe ho, jaise "main hafte ki practice se [design patterns] gehre kar raha hoon", par tab jab woh role ki core skill na ho.</p>
 <ul>
 <li>"Main bahut zyada kaam karta hoon" se bacho aur aisi kamzori se bhi jo khud naukri hai, jaise "mujhe logon se baat karna pasand nahi".</li>
 </ul>
@@ -941,7 +941,7 @@ foreach (var gap in gaps)
 </ul>
 <p>Revise: Day 27 (hallucination, tool arguments are untrusted, evaluating AI features).</p>`,
         hi: `<ul>
-<li><b>सटीक माँगो:</b> exact shape दो (field names, allowed values) और एक छोटा example। Provider structured output या JSON schema mode दे तो वही use करो; कुछ <code>IChatClient</code> libraries C# type में deserialise भी कर सकती हैं (अपने provider के लिए current docs देखो)।</li>
+<li><b>exact माँगो:</b> exact shape दो (field names, allowed values) और एक छोटा example। Provider structured output या JSON schema mode दे तो वही use करो; कुछ <code>IChatClient</code> libraries C# type में deserialise भी कर सकती हैं (अपने provider के लिए current docs देखो)।</li>
 <li><b>Code में validate करो:</b> <code>System.Text.Json</code> से parse करो, फिर ranges, required fields और allowed values check करो। सही बना हुआ JSON भी ग़लत value रख सकता है।</li>
 <li><b>Fail होने पर:</b> एक बार retry करो और validation error वापस भेजो; उसके बाद default, सादा rule या human review queue पर जाओ। हमेशा loop मत चलाओ; हर retry में tokens लगते हैं।</li>
 <li><b>Safety:</b> output को code या SQL की तरह कभी run मत करो; model की हर value को user input की तरह लो (Day 27)।</li>
@@ -949,7 +949,7 @@ foreach (var gap in gaps)
 </ul>
 <p>Revise: Day 27 (hallucination, tool arguments untrusted हैं, AI features को evaluate करना)।</p>`,
         hg: `<ul>
-<li><b>Sateek maango:</b> exact shape do (field names, allowed values) aur ek chhota example. Provider structured output ya JSON schema mode de to wahi use karo; kuch <code>IChatClient</code> libraries C# type mein deserialise bhi kar sakti hain (apne provider ke liye current docs dekho).</li>
+<li><b>Exact maango:</b> exact shape do (field names, allowed values) aur ek chhota example. Provider structured output ya JSON schema mode de to wahi use karo; kuch <code>IChatClient</code> libraries C# type mein deserialise bhi kar sakti hain (apne provider ke liye current docs dekho).</li>
 <li><b>Code mein validate karo:</b> <code>System.Text.Json</code> se parse karo, phir ranges, required fields aur allowed values check karo. Sahi bana hua JSON bhi galat value rakh sakta hai.</li>
 <li><b>Fail hone par:</b> ek baar retry karo aur validation error wapas bhejo; uske baad default, saada rule ya human review queue par jao. Hamesha loop mat chalao; har retry mein tokens lagte hain.</li>
 <li><b>Safety:</b> output ko code ya SQL ki tarah kabhi run mat karo; model ki har value ko user input ki tarah lo (Day 27).</li>
@@ -1017,7 +1017,7 @@ foreach (var gap in gaps)
 </ul>
 <p>Revise: Day 27 (choosing a model, Azure OpenAI vs Foundry, IChatClient, evaluation).</p>`,
         hi: `<ul>
-<li><b>पूछो कि special क्या है:</b> tickets का summary या calls की transcription commodity है; आपके अनोखे data और workflow पर बना feature आपकी धार हो सकता है।</li>
+<li><b>पूछो कि special क्या है:</b> tickets का summary या calls की transcription commodity है; आपके अनोखे data और workflow पर बना feature आपका edge हो सकता है।</li>
 <li><b>Criteria:</b> value तक पहुँचने की speed, कुल cost (evaluation, monitoring और security का काम भी, सिर्फ़ model calls नहीं), data की sensitivity और residency, ज़रूरी accuracy, और team की skills।</li>
 <li><b>बीच का रास्ता:</b> managed model (Azure OpenAI या Foundry, Day 27) लो और पतली, क़ीमती layer ख़ुद बनाओ: आपके prompts, आपका grounding data, आपका evaluation set।</li>
 <li><b>Lock-in घटाओ:</b> <code>IChatClient</code> के against code लिखो (Day 27) ताकि model या provider बदला जा सके; evaluation set रखो ताकि candidates की fair तुलना हो सके।</li>
@@ -1026,7 +1026,7 @@ foreach (var gap in gaps)
 </ul>
 <p>Revise: Day 27 (model चुनना, Azure OpenAI vs Foundry, IChatClient, evaluation)।</p>`,
         hg: `<ul>
-<li><b>Poochho ki special kya hai:</b> tickets ka summary ya calls ki transcription commodity hai; aapke anokhe data aur workflow par bana feature aapki dhaar ho sakta hai.</li>
+<li><b>Poochho ki special kya hai:</b> tickets ka summary ya calls ki transcription commodity hai; aapke anokhe data aur workflow par bana feature aapka edge ho sakta hai.</li>
 <li><b>Criteria:</b> value tak pahunchne ki speed, kul cost (evaluation, monitoring aur security ka kaam bhi, sirf model calls nahi), data ki sensitivity aur residency, zaroori accuracy, aur team ki skills.</li>
 <li><b>Beech ka raasta:</b> managed model (Azure OpenAI ya Foundry, Day 27) lo aur patli, keemti layer khud banao: aapke prompts, aapka grounding data, aapka evaluation set.</li>
 <li><b>Lock-in ghatao:</b> <code>IChatClient</code> ke against code likho (Day 27) taaki model ya provider badla ja sake; evaluation set rakho taaki candidates ki fair tulna ho sake.</li>
@@ -1153,7 +1153,7 @@ cancelled
 done`,
       explain: {
         en: `<p>An async iterator is lazy: the loop pulls one item, so the output interleaves (produce 1, consume 1, produce 2, consume 2). When the consumer calls <code>cts.Cancel()</code> after item 2, nothing stops immediately; cancellation is <b>cooperative</b>. The producer only notices at its next check, <code>ThrowIfCancellationRequested()</code> at the top of the third loop turn, so "produce 3" is never printed. The exception leaves the iterator through its <code>finally</code> block ("producer cleanup"), then reaches the <code>await foreach</code> and the <code>catch</code> ("cancelled") before "done". <code>WithCancellation</code> plus <code>[EnumeratorCancellation]</code> is how the token reaches the iterator's parameter.</p>
-<p>Lesson from Days 3 and 4: pass the token everywhere and expect <code>OperationCanceledException</code>; a streaming API stops work and cleans up when the caller cancels.</p>`,
+<p>Day 3 (cancellation) and Day 4 (lazy evaluation): pass the token everywhere and expect <code>OperationCanceledException</code>; a streaming API stops work and cleans up when the caller cancels.</p>`,
         hi: `<p>Async iterator lazy है: loop एक item खींचता है, इसलिए output interleave होता है (produce 1, consume 1, produce 2, consume 2)। Consumer जब item 2 के बाद <code>cts.Cancel()</code> बुलाता है, तो कुछ भी तुरंत नहीं रुकता; cancellation <b>cooperative</b> है। Producer को सिर्फ़ अपने अगले check पर पता चलता है, यानी तीसरे loop turn की शुरुआत में <code>ThrowIfCancellationRequested()</code>, इसलिए "produce 3" कभी print नहीं होता। Exception iterator से उसके <code>finally</code> block ("producer cleanup") से होकर निकलता है, फिर <code>await foreach</code> और <code>catch</code> ("cancelled") तक पहुँचता है, "done" से पहले। <code>WithCancellation</code> और <code>[EnumeratorCancellation]</code> से token iterator के parameter तक पहुँचता है।</p>
 <p>Day 3 और 4 का सबक: token हर जगह पास करो और <code>OperationCanceledException</code> की उम्मीद रखो; caller cancel करे तो streaming API काम रोकती है और cleanup करती है।</p>`,
         hg: `<p>Async iterator lazy hai: loop ek item kheenchta hai, isliye output interleave hota hai (produce 1, consume 1, produce 2, consume 2). Consumer jab item 2 ke baad <code>cts.Cancel()</code> bulata hai, to kuch bhi turant nahi rukta; cancellation <b>cooperative</b> hai. Producer ko sirf apne agle check par pata chalta hai, yaani teesre loop turn ki shuruaat mein <code>ThrowIfCancellationRequested()</code>, isliye "produce 3" kabhi print nahi hota. Exception iterator se uske <code>finally</code> block ("producer cleanup") se hokar nikalta hai, phir <code>await foreach</code> aur <code>catch</code> ("cancelled") tak pahunchta hai, "done" se pehle. <code>WithCancellation</code> aur <code>[EnumeratorCancellation]</code> se token iterator ke parameter tak pahunchta hai.</p>
