@@ -45,6 +45,13 @@ node tools/check-code.mjs --strict day14  # any SKIP (for example no SQL tooling
 1. Create `content/dayNN.js` (two-digit number). It must assign one object: `window.TL_DAY = { day, title, summary, sections, qa, puzzles, revision, whatsNew? }`.
    - Text fields are `{ en, hi, hg }` objects. They may contain simple HTML: `<b>`, `<i>`, `<code>`, `<ul><li>`, `<br>`.
    - `sections[]` have an `id`, a `depth` (`"short"` or `"detailed"`), a `title`, a `body` and optional `code[]` with `{ caption, src, check, packages?, expected? }`.
+   - Optional **lesson format** (used by Day 1): set `format: "lesson"` on the day. Then a `short` section may carry a `lesson` object with the learning steps, and its `body` becomes optional. Sections without `lesson` are the optional Deep Dive. A `lesson` has:
+     - `buildsOn` (how it builds on the previous lesson; required for every lesson except the first), `what`, `why`, `analogy`, `mistakes`, `whenToUse` and `recap`, all text fields.
+     - `focus?`: a small code item shown before the complete example (it may use `check: "none"`).
+     - `lines[]`: `{ code, note }` line-by-line notes. `code` must quote a line of the section's `code[0]`, which must be the complete example with `check: "run"` and `expected`.
+     - `exercise`: `{ task, hint?, solution }`. `solution` is a code item with `check: "compile"` or `"run"`; `check-code.mjs` builds it.
+     - `quiz`: `{ q, options: [2..5 text fields], answer: <0-based index>, explain }`.
+     - The time estimate counts the lesson steps and 1 min per quiz in Short, and each exercise (3 min plus its text and solution) in the Detailed delta.
    - `qa[]` have an `id`, a `depth`, `q`, `answer` (English), `meaning: { hi, hg }` and `explain`.
    - `puzzles[]` have an `id`, `src` (a full runnable program), `answer` (the exact output) and `explain`.
    - `packages` entries are NuGet package names added to the snippet project. `"Name"` pins `Version="9.*"`; `"Name@version"` pins that version instead, e.g. `"Azure.Identity@1.*"` or `"Yarp.ReverseProxy@2.3.0"`. The validator rejects malformed specs (`bad package spec X`).

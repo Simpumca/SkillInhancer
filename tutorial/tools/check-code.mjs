@@ -18,7 +18,11 @@ export function collectSnippets(day) {
     if (c.check === 'run' && c.expected !== undefined) item.expected = c.expected;
     out.push(item);
   });
-  for (const s of day.sections || []) addCode(`day${pad}-sec-${s.id}`, s.code);
+  for (const s of day.sections || []) {
+    addCode(`day${pad}-sec-${s.id}`, s.code);
+    if (s.lesson && s.lesson.focus) addCode(`day${pad}-sec-${s.id}-focus`, [s.lesson.focus]);
+    if (s.lesson && s.lesson.exercise && s.lesson.exercise.solution) addCode(`day${pad}-sec-${s.id}-exercise`, [s.lesson.exercise.solution]);
+  }
   for (const q of day.qa || []) addCode(`day${pad}-qa-${q.id}`, q.code);
   for (const p of day.puzzles || []) {
     out.push({ key: `day${pad}-puz-${p.id}`, lang: p.lang || 'csharp', src: p.src, mode: 'run', expected: p.answer, packages: p.packages || [], frameworks: p.frameworks || [] });

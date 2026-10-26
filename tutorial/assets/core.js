@@ -94,6 +94,8 @@
   // short    = summary + whatsNew (app.js renders it at both depths) + short sections/Q&A + revision.
   // detailed = the DELTA after Short: only detailed sections/Q&A + puzzles (3 min each, plus
   //            their code and explanation).
+  // Lesson sections (always depth short): their steps, line notes and focus snippet count in Short,
+  // plus 1 min per quiz; their exercises (task, hint, solution, 3 min each) count in the Detailed delta.
   function estimateMinutes(day, depth) {
     var words = 0;
     var codeLines = 0;
@@ -117,7 +119,26 @@
     }
     items(day.sections).forEach(function (s) {
       add(pick(s.title, 'en')); add(pick(s.body, 'en')); addCode(s.code);
+      var ls = s.lesson;
+      if (!ls) return;
+      ['buildsOn', 'what', 'why', 'analogy', 'mistakes', 'whenToUse', 'recap'].forEach(function (k) { add(pick(ls[k], 'en')); });
+      (ls.lines || []).forEach(function (n) { add(n.code); add(pick(n.note, 'en')); });
+      if (ls.focus) addCode([ls.focus]);
+      if (ls.quiz) {
+        add(pick(ls.quiz.q, 'en')); add(pick(ls.quiz.explain, 'en'));
+        (ls.quiz.options || []).forEach(function (o) { add(pick(o, 'en')); });
+        extra += 1;
+      }
     });
+    if (detailed) {
+      (day.sections || []).forEach(function (s) {
+        var ex = s.lesson && s.lesson.exercise;
+        if (!ex) return;
+        add(pick(ex.task, 'en')); add(pick(ex.hint, 'en'));
+        if (ex.solution) addCode([ex.solution]);
+        extra += 3;
+      });
+    }
     items(day.qa).forEach(function (q) {
       add(q.q); add(q.answer); add(pick(q.explain, 'en')); addCode(q.code);
     });

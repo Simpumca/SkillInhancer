@@ -226,3 +226,22 @@ test('cli_compiles_package_pinned_fixture', (t) => {
   assert.equal(r.status, 0, r.stdout + r.stderr);
   assert.match(r.stdout, /PASS day97-sec-pkg-0/);
 });
+
+test('collect_snippets_includes_lesson_focus_and_exercise_solution', () => {
+  const items = collectSnippets(loadDay('tests/fixtures/day-lesson.js'));
+  assert.deepEqual(items.map(i => i.key), [
+    'day98-sec-class-object-0', 'day98-sec-class-object-exercise-0',
+    'day98-sec-methods-0', 'day98-sec-methods-exercise-0',
+    'day98-puz-p1'
+  ]);   // methods focus is check "none", so it is skipped
+  assert.equal(items[1].expected, 'Ravi');
+  assert.equal(items[3].mode, 'compile');
+});
+
+test('cli_passes_lesson_fixture', (t) => {
+  if (!hasDotnet) return t.skip('dotnet not on PATH');
+  const r = runCli('tests/fixtures/day-lesson.js');
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /PASS day98-sec-class-object-exercise-0/);
+  assert.match(r.stdout, /PASS day98-sec-methods-exercise-0/);
+});

@@ -312,3 +312,72 @@ test('packages_and_frameworks_only_on_csharp_items', () => {
   d.puzzles[0].packages = ['Foo'];
   assert.deepEqual(validateDay(d, RELAXED), []);
 });
+
+// ---- Lesson format (format: "lesson", sections[].lesson) ----
+const lessonDay = () => { const d = loadDay('tests/fixtures/day-lesson.js'); d.day = 1; return d; };
+const lessonErrs = d => validateDay(d, RELAXED);
+
+test('lesson_fixture_passes', () => {
+  assert.deepEqual(lessonErrs(lessonDay()), []);
+});
+
+test('lesson_needs_lesson_format', () => {
+  const d = lessonDay();
+  delete d.format;
+  assert.ok(lessonErrs(d).includes('sections[0].lesson: only allowed when format is "lesson"'));
+  const e = lessonDay();
+  e.format = 'book';
+  assert.ok(lessonErrs(e).includes('format: unknown book'));
+  const f = lessonDay();
+  f.sections.forEach(s => delete s.lesson);
+  f.sections.forEach(s => { s.body = s.body || { en: 'x', hi: 'क', hg: 'x' }; });
+  assert.ok(lessonErrs(f).includes('format: lesson day has no lesson sections'));
+});
+
+test('lesson_required_steps_and_languages', () => {
+  let d = lessonDay();
+  delete d.sections[0].lesson.analogy;
+  assert.ok(lessonErrs(d).includes('sections[0].lesson.analogy: missing'));
+  d = lessonDay();
+  d.sections[0].lesson.recap.hi = 'Class = blueprint';
+  assert.ok(lessonErrs(d).some(e => e === 'sections[0].lesson.recap: hi has no Devanagari'));
+  d = lessonDay();
+  delete d.sections[0].lesson.exercise;
+  assert.ok(lessonErrs(d).includes('sections[0].lesson.exercise: missing'));
+  d = lessonDay();
+  d.sections[0].depth = 'detailed';
+  assert.ok(lessonErrs(d).includes('sections[0].lesson: lesson sections must be depth short'));
+});
+
+test('lesson_builds_on_required_after_first', () => {
+  const d = lessonDay();
+  delete d.sections[1].lesson.buildsOn;
+  assert.ok(lessonErrs(d).includes('sections[1].lesson.buildsOn: missing (required after the first lesson)'));
+});
+
+test('lesson_quiz_shape', () => {
+  let d = lessonDay();
+  d.sections[0].lesson.quiz.answer = 2;
+  assert.ok(lessonErrs(d).includes('sections[0].lesson.quiz.answer: must be an option index 0..1'));
+  d = lessonDay();
+  d.sections[0].lesson.quiz.options = [d.sections[0].lesson.quiz.options[0]];
+  assert.ok(lessonErrs(d).includes('sections[0].lesson.quiz.options: need 2..5 options'));
+});
+
+test('lesson_example_and_line_notes', () => {
+  let d = lessonDay();
+  d.sections[0].lesson.lines[0].code = 'Console.WriteLine("missing");';
+  assert.ok(lessonErrs(d).some(e => e.startsWith('sections[0].lesson.lines[0]: code not found in code[0]')));
+  d = lessonDay();
+  d.sections[0].code[0].check = 'compile';
+  assert.ok(lessonErrs(d).includes('sections[0].code[0]: lesson needs a complete example with check "run"'));
+  d = lessonDay();
+  d.sections[0].lesson.exercise.solution.check = 'none';
+  assert.ok(lessonErrs(d).includes('sections[0].lesson.exercise.solution: must be checked (compile or run)'));
+});
+
+test('lesson_fields_raw_tags_rejected', () => {
+  const d = lessonDay();
+  d.sections[0].lesson.quiz.options[1].en = 'List<T>';
+  assert.ok(lessonErrs(d).some(e => e.startsWith('sections[0].lesson.quiz.options[1].en: raw tag <T>')));
+});

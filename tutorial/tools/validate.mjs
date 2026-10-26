@@ -67,22 +67,72 @@ function checkM(v, label, errors) {
   }
 }
 
+function checkCodeItem(c, l, errors) {
+  if (!isObj(c)) { errors.push(`${l}: not an object`); return; }
+  checkL(c.caption, `${l}.caption`, errors);
+  if (!isStr(c.src)) errors.push(`${l}: missing src`);
+  if (!['compile', 'run', 'none'].includes(c.check)) errors.push(`${l}: bad check`);
+  if (c.check === 'run' && typeof c.expected !== 'string') errors.push(`${l}: run snippet without expected`);
+  if (checkLang(c, l, errors) && c.lang !== undefined && !CHECKABLE_LANGS.includes(c.lang) && c.check !== 'none') {
+    errors.push(`${l}: lang ${c.lang} must use check:"none"`);
+  }
+  checkFrameworks(c, l, errors);
+  checkPackages(c, l, errors);
+}
+
 function checkCode(list, label, errors) {
   if (list === undefined) return;
   if (!Array.isArray(list)) { errors.push(`${label}: code must be an array`); return; }
-  list.forEach((c, i) => {
-    const l = `${label}.code[${i}]`;
-    if (!isObj(c)) { errors.push(`${l}: not an object`); return; }
-    checkL(c.caption, `${l}.caption`, errors);
-    if (!isStr(c.src)) errors.push(`${l}: missing src`);
-    if (!['compile', 'run', 'none'].includes(c.check)) errors.push(`${l}: bad check`);
-    if (c.check === 'run' && typeof c.expected !== 'string') errors.push(`${l}: run snippet without expected`);
-    if (checkLang(c, l, errors) && c.lang !== undefined && !CHECKABLE_LANGS.includes(c.lang) && c.check !== 'none') {
-      errors.push(`${l}: lang ${c.lang} must use check:"none"`);
+  list.forEach((c, i) => checkCodeItem(c, `${label}.code[${i}]`, errors));
+}
+
+// Lesson-format days (day.format === "lesson"): each core section carries a `lesson` with the 8 learning steps.
+// The complete example is section.code[0] (check "run" + expected); lines[].code must quote a line of it.
+const LESSON_TEXT = ['what', 'why', 'analogy', 'mistakes', 'whenToUse', 'recap'];
+const collapse = s => String(s).replace(/\s+/g, ' ').trim();
+
+function checkLesson(s, label, isFirst, errors) {
+  const ls = s.lesson;
+  const l = `${label}.lesson`;
+  if (!isObj(ls)) { errors.push(`${l}: not an object`); return; }
+  if (s.depth !== 'short') errors.push(`${l}: lesson sections must be depth short`);
+  for (const k of LESSON_TEXT) checkL(ls[k], `${l}.${k}`, errors);
+  if (ls.buildsOn !== undefined) checkL(ls.buildsOn, `${l}.buildsOn`, errors);
+  else if (!isFirst) errors.push(`${l}.buildsOn: missing (required after the first lesson)`);
+  if (ls.focus !== undefined) checkCodeItem(ls.focus, `${l}.focus`, errors);
+
+  const example = Array.isArray(s.code) ? s.code[0] : undefined;
+  if (!isObj(example) || example.check !== 'run') errors.push(`${label}.code[0]: lesson needs a complete example with check "run"`);
+  if (!Array.isArray(ls.lines) || ls.lines.length === 0) errors.push(`${l}.lines: must be a non-empty array`);
+  else ls.lines.forEach((n, i) => {
+    const nl = `${l}.lines[${i}]`;
+    if (!isObj(n)) { errors.push(`${nl}: not an object`); return; }
+    if (!isStr(n.code)) errors.push(`${nl}: missing code`);
+    else if (isObj(example) && isStr(example.src) && !collapse(example.src).includes(collapse(n.code))) {
+      errors.push(`${nl}: code not found in code[0]: ${n.code}`);
     }
-    checkFrameworks(c, l, errors);
-    checkPackages(c, l, errors);
+    checkL(n.note, `${nl}.note`, errors);
   });
+
+  const ex = ls.exercise;
+  if (!isObj(ex)) errors.push(`${l}.exercise: missing`);
+  else {
+    checkL(ex.task, `${l}.exercise.task`, errors);
+    if (ex.hint !== undefined) checkL(ex.hint, `${l}.exercise.hint`, errors);
+    checkCodeItem(ex.solution, `${l}.exercise.solution`, errors);
+    if (isObj(ex.solution) && ex.solution.check === 'none') errors.push(`${l}.exercise.solution: must be checked (compile or run)`);
+  }
+
+  const qz = ls.quiz;
+  if (!isObj(qz)) errors.push(`${l}.quiz: missing`);
+  else {
+    checkL(qz.q, `${l}.quiz.q`, errors);
+    checkL(qz.explain, `${l}.quiz.explain`, errors);
+    if (!Array.isArray(qz.options) || qz.options.length < 2 || qz.options.length > 5) errors.push(`${l}.quiz.options: need 2..5 options`);
+    else qz.options.forEach((o, i) => checkL(o, `${l}.quiz.options[${i}]`, errors));
+    const n = Array.isArray(qz.options) ? qz.options.length : 0;
+    if (!Number.isInteger(qz.answer) || qz.answer < 0 || qz.answer >= n) errors.push(`${l}.quiz.answer: must be an option index 0..${n - 1}`);
+  }
 }
 
 function checkDepth(item, label, errors) {
@@ -125,6 +175,20 @@ export function htmlFields(day) {
     addL(s.title, `sections[${i}].title`);
     addL(s.body, `sections[${i}].body`);
     addCode(s.code, `sections[${i}]`);
+    const ls = s.lesson;
+    if (!isObj(ls)) return;
+    const p = `sections[${i}].lesson`;
+    for (const k of [...LESSON_TEXT, 'buildsOn']) addL(ls[k], `${p}.${k}`);
+    if (isObj(ls.focus)) addL(ls.focus.caption, `${p}.focus.caption`);
+    if (Array.isArray(ls.lines)) ls.lines.forEach((n, j) => { if (isObj(n)) addL(n.note, `${p}.lines[${j}].note`); });
+    if (isObj(ls.exercise)) {
+      for (const k of ['task', 'hint']) addL(ls.exercise[k], `${p}.exercise.${k}`);
+      if (isObj(ls.exercise.solution)) addL(ls.exercise.solution.caption, `${p}.exercise.solution.caption`);
+    }
+    if (isObj(ls.quiz)) {
+      for (const k of ['q', 'explain']) addL(ls.quiz[k], `${p}.quiz.${k}`);
+      if (Array.isArray(ls.quiz.options)) ls.quiz.options.forEach((o, j) => addL(o, `${p}.quiz.options[${j}]`));
+    }
   });
   if (Array.isArray(day.qa)) day.qa.forEach((q, i) => {
     if (!isObj(q)) return;
@@ -169,15 +233,26 @@ export function validateDay(day, opts = {}) {
   checkL(day.summary, 'summary', errors);
   if (day.whatsNew !== undefined) checkL(day.whatsNew, 'whatsNew', errors);
 
+  if (day.format !== undefined && day.format !== 'lesson') errors.push(`format: unknown ${day.format}`);
+  const lessonFormat = day.format === 'lesson';
+
   const sections = arrayOrError(day.sections, 'sections', errors);
   checkUnique(sections, 'sections', errors);
+  let lessons = 0;
   sections.forEach((s, i) => {
     if (!isObj(s)) { errors.push(`sections[${i}]: not an object`); return; }
     checkDepth(s, `sections[${i}]`, errors);
     checkL(s.title, `sections[${i}].title`, errors);
-    checkL(s.body, `sections[${i}].body`, errors);
+    // A lesson's steps replace the free-form body, so body is optional there.
+    if (s.lesson === undefined || s.body !== undefined) checkL(s.body, `sections[${i}].body`, errors);
     checkCode(s.code, `sections[${i}]`, errors);
+    if (s.lesson !== undefined) {
+      if (!lessonFormat) errors.push(`sections[${i}].lesson: only allowed when format is "lesson"`);
+      checkLesson(s, `sections[${i}]`, lessons === 0, errors);
+      lessons++;
+    }
   });
+  if (lessonFormat && lessons === 0) errors.push('format: lesson day has no lesson sections');
 
   if (sections.length < minSections) errors.push(`sections: ${sections.length} < ${minSections}`);
   const shortSections = sections.filter(s => isObj(s) && s.depth === 'short').length;

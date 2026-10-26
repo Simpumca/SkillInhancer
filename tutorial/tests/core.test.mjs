@@ -132,3 +132,24 @@ test('lang_class_maps_prism_names', () => {
   assert.equal(langClass(undefined), 'language-csharp');
   assert.equal(langClass('weird'), 'language-csharp');
 });
+
+test('estimateMinutes_lesson_steps_in_short_exercises_in_detailed', () => {
+  const L = n => ({ en: words(n) });
+  const day = {
+    sections: [{
+      depth: 'short', title: { en: '' },
+      code: [{ caption: { en: '' }, src: lines(12) }],
+      lesson: {
+        buildsOn: L(150), what: L(150), why: L(150), analogy: L(150), mistakes: L(150), whenToUse: L(150), recap: L(150),
+        lines: [{ code: 'x', note: L(150) }],
+        focus: { caption: { en: '' }, src: lines(6) },
+        quiz: { q: L(75), options: [L(0), L(0)], explain: L(75) },
+        exercise: { task: L(300), hint: L(150), solution: { caption: { en: '' }, src: lines(12) } }
+      }
+    }]
+  };
+  // short: words 7x150 + 150 note + 1 ("x") + 150 quiz = 1351 / 150 = 9.0; code (12 + 6) / 6 = 3; quiz 1 -> 13 -> 15
+  assert.equal(estimateMinutes(day, 'short'), 15);
+  // detailed delta: exercise words 450 / 150 = 3; solution 12 / 6 = 2; exercise 3 -> 8 -> 10
+  assert.equal(estimateMinutes(day, 'detailed'), 10);
+});
