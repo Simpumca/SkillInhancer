@@ -154,6 +154,26 @@
     return h + ' h' + (m ? ' ' + m + ' min' : '');
   }
 
+  // Lesson progress lives in its own key (tl.lessons), separate from tl.done:
+  // { "<day>": ["<section id>", ...] }. Anything malformed reads as "nothing done".
+  function lessonsDone(map, day) {
+    var list = map && typeof map === 'object' && !Array.isArray(map) ? map[String(day)] : null;
+    return Array.isArray(list) ? list.filter(function (x) { return typeof x === 'string'; }) : [];
+  }
+
+  // Returns a new map with section `id` of `day` marked done or not done (input is not modified).
+  function setLessonDone(map, day, id, isDone) {
+    var out = {};
+    var k;
+    if (map && typeof map === 'object' && !Array.isArray(map)) for (k in map) {
+      if (Object.prototype.hasOwnProperty.call(map, k)) out[k] = lessonsDone(map, k);
+    }
+    var list = lessonsDone(map, day).filter(function (x) { return x !== id; });
+    if (isDone) list.push(id);
+    out[String(day)] = list;
+    return out;
+  }
+
   var PRISM_LANG = { csharp: 'csharp', sql: 'sql', yaml: 'yaml', dockerfile: 'docker', bash: 'bash', json: 'json', text: 'none',
     javascript: 'javascript', jsx: 'jsx', tsx: 'tsx', typescript: 'typescript', html: 'markup' };
   function langClass(lang) {
@@ -169,6 +189,8 @@
     makeStore: makeStore,
     contentPath: contentPath,
     estimateMinutes: estimateMinutes,
-    formatMinutes: formatMinutes
+    formatMinutes: formatMinutes,
+    lessonsDone: lessonsDone,
+    setLessonDone: setLessonDone
   };
 });

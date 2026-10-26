@@ -32,7 +32,15 @@
       missingTitle: 'Content file missing', missingText: 'Could not load <code>{file}</code>. Check that it exists in the <code>content</code> folder.',
       errorTitle: 'Content file has an error', errorText: '<code>{file}</code> loaded but did not set up this day (a JavaScript error or a wrong <code>day</code> number). Run <code>node tools/validate.mjs</code> to find it.',
       backHome: '🏠 Back to Home',
-      copy: 'Copy', copyLabel: 'Copy code', copied: 'Copied ✓', copyFail: 'Copy failed — select the code manually'
+      copy: 'Copy', copyLabel: 'Copy code', copied: 'Copied ✓', copyFail: 'Copy failed — select the code manually',
+      lesson: 'Lesson', lessonsProgress: '{done}/{total} lessons done', toc: '🧭 On this page', core: '📘 Core lessons',
+      buildsOn: '🔗 Builds on the last lesson', what: '📌 What is it?', why: '🎯 Why do we need it?', analogy: '🏠 Real-life analogy',
+      focus: '🔍 Look at this part first', example: '💻 Complete example', output: 'Output', lines: '🔎 Line by line',
+      mistakes: '⚠️ Common mistakes', whenToUse: '✅ When to use it', exercise: '🛠 Try it yourself', hint: 'Show hint',
+      solution: 'Show solution', quiz: '❓ Quick check', quizRight: 'Correct ✓', quizWrong: 'Not quite ✗ — the right answer is marked.',
+      recap: '🧠 Quick recap', lessonMark: 'Mark lesson as done', lessonDone: 'Lesson done ✓ — click to undo',
+      deepDive: '🔬 Deep Dive (optional)', deepDiveHint: 'Advanced topics. Open these after the core lessons feel easy.',
+      interview: '🎤 Interview Preparation', interviewHint: 'Answer each question aloud before you open it.'
     },
     hi: {
       plan: '30 दिन का प्लान', today: 'आज का दिन ▶', progress: '{total} में से {done} दिन पूरे',
@@ -55,7 +63,15 @@
       missingTitle: 'कंटेंट फ़ाइल नहीं मिली', missingText: '<code>{file}</code> लोड नहीं हुई। देखो कि फ़ाइल <code>content</code> फ़ोल्डर में है।',
       errorTitle: 'कंटेंट फ़ाइल में गड़बड़ है', errorText: '<code>{file}</code> लोड हुई पर इस दिन का data नहीं बना (JavaScript error या ग़लत <code>day</code> number)। ढूँढने के लिए <code>node tools/validate.mjs</code> चलाओ।',
       backHome: '🏠 होम पर वापस',
-      copy: 'कॉपी', copyLabel: 'कोड कॉपी करो', copied: 'कॉपी हो गया ✓', copyFail: 'कॉपी नहीं हुआ — कोड ख़ुद select करो'
+      copy: 'कॉपी', copyLabel: 'कोड कॉपी करो', copied: 'कॉपी हो गया ✓', copyFail: 'कॉपी नहीं हुआ — कोड ख़ुद select करो',
+      lesson: 'पाठ', lessonsProgress: '{total} में से {done} पाठ पूरे', toc: '🧭 इस पेज पर', core: '📘 मुख्य पाठ',
+      buildsOn: '🔗 पिछले पाठ से जुड़ाव', what: '📌 यह क्या है?', why: '🎯 इसकी ज़रूरत क्यों?', analogy: '🏠 रोज़ की ज़िंदगी से मिसाल',
+      focus: '🔍 पहले यह हिस्सा देखो', example: '💻 पूरा उदाहरण', output: 'Output', lines: '🔎 लाइन-दर-लाइन',
+      mistakes: '⚠️ आम ग़लतियाँ', whenToUse: '✅ कब इस्तेमाल करें', exercise: '🛠 ख़ुद करके देखो', hint: 'Hint देखो',
+      solution: 'हल देखो', quiz: '❓ झटपट जाँच', quizRight: 'सही ✓', quizWrong: 'सही नहीं ✗ — सही जवाब पर निशान लगा है।',
+      recap: '🧠 झटपट दोहराव', lessonMark: 'पाठ पूरा हुआ', lessonDone: 'पाठ पूरा ✓ — वापस लेने के लिए क्लिक करो',
+      deepDive: '🔬 Deep Dive (ज़रूरी नहीं)', deepDiveHint: 'Advanced topics। मुख्य पाठ आसान लगने के बाद इन्हें खोलो।',
+      interview: '🎤 इंटरव्यू की तैयारी', interviewHint: 'हर सवाल का जवाब खोलने से पहले बोलकर दो।'
     },
     hg: {
       plan: '30 din ka plan', today: 'Aaj ka din ▶', progress: '{total} mein se {done} din poore',
@@ -78,7 +94,15 @@
       missingTitle: 'Content file nahi mili', missingText: '<code>{file}</code> load nahi hui. Check karo ki file <code>content</code> folder mein hai.',
       errorTitle: 'Content file mein gadbad hai', errorText: '<code>{file}</code> load hui par is din ka data nahi bana (JavaScript error ya galat <code>day</code> number). Dhoondhne ke liye <code>node tools/validate.mjs</code> chalao.',
       backHome: '🏠 Home par wapas',
-      copy: 'Copy', copyLabel: 'Code copy karo', copied: 'Copy ho gaya ✓', copyFail: 'Copy nahi hua — code khud select karo'
+      copy: 'Copy', copyLabel: 'Code copy karo', copied: 'Copy ho gaya ✓', copyFail: 'Copy nahi hua — code khud select karo',
+      lesson: 'Lesson', lessonsProgress: '{total} mein se {done} lessons poore', toc: '🧭 Is page par', core: '📘 Core lessons',
+      buildsOn: '🔗 Pichhle lesson se jodh', what: '📌 Ye kya hai?', why: '🎯 Iski zaroorat kyun?', analogy: '🏠 Roz ki zindagi se misaal',
+      focus: '🔍 Pehle ye hissa dekho', example: '💻 Poora example', output: 'Output', lines: '🔎 Line-by-line',
+      mistakes: '⚠️ Aam galtiyan', whenToUse: '✅ Kab use karein', exercise: '🛠 Khud karke dekho', hint: 'Hint dekho',
+      solution: 'Solution dekho', quiz: '❓ Jhatpat check', quizRight: 'Sahi ✓', quizWrong: 'Sahi nahi ✗ — sahi jawaab par nishaan laga hai.',
+      recap: '🧠 Jhatpat recap', lessonMark: 'Lesson poora hua', lessonDone: 'Lesson poora ✓ — undo ke liye click karo',
+      deepDive: '🔬 Deep Dive (optional)', deepDiveHint: 'Advanced topics. Core lessons aasaan lagne ke baad inhe kholo.',
+      interview: '🎤 Interview ki taiyaari', interviewHint: 'Har sawaal ka jawaab kholne se pehle bolkar do.'
     }
   };
 
@@ -288,14 +312,22 @@
     return h('span', { 'class': 'copy-wrap' }, [btn, status]);
   }
 
-  function codeFigure(code) {
+  // showOutput: also show the checked `expected` output under the code (lesson days only).
+  function codeFigure(code, showOutput) {
     return h('figure', { 'class': 'code' }, [
       h('figcaption', { 'class': 'code-head' }, [
         h('span', { html: code.caption ? '💻 ' + C.pick(code.caption, lang) : '' }),
         copyButton(code.src)
       ]),
-      h('pre', null, [h('code', { 'class': C.langClass(code.lang), text: code.src })])
+      h('pre', null, [h('code', { 'class': C.langClass(code.lang), text: code.src })]),
+      showOutput === true && typeof code.expected === 'string' ? h('div', { 'class': 'output' }, [
+        h('span', { 'class': 'output-label', text: '▶ ' + t('output') }),
+        h('pre', null, [h('code', { 'class': 'language-none', text: code.expected })])
+      ]) : null
     ]);
+  }
+  function codeFigures(list, showOutput) {
+    return (list || []).map(function (c) { return codeFigure(c, showOutput); });
   }
 
   function meaningLine(text) {
@@ -303,90 +335,68 @@
     return h('div', { 'class': 'meaning' }, [h('span', { 'class': 'label', text: t('meaning') }), h('span', { html: text })]);
   }
 
-  function block(title, kids) {
-    return h('section', { 'class': 'block' }, [h('h2', { html: title })].concat(kids));
+  function block(title, kids, id) {
+    return h('section', { 'class': 'block', id: id || null }, [h('h2', { html: title })].concat(kids));
   }
 
-  function renderDayContent(d) {
-    var sections = C.filterDepth(d.sections, depth);
-    var qa = C.filterDepth(d.qa, depth);
-    var puzzles = depth === 'detailed' ? (d.puzzles || []) : [];
-    var c = findDay(dayNum);
-    var out = [];
+  function qaItems(qa) {
+    return qa.map(function (q, i) {
+      return h('div', { 'class': 'qa', id: 'q-' + q.id }, [
+        h('p', { 'class': 'qa-q' }, [h('span', { 'class': 'num', text: (i + 1) + '.' }), h('span', { html: q.q })]),
+        h('details', null, [
+          h('summary', { text: t('showAnswer') }),
+          h('div', { 'class': 'qa-body' }, [
+            h('div', { 'class': 'answer', html: q.answer }),
+            meaningLine(q.meaning && q.meaning[lang]),
+            h('div', { 'class': 'explain', html: C.pick(q.explain, lang) })
+          ].concat(codeFigures(q.code)))
+        ])
+      ]);
+    });
+  }
 
-    out.push(h('header', { 'class': 'day-head' }, [
-      h('span', { 'class': 'eyebrow', text: t('day') + ' ' + dayNum + ' · ' + t('week') + ' ' + c.week }),
-      h('h1', { html: C.pick(d.title, lang) }),
-      h('p', { 'class': 'estimate', text: t(depth === 'detailed' ? 'estimateDetailed' : 'estimate', { time: C.formatMinutes(C.estimateMinutes(d, depth)) }) })
-    ]));
+  function puzzleCards(puzzles) {
+    return puzzles.map(function (p, i) {
+      return h('article', { 'class': 'card puzzle', id: 'p-' + p.id }, [
+        h('div', { 'class': 'code-head' }, [
+          h('h3', { text: t('puzzle') + ' ' + (i + 1) }),
+          copyButton(p.src)
+        ]),
+        h('pre', null, [h('code', { 'class': C.langClass(p.lang), text: p.src })]),
+        h('p', { 'class': 'prompt', text: t('whatPrint') }),
+        h('details', null, [
+          h('summary', { text: t('showAnswer') }),
+          h('pre', null, [h('code', { text: p.answer })]),
+          h('div', { 'class': 'explain', html: C.pick(p.explain, lang) })
+        ])
+      ]);
+    });
+  }
 
-    out.push(block(t('summary'), [h('div', { 'class': 'card summary', html: C.pick(d.summary, lang) })]));
+  // "Detailed mode adds ..." line shown in Short mode, or null.
+  function moreHint(d, sections, qa) {
+    if (depth !== 'short') return null;
+    var hidden = {
+      s: (d.sections || []).length - sections.length,
+      q: (d.qa || []).length - qa.length,
+      p: (d.puzzles || []).length
+    };
+    var forms = T[lang].more;
+    var parts = ['s', 'q', 'p'].filter(function (k) { return hidden[k] > 0; }).map(function (k) {
+      return forms[k][hidden[k] === 1 ? 0 : 1].replace('{n}', hidden[k]);
+    });
+    return parts.length ? h('p', { 'class': 'hint', html: t('moreHint', { list: parts.join(', ') }) }) : null;
+  }
 
-    if (sections.length) {
-      out.push(block(t('learn'), sections.map(function (s) {
-        return h('article', { 'class': 'card', id: 's-' + s.id }, [
-          h('h3', null, [h('span', { html: C.pick(s.title, lang) }),
-            s.depth === 'detailed' ? h('span', { 'class': 'tag', text: t('extra') }) : null]),
-          h('div', { html: C.pick(s.body, lang) })
-        ].concat((s.code || []).map(codeFigure)));
-      })));
-    }
-
-    if (d.whatsNew) out.push(block(t('whatsNew'), [h('div', { 'class': 'card', html: C.pick(d.whatsNew, lang) })]));
-
-    if (qa.length) {
-      out.push(block(t('qa') + ' <span class="tag">' + qa.length + '</span>', qa.map(function (q, i) {
-        return h('div', { 'class': 'qa', id: 'q-' + q.id }, [
-          h('p', { 'class': 'qa-q' }, [h('span', { 'class': 'num', text: (i + 1) + '.' }), h('span', { html: q.q })]),
-          h('details', null, [
-            h('summary', { text: t('showAnswer') }),
-            h('div', { 'class': 'qa-body' }, [
-              h('div', { 'class': 'answer', html: q.answer }),
-              meaningLine(q.meaning && q.meaning[lang]),
-              h('div', { 'class': 'explain', html: C.pick(q.explain, lang) })
-            ].concat((q.code || []).map(codeFigure)))
-          ])
-        ]);
-      })));
-    }
-
-    if (depth === 'short') {
-      var hidden = {
-        s: (d.sections || []).length - sections.length,
-        q: (d.qa || []).length - qa.length,
-        p: (d.puzzles || []).length
-      };
-      var forms = T[lang].more;
-      var parts = ['s', 'q', 'p'].filter(function (k) { return hidden[k] > 0; }).map(function (k) {
-        return forms[k][hidden[k] === 1 ? 0 : 1].replace('{n}', hidden[k]);
-      });
-      if (parts.length) out.push(h('p', { 'class': 'hint', html: t('moreHint', { list: parts.join(', ') }) }));
-    }
-
-    if (puzzles.length) {
-      out.push(block(t('puzzles'), puzzles.map(function (p, i) {
-        return h('article', { 'class': 'card puzzle', id: 'p-' + p.id }, [
-          h('div', { 'class': 'code-head' }, [
-            h('h3', { text: t('puzzle') + ' ' + (i + 1) }),
-            copyButton(p.src)
-          ]),
-          h('pre', null, [h('code', { 'class': C.langClass(p.lang), text: p.src })]),
-          h('p', { 'class': 'prompt', text: t('whatPrint') }),
-          h('details', null, [
-            h('summary', { text: t('showAnswer') }),
-            h('pre', null, [h('code', { text: p.answer })]),
-            h('div', { 'class': 'explain', html: C.pick(p.explain, lang) })
-          ])
-        ]);
-      })));
-    }
-
+  function revisionBlock(d, id) {
     var rev = d.revision || { en: [], meaning: {} };
     var revMeaning = (rev.meaning && rev.meaning[lang]) || [];
-    out.push(block(t('revision'), [h('div', { 'class': 'revision' }, [h('ul', null, rev.en.map(function (line, i) {
+    return block(t('revision'), [h('div', { 'class': 'revision' }, [h('ul', null, rev.en.map(function (line, i) {
       return h('li', null, [h('span', { html: line }), meaningLine(revMeaning[i])]);
-    }))])]));
+    }))])], id);
+  }
 
+  function doneRow() {
     var isDone = doneDays().indexOf(dayNum) !== -1;
     var doneBtn = h('button', {
       type: 'button', 'class': 'btn btn-done', 'aria-pressed': String(isDone), text: isDone ? t('isDone') : t('markDone'),
@@ -397,9 +407,239 @@
         doneBtn.textContent = isDone ? t('isDone') : t('markDone');
       }
     });
-    out.push(h('div', { 'class': 'done-row' }, [doneBtn]));
+    return h('div', { 'class': 'done-row' }, [doneBtn]);
+  }
+
+  function dayHead(d, extra) {
+    var c = findDay(dayNum);
+    return h('header', { 'class': 'day-head' }, [
+      h('span', { 'class': 'eyebrow', text: t('day') + ' ' + dayNum + ' · ' + t('week') + ' ' + c.week }),
+      h('h1', { html: C.pick(d.title, lang) }),
+      h('p', { 'class': 'estimate', text: t(depth === 'detailed' ? 'estimateDetailed' : 'estimate', { time: C.formatMinutes(C.estimateMinutes(d, depth)) }) })
+    ].concat(extra || []));
+  }
+
+  function renderDayContent(d) {
+    if (d.format === 'lesson') return renderLessonDay(d);
+    var sections = C.filterDepth(d.sections, depth);
+    var qa = C.filterDepth(d.qa, depth);
+    var puzzles = depth === 'detailed' ? (d.puzzles || []) : [];
+    var out = [];
+
+    out.push(dayHead(d));
+
+    out.push(block(t('summary'), [h('div', { 'class': 'card summary', html: C.pick(d.summary, lang) })]));
+
+    if (sections.length) {
+      out.push(block(t('learn'), sections.map(function (s) {
+        return h('article', { 'class': 'card', id: 's-' + s.id }, [
+          h('h3', null, [h('span', { html: C.pick(s.title, lang) }),
+            s.depth === 'detailed' ? h('span', { 'class': 'tag', text: t('extra') }) : null]),
+          h('div', { html: C.pick(s.body, lang) })
+        ].concat(codeFigures(s.code)));
+      })));
+    }
+
+    if (d.whatsNew) out.push(block(t('whatsNew'), [h('div', { 'class': 'card', html: C.pick(d.whatsNew, lang) })]));
+
+    if (qa.length) out.push(block(t('qa') + ' <span class="tag">' + qa.length + '</span>', qaItems(qa)));
+
+    out.push(moreHint(d, sections, qa));
+
+    if (puzzles.length) out.push(block(t('puzzles'), puzzleCards(puzzles)));
+
+    out.push(revisionBlock(d));
+    out.push(doneRow());
 
     return h('main', { 'class': 'wrap day' }, out);
+  }
+
+  // ---------- Lesson-format day (day.format === "lesson") ----------
+  // Core lessons = sections with a `lesson`; the other sections form the optional Deep Dive.
+  var quizPick = {};   // section id -> chosen option index (kept across language/depth switches)
+
+  function lessonIds(d) {
+    return (d.sections || []).filter(function (s) { return s.lesson; }).map(function (s) { return s.id; });
+  }
+  function lessonsDoneNow(d) {
+    var ids = lessonIds(d);
+    return C.lessonsDone(store.get('tl.lessons', {}), dayNum).filter(function (id) { return ids.indexOf(id) !== -1; });
+  }
+
+  // A <details> whose open state is remembered (by key) only when the learner toggles it,
+  // so a depth switch can still apply that depth's default.
+  function fold(key, summary, open, kids, cls) {
+    var d = h('details', { 'class': cls, 'data-key': key, open: open ? '' : null }, [
+      h('summary', { html: summary, onclick: function () { openState['k:' + key] = !d.open; } })
+    ].concat(kids));
+    return d;
+  }
+
+  function box(kind, title, html) {
+    return h('div', { 'class': 'box box-' + kind }, [h('h4', { text: title }), h('div', { html: html })]);
+  }
+
+  // Options are buttons; the result line is a live region that exists before the first answer.
+  function quizBox(s) {
+    var qz = s.lesson.quiz;
+    var qid = 'quiz-' + s.id;
+    var result = h('div', { 'class': 'quiz-result', role: 'status' });
+    var buttons = qz.options.map(function (o, i) {
+      return h('button', {
+        type: 'button', 'class': 'quiz-opt', 'aria-pressed': 'false',
+        onclick: function () { quizPick[s.id] = i; paint(); }
+      }, [h('span', { 'class': 'quiz-letter', 'aria-hidden': 'true', text: String.fromCharCode(65 + i) }), h('span', { html: C.pick(o, lang) })]);
+    });
+    function paint() {
+      var picked = quizPick[s.id];
+      if (typeof picked !== 'number') return;
+      buttons.forEach(function (b, i) {
+        b.setAttribute('aria-pressed', String(i === picked));
+        b.classList.toggle('is-right', i === qz.answer);
+        b.classList.toggle('is-wrong', i === picked && i !== qz.answer);
+      });
+      var ok = picked === qz.answer;
+      result.textContent = '';
+      result.appendChild(h('p', { 'class': ok ? 'ok' : 'bad', text: ok ? t('quizRight') : t('quizWrong') }));
+      result.appendChild(h('div', { html: C.pick(qz.explain, lang) }));
+    }
+    paint();
+    return h('div', { 'class': 'box box-quiz' }, [
+      h('h4', { text: t('quiz') }),
+      h('p', { 'class': 'quiz-q', id: qid, html: C.pick(qz.q, lang) }),
+      h('div', { 'class': 'quiz-options', role: 'group', 'aria-labelledby': qid }, buttons),
+      result
+    ]);
+  }
+
+  // Updates the header count, bar, TOC ticks and card state in place (keeps focus and scroll).
+  function paintLessonProgress(d) {
+    var ids = lessonIds(d);
+    var done = lessonsDoneNow(d);
+    var count = document.querySelector('#app .lesson-count');
+    if (count) count.textContent = t('lessonsProgress', { done: done.length, total: ids.length });
+    var bar = document.querySelector('#app .lesson-progress .bar');
+    if (bar) {
+      bar.setAttribute('aria-valuenow', String(done.length));
+      bar.firstChild.style.width = (ids.length ? Math.round(done.length * 100 / ids.length) : 0) + '%';
+    }
+    ids.forEach(function (id) {
+      var on = done.indexOf(id) !== -1;
+      var li = document.querySelector('#app .toc li[data-sec="' + id + '"]');
+      if (li) li.classList.toggle('is-done', on);
+      var card = document.getElementById('s-' + id);
+      if (card) card.classList.toggle('is-done', on);
+    });
+  }
+
+  function lessonCard(d, s, n, done) {
+    var ls = s.lesson;
+    var detailed = depth === 'detailed';
+    var code = s.code || [];
+    var ex = ls.exercise;
+    var isDone = done.indexOf(s.id) !== -1;
+    var btn = h('button', {
+      type: 'button', 'class': 'btn btn-lesson', 'aria-pressed': String(isDone), text: isDone ? t('lessonDone') : t('lessonMark'),
+      onclick: function () {
+        isDone = !isDone;
+        store.set('tl.lessons', C.setLessonDone(store.get('tl.lessons', {}), dayNum, s.id, isDone));
+        btn.setAttribute('aria-pressed', String(isDone));
+        btn.textContent = isDone ? t('lessonDone') : t('lessonMark');
+        paintLessonProgress(d);
+      }
+    });
+    return h('article', { 'class': 'card lesson' + (isDone ? ' is-done' : ''), id: 's-' + s.id }, [
+      h('p', { 'class': 'eyebrow lesson-num', text: t('lesson') + ' ' + n + ' / ' + lessonIds(d).length }),
+      h('h3', { html: C.pick(s.title, lang) }),
+      ls.buildsOn ? h('p', { 'class': 'builds-on' }, [h('b', { text: t('buildsOn') + ': ' }), h('span', { html: C.pick(ls.buildsOn, lang) })]) : null,
+      s.body ? h('div', { html: C.pick(s.body, lang) }) : null,
+      box('what', t('what'), C.pick(ls.what, lang)),
+      box('why', t('why'), C.pick(ls.why, lang)),
+      box('analogy', t('analogy'), C.pick(ls.analogy, lang)),
+      ls.focus ? h('div', { 'class': 'step' }, [h('h4', { text: t('focus') }), codeFigure(ls.focus, true)]) : null,
+      code.length ? h('div', { 'class': 'step' }, [h('h4', { text: t('example') }), codeFigure(code[0], true)]) : null,
+      fold(s.id + '-lines', t('lines'), detailed, [h('ol', { 'class': 'line-notes' }, ls.lines.map(function (ln) {
+        return h('li', null, [h('code', { text: ln.code }), h('div', { html: C.pick(ln.note, lang) })]);
+      }))], 'fold fold-step')
+    ].concat(codeFigures(code.slice(1), true), [
+      box('mistakes', t('mistakes'), C.pick(ls.mistakes, lang)),
+      box('when', t('whenToUse'), C.pick(ls.whenToUse, lang)),
+      fold(s.id + '-exercise', t('exercise'), detailed, [
+        h('div', { 'class': 'fold-body' }, [
+          h('div', { html: C.pick(ex.task, lang) }),
+          ex.hint ? fold(s.id + '-hint', t('hint'), false, [h('div', { 'class': 'fold-body', html: C.pick(ex.hint, lang) })], 'fold fold-inner') : null,
+          fold(s.id + '-solution', t('solution'), false, [h('div', { 'class': 'fold-body' }, [codeFigure(ex.solution, true)])], 'fold fold-inner')
+        ])
+      ], 'fold fold-step fold-exercise'),
+      quizBox(s),
+      box('recap', t('recap'), C.pick(ls.recap, lang)),
+      h('div', { 'class': 'lesson-foot' }, [btn])
+    ]));
+  }
+
+  function tocNav(lessons, done, extra) {
+    var items = lessons.map(function (s, i) {
+      return h('li', { 'data-sec': s.id, 'class': done.indexOf(s.id) !== -1 ? 'is-done' : null }, [
+        h('a', { href: '#s-' + s.id }, [h('span', { 'class': 'toc-num', text: String(i + 1) }), h('span', { html: C.pick(s.title, lang) })])
+      ]);
+    }).concat(extra.map(function (x) {
+      return h('li', { 'class': 'toc-extra' }, [h('a', { href: '#' + x.id, html: x.label })]);
+    }));
+    var wide = !!(window.matchMedia && window.matchMedia('(min-width: 900px)').matches);
+    return h('nav', { 'class': 'toc-col', 'aria-label': t('toc').replace(/^\S+\s/, '') }, [
+      fold('toc', t('toc'), wide, [h('ol', { 'class': 'toc-list' }, items)], 'toc')
+    ]);
+  }
+
+  function renderLessonDay(d) {
+    var all = C.filterDepth(d.sections, depth);
+    var lessons = all.filter(function (s) { return s.lesson; });
+    var deep = all.filter(function (s) { return !s.lesson; });
+    var qa = C.filterDepth(d.qa, depth);
+    var puzzles = depth === 'detailed' ? (d.puzzles || []) : [];
+    var done = lessonsDoneNow(d);
+    var total = lessonIds(d).length;
+
+    var head = dayHead(d, [h('div', { 'class': 'lesson-progress' }, [
+      h('span', { 'class': 'lesson-count', id: 'lesson-count', text: t('lessonsProgress', { done: done.length, total: total }) }),
+      h('div', { 'class': 'bar', role: 'progressbar', 'aria-labelledby': 'lesson-count',
+        'aria-valuemin': '0', 'aria-valuemax': String(total), 'aria-valuenow': String(done.length) },
+        [h('span', { style: 'width:' + (total ? Math.round(done.length * 100 / total) : 0) + '%' })])
+    ])]);
+
+    var main = [];
+    main.push(block(t('summary'), [h('div', { 'class': 'card summary', html: C.pick(d.summary, lang) })]));
+    main.push(block(t('core'), lessons.map(function (s, i) { return lessonCard(d, s, i + 1, done); }), 'core'));
+
+    var extra = [];
+    if (deep.length || d.whatsNew) {
+      extra.push({ id: 'deep-dive', label: t('deepDive') });
+      main.push(h('section', { 'class': 'block', id: 'deep-dive' }, [fold('deep-dive', t('deepDive'), false, [
+        h('p', { 'class': 'fold-hint', text: t('deepDiveHint') })
+      ].concat(deep.map(function (s) {
+        return h('article', { 'class': 'card', id: 's-' + s.id }, [
+          h('h3', { html: C.pick(s.title, lang) }),
+          h('div', { html: C.pick(s.body, lang) })
+        ].concat(codeFigures(s.code, true)));
+      }), d.whatsNew ? [h('article', { 'class': 'card' }, [h('h3', { html: t('whatsNew') }), h('div', { html: C.pick(d.whatsNew, lang) })])] : []), 'fold fold-block')]));
+    }
+
+    if (qa.length || puzzles.length) {
+      extra.push({ id: 'interview', label: t('interview') });
+      main.push(h('section', { 'class': 'block', id: 'interview' }, [fold('interview', t('interview') + ' <span class="tag">' + qa.length + '</span>', false, [
+        h('p', { 'class': 'fold-hint', text: t('interviewHint') })
+      ].concat(qaItems(qa), puzzles.length ? [h('h3', { 'class': 'sub-head', html: t('puzzles') })].concat(puzzleCards(puzzles)) : []), 'fold fold-block')]));
+    }
+
+    main.push(moreHint(d, all, qa));
+    extra.push({ id: 'revision', label: t('revision') });
+    main.push(revisionBlock(d, 'revision'));
+    main.push(doneRow());
+
+    return h('main', { 'class': 'wrap day lesson-day' }, [
+      head,
+      h('div', { 'class': 'lesson-layout' }, [tocNav(lessons, done, extra), h('div', { 'class': 'lesson-main' }, main)])
+    ]);
   }
 
   function highlight() {
@@ -410,7 +650,8 @@
 
   // ---------- Keep open answers and scroll position across re-renders (language/depth switch) ----------
   // Items are the cards with a stable id: s-<section>, q-<question>, p-<puzzle>.
-  var openState = {};   // item id -> its <details> open?  (kept for items hidden at the current depth)
+  var openState = {};   // item id -> its <details> open?  (kept for items hidden at the current depth);
+                        // "k:<data-key>" -> lesson-day fold state the learner chose
 
   function dayItems() {
     return Array.prototype.slice.call(document.querySelectorAll('#app main.day [id]'));
@@ -427,7 +668,7 @@
     var items = dayItems();
     if (!items.length) return null;
     items.forEach(function (el) {
-      var d = el.querySelector('details');
+      var d = el.querySelector('details:not([data-key])');
       if (d) openState[el.id] = d.open;
     });
     if (window.scrollY < 1) return { anchor: null };
@@ -443,8 +684,13 @@
 
   function restoreView(view) {
     dayItems().forEach(function (el) {
-      var d = el.querySelector('details');
+      var d = el.querySelector('details:not([data-key])');
       if (d && openState[el.id]) d.open = true;
+    });
+    // Lesson-day folds: only states the learner chose (see fold()) override the depth default.
+    Array.prototype.forEach.call(document.querySelectorAll('#app details[data-key]'), function (d) {
+      var k = 'k:' + d.getAttribute('data-key');
+      if (Object.prototype.hasOwnProperty.call(openState, k)) d.open = openState[k];
     });
     if (!view || !view.anchor) return;
     var ids = [view.anchor].concat(view.fallback);

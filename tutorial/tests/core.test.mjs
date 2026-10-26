@@ -153,3 +153,21 @@ test('estimateMinutes_lesson_steps_in_short_exercises_in_detailed', () => {
   // detailed delta: exercise words 450 / 150 = 3; solution 12 / 6 = 2; exercise 3 -> 8 -> 10
   assert.equal(estimateMinutes(day, 'detailed'), 10);
 });
+
+test('lesson_progress_roundtrip_and_malformed_input', () => {
+  const { lessonsDone, setLessonDone } = require('../assets/core.js');
+  assert.deepEqual(lessonsDone(null, 1), []);
+  assert.deepEqual(lessonsDone({ 1: 'x' }, 1), []);
+  assert.deepEqual(lessonsDone([], 1), []);
+  assert.deepEqual(lessonsDone({ 1: ['a', 3, 'b'] }, 1), ['a', 'b']);
+  const before = { 2: ['z'] };
+  let m = setLessonDone(before, 1, 'a', true);
+  m = setLessonDone(m, 1, 'b', true);
+  m = setLessonDone(m, 1, 'a', true);            // no duplicates
+  assert.deepEqual(lessonsDone(m, 1), ['b', 'a']);
+  assert.deepEqual(lessonsDone(m, 2), ['z']);    // other days kept
+  m = setLessonDone(m, 1, 'b', false);
+  assert.deepEqual(lessonsDone(m, 1), ['a']);
+  assert.deepEqual(before, { 2: ['z'] });        // input not modified
+  assert.deepEqual(lessonsDone(setLessonDone('junk', 1, 'a', true), 1), ['a']);
+});
