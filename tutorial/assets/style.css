@@ -272,6 +272,8 @@ pre {
 .lesson-day pre { font-size: .92rem; }
 /* Cascadia-style ligatures turn => into an arrow glyph; show the characters learners must type. */
 .lesson-day code { font-variant-ligatures: none; }
+.lesson-day .summary > :first-child { margin-top: 0; }
+.lesson-day .summary > :last-child { margin-bottom: 0; }
 .lesson-progress { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: -8px 0 22px; }
 .lesson-progress .lesson-count { font-size: .9rem; color: var(--muted); }
 .lesson-progress .bar { flex: 1 1 160px; max-width: 320px; }
