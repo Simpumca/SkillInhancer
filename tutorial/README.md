@@ -21,6 +21,7 @@ An offline study site for .NET Tech Lead interview preparation. Every day has a 
 - **Depth**: **Short** shows the summary, the key sections, the 8 most-asked questions and the revision list. **Detailed** adds everything else, including the puzzles.
 - **Progress**: "Mark day as done" on a day page. Click it again to undo.
 - Language, depth and progress are saved in `localStorage` (`tl.lang`, `tl.depth`, `tl.done`). If the browser blocks storage, the site still works with the defaults (English, Short).
+- Every code block and puzzle has a **Copy** button. It uses the Clipboard API and falls back to `document.execCommand('copy')` where that API is unavailable.
 - Light and dark mode follow your operating system setting.
 
 ## How to run the checks

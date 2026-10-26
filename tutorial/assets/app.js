@@ -31,7 +31,8 @@
       notReadyTitle: 'Coming in Phase 2', notReadyText: 'Day {n} is not written yet. Finish the ready days first!',
       missingTitle: 'Content file missing', missingText: 'Could not load <code>{file}</code>. Check that it exists in the <code>content</code> folder.',
       errorTitle: 'Content file has an error', errorText: '<code>{file}</code> loaded but did not set up this day (a JavaScript error or a wrong <code>day</code> number). Run <code>node tools/validate.mjs</code> to find it.',
-      backHome: '🏠 Back to Home'
+      backHome: '🏠 Back to Home',
+      copy: 'Copy', copyLabel: 'Copy code', copied: 'Copied ✓', copyFail: 'Copy failed — select the code manually'
     },
     hi: {
       plan: '30 दिन का प्लान', today: 'आज का दिन ▶', progress: '{total} में से {done} दिन पूरे',
@@ -53,7 +54,8 @@
       notReadyTitle: 'Phase 2 में आएगा', notReadyText: 'दिन {n} अभी लिखा नहीं गया है। पहले तैयार दिन पूरे करो!',
       missingTitle: 'कंटेंट फ़ाइल नहीं मिली', missingText: '<code>{file}</code> लोड नहीं हुई। देखो कि फ़ाइल <code>content</code> फ़ोल्डर में है।',
       errorTitle: 'कंटेंट फ़ाइल में गड़बड़ है', errorText: '<code>{file}</code> लोड हुई पर इस दिन का data नहीं बना (JavaScript error या ग़लत <code>day</code> number)। ढूँढने के लिए <code>node tools/validate.mjs</code> चलाओ।',
-      backHome: '🏠 होम पर वापस'
+      backHome: '🏠 होम पर वापस',
+      copy: 'कॉपी', copyLabel: 'कोड कॉपी करो', copied: 'कॉपी हो गया ✓', copyFail: 'कॉपी नहीं हुआ — कोड ख़ुद select करो'
     },
     hg: {
       plan: '30 din ka plan', today: 'Aaj ka din ▶', progress: '{total} mein se {done} din poore',
@@ -75,7 +77,8 @@
       notReadyTitle: 'Phase 2 mein aayega', notReadyText: 'Day {n} abhi likha nahi gaya hai. Pehle ready din poore karo!',
       missingTitle: 'Content file nahi mili', missingText: '<code>{file}</code> load nahi hui. Check karo ki file <code>content</code> folder mein hai.',
       errorTitle: 'Content file mein gadbad hai', errorText: '<code>{file}</code> load hui par is din ka data nahi bana (JavaScript error ya galat <code>day</code> number). Dhoondhne ke liye <code>node tools/validate.mjs</code> chalao.',
-      backHome: '🏠 Home par wapas'
+      backHome: '🏠 Home par wapas',
+      copy: 'Copy', copyLabel: 'Code copy karo', copied: 'Copy ho gaya ✓', copyFail: 'Copy nahi hua — code khud select karo'
     }
   };
 
@@ -245,9 +248,52 @@
     ])]);
   }
 
+  // ---------- Copy to clipboard ----------
+  // navigator.clipboard needs a secure context (and can be denied); fall back to execCommand.
+  function copyText(text) {
+    function fallback() {
+      var ta = h('textarea', { readonly: '', 'aria-hidden': 'true', style: 'position:fixed;top:-1000px;left:0;opacity:0' });
+      ta.value = text;
+      document.body.appendChild(ta);
+      var active = document.activeElement;
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      if (active && active.focus) active.focus();
+      return ok;
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, fallback);
+    }
+    return Promise.resolve(fallback());
+  }
+
+  // Visible text stays short ("Copy"); aria-label names the action; the status span announces the result.
+  function copyButton(src) {
+    var status = h('span', { 'class': 'sr-only', role: 'status' });
+    var timer = null;
+    var btn = h('button', {
+      type: 'button', 'class': 'copy-btn', 'aria-label': t('copyLabel'), text: t('copy'),
+      onclick: function () {
+        copyText(src).then(function (ok) {
+          var msg = ok ? t('copied') : t('copyFail');
+          btn.textContent = ok ? t('copied') : t('copy');
+          status.textContent = msg;
+          clearTimeout(timer);
+          timer = setTimeout(function () { btn.textContent = t('copy'); status.textContent = ''; }, 2000);
+        });
+      }
+    });
+    return h('span', { 'class': 'copy-wrap' }, [btn, status]);
+  }
+
   function codeFigure(code) {
     return h('figure', { 'class': 'code' }, [
-      code.caption ? h('figcaption', { html: '💻 ' + C.pick(code.caption, lang) }) : null,
+      h('figcaption', { 'class': 'code-head' }, [
+        h('span', { html: code.caption ? '💻 ' + C.pick(code.caption, lang) : '' }),
+        copyButton(code.src)
+      ]),
       h('pre', null, [h('code', { 'class': C.langClass(code.lang), text: code.src })])
     ]);
   }
@@ -320,7 +366,10 @@
     if (puzzles.length) {
       out.push(block(t('puzzles'), puzzles.map(function (p, i) {
         return h('article', { 'class': 'card puzzle', id: 'p-' + p.id }, [
-          h('h3', { text: t('puzzle') + ' ' + (i + 1) }),
+          h('div', { 'class': 'code-head' }, [
+            h('h3', { text: t('puzzle') + ' ' + (i + 1) }),
+            copyButton(p.src)
+          ]),
           h('pre', null, [h('code', { 'class': C.langClass(p.lang), text: p.src })]),
           h('p', { 'class': 'prompt', text: t('whatPrint') }),
           h('details', null, [
