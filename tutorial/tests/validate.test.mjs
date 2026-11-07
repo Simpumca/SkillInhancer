@@ -376,6 +376,18 @@ test('lesson_example_and_line_notes', () => {
   assert.ok(lessonErrs(d).includes('sections[0].lesson.exercise.solution: must be checked (compile or run)'));
 });
 
+test('lesson_uncheckable_language_may_skip_run', () => {
+  let d = lessonDay();
+  Object.assign(d.sections[0].code[0], { lang: 'yaml', check: 'none' });
+  delete d.sections[0].code[0].expected;
+  Object.assign(d.sections[0].lesson.exercise.solution, { lang: 'yaml', check: 'none' });
+  delete d.sections[0].lesson.exercise.solution.expected;
+  assert.deepEqual(lessonErrs(d), []);
+  d = lessonDay();
+  d.sections[0].code[0].check = 'none';
+  assert.ok(lessonErrs(d).includes('sections[0].code[0]: lesson needs a complete example with check "run"'));
+});
+
 test('lesson_fields_raw_tags_rejected', () => {
   const d = lessonDay();
   d.sections[0].lesson.quiz.options[1].en = 'List<T>';

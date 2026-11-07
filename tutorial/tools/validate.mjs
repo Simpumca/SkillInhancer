@@ -88,6 +88,8 @@ function checkCode(list, label, errors) {
 
 // Lesson-format days (day.format === "lesson"): each core section carries a `lesson` with the 8 learning steps.
 // The complete example is section.code[0] (check "run" + expected); lines[].code must quote a line of it.
+// Topics with no runnable language (YAML, Dockerfile, JSX, plain text) may use check "none" for code[0] and the exercise solution.
+const uncheckable = c => isObj(c) && c.check === 'none' && isStr(c.lang) && !CHECKABLE_LANGS.includes(c.lang);
 const LESSON_TEXT = ['what', 'why', 'analogy', 'mistakes', 'whenToUse', 'recap'];
 const collapse = s => String(s).replace(/\s+/g, ' ').trim();
 
@@ -102,7 +104,7 @@ function checkLesson(s, label, isFirst, errors) {
   if (ls.focus !== undefined) checkCodeItem(ls.focus, `${l}.focus`, errors);
 
   const example = Array.isArray(s.code) ? s.code[0] : undefined;
-  if (!isObj(example) || example.check !== 'run') errors.push(`${label}.code[0]: lesson needs a complete example with check "run"`);
+  if (!isObj(example) || (example.check !== 'run' && !uncheckable(example))) errors.push(`${label}.code[0]: lesson needs a complete example with check "run"`);
   if (!Array.isArray(ls.lines) || ls.lines.length === 0) errors.push(`${l}.lines: must be a non-empty array`);
   else ls.lines.forEach((n, i) => {
     const nl = `${l}.lines[${i}]`;
@@ -120,7 +122,7 @@ function checkLesson(s, label, isFirst, errors) {
     checkL(ex.task, `${l}.exercise.task`, errors);
     if (ex.hint !== undefined) checkL(ex.hint, `${l}.exercise.hint`, errors);
     checkCodeItem(ex.solution, `${l}.exercise.solution`, errors);
-    if (isObj(ex.solution) && ex.solution.check === 'none') errors.push(`${l}.exercise.solution: must be checked (compile or run)`);
+    if (isObj(ex.solution) && ex.solution.check === 'none' && !uncheckable(ex.solution)) errors.push(`${l}.exercise.solution: must be checked (compile or run)`);
   }
 
   const qz = ls.quiz;

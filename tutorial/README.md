@@ -51,6 +51,7 @@ node tools/check-code.mjs --strict day14  # any SKIP (for example no SQL tooling
      - `lines[]`: `{ code, note }` line-by-line notes. `code` must quote a line of the section's `code[0]`, which must be the complete example with `check: "run"` and `expected`.
      - `exercise`: `{ task, hint?, solution }`. `solution` is a code item with `check: "compile"` or `"run"`; `check-code.mjs` builds it.
      - `quiz`: `{ q, options: [2..5 text fields], answer: <0-based index>, explain }`.
+     - The complete example (`code[0]`) and the exercise solution must be checked (`run`, or `compile` for the solution). Only when the topic has no runnable language (for example `yaml`, `dockerfile`, `jsx` or `text`) may they use `check: "none"`.
      - The time estimate counts the lesson steps and 1 min per quiz in Short, and each exercise (3 min plus its text and solution) in the Detailed delta.
    - `qa[]` have an `id`, a `depth`, `q`, `answer` (English), `meaning: { hi, hg }` and `explain`.
    - `puzzles[]` have an `id`, `src` (a full runnable program), `answer` (the exact output) and `explain`.
