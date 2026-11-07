@@ -1015,14 +1015,14 @@ window.TL_DAY = {
       },
       lesson: {
         buildsOn: {
-          en: "<p>Lesson 6 gave the sender a limiter so it does not flood the SMS provider. Now the worker must also survive duplicates and failures. This is Design 2: a notification system, the same shape as a WhatsApp bot, built on the queues and idempotent consumers of Day 16.</p>",
-          hi: "<p>पाठ 6 ने sender को limiter दिया ताकि वह SMS provider को भर न दे। अब worker को duplicates और failures भी झेलने हैं। यह Design 2 है: notification system, WhatsApp bot जैसा ही आकार, Day 16 के queues और idempotent consumers पर बना।</p>",
-          hg: "<p>Lesson 6 ne sender ko limiter diya taaki woh SMS provider ko bhar na de. Ab worker ko duplicates aur failures bhi jhelne hain. Ye Design 2 hai: notification system, WhatsApp bot jaisa hi aakaar, Day 16 ke queues aur idempotent consumers par bana.</p>"
+          en: "<p>Lesson 6 gave the sender a limiter so it does not flood the SMS provider. Now the worker must also survive duplicates and failures. This is Design 2: a notification system, the same shape as a WhatsApp bot, built on the queues, retries and dead-letter of Day 16.</p>",
+          hi: "<p>पाठ 6 ने sender को limiter दिया ताकि वह SMS provider को भर न दे। अब worker को duplicates और failures भी झेलने हैं। यह Design 2 है: notification system, WhatsApp bot जैसा ही आकार, Day 16 के queues, retries और dead-letter पर बना।</p>",
+          hg: "<p>Lesson 6 ne sender ko limiter diya taaki woh SMS provider ko bhar na de. Ab worker ko duplicates aur failures bhi jhelne hain. Ye Design 2 hai: notification system, WhatsApp bot jaisa hi aakaar, Day 16 ke queues, retries aur dead-letter par bana.</p>"
         },
         what: {
-          en: "<p>The pipeline is: accept fast, put the work in a <b>queue</b>, and let a worker send it. Queues deliver <b>at least once</b>, so a message can arrive twice. The worker therefore needs three habits: skip <b>duplicates</b> (idempotency), <b>retry</b> temporary failures with backoff, and move hopeless messages to a <b>dead-letter</b> list.</p>",
-          hi: "<p>Pipeline ऐसी है: जल्दी accept करो, काम <b>queue</b> में डालो, और worker से भिजवाओ। Queues <b>at least once</b> पहुँचाती हैं, यानी message दो बार आ सकता है। इसलिए worker को तीन आदतें चाहिए: <b>duplicates</b> छोड़ना (idempotency), temporary failures पर backoff के साथ <b>retry</b>, और बेकार messages को <b>dead-letter</b> list में डालना।</p>",
-          hg: "<p>Pipeline aisi hai: jaldi accept karo, kaam <b>queue</b> mein daalo, aur worker se bhijwao. Queues <b>at least once</b> pahunchati hain, yaani message do baar aa sakta hai. Isliye worker ko teen aadatein chahiye: <b>duplicates</b> chhodna (idempotency), temporary failures par backoff ke saath <b>retry</b>, aur bekaar messages ko <b>dead-letter</b> list mein daalna.</p>"
+          en: "<p>Day 16 taught at-least-once delivery, idempotent consumers, retry with backoff and the dead-letter queue; here the worker combines all three. The pipeline is: accept fast, put the work in a <b>queue</b>, and let a worker send it.</p>",
+          hi: "<p>Day 16 ने at-least-once delivery, idempotent consumers, backoff के साथ retry और dead-letter queue सिखाए; यहाँ worker तीनों को जोड़ता है। Pipeline ऐसी है: जल्दी accept करो, काम <b>queue</b> में डालो, और worker से भिजवाओ।</p>",
+          hg: "<p>Day 16 ne at-least-once delivery, idempotent consumers, backoff ke saath retry aur dead-letter queue sikhaye; yahan worker teeno ko jodta hai. Pipeline aisi hai: jaldi accept karo, kaam <b>queue</b> mein daalo, aur worker se bhijwao.</p>"
         },
         why: {
           en: "<p>Providers time out, return 503, and the queue redelivers. Without these habits the customer gets the same SMS twice, or a temporary glitch loses a message, or one bad phone number blocks the queue forever.</p>",
@@ -1070,9 +1070,9 @@ window.TL_DAY = {
           {
             code: "var backoff = 100 * (1 << msg.Attempt);",
             note: {
-              en: "<b>Exponential backoff</b>: wait 200 ms, then 400 ms. Waiting longer each time gives the provider room to recover. Real code adds random jitter.",
-              hi: "<b>Exponential backoff</b>: 200 ms रुको, फिर 400 ms। हर बार ज़्यादा रुकने से provider को संभलने का मौक़ा मिलता है। असली code में random jitter भी जोड़ते हैं।",
-              hg: "<b>Exponential backoff</b>: 200 ms ruko, phir 400 ms. Har baar zyada rukne se provider ko sambhalne ka mauka milta hai. Asli code mein random jitter bhi jodte hain."
+              en: "<b>Exponential backoff</b> as in Day 16: here it waits 200 ms, then 400 ms. Real code adds random jitter.",
+              hi: "<b>Exponential backoff</b>, जैसा Day 16 में: यहाँ 200 ms रुकता है, फिर 400 ms। असली code में random jitter भी जोड़ते हैं।",
+              hg: "<b>Exponential backoff</b>, jaisa Day 16 mein: yahan 200 ms rukta hai, phir 400 ms. Asli code mein random jitter bhi jodte hain."
             }
           },
           {
@@ -1085,9 +1085,9 @@ window.TL_DAY = {
           }
         ],
         mistakes: {
-          en: "<ul><li>Marking a message as sent before the provider accepts it. A failure then loses the message silently.</li><li>Retrying everything. A 400-type error (bad number) will never succeed; only retry timeouts, 429 and 5xx.</li><li>Expecting exactly-once delivery. Aim for at-least-once plus idempotent handling. Also note that a retry goes to the back of the queue, so order is not guaranteed across retries (see how 502 finishes last).</li></ul>",
-          hi: "<ul><li>Provider के accept करने से पहले message को sent mark करना। तब failure से message चुपचाप खो जाता है।</li><li>सब कुछ retry करना। 400-type error (ग़लत number) कभी सफल नहीं होगी; सिर्फ़ timeouts, 429 और 5xx पर retry करो।</li><li>Exactly-once की उम्मीद रखना। At-least-once और idempotent handling से काम चलाओ। यह भी याद रखो कि retry queue के पीछे जाती है, इसलिए retries के आर-पार क्रम तय नहीं है (देखो 502 सबसे आख़िर में कैसे ख़त्म होता है)।</li></ul>",
-          hg: "<ul><li>Provider ke accept karne se pehle message ko sent mark karna. Tab failure se message chupchaap kho jaata hai.</li><li>Sab kuchh retry karna. 400-type error (galat number) kabhi safal nahi hogi; sirf timeouts, 429 aur 5xx par retry karo.</li><li>Exactly-once ki ummeed rakhna. At-least-once aur idempotent handling se kaam chalao. Ye bhi yaad rakho ki retry queue ke peechhe jaati hai, isliye retries ke aar-paar kram tay nahi hai (dekho 502 sabse aakhir mein kaise khatam hota hai).</li></ul>"
+          en: "<ul><li>Marking a message as sent before the provider accepts it. A failure then loses the message silently.</li><li>Retrying everything. A 400-type error (bad number) will never succeed; only retry timeouts, 429 and 5xx.</li><li>Expecting exactly-once delivery (Day 16). Aim for at-least-once plus idempotent handling. Also note that a retry goes to the back of the queue, so order is not guaranteed across retries (see how 502 finishes last).</li></ul>",
+          hi: "<ul><li>Provider के accept करने से पहले message को sent mark करना। तब failure से message चुपचाप खो जाता है।</li><li>सब कुछ retry करना। 400-type error (ग़लत number) कभी सफल नहीं होगी; सिर्फ़ timeouts, 429 और 5xx पर retry करो।</li><li>Exactly-once की उम्मीद रखना (Day 16)। At-least-once और idempotent handling से काम चलाओ। यह भी याद रखो कि retry queue के पीछे जाती है, इसलिए retries के आर-पार क्रम तय नहीं है (देखो 502 सबसे आख़िर में कैसे ख़त्म होता है)।</li></ul>",
+          hg: "<ul><li>Provider ke accept karne se pehle message ko sent mark karna. Tab failure se message chupchaap kho jaata hai.</li><li>Sab kuchh retry karna. 400-type error (galat number) kabhi safal nahi hogi; sirf timeouts, 429 aur 5xx par retry karo.</li><li>Exactly-once ki ummeed rakhna (Day 16). At-least-once aur idempotent handling se kaam chalao. Ye bhi yaad rakho ki retry queue ke peechhe jaati hai, isliye retries ke aar-paar kram tay nahi hai (dekho 502 sabse aakhir mein kaise khatam hota hai).</li></ul>"
         },
         whenToUse: {
           en: "<p>Use this shape for anything that calls an unreliable outside service: SMS, email, WhatsApp, payment callbacks. In production the queue is a managed broker (Day 20), and the \"sent\" record lives in a shared database, not in memory. The webhook that feeds the queue should only verify, dedupe, enqueue and answer 200 quickly.</p>",
@@ -1185,14 +1185,14 @@ window.TL_DAY = {
           hg: "<p>Lesson 7 ne idempotency aur retries se akele messages ko surakshit banaya. Design 3 kai services ko ek business kaam mein jodta hai: customer SMS-credits ka pack kharidta hai. Day 15 ne alag services aur unke apne databases diye, aur Day 16 ne saga. Yahan ek chhota saga hai jise tum whiteboard par samjha sako.</p>"
         },
         what: {
-          en: "<p>A <b>saga</b> runs a business action as a list of local steps (reserve credits, charge card, confirm). If a step fails, the saga runs a <b>compensation</b> (an undo) for each step that already finished, in <b>reverse</b> order.</p>",
-          hi: "<p><b>Saga</b> एक business काम को local steps की list की तरह चलाता है (credits reserve, card charge, confirm)। कोई step fail हो तो saga जो steps पूरे हो चुके हैं उनके लिए <b>compensation</b> (undo) चलाता है, <b>उल्टे</b> क्रम में।</p>",
-          hg: "<p><b>Saga</b> ek business kaam ko local steps ki list ki tarah chalata hai (credits reserve, card charge, confirm). Koi step fail ho to saga jo steps poore ho chuke hain unke liye <b>compensation</b> (undo) chalata hai, <b>ulte</b> kram mein.</p>"
+          en: "<p>Day 16 taught the saga: local steps, with compensations for finished steps in reverse order. Here we design one for buying an SMS-credits pack.</p>",
+          hi: "<p>Day 16 ने saga सिखाया: local steps, और पूरे हुए steps के compensations उल्टे क्रम में। यहाँ हम SMS-credits का pack ख़रीदने के लिए एक design करते हैं।</p>",
+          hg: "<p>Day 16 ne saga sikhaya: local steps, aur poore hue steps ke compensations ulte kram mein. Yahan hum SMS-credits ka pack kharidne ke liye ek design karte hain.</p>"
         },
         why: {
-          en: "<p>Each service owns its database, so one database transaction cannot cover them all. A distributed transaction across services is slow and fragile. A saga gives up instant consistency (the order is \"processing\" for a moment) and in return each service stays independent. Never double-charge, never lose an order.</p>",
-          hi: "<p>हर service का अपना database है, इसलिए एक database transaction सबको cover नहीं कर सकता। Services के आर-पार distributed transaction धीमा और नाज़ुक होता है। Saga तुरंत वाली consistency छोड़ता है (order थोड़ी देर \"processing\" रहता है) और बदले में हर service independent रहती है। दो बार charge कभी नहीं, order कभी खोना नहीं।</p>",
-          hg: "<p>Har service ka apna database hai, isliye ek database transaction sabko cover nahi kar sakta. Services ke aar-paar distributed transaction dheema aur naazuk hota hai. Saga turant wali consistency chhodta hai (order thodi der \"processing\" rehta hai) aur badle mein har service independent rehti hai. Do baar charge kabhi nahi, order kabhi khona nahi.</p>"
+          en: "<p>Day 16 explained why one transaction cannot span services. What is new here is designing the steps and the state the customer sees meanwhile.</p>",
+          hi: "<p>Day 16 ने बताया कि एक transaction कई services में नहीं चल सकता। यहाँ नया यह है: steps का design और बीच में customer को दिखने वाली state।</p>",
+          hg: "<p>Day 16 ne bataya ki ek transaction kai services mein nahi chal sakta. Yahan naya ye hai: steps ka design aur beech mein customer ko dikhne wali state.</p>"
         },
         analogy: {
           en: "<p>Booking a train ticket online: the seat is blocked first, then payment is tried. If the payment fails, the seat is released and the booking is cancelled. If the payment is taken but the ticket cannot be issued, the money is refunded. Each step has its own undo.</p>",
@@ -1250,14 +1250,14 @@ window.TL_DAY = {
           }
         ],
         mistakes: {
-          en: "<ul><li>Undoing the step that failed. Only completed steps need a compensation.</li><li>Compensations that are not idempotent. A refund message can be delivered twice, so the second one must do nothing (the exercise shows how).</li><li>Treating this in-memory model as production. A real saga stores its state in a database and publishes events through an outbox (Day 16), so a crash in the middle can resume, and a stuck saga needs a timeout and an alert.</li></ul>",
-          hi: "<ul><li>जो step fail हुआ उसका undo चलाना। Compensation सिर्फ़ पूरे हुए steps की चाहिए।</li><li>Compensations जो idempotent नहीं हैं। Refund message दो बार आ सकता है, इसलिए दूसरे को कुछ नहीं करना चाहिए (exercise में दिखाया है)।</li><li>इस in-memory model को production समझना। असली saga अपनी state database में रखता है और outbox से events भेजता है (Day 16), ताकि बीच में crash हो तो आगे बढ़ सके, और अटके saga के लिए timeout और alert चाहिए।</li></ul>",
-          hg: "<ul><li>Jo step fail hua uska undo chalana. Compensation sirf poore hue steps ki chahiye.</li><li>Compensations jo idempotent nahi hain. Refund message do baar aa sakta hai, isliye doosre ko kuchh nahi karna chahiye (exercise mein dikhaya hai).</li><li>Is in-memory model ko production samajhna. Asli saga apni state database mein rakhta hai aur outbox se events bhejta hai (Day 16), taaki beech mein crash ho to aage badh sake, aur atke saga ke liye timeout aur alert chahiye.</li></ul>"
+          en: "<ul><li>Putting the hardest-to-undo step first. Reserve credits first (easy to release) and confirm last; an SMS or confirmation that was already sent cannot be taken back.</li><li>Compensations that are not idempotent. A refund message can be delivered twice, so the second one must do nothing (the exercise shows how).</li><li>Treating this in-memory model as production. A real saga stores its state in a database and publishes events through an outbox (Day 16), so a crash in the middle can resume, and a stuck saga needs a timeout and an alert.</li></ul>",
+          hi: "<ul><li>सबसे मुश्किल-से-undo वाला step पहले रखना। Credits reserve पहले करो (release करना आसान) और confirm आख़िर में; जो SMS या confirmation भेजा जा चुका वह वापस नहीं लिया जा सकता।</li><li>Compensations जो idempotent नहीं हैं। Refund message दो बार आ सकता है, इसलिए दूसरे को कुछ नहीं करना चाहिए (exercise में दिखाया है)।</li><li>इस in-memory model को production समझना। असली saga अपनी state database में रखता है और outbox से events भेजता है (Day 16), ताकि बीच में crash हो तो आगे बढ़ सके, और अटके saga के लिए timeout और alert चाहिए।</li></ul>",
+          hg: "<ul><li>Sabse mushkil-se-undo wala step pehle rakhna. Credits reserve pehle karo (release karna aasaan) aur confirm aakhir mein; jo SMS ya confirmation bheja ja chuka woh wapas nahi liya ja sakta.</li><li>Compensations jo idempotent nahi hain. Refund message do baar aa sakta hai, isliye doosre ko kuchh nahi karna chahiye (exercise mein dikhaya hai).</li><li>Is in-memory model ko production samajhna. Asli saga apni state database mein rakhta hai aur outbox se events bhejta hai (Day 16), taaki beech mein crash ho to aage badh sake, aur atke saga ke liye timeout aur alert chahiye.</li></ul>"
         },
         whenToUse: {
-          en: "<p>Use a saga when one business action spans several services with separate databases. If everything lives in one database (a modular monolith, Day 15), use a normal transaction; it is simpler and safer. Orchestration (one coordinator, as here) is easier to follow; choreography (services react to events) has less central coupling.</p>",
-          hi: "<p>जब एक business काम अलग databases वाली कई services में फैला हो तब saga लो। सब कुछ एक database में हो (modular monolith, Day 15) तो normal transaction लो; वह आसान और सुरक्षित है। Orchestration (एक coordinator, जैसा यहाँ) समझना आसान है; choreography (services events पर react करती हैं) में central coupling कम होती है।</p>",
-          hg: "<p>Jab ek business kaam alag databases wali kai services mein phaila ho tab saga lo. Sab kuchh ek database mein ho (modular monolith, Day 15) to normal transaction lo; woh aasaan aur surakshit hai. Orchestration (ek coordinator, jaisa yahan) samajhna aasaan hai; choreography (services events par react karti hain) mein central coupling kam hoti hai.</p>"
+          en: "<p>Use a saga when one business action spans several services with separate databases. If everything lives in one database (a modular monolith, Day 15), use a normal transaction; it is simpler and safer. (the Day 16 Deep Dive compares orchestration and choreography).</p>",
+          hi: "<p>जब एक business काम अलग databases वाली कई services में फैला हो तब saga लो। सब कुछ एक database में हो (modular monolith, Day 15) तो normal transaction लो; वह आसान और सुरक्षित है। (Day 16 का Deep Dive orchestration और choreography की तुलना करता है)।</p>",
+          hg: "<p>Jab ek business kaam alag databases wali kai services mein phaila ho tab saga lo. Sab kuchh ek database mein ho (modular monolith, Day 15) to normal transaction lo; woh aasaan aur surakshit hai. (Day 16 ka Deep Dive orchestration aur choreography ki tulna karta hai).</p>"
         },
         exercise: {
           task: {
@@ -1317,9 +1317,9 @@ window.TL_DAY = {
           }
         },
         recap: {
-          en: "<ul><li>A saga is a list of local steps, each with an undo; on failure undo the finished steps in reverse.</li><li>Compensations must be idempotent, and real sagas keep their state in a database with an outbox.</li><li>Use a normal transaction when everything is in one database.</li></ul>",
-          hi: "<ul><li>Saga local steps की list है, हर step का एक undo; failure पर पूरे हुए steps का undo उल्टे क्रम में चलाओ।</li><li>Compensations idempotent होनी चाहिए, और असली sagas अपनी state outbox के साथ database में रखते हैं।</li><li>सब कुछ एक database में हो तो normal transaction लो।</li></ul>",
-          hg: "<ul><li>Saga local steps ki list hai, har step ka ek undo; failure par poore hue steps ka undo ulte kram mein chalao.</li><li>Compensations idempotent honi chahiye, aur asli sagas apni state outbox ke saath database mein rakhte hain.</li><li>Sab kuchh ek database mein ho to normal transaction lo.</li></ul>"
+          en: "<ul><li>As in Day 16, a saga is a list of local steps, each with an undo; on failure undo the finished steps in reverse.</li><li>Compensations must be idempotent, and real sagas keep their state in a database with an outbox.</li><li>Use a normal transaction when everything is in one database.</li></ul>",
+          hi: "<ul><li>Day 16 की तरह, saga local steps की list है, हर step का एक undo; failure पर पूरे हुए steps का undo उल्टे क्रम में चलाओ।</li><li>Compensations idempotent होनी चाहिए, और असली sagas अपनी state outbox के साथ database में रखते हैं।</li><li>सब कुछ एक database में हो तो normal transaction लो।</li></ul>",
+          hg: "<ul><li>Day 16 ki tarah, saga local steps ki list hai, har step ka ek undo; failure par poore hue steps ka undo ulte kram mein chalao.</li><li>Compensations idempotent honi chahiye, aur asli sagas apni state outbox ke saath database mein rakhte hain.</li><li>Sab kuchh ek database mein ho to normal transaction lo.</li></ul>"
         }
       },
       code: [
